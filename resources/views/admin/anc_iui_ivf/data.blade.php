@@ -1,0 +1,152 @@
+<table class="table m-b-0 table-hover" id="appointment-table">
+    <thead>
+        <tr>             
+            <th>Sr.No</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Seen By</th>
+            <th>Arrival Time</th>
+            <th>Category</th>
+            <th>Mobile Number</th>
+            <th>Remark</th>
+            <th>Action</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <td class="appointment-loader d-none" colspan="9">
+            <div class="row">
+                <div class="page-loader-wrapper medicine-loader">
+                    <div class="loader">
+                        <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        @forelse($appointment as $row)
+            @php
+                // $isDone = $row->is_done == 1 && !empty($row->getAppointmentCharges) ? 'is-done' : '';
+                // if(empty($row->getAppointmentCharges) && !empty($row->arrival_time)){
+                //     $isDone = ' appointment-opd-tr';
+                // }
+                $isDone = '';
+                if(!empty($row->arrival_time) && $row->arrival_time > 0){
+                    $isDone = 'is_arrival';
+                    // if(empty($row->getAppointmentCharges)){
+                    //     $isDone = ' is-done';
+                    // }
+                    if($row->is_done == 1){
+                        $isDone = 'is-done';
+                    }
+                    // if($row->is_done == 1 && !empty($row->getAppointmentCharges) ){
+                    //     $isDone = 'is-done';
+                    // }
+                }
+            @endphp
+            @php
+                $categoryId = $row->category_id;
+            @endphp
+            @if($categoryId == '6' || $categoryId == '5')
+                @php
+                    $categoryName = 'ANC';
+                    $cName = 'ANC';
+                    $type = $row->getPatientsDetails->getAnc ? 'history' : 'next-appointment';
+                @endphp
+            @endif
+            @if($categoryId == '4' || $categoryId == '3')
+                @php
+                    $categoryName = 'INF';
+                    $cName = 'IUI';
+                    $type = $row->getPatientsDetails->getIui ? 'history' : 'create';
+                @endphp
+            @endif
+            @if($categoryId == '1' || $categoryId == '2' || $categoryId == '11' || $categoryId == '14')
+                @php
+                    $categoryName = 'IVF';
+                    $cName = 'IVF';
+                    $type = $row->getPatientsDetails->getIvf ? 'history' : 'create';
+                @endphp
+            @endif
+            @if($categoryId == '17' || $categoryId == '18' || strtolower($row->categoryDetails['name']) == 'gynec' || strtolower($row->categoryDetails['name']) == 'new gynec' || strtolower($row->categoryDetails['name']) == 'old gynec')
+                @php
+                    $categoryName = 'gynec';
+                    $cName = 'gynec';
+                    $type = $row->getPatientsDetails->getGynec ? 'history' : 'create';
+                @endphp
+            @endif
+            @if($categoryId == '22' || strtolower($row->categoryDetails['name']) == 'stich')
+                @php
+                    $categoryName = 'Stich';
+                    $cName = 'stich';
+                    $type = $row->getPatientsDetails->getStich ? 'history' : 'create';
+                @endphp
+            @endif
+            @if($categoryId != '4' && $categoryId != '3' && $categoryId != '1' && $categoryId != '2' && $categoryId != '17' && $categoryId != '18' && $categoryId != '11' && $categoryId != '14' && $categoryId != '22')
+                @php
+                    $categoryName = 'ANC'; 
+                    $cName = 'ANC';
+                    $type = $row->getPatientsDetails->getAnc ? 'history' : 'next-appointment';
+                @endphp
+            @endif
+            @php
+                $paymentUrl = url('ivf/payments/'.encrypt($row->patients_id));
+            @endphp
+            <tr data-id="{{encrypt($row->getPatientsDetails['id'])}}" data-type="{{$type}}" data-catname="{{$cName}}"
+                class="anc-iui-ivf-edit appointmentdata
+                    @if($categoryId != '4' && $categoryId != '3' && $categoryId != '1' && $categoryId != '2' && $categoryId != '17')
+                        {{$row->getPatientsDetails->getAnc ? 'old-anc' : 'new-anc'}}
+                    @endif
+                    @if($categoryId == '4' || $categoryId == '3')
+                        {{$row->getPatientsDetails->getIui ? 'old-iui' : 'new-iui'}}
+                    @endif
+                    @if($categoryId == '1' || $categoryId == '2' || $categoryId == '11' || $categoryId == '14')
+                        {{$row->getPatientsDetails->getIvf ? 'old-ivf' : 'new-ivf'}}
+                    @endif
+                    @if($categoryId == '22')
+                        {{$row->getPatientsDetails->getIvf ? 'old-stich' : 'new-stich'}}
+                    @endif
+                    @if($categoryId == '17' || $categoryId == '18' || strtolower($row->categoryDetails['name']) == 'gynec' || strtolower($row->categoryDetails['name']) == 'new gynec' || strtolower($row->categoryDetails['name']) == 'old gynec')
+                        {{$row->getPatientsDetails->getGynec ? 'old-gynec' : 'new-gynec'}}
+                    @endif
+                    {{$isDone}} " data-apid="{{encrypt($row->id)}}">
+                <td> {{ ((($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration) . '.' }}</td>
+                <td>{{\Carbon\Carbon::parse($row->date)->format('d-m-Y')}}</td>
+                <td>{{\Carbon\Carbon::parse($row->time)->format('h:i a')}}</td>
+                <td>{{$row->getPatientsDetails['code']}}</td>
+                <td>{{ucwords(strtolower($row->getPatientsDetails['name']))}}</td>
+                <td>{{$row->getPatientsDetails->getHospitalDoctor['name']}}</td>
+                <td>{{$row->arrival_time}}</td>
+                <td>{{$row->categoryDetails['name']}}</td>
+                <td>{{$row->getPatientsDetails['mobile_number']}}</td>
+               <!--  <td>
+                    {{$categoryName}} 
+                </td> -->
+                <td>
+                    <div class="{{'edit-remark-data edit-remark-'.$row->id}}">
+                        @if($row->remark)
+                            {!!wordwrap($row->remark, 30,"<br>\n") !!}
+                            <span class="edit-remark">
+                                <i class="material-icons edit-remark-icon pencil-icon" data-value="{{$row->remark}}" data-appointmentid="{{encrypt($row->id)}}" data-id="{{$row->id}}">edit</i>
+                            </span>
+                        @else
+                            <span class="edit-remark">
+                                <i class="material-icons edit-remark-icon" data-value="{{$row->remark}}" data-appointmentid="{{encrypt($row->id)}}" data-id="{{$row->id}}">add</i>
+                            </span>
+                        @endif
+                    </div>
+                </td>
+
+                @if($row->categoryDetails['id'] == 1 || $row->categoryDetails['id'] == 2)
+                <td><a href="{{$paymentUrl}}" class="btn btn-primary btn-sm ivf-payment-font"> IVF Payment</a></td>
+                @else
+                <td></td>
+                @endif
+            </tr>
+        @empty
+            <td colspan='9' class="text-center">No records available</td>
+        @endforelse
+    </tbody>
+</table>
+{{$appointment->links()}}

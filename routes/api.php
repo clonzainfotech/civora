@@ -1,0 +1,81 @@
+<?php
+
+use Illuminate\Http\Request;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::prefix('v1')->namespace('Api')->group(function () {
+
+    Route::post('/login', 'AuthApiController@login');
+    Route::post('/otp_verify', 'AuthApiController@otp_verify');
+    Route::get('/hospital_tutorials', 'HomeController@hospital_tutorials');
+    Route::get('/getQ_A', 'HomeController@getQAns');
+
+    Route::middleware('APIToken')->group(function () {
+        // Logout
+        Route::get('/home', 'HomeController@home');
+
+        Route::get('/appointments', 'AppointmentController@index');
+        Route::post('/appointmentdetails', 'AppointmentController@appointmentDetail');
+        Route::post('/add-appointment', 'AppointmentController@addAppointment');
+
+        Route::get('getUsers',  'ReviewController@getUsers');
+        Route::get('get-patients-review', 'ReviewController@getPatientsReview');
+    //    Route::get('/reviewrole', 'ReviewController@getReviewRole');
+        Route::post('/addreview', 'ReviewController@addReview');
+        Route::get('getReview','ReviewController@getReview');
+        Route::post('deleteReview','ReviewController@deleteReview');
+
+        Route::get('/events','EventController@getEvents');
+        Route::post('/eventdetails','EventController@eventDetails');
+
+        Route::get('/holidays','HolidayController@index');
+
+        Route::get('/testimonials','TestimonialController@index');
+        Route::post('/notification','NotificationController@index');
+
+
+        Route::get('/getPatient','UserController@edit');
+        // Route::post('/updateprofile','UserController@update');
+        
+        Route::post('/index','NotificationController@index');
+        
+        Route::post('/logout', 'AuthApiController@logout');
+
+        // our staff
+        Route::get('ourstaff','UserController@ourStaff');
+
+        //our doctor
+        Route::get('ourdoctor','UserController@ourDoctor');
+      
+        Route::get('about-us','UserController@aboutUs');
+        // Route::post('get_patient_report','UserController@get_patient_report');
+
+        // Route::get('notification','NotificationController@index' );
+
+        //get patient details
+        Route::get('getPaientDetails', 'PatientController@getPaientDetails');
+
+        Route::post('getUserDetails', 'UserController@getUserDetails');
+
+        Route::post('updateProfilePicture','PatientController@updateProfilePicture');
+        Route::post('/add_profile', 'PatientController@add_profile');
+
+        Route::get('all-appointment','AppointmentController@allAppointment');
+        Route::post('get_medicines','MedicineController@get_medicines');
+    });
+
+});

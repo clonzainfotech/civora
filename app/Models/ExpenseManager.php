@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Base\BaseModel;
+
+class ExpenseManager extends BaseModel
+{
+    protected $table = 'expense_manager';
+
+    public function getUser() {
+        return $this->belongsTo('App\User','created_by');
+    }
+    public function getExpenseCategory() {
+        return $this->belongsTo('App\Models\ExpenseCategory','expense_category');
+    }
+}

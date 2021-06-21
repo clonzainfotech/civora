@@ -1,0 +1,145 @@
+@extends('layouts.main')
+@section('parentPageTitle', 'Medical')
+@section('title', 'Medical')
+@section('page-style')
+    <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+@stop
+@section('content')
+
+<div class="card">
+    <div class="body medicine-body-padding">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-5">
+                    <h5>{{ucwords($patients->name)}}</h5>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    {{Form::select('category',$categoryData,'',['class'=>'category-data-value float-left','placeholder'=>'Select Category'])}}
+                </div>
+                <div class="col-md-1">
+                    <a href="#">
+                        <button class="btn btn-primary print-medicine">
+                            Print
+                        </button>
+                    </a>
+                </div>
+                <div class="col-md-1">
+                    <a href="{{URL::to('medical')}}">
+                        <button class="btn btn-primary">
+                            Back
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="row clearfix ivf">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6"><h5 class="ml-2"></h5></div>
+                <div class="col-md-2"></div>
+                @if(count($categoryData) > 1)
+                    <div class="col-md-2">
+                        
+                    </div>
+                @endif
+            </div>
+        </div>
+        <div class="medicine-data table-responsive active">
+            <!-- table data here include -->
+        </div>
+    </div>
+@stop
+@section('page-script')
+<script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
+    <script type="text/javascript">
+        var qstring = '';
+        var lastCId = '';
+        var page = '';
+        var patientId = "{{$patientsId}}";
+        var status = '';
+        var cId = '';
+        var date = '';
+        var type = '';
+
+        $(document).ready(function(){
+            getMedicineData();
+            $(document).on('click', '.pagination a',function(event){
+                event.preventDefault();
+                page=$(this).attr('href').split('page=')[1];
+                qstring = 'page='+page+'&patient_id='+patientId;
+                getMedicineData(qstring);
+            });
+
+            $(document).on('click', '.print-medicine',function(event){
+                event.preventDefault();
+                qstring = 'page='+page+'&patient_id='+patientId+'&is_print=1';
+                getMedicineData(qstring);
+            });
+            $(document).on('change','select.category-data-value',function(){
+                cId = $(this).val();
+                $('.category-data').addClass('d-none');
+                if(cId != ''){
+                    $('.category-data-'+cId).removeClass('d-none');
+                }else{
+                    $('.'+lastCId).removeClass('d-none');
+                }
+            });
+
+            $(document).on('dblclick', '#p-table tbody tr', function(event) {
+                var patientsId = $(this).data('id');
+                if(typeof(patientsId) !== 'undefined'){
+                    var url = "{{URL::to('get-medicine')}}"+'/'+patientId;
+                    window.location.href=url;
+                }
+            });
+            
+        });
+
+        // get appointment data
+        function getMedicineData(qstring){
+            $.ajax({
+                url: "{{URL::to('get-medicine')}}"+'/'+'{{$patientsId}}'+'?'+qstring,
+                dataType: 'json',
+            }).done(function(data) {
+                if(data.status == 1){
+                    $('.medicine-data').html(data.patients);
+                   
+                    $(".daterange").daterangepicker({
+                        // autoUpdateInput: false,
+                        locale: {
+                            direction: 'drop-down-date-range',
+                            cancelLabel: 'Cancel',
+                            format: 'D/M/Y'
+                        }
+                    }).on("change", function() {
+                        type = $(this).data('id');
+                        date = $(this).val();
+                        qstring = 'date='+date+'&type='+type;
+                        getMedicineData(qstring);
+                    });
+                    if(data.dateType != '' && data.date != '' && typeof data.dateType != 'undefined' && typeof data.date != 'undefined'){
+                        $('.'+data.dateType).val(data.date);
+                    }
+                    if(data.lastType != '' && data.lastType != null){
+                        lastCId = data.lastType;
+                        $('.'+data.lastType).removeClass('d-none');
+                    }
+                }
+                if(data.status == 2){
+                    w = window.open(window.location.href, "_blank");
+                    w.document.open();
+                    w.document.write(data.patients);
+                    w.document.close();
+                    w.window.print();
+                }
+            }).fail(function() {
+
+            });
+        }
+
+    </script>
+@stop

@@ -1,0 +1,151 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Base\Admin\AdminController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Session;
+use Exception;
+use View;
+
+class AppointmentRequestController extends AdminController
+{
+    /**
+    * Return appointment request blade
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function index(Request $request) {
+        try{
+            $now = date('Y-m-d');
+            $pastAppointment = $this->AppointmentRequest->where('is_book','0')->where('appointment_date','<',$now)->update(['is_book'=>2]);
+            $appointmentRequest = $this->AppointmentRequest->where('is_book',0)->orderBy('appointment_date','DESC')->get();
+            if($request->ajax()){
+                $data['status'] = 1;
+                $data['appointmentData'] = View::make('admin.appointment.appointmentrequest.apppointment_request_print',compact('appointmentRequest'))->render();
+                return $data;
+            }
+            return view('admin.appointment.appointmentrequest.index',compact('appointmentRequest'));
+        }catch(\Exception $e){
+            abort(500);
+        }
+    }
+    /**
+    * Return appointment request blade
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function appointmentApprove($id, Request $request) {
+        try{
+            if($request->ajax()) {
+                $apRequestId = decrypt($id);
+                if($apRequestId) {
+                    $appointmentRequests = $this->AppointmentRequest->where('id',$apRequestId)->first();
+                    // $appointmentData = $this->checkLastAppointmentStatus($appointmentRequests);
+                    $appointmentData = true;
+                    
+                    $this->storeAppointmentNotification($appointmentRequests->patients_id,1);
+
+                    $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($request);
+                    $hospitalTime = $this->appointmentTime('09:00', '23:55', '5 mins');
+                    $totalAppoointment = count($hospitalTime);
+                    $aTime = !empty($nextAppontment['time']) || (isset($nextAppontment['time']) && $nextAppontment['time'] == 0) ? $hospitalTime[$nextAppontment['time']] : null;
+                    $lastAppointment = $this->Appointment->where('patients_id',$appointmentRequests->patients_id)->orderBy('id','DESC')->first();
+                    $checkAppointment = $this->Appointment->whereDate('date',$appointmentRequests->appointment_date)->count();
+                    if($totalAppoointment != $checkAppointment){
+                        $appointment = $this->Appointment;
+                        $appointment->date = $appointmentRequests->appointment_date;
+                        $appointment->time = $aTime;
+                        $appointment->created_by = Auth::User()->id;
+                        $appointment->category_id = $lastAppointment->category_id;
+                        $appointment->patients_id = $appointmentRequests->patients_id;
+                        $appointment->appontment_request_id = $apRequestId;
+                        $appointment->save();
+                        $this->AppointmentRequest->whereId($apRequestId)->update(['is_book' => 1]);
+                    }else{
+                        $this->AppointmentRequest->whereId($apRequestId)->update(['is_book' => 2]);
+                    }
+                    
+                    return 'true';
+                    // return $appointmentData['status'];
+
+                    // if(!empty($appointmentData)) {
+                    //     $nextAppointment = $appointmentData->nextAppointmentDate();
+                    //     if(empty($nextAppointment)){
+                    //         $this->AppointmentRequest
+                    //             ->whereId($apRequestId)
+                    //             ->update(['is_book' => 1]);
+
+                    //         $appointmentData=$this->Appointment;
+                    //         $appointmentData->date = $appointmentRequests->appointment_date;
+                    //         $appointmentData->created_by = Auth::User()->id;
+                    //         $appointmentData->patients_id = $appointmentRequests->patients_id;
+                    //         $appointmentData->appontment_request_id = $apRequestId;
+                    //         $appointmentData->save();
+                    //         return ['status' => true];
+                    //     }
+                    //     Session::flash('msg',"You can't approve appointment for this patients because he has already appointment !");
+                    //     return ['status' => false];
+                    // }
+                    // else {
+                    //     $this->AppointmentRequest
+                    //         ->whereId($apRequestId)
+                    //         ->update([
+                    //             'is_book' => 1
+                    //         ]);
+
+                    //     $appointmentData=$this->Appointment;
+                    //     $appointmentData->date = $appointmentRequests->appointment_date;
+                    //     $appointmentData->created_by = Auth::User()->id;
+                    //     $appointmentData->patients_id = $appointmentRequests->patients_id;
+                    //     $appointmentData->appontment_request_id = $apRequestId;
+                    //     $appointmentData->save();
+
+                    //     return ['status' => true];
+                    // }
+                }
+            }
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    public function appointmentReject($id, Request $request) {
+        if($request->ajax()) {
+            $apRequestId = decrypt($id);
+            if($apRequestId) {
+                $appRequestData = $this->AppointmentRequest->whereId($apRequestId)->first();
+                $appRequestData->is_book = 2;
+                $appRequestData->save();
+                $this->storeAppointmentNotification($appRequestData->patients_id,0);
+                //$this->Notification::sendNotificationToPatients($apRequestId);
+                return ['status' => true];
+            }
+            return ['status' => false];
+        }
+    }
+
+    private function checkLastAppointmentStatus($appointmentRequests){
+        $checkAppointment = $this->Appointment->wherePatientsId($appointmentRequests->patients_id)->orderBy('id','DESC')->first();
+        $status = true;
+        $appointmentId = null;
+        if($checkAppointment){
+            $appointmentId = $checkAppointment->id;
+            if(!$checkAppointment->getAppointmentCharges || !$checkAppointment->arrival_time){
+                $status = false;
+            }
+        }
+        if($status && !$appointmentId){
+            $checkAppointment = $this->Appointment;
+        }
+        $checkAppointment->date = $appointmentRequests->appointment_date;
+        $checkAppointment->created_by = Auth::User()->id;
+        $checkAppointment->category_id = $checkAppointment->category_id;
+        $checkAppointment->patients_id = $appointmentRequests->patients_id;
+        $checkAppointment->appontment_request_id = $appointmentRequests->id;
+        $checkAppointment->save();
+        return ['status'=>'true'];
+    } 
+}

@@ -1,0 +1,1442 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Base\Admin\AdminController;
+use Illuminate\Http\Request;
+use App\Models\AppointmentCharges;
+use Carbon\Carbon;
+use App\Models\Category;
+use Exception;
+use Validator;
+use View;
+use Log;
+use DB;
+use Excel;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
+class ReportController extends AdminController
+{
+    /**
+    * Return on report index
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function index(Request $request)
+    {
+        try{
+            if ($request->ajax()) {
+                $report = $this->AppointmentCharges->select("*",
+                    \DB::raw('(CASE
+                                    WHEN payment_mode = "1" THEN "Swipe"
+                                    WHEN payment_mode = "2" THEN "Cash"
+                                    WHEN payment_mode = "3" THEN "Cheque"
+                                    WHEN payment_mode = "4" THEN "UPI"
+                                    WHEN payment_mode = "5" THEN "NEFT"
+                                    END) AS payment_mode'))->orderBy('id', 'desc');
+                $search = $request->report_days;
+                $date = '';
+                if ($search) {
+                    if($search==1)
+                    {
+                        $date = \Carbon\Carbon::now()->isoFormat('Do MMM Y, dddd');
+                        $report = $report->WhereHas('getAppointment', function ($query) use ($search) {
+                            $query->whereDay('date','=',\Carbon\Carbon::now()->format('d'));
+                        });
+                    }elseif($search==2)
+                    {
+                        $date = \Carbon\Carbon::now()->isoFormat('MMMM, G');
+                        $report = $report->WhereHas('getAppointment', function ($query) use ($search) {
+                            $query->whereMonth('date','=',\Carbon\Carbon::now()->format('m'));
+                        });
+                    }elseif($search==3)
+                    {
+                        $date = 'Year ' . \Carbon\Carbon::now()->isoFormat('G');
+                        $report = $report->WhereHas('getAppointment', function ($query) use ($search) {
+                            $query->whereYear('date','=',\Carbon\Carbon::now()->format('Y'));
+                        });
+                    }
+                } else {
+                    $fromdate = $request->fromdate;
+                    $todate = $request->todate;
+
+                    $date = carbon::parse($fromdate)->isoFormat('Do MMM Y, dddd');
+
+                    if($fromdate!=$todate)
+                    {
+                        $date = carbon::parse($fromdate)->isoFormat('Do MMM Y, dddd').' - '.carbon::parse($todate)->isoFormat('Do MMM Y, dddd');
+                    }
+
+                    if ($fromdate || $todate) {
+                        $report = $report->WhereHas('getAppointment', function ($query) use ($fromdate, $todate) {
+                            $query->whereBetween('date', [$fromdate, $todate]);
+                        });
+                    }
+                }
+                $netAmountCount = $report->sum('netamount');
+                if($request->isprint==1){
+                    $report = $report->get();
+                    return response()->json([
+                        View::make('admin.report.preview', compact('report','date', 'netAmountCount'))->render()
+                    ]);
+                }
+
+                $report = $report->paginate(100);
+                return response()->json([
+                    View::make('admin.report.data', compact('report', 'netAmountCount'))->render()
+                ]);
+            }
+            return view('admin.report.index');
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    /**
+    * Return on report category index
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getCategoryReport(Request $request)
+    {
+        try{
+            $doctor = $this->getDoctor();
+            $hospitalDoctor = $doctor['hospitalDoctor'];
+            $category = $this->Category->pluck('name','id');
+            $reportDatails = [];
+            $reportDatails['category'] = '';
+            $reportDatails['doctor'] = 'Jaydev Dhameliya';
+            if($request->ajax()){
+
+
+                $categoryReport = $this->AppointmentCharges->orderBy('id','DESC');
+
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $categoryReport = $categoryReport->WhereHas('getAppointment', function ($query) use ($fromdate, $todate) {
+                        $query->whereBetween('date', [$fromdate, $todate]);
+                    });
+                }
+                $categoryId = $request->categoryId;
+                if($categoryId){
+                    $reportDatails['category'] = $this->Category->where('id',$categoryId)->value('name');
+                    $categoryReport = $categoryReport->WhereHas('getAppointment', function ($query) use ($categoryId) {
+                        $query->where('category_id', $categoryId);
+                    });
+                }
+
+                $hospitalDoctorId = $request->hospital_doctor_id;
+                if($hospitalDoctorId){
+                    $reportDatails['doctor'] =  $this->User->where('id',$hospitalDoctorId)->value('name');
+                    $categoryReport = $categoryReport->WhereHas('getAppointment.getPatientsDetails', function($query) use($hospitalDoctorId){
+                        $query->where('hospital_doctor_id',$hospitalDoctorId);
+                    });
+                }
+
+                if($request->isprint==1){
+                    $categoryReport = $categoryReport->get();
+                    $reportDatails['total'] = $categoryReport->sum('netamount');
+                    $reportDatails['count'] = $categoryReport->count();
+                    $reportDatails['type'] = $request->reportType;
+                    return response()->json([
+                        View::make('admin.report.category.preview', compact('categoryReport','reportDatails'))->render()
+                    ]);
+                }
+                $reportDatails['total'] = $categoryReport->sum('netamount');
+                $categoryReport = $categoryReport->paginate(100);
+                $reportDatails['count'] = $categoryReport->count();
+                $reportDatails['type'] = $request->reportType;
+                return response()->json([
+                    View::make('admin.report.category.data',compact('categoryReport','reportDatails'))->render()
+                ]);
+            }
+            return view('admin.report.category.index',compact('category','hospitalDoctor'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+
+    /**
+    * Return on report index
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function referenceDoctorProReport(Request $request){
+        $infertilityReport = null;
+        $referenceDoctorPro = $this->ReferenceDoctorPro->pluck('name','id');
+        $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
+        $appointment = $this->getPatients();
+        // $OpdPatients_category = $this->OpdPatients_category;
+        // $appointment = $this->OpdPatients->whereNotIn('reference_doctor_id',[3,500,90,107,452,471,489,1,32,387,30]);
+        // $patients = $this->Appointment->whereNotIn('category_id',[2,4,6,9,11,13,18,25])->where('is_procedure',0);
+
+        $patients = $this->Appointment->rightJoin('patients','patients.id','=','appointments.patients_id')->whereNotIn('patients.reference_doctor_id',[1,"null"])->
+        whereNotIn('appointments.category_id',[2,4,6,9,11,13,18,25]);
+        if($request->ajax()){
+
+            $patientId = $request->patient_id;
+            if($patientId) {
+                $patients = $patients->where(function($query) use($patientId) {
+                    $query
+                        ->orWhereHas('getPatientsDetails', function($query) use($patientId) {
+                            $query->where('id', $patientId);
+                        });
+                });
+            }
+
+            $refProId = $request->ref_pro_doctorid;
+            if($refProId){
+                $patients= $patients->where('patients.reference_doctor_pro_id',$refProId);
+            }
+            $refDocId = $request->ref_doc_id;
+            if($refDocId){
+                $patients= $patients->where('patients.reference_doctor_id',$refDocId);
+            }
+
+            $iuiReport = $this->IndoorDeposit
+                ->whereNotIn('reference_doctor_id', [1,12,32])
+                ->where([
+                    ['charge_type', '=', 3],
+                    ['case_type', '=', 'Credit'],
+                ])
+                ->orderBy('id', 'DESC');
+
+            $fromdate = $request->fromdate;
+            $todate = $request->todate;
+            if($fromdate || $todate){
+                $fromdate = $fromdate;
+                $todate = $todate;
+                $patients = $patients->whereBetween(\DB::raw('DATE(patients.created_at)'), [$fromdate, $todate]);
+                $iuiReport = $iuiReport->whereBetween('patients.date', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+            }
+
+            if($request->isprint==1){
+                $patients = $patients->get();
+                return response()->json([
+                    View::make('admin.report.ref_pro_doctor.preview',compact('patients'))->render()
+                ]);
+            }
+            $patients = $patients->paginate(50);
+            $data['status'] = 1;
+            $data['report_data'] = View::make('admin.report.ref_pro_doctor.data',compact('patients','referenceDoctorPro','referenceDoctor'))->render();
+            return $data;
+        }
+        return view('admin.report.ref_pro_doctor.index',compact('patients','appointment','referenceDoctorPro','referenceDoctor'));
+    }
+
+    /**
+    * Return on cut report index
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getCutReport(Request $request)
+    {
+        try{
+            $doctor = collect($this->ReferenceDoctor->whereNotIn('id', [1, 3, 12, 32])->pluck('name', 'id'))
+                ->map(function ($query) {
+                    $query = ucwords(strtolower($query));
+                    return $query;
+                });
+
+            $reportDatails = [];
+            $reportDatails['doctor'] = '';
+            if($request->ajax()){
+                $cutReport = $this->AppointmentCharges->where(function($query) {
+                    $query->whereHas('getAppointment.getPatientsDetails', function($query) {
+                        $query->whereNotIn('reference_doctor_id', [1, 3, 12, 32]);
+                    });
+                })
+                    ->orderBy('id','DESC');
+
+                $iuiReport = $this->IndoorDeposit
+                    ->whereNotIn('reference_doctor_id', [1, 3, 12, 32])
+                    ->where([
+                        ['charge_type', '=', 3],
+                        ['case_type', '=', 'Credit'],
+                    ])
+                    ->orderBy('id', 'DESC');
+
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $cutReport = $cutReport->whereHas('getAppointment', function ($query) use ($fromdate, $todate) {
+                        $query->whereBetween('date', [$fromdate, $todate]);
+                    });
+                    $iuiReport = $iuiReport->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+
+                }
+
+                $referenceDoctorId = $request->reference_doctor_id;
+
+                if($referenceDoctorId){
+                    $reportDatails['doctor'] =  $this->ReferenceDoctor->where('id',$referenceDoctorId)->value('name');
+                    $cutReport = $cutReport->where(function($query) use ($referenceDoctorId) {
+                        $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($referenceDoctorId) {
+                            $query->where('reference_doctor_id', $referenceDoctorId);
+                        });
+                    });
+                    $iuiReport = $iuiReport->where('reference_doctor_id', $referenceDoctorId);
+                }
+
+                $cutReport = collect($cutReport->get())
+                    ->map(function ($query) {
+                        $query->reference_doctor_id = $query->getAppointment->getPatientsDetails['reference_doctor_id'];
+                        return $query;
+                    });
+
+                $iuiReport = $iuiReport->get();
+                $cutReport = collect($cutReport)->merge($iuiReport);
+                $cutReport = $cutReport->groupBy('getReferenceDoctors.name');
+                if($request->isprint==1){
+
+                    $reportDatails['total'] = $cutReport->sum('netamount');
+                    $reportDatails['count'] = $cutReport->count();
+                    return response()->json([
+                        View::make('admin.report.cut.preview', compact('cutReport','reportDatails'))->render()
+                    ]);
+                }
+
+                $reportDatails['total'] = $cutReport->sum('netamount');
+                $reportDatails['count'] = $cutReport->count();
+                return response()->json([
+                    View::make('admin.report.cut.data',compact('cutReport','reportDatails'))->render()
+                ]);
+            }
+            return view('admin.report.cut.index',compact('doctor'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    /**
+    * Get refernce doctor report
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getRefDoctorReport(Request $request)
+    {
+        try{
+            $doctor = collect($this->ReferenceDoctor->whereNotIn('id', [1, 12, 32])->pluck('name', 'id'))
+                ->map(function ($query) {
+                    $query = ucwords(strtolower($query));
+                    return $query;
+                });
+
+            $reportDatails = [];
+            $reportDatails['doctor'] = '';
+            $category = $this->Category->pluck('name','id');
+            $charge_type = !empty($request->type) ? $request->type : null;
+            if($request->ajax()){
+
+                $refDoctorReport = $this->AppointmentCharges->where(function($query) {
+                    $query->whereHas('getAppointment.getPatientsDetails', function($query) {
+                        $query->whereNotIn('reference_doctor_id', [1,12,32]);
+                    });
+                })
+                    ->orderBy('id', 'DESC');
+                
+                
+                //OPD
+                if(empty($charge_type) || $charge_type == 1)
+                {
+
+                    $iuiReport = $this->IndoorDeposit
+                    ->whereNotIn('reference_doctor_id', [1,12,32])
+                    ->where([
+                        ['charge_type', '=', [1,2,3]],
+                        ['case_type', '=', 'Credit'],
+                    ])
+                    ->orderBy('id', 'DESC');
+                }
+                //INDOOR
+                if(!empty($charge_type) && $charge_type == 4)
+                {
+
+                    $iuiReport = $this->IndoorDeposit
+                    ->whereNotIn('reference_doctor_id', [1,12,32])
+                    ->where([
+                        ['charge_type','=', 4],
+                        ['case_type', '=', 'Credit'],
+                    ])
+                    ->orderBy('id', 'DESC');
+                }
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $fromdate = $fromdate;
+                    $todate = $todate;
+                    $refDoctorReport = $refDoctorReport->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $iuiReport = $iuiReport->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+                }
+
+                $categoryId = $request->categoryId;
+                if($categoryId){
+                    $reportDatails['category'] = $this->Category->where('id',$categoryId)->value('name');
+                    $refDoctorReport =$refDoctorReport->WhereHas('getAppointment', function ($query) use ($categoryId) {
+                        $query->where('category_id', $categoryId);
+                    });
+                }
+                $categoryReport = $refDoctorReport->get();
+
+                $referenceDoctorId = $request->reference_doctor_id;
+
+                if($referenceDoctorId){
+                    $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
+                        $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($referenceDoctorId) {
+                            $query->where('reference_doctor_id', $referenceDoctorId);
+                        });
+                    });
+                    $iuiReport = $iuiReport->where('reference_doctor_id', $referenceDoctorId);
+                }
+
+                $refDoctorReport = collect($refDoctorReport->get())
+                    ->map(function ($query) {
+                        $query->reference_doctor_id = $query->getAppointment->getPatientsDetails['reference_doctor_id'];
+                        return $query;
+                    });
+
+
+                $iuiReport = $iuiReport->get();
+                $refDoctorReport = collect($refDoctorReport)->merge($iuiReport);
+                $refDoctorReport = $refDoctorReport->groupBy('getReferenceDoctors.name');
+
+
+                if($request->isprint==1){
+                    return response()->json([
+                        View::make('admin.report.refdoctor.preview', compact('refDoctorReport','reportDatails'))->render()
+                    ]);
+                }
+
+                $data['status'] = 1;
+                $data['report_data'] = View::make('admin.report.refdoctor.data',compact('refDoctorReport','reportDatails','categoryReport'))->render();
+                return $data;
+
+            }
+            return view('admin.report.refdoctor.index',compact('doctor','category'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    /**
+    * Return on New collection report with filtering
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getCollectionReport(Request $request)
+    {
+        try{
+            $doctor = $this->getDoctor();
+            $referenceDoctor = $doctor['referenceDoctor'];
+            $reportDatails = [];
+            $reportDatails['doctor'] = '';
+            if($request->ajax() || $request->isexport == 1){
+                $paymentType = $request->payment_type;
+                $collectionReport = $this->AppointmentCharges->orderBy('id','DESC');
+
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $fromdate = carbon::parse($fromdate)->format('Y-m-d');
+                    $todate = carbon::parse($todate)->format('Y-m-d');
+                    $collectionReport = $collectionReport->WhereHas('getAppointment', function ($query) use ($fromdate, $todate) {
+                        $query->whereBetween('date', [$fromdate, $todate]);
+                    });
+                }
+
+                $referenceDoctorId = $request->reference_doctor_id;
+                if($referenceDoctorId){
+                    $reportDatails['doctor'] =  $this->ReferenceDoctor->where('id',$referenceDoctorId)->value('name');
+                    $collectionReport = $collectionReport->WhereHas('getAppointment.getPatientsDetails', function($query) use($referenceDoctorId){
+                        $query->where('reference_doctor_id',$referenceDoctorId);
+                    });
+                }
+                // USG
+                $usg = $this->Appointment->whereHas('getAppointmentCharges',function($q) use($paymentType){
+                    $q->where('usg', '!=', null)
+                        ->where('payment_mode',$paymentType);
+                })->orderBy('id', 'desc');
+                // Hormon
+                $hormon = $this->IndoorDeposit->where([['charge_type', '=', 1],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // IUI
+                $iui = $this->IndoorDeposit->where([['charge_type', '=', 3],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // IVF
+                $ivf = $this->IndoorDeposit->where([['charge_type', '=', 2],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // Main Collection Data Card
+                $mainDataCash = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) use($paymentType) {$query->where([
+                        ['payment_mode', '=', $paymentType],
+                        ['category_id', '!=', 7],
+                    ])
+                        ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);})
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+
+                $mainDataCard = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 1],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                $mainDataCheque = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 3],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                $mainDataUPI = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 4],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                $mainDataNEFT = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 5],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+
+                if($fromdate || $todate){
+                    $usg = $usg->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $hormon = $hormon->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $iui = $iui->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $ivf = $ivf->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+
+                    $mainDataCash = $mainDataCash->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCard = $mainDataCard->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCheque = $mainDataCheque->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCheque = $mainDataCheque->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataUPI = $mainDataUPI->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataNEFT = $mainDataNEFT->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                }
+
+                $mainDataCash  = $mainDataCash->get();
+                $mainDataCash = $mainDataCash->groupBy('category_id')->toArray();
+
+                // $ivfCash = (!empty($mainDataCash[1]) ? $mainDataCash[1] : []) + (!empty($mainDataCash[2]) ? $mainDataCash[2] : []);
+                // $iuiCash = (!empty($mainDataCash[3]) ? $mainDataCash[3] : []) + (!empty($mainDataCash[4]) ? $mainDataCash[4] : []);
+                // $ancCash = (!empty($mainDataCash[5]) ? $mainDataCash[5] : []) + (!empty($mainDataCash[6]) ? $mainDataCash[6] : []);
+                $ivfCash = array_merge(!empty($mainDataCash[1]) ? $mainDataCash[1] : [],!empty($mainDataCash[2]) ? $mainDataCash[2] : []);
+                $iuiCash = array_merge(!empty($mainDataCash[3]) ? $mainDataCash[3] : [],!empty($mainDataCash[4]) ? $mainDataCash[4] : []);
+                $ancCash = array_merge(!empty($mainDataCash[5]) ? $mainDataCash[5] : [],!empty($mainDataCash[6]) ? $mainDataCash[6] : []);
+                $gynecCash = array_merge(!empty($mainDataCash[17]) ? $mainDataCash[17] : [],!empty($mainDataCash[18]) ? $mainDataCash[18] : []);
+                // $newOldCash = array_merge(!empty($mainDataCash[8]) ? $mainDataCash[8] : [],!empty($mainDataCash[9]) ? $mainDataCash[9] : []);
+                $mainDataCard  = $mainDataCard->get();
+                $mainDataCard = $mainDataCard->groupBy('category_id')->toArray();
+                // $ivfCard = (!empty($mainDataCard[1]) ? $mainDataCard[1] : []) + (!empty($mainDataCard[2]) ? $mainDataCard[2] : []);
+                // $iuiCard = (!empty($mainDataCard[3]) ? $mainDataCard[3] : []) + (!empty($mainDataCard[4]) ? $mainDataCard[4] : []);
+                // $ancCard = (!empty($mainDataCard[5]) ? $mainDataCard[5] : []) + (!empty($mainDataCard[6]) ? $mainDataCard[6] : []);
+                $ivfCard = array_merge(!empty($mainDataCard[1]) ? $mainDataCard[1] : [],!empty($mainDataCard[2]) ? $mainDataCard[2] : []);
+                $iuiCard = array_merge(!empty($mainDataCard[3]) ? $mainDataCard[3] : [],!empty($mainDataCard[4]) ? $mainDataCard[4] : []);
+                $ancCard = array_merge(!empty($mainDataCard[5]) ? $mainDataCard[5] : [],!empty($mainDataCard[6]) ? $mainDataCard[6] : []);
+                $gynecCard = array_merge(!empty($mainDataCard[17]) ? $mainDataCard[17] : [],!empty($mainDataCard[18]) ? $mainDataCard[18] : []);
+                // $newOldCard = array_merge(!empty($mainDataCard[8]) ? $mainDataCard[8] : [],!empty($mainDataCard[9]) ? $mainDataCard[9] : []);
+
+                $mainDataCheque  = $mainDataCheque->get();
+                $mainDataCheque = $mainDataCheque->groupBy('category_id')->toArray();
+
+                $mainDataUPI  = $mainDataUPI->get();
+                $mainDataUPI = $mainDataUPI->groupBy('category_id')->toArray();
+
+                $mainDataNEFT  = $mainDataNEFT->get();
+                $mainDataNEFT = $mainDataNEFT->groupBy('category_id')->toArray();
+
+                // Cheque
+                $ivfCheque = array_merge(!empty($mainDataCheque[1]) ? $mainDataCheque[1] : [],!empty($mainDataCheque[2]) ? $mainDataCheque[2] : []);
+                $iuiCheque = array_merge(!empty($mainDataCheque[3]) ? $mainDataCheque[3] : [],!empty($mainDataCheque[4]) ? $mainDataCheque[4] : []);
+                $ancCheque = array_merge(!empty($mainDataCheque[5]) ? $mainDataCheque[5] : [],!empty($mainDataCheque[6]) ? $mainDataCheque[6] : []);
+                $gynecCheque = array_merge(!empty($mainDataCheque[17]) ? $mainDataCheque[17] : [],!empty($mainDataCheque[18]) ? $mainDataCheque[18] : []);
+
+                // UPI
+                $ivfUPI = array_merge(!empty($mainDataUPI[1]) ? $mainDataUPI[1] : [],!empty($mainDataUPI[2]) ? $mainDataUPI[2] : []);
+                $iuiUPI = array_merge(!empty($mainDataUPI[3]) ? $mainDataUPI[3] : [],!empty($mainDataUPI[4]) ? $mainDataUPI[4] : []);
+                $ancUPI = array_merge(!empty($mainDataUPI[5]) ? $mainDataUPI[5] : [],!empty($mainDataUPI[6]) ? $mainDataUPI[6] : []);
+                $gynecUPI = array_merge(!empty($mainDataUPI[17]) ? $mainDataUPI[17] : [],!empty($mainDataUPI[18]) ? $mainDataUPI[18] : []);
+
+                // NEFT
+                $ivfNEFT = array_merge(!empty($mainDataNEFT[1]) ? $mainDataNEFT[1] : [],!empty($mainDataNEFT[2]) ? $mainDataNEFT[2] : []);
+                $iuiNEFT = array_merge(!empty($mainDataNEFT[3]) ? $mainDataNEFT[3] : [],!empty($mainDataNEFT[4]) ? $mainDataNEFT[4] : []);
+                $ancNEFT = array_merge(!empty($mainDataNEFT[5]) ? $mainDataNEFT[5] : [],!empty($mainDataNEFT[6]) ? $mainDataNEFT[6] : []);
+                $gynecNEFT = array_merge(!empty($mainDataNEFT[17]) ? $mainDataNEFT[17] : [],!empty($mainDataNEFT[18]) ? $mainDataNEFT[18] : []);
+
+
+                $indoor = $this->IndoorBook
+                    ->whereIsFinalInvoice(1)
+                    ->whereNotNull('final_invoice_date')
+                    ->with([
+                        'getInvoice',
+                        'getPatientsDetails'
+                    ])
+                    ->orderBy('id', 'DESC');
+
+
+                $indoorCaseDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType($paymentType)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorCardDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('1')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorChequeDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('3')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorUPIDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('4')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorNEFTDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('5')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorDebit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
+
+                if($fromdate || $todate) {
+                    $indoor = $indoor->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCaseDeposit = $indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCardDeposit = $indoorCardDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorChequeDeposit = $indoorChequeDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorUPIDeposit = $indoorUPIDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorNEFTDeposit = $indoorNEFTDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorDebit = $indoorDebit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                }
+                $indoorCaseDeposit = $indoorCaseDeposit->get()->toArray();
+                $indoorCardDeposit = $indoorCardDeposit->get()->toArray();
+                $indoorChequeDeposit = $indoorChequeDeposit->get()->toArray();
+                $indoorUPIDeposit = $indoorUPIDeposit->get()->toArray();
+                $indoorNEFTDeposit = $indoorNEFTDeposit->get()->toArray();
+                $indoorDebit = $indoorDebit->get()->toArray();
+                $indoor = $indoor->get()->toArray();
+
+                $indoorCash = collect($indoor)->where('get_invoice.payment_mode', '=', $paymentType)->all();
+                $indoorCash = array_slice($indoorCash, 0);
+
+                $indoorCheque = collect($indoor)->where('get_invoice.payment_mode', '=', 3)->all();
+                $indoorCheque = array_slice($indoorCheque, 0);
+
+                $indoorUPI = collect($indoor)->where('get_invoice.payment_mode', '=', 4)->all();
+                $indoorUPI = array_slice($indoorUPI, 0);
+
+                $indoorNEFT = collect($indoor)->where('get_invoice.payment_mode', 5)->all();
+                $indoorNEFT = array_slice($indoorNEFT, 0);
+
+                $indoorCard = collect($indoor)->where('get_invoice.payment_mode', 1)->all();
+                $indoorCard = array_slice($indoorCard, 0);
+
+                $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
+                $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
+                $incomePaymentType = $paymentMethodValueData[$paymentType];
+                $income = $this->IncomeManager->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                )
+                    ->orderBy('id', 'desc');
+                if($fromdate || $todate){
+                    $income = $income->whereBetween('date', [$fromdate, $todate]);
+                }
+                // expense
+                $expense = $this->ExpenseManager->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                )
+                    ->orderBy('id', 'desc');
+
+                if($fromdate || $todate){
+                    $expense = $expense->whereBetween('date', [$fromdate, $todate]);
+                }
+                // $usgGrandTotal = $usg->sum('usg');
+                $incomeGrandTotal = $income->sum('amount');
+                $expenseGrandTotal = $expense->sum('amount');
+
+                if($request->isprint==1){
+                    $usg = $usg->get();
+                    $hormon = $hormon->get();
+                    $iui = $iui->get();
+                    $ivf = $ivf->get();
+                    $income = $income->get();
+                    $expense = $expense->get();
+                    $collectionReport = $collectionReport->get();
+                    $reportDatails['total'] = $collectionReport->sum('netamount');
+                    $reportDatails['count'] = $collectionReport->count();
+
+                    return response()->json([
+                        View::make('admin.report.collection.preview',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard','iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
+                    ]);
+                }
+                $collectionReport = $collectionReport->paginate(100);
+                $reportDatails['total'] = $collectionReport->sum('netamount');
+                $reportDatails['count'] = $collectionReport->count();
+
+                $usg = $usg->paginate(100, ['*'], 'usg');
+                $hormon = $hormon->paginate(100, ['*'], 'hormon');
+                $iui = $iui->paginate(100, ['*'], 'iui');
+                $ivf = $ivf->paginate(100, ['*'], 'ivf');
+                $income = $income->paginate(100, ['*'], 'income');
+                $expense = $expense->paginate(100, ['*'], 'expense');
+
+                return response()->json([
+                    View::make('admin.report.collection.data',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard', 'iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
+                ]);
+            }
+            return view('admin.report.collection.index',compact('referenceDoctor'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+    /**
+    * Get doctor report
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    private function getDoctor(){
+        $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
+        $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+        return['referenceDoctor'=>$referenceDoctor,'hospitalDoctor'=>$hospitalDoctor];
+    }
+
+    // ivf payment report
+    public function ivfPaymentReport(Request $request){
+        try{
+            $ivfPayment = $this->IvfPayment->whereNotNull('payment')->orderBy('id','DESC');
+            $patients = $this->getPatients();
+            if($request->ajax()){
+                if($request->date){
+                    $date = explode("-",$request->date);
+                    $startDate = Carbon::createFromFormat('d/m/Y', trim($date[0]))->format('Y-m-d');
+                    $startDate = $startDate.' '.'00:00:00';
+                    $endDate = Carbon::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d');
+                    $endDate = Carbon::parse($endDate)->addDays(1)->format('Y-m-d');
+                    $endDate = $endDate.' '.'00:00:00';
+                    if($date){
+                        $ivfPayment = $ivfPayment->whereBetween('created_at', [$startDate, $endDate]);
+                    }
+                }
+                $patientId = $request->patient_id;
+                if($patientId){
+                    $ivfPayment = $ivfPayment->where('patients_id',$patientId);
+                }
+                if($request->isprint){
+                    $ivfPayment = $ivfPayment->get();
+                    $data['status'] = 2;
+                    $data['ivfpayment'] = View::make('admin.report.ivf_payment.preview',compact('ivfPayment'))->render();
+                    return $data;
+                }
+                $ivfPayment = $ivfPayment->paginate(100);
+                $data['status'] = 1;
+                $data['ivfpayment'] = View::make('admin.report.ivf_payment.data',compact('ivfPayment'))->render();
+                return $data;
+            }
+            return view('admin.report.ivf_payment.index',compact('patients'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    /**
+    * Return on ivf remaining payment
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function ivfRemainigPayment(Request $request){
+        try{
+            $ivfPayment = $this->IvfPayment->whereNotNull('payment')->orderBy('id','DESC');
+            $patients = $this->getPatients();            
+            if($request->ajax()){
+
+                if($request->date){
+                    $date = explode("-",$request->date);
+                    $startDate = Carbon::createFromFormat('d/m/Y', trim($date[0]))->format('Y-m-d');
+                    $endDate = Carbon::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d');
+                    if($date){
+                        $ivfPayment = $ivfPayment->whereBetween('remaining_date', [$startDate, $endDate]);
+                    }
+                }
+                /*
+                $patientId = $request->patient_id;
+                if($patientId){
+                    $ivfPayment = $ivfPayment->where('patients_id',$patientId);
+                }*/
+                if($request->isprint){  
+                    $ivfPayment = $ivfPayment->get();
+                    $data['status'] = 2;
+                    $data['ivfpayment'] = View::make('admin.report.ivf_payment.preview',compact('ivfPayment'))->render();
+                    return $data;
+                }
+                $ivfPayment = $ivfPayment->paginate(100);
+                $data['status'] = 1;
+                $data['ivfpayment'] = View::make('admin.report.ivf_payment.remaining_data',compact('ivfPayment','patients'))->render();
+                return $data;
+            }
+            return view('admin.report.ivf_payment.remaining_payment',compact('patients'));
+        }catch(Exception $e){
+            abort(500);
+        }
+    }
+
+    public function remaining_payment(Request $request)
+    {
+        return view("admin.report.ivf_payment.remaining_payment");
+    }
+
+    /**
+    * Get IVF payment report detail
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getIvfPaymentReport($paymentId){
+        try{
+            $ipId = decrypt($paymentId);
+            $paymentData = $this->IvfPayment->find($ipId);
+            return ['status'=>1,'data'=>$paymentData];
+        }catch(Exception $e){
+            return ['status'=>0];
+        }
+    }
+
+    // update
+    public function updateIvfPaymentReport(Request $request){
+        try{
+            $id = decrypt($request->id);
+            $ivfPaymentData = $this->IvfPayment->find($id);
+            $ivfPaymentData->cycle_no = $request->cycle_no;
+            $ivfPaymentData->payment = $request->payment;
+            $ivfPaymentData->package = $request->package;
+            $ivfPaymentData->payment_type = $request->payment_type;
+            $ivfPaymentData->time = $request->time;
+            $ivfPaymentData->condition = $request->condition;
+            $ivfPaymentData->save();
+            return['status'=>1,'data'=>$ivfPaymentData];
+        }catch(Exception $e){
+            return['status'=>0];
+        }
+    }
+
+    // generate infertility report base on IUI and IVF module and also print for IVF package
+    public function infertilityReport(Request $request){
+        $infertilityReport = null;
+        $patients = $this->getPatients();
+        // $appointment = $this->Appointment->whereIn('category_id',[1,2,3,4])->where('is_procedure',0)->get();
+            $appointment = $this->IvfHistory->where('cycle_status',1)->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
+            if($request->report_type == 2)
+            {
+                $appointment = $this->IuiHistory->where('cycle_status',1)->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
+            }
+            
+        if($request->ajax()){
+            if($request->package_id){
+                $ivfPayment = $this->IvfPayment->find(decrypt($request->package_id));
+                return response()->json([
+                    'status' => 2,
+                    'infertility_data' => View::make('admin.ivf.payment_preview', compact('ivfPayment'))->render()
+                ]);
+            }
+            $patientId = $request->patient_id;
+            if($patientId) {
+                $appointment = $appointment->where(function($query) use($patientId) {
+                    $query
+                        ->orWhereHas('getPatientsDetails', function($query) use($patientId) {
+                            $query->where('id', $patientId);
+                        });
+                });
+            }
+            $search = $request->search;
+            if($search){
+                $appointment = $appointment->where(function($query) use($search) {
+                    $query
+                        ->orWhereHas('getPatientsDetails', function($query) use($search) {
+                            $query->where('mobile_number','LIKE',$search.'%');
+                        });
+                });
+            }
+            $patientStatus = $request->patient_status;
+            if($patientStatus){
+                if($patientStatus == 1){
+                    $appointment = $appointment->where(function($query){
+                        $query->has('getPatientsDetails.getIui')->orHas('getPatientsDetails.getIvf');
+                    });
+                }else{
+                    $appointment = $appointment->where(function($query){
+                        $query->doesnthave('getPatientsDetails.getIui')->doesnthave('getPatientsDetails.getIvf');
+                    });
+                }
+            }
+            if($request->date){
+                $date = explode("-",$request->date);
+                $startDate = Carbon::createFromFormat('d/m/Y', trim($date[0]))->format('Y-m-d').' 00:00:00';
+                $endDate = Carbon::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d').' 23:59:59';
+                if($date){
+                    $patientId = $appointment->pluck('patients_id','patients_id')->toArray();
+                    // $patientsData = $this->getPatients($pId);
+                    $appointment = $appointment->whereIn('patients_id',$patientId)->whereBetween('created_at', [$startDate, $endDate]);
+                }
+            }
+            if($request->isprint == 1){
+                $appointment = $appointment->orderBy('id','DESC')->get();
+                $data['status'] = 2;
+                $data['infertility_data'] = View::make('admin.report.infertility.preview',compact('appointment'))->render();
+                return $data;
+            }
+            $appointment = $appointment->orderBy('id','DESC')->paginate(50);
+            $data['status'] = 1;
+            $data['infertility_data'] = View::make('admin.report.infertility.data',compact('appointment'))->render();
+            return $data;
+        }
+        return view('admin.report.infertility.index',compact('patients'));
+    }
+
+
+    // remark appointment generate
+    public function remarkAppointment(Request $request){
+        try{
+            $patients = $this->OpdPatients->pluck('name','id')->toArray();
+            if($request->ajax()){
+                $appointment = $this->Appointment->whereNotNull('remark');
+                $patientId = $request->patient_id;
+                if($patientId){
+                    $appointment = $appointment->where('patients_id',$patientId);
+                }
+                $search = $request->search;
+                if($search){
+                    $appointment = $appointment->where('remark','LIKE','%'.$search.'%');
+                }
+                if($request->isprint == 1){
+                    $appointment = $appointment->orderBy('id','DESC')->get();
+                    $data['status'] = 2;
+                    $data['remark_appointment'] = View::make('admin.report.remark_appointment.preview',compact('appointment'))->render();
+                    return $data;
+                }
+                $appointment = $appointment->orderBy('id','DESC')->paginate(50);
+                $data['status'] = 1;
+                $data['remark_appointment'] = View::make('admin.report.remark_appointment.data',compact('appointment'))->render();
+                return $data;
+            }
+            return view('admin.report.remark_appointment.index',compact('patients'));
+        }catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+     
+    //ca expense report
+    public function getCaExpenseReport(Request $request)
+    {
+        try{
+            $doctor = $this->getDoctor();
+            $referenceDoctor = $doctor['referenceDoctor'];
+            $reportDatails = [];
+            $reportDatails['doctor'] = '';
+            $bank_details = $this->BankDetail->pluck('name','id');
+            if($request->ajax() || $request->isexport == 1){
+                $paymentType = $request->payment_type;
+                $bank_id = $request->bank_id;
+                $collectionReport = $this->AppointmentCharges->orderBy('id','DESC');
+                if(!empty($bank_id))
+                {
+                    $collectionReport = $this->AppointmentCharges->where('bank_id',$bank_id)->orderBy('id','DESC');
+                }
+
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $fromdate = carbon::parse($fromdate)->format('Y-m-d');
+                    $todate = carbon::parse($todate)->format('Y-m-d');
+                    $collectionReport = $collectionReport->WhereHas('getAppointment', function ($query) use ($fromdate, $todate) {
+                        $query->whereBetween('date', [$fromdate, $todate]);
+                    });
+                }
+
+                $referenceDoctorId = $request->reference_doctor_id;
+                if($referenceDoctorId){
+                    $reportDatails['doctor'] =  $this->ReferenceDoctor->where('id',$referenceDoctorId)->value('name');
+                    $collectionReport = $collectionReport->WhereHas('getAppointment.getPatientsDetails', function($query) use($referenceDoctorId){
+                        $query->where('reference_doctor_id',$referenceDoctorId);
+                    });
+                }
+                // USG
+                $usg = $this->Appointment->whereHas('getAppointmentCharges',function($q) use($paymentType){
+                    $q->where('usg', '!=', null)
+                        ->where('payment_mode',$paymentType);
+                })->orderBy('id', 'desc');
+                if(!empty($bank_id))
+                {
+                    $usg = $this->Appointment->whereHas('getAppointmentCharges',function($q) use($paymentType,$bank_id){
+                        $q->where('usg', '!=', null)
+                            ->where('payment_mode',$paymentType)
+                            ->where('bank_id',$bank_id);
+                    })->orderBy('id', 'desc');
+                }
+                // Hormon
+                $hormon = $this->IndoorDeposit->where([['charge_type', '=', 1],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // IUI
+                $iui = $this->IndoorDeposit->where([['charge_type', '=', 3],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // IVF
+                $ivf = $this->IndoorDeposit->where([['charge_type', '=', 2],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                // Main Collection Data Card
+                
+                $mainDataCash = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) use($paymentType) {$query->where([
+                        ['payment_mode', '=', $paymentType],
+                        ['category_id', '!=', 7],
+                    ])
+                        ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);})
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                    if(!empty($bank_id))
+                    {
+                        $mainDataCash = $this->Appointment
+                        ->whereHas('getAppointmentCharges', function($query) use($paymentType,$bank_id) {$query->where([
+                            ['payment_mode', '=', $paymentType],
+                            ['category_id', '!=', 7],
+                            ['bank_id','=',$bank_id],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);})
+                        ->with([
+                            'getPatientsDetails',
+                            'getAppointmentCharges',
+                        ])
+                        ->orderBy('id', 'desc');
+
+                    }
+                $mainDataCard = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 1],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                    if(!empty($bank_id))
+                    {
+                        $mainDataCard = $this->Appointment
+                        ->whereHas('getAppointmentCharges', function($query) use($bank_id) {
+                            $query->where([
+                                ['payment_mode', '=', 1],
+                                ['category_id', '!=', 7],
+                                ['bank_id','=', $bank_id],
+                            ])
+                                ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                        })
+                        ->with([
+                            'getPatientsDetails',
+                            'getAppointmentCharges',
+                        ])
+                        ->orderBy('id', 'desc');
+
+                    }
+                $mainDataCheque = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 3],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                    if(!empty($bank_id))
+                    {
+                        $mainDataCheque = $this->Appointment
+                        ->whereHas('getAppointmentCharges', function($query) use($bank_id) {
+                            $query->where([
+                                ['payment_mode', '=', 3],
+                                ['category_id', '!=', 7],
+                                ['bank_id','=',$bank_id],
+                            ])
+                                ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                        })
+                        ->with([
+                            'getPatientsDetails',
+                            'getAppointmentCharges',
+                        ])
+                        ->orderBy('id', 'desc');
+                    }
+                $mainDataUPI = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 4],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                    if(!empty($bank_id))
+                    {
+                        $mainDataUPI = $this->Appointment
+                        ->whereHas('getAppointmentCharges', function($query) use($bank_id) {
+                            $query->where([
+                                ['payment_mode', '=', 4],
+                                ['category_id', '!=', 7],
+                                ['bank_id','=',$bank_id],
+                            ])
+                                ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                        })
+                        ->with([
+                            'getPatientsDetails',
+                            'getAppointmentCharges',
+                        ])
+                        ->orderBy('id', 'desc');
+                    }
+                $mainDataNEFT = $this->Appointment
+                    ->whereHas('getAppointmentCharges', function($query) {
+                        $query->where([
+                            ['payment_mode', '=', 5],
+                            ['category_id', '!=', 7],
+                        ])
+                            ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                    })
+                    ->with([
+                        'getPatientsDetails',
+                        'getAppointmentCharges',
+                    ])
+                    ->orderBy('id', 'desc');
+                    if(!empty($bank_id))
+                    {
+                        $mainDataNEFT = $this->Appointment
+                        ->whereHas('getAppointmentCharges', function($query) use($bank_id) {
+                            $query->where([
+                                ['payment_mode', '=', 5],
+                                ['category_id', '!=', 7],
+                                ['bank_id','=',$bank_id],
+                            ])
+                                ->select(['id','appointment_id','consulting_charges','extra_field','nst','cut','usg','dressing','ivf','charge_types','total','payment_mode','created_at']);
+                        })
+                        ->with([
+                            'getPatientsDetails',
+                            'getAppointmentCharges',
+                        ])
+                        ->orderBy('id', 'desc');
+                    }
+                if(!empty($bank_id))
+                {
+                    $hormon = $hormon->where('bank_id',$bank_id);
+                    $iui = $iui->where('bank_id',$bank_id);
+                    $ivf = $ivf->where('bank_id',$bank_id);
+                }
+                if($fromdate || $todate){
+                    $usg = $usg->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $hormon = $hormon->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $iui = $iui->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $ivf = $ivf->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+
+                    $mainDataCash = $mainDataCash->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCard = $mainDataCard->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCheque = $mainDataCheque->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataCheque = $mainDataCheque->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataUPI = $mainDataUPI->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $mainDataNEFT = $mainDataNEFT->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                }
+                
+                $mainDataCash  = $mainDataCash->get();
+                $mainDataCash = $mainDataCash->groupBy('category_id')->toArray();
+
+                // $ivfCash = (!empty($mainDataCash[1]) ? $mainDataCash[1] : []) + (!empty($mainDataCash[2]) ? $mainDataCash[2] : []);
+                // $iuiCash = (!empty($mainDataCash[3]) ? $mainDataCash[3] : []) + (!empty($mainDataCash[4]) ? $mainDataCash[4] : []);
+                // $ancCash = (!empty($mainDataCash[5]) ? $mainDataCash[5] : []) + (!empty($mainDataCash[6]) ? $mainDataCash[6] : []);
+                $ivfCash = array_merge(!empty($mainDataCash[1]) ? $mainDataCash[1] : [],!empty($mainDataCash[2]) ? $mainDataCash[2] : []);
+                $iuiCash = array_merge(!empty($mainDataCash[3]) ? $mainDataCash[3] : [],!empty($mainDataCash[4]) ? $mainDataCash[4] : []);
+                $ancCash = array_merge(!empty($mainDataCash[5]) ? $mainDataCash[5] : [],!empty($mainDataCash[6]) ? $mainDataCash[6] : []);
+                $gynecCash = array_merge(!empty($mainDataCash[17]) ? $mainDataCash[17] : [],!empty($mainDataCash[18]) ? $mainDataCash[18] : []);
+                // $newOldCash = array_merge(!empty($mainDataCash[8]) ? $mainDataCash[8] : [],!empty($mainDataCash[9]) ? $mainDataCash[9] : []);
+                $mainDataCard  = $mainDataCard->get();
+                $mainDataCard = $mainDataCard->groupBy('category_id')->toArray();
+                // $ivfCard = (!empty($mainDataCard[1]) ? $mainDataCard[1] : []) + (!empty($mainDataCard[2]) ? $mainDataCard[2] : []);
+                // $iuiCard = (!empty($mainDataCard[3]) ? $mainDataCard[3] : []) + (!empty($mainDataCard[4]) ? $mainDataCard[4] : []);
+                // $ancCard = (!empty($mainDataCard[5]) ? $mainDataCard[5] : []) + (!empty($mainDataCard[6]) ? $mainDataCard[6] : []);
+                $ivfCard = array_merge(!empty($mainDataCard[1]) ? $mainDataCard[1] : [],!empty($mainDataCard[2]) ? $mainDataCard[2] : []);
+                $iuiCard = array_merge(!empty($mainDataCard[3]) ? $mainDataCard[3] : [],!empty($mainDataCard[4]) ? $mainDataCard[4] : []);
+                $ancCard = array_merge(!empty($mainDataCard[5]) ? $mainDataCard[5] : [],!empty($mainDataCard[6]) ? $mainDataCard[6] : []);
+                $gynecCard = array_merge(!empty($mainDataCard[17]) ? $mainDataCard[17] : [],!empty($mainDataCard[18]) ? $mainDataCard[18] : []);
+                // $newOldCard = array_merge(!empty($mainDataCard[8]) ? $mainDataCard[8] : [],!empty($mainDataCard[9]) ? $mainDataCard[9] : []);
+
+                $mainDataCheque  = $mainDataCheque->get();
+                $mainDataCheque = $mainDataCheque->groupBy('category_id')->toArray();
+
+                $mainDataUPI  = $mainDataUPI->get();
+                $mainDataUPI = $mainDataUPI->groupBy('category_id')->toArray();
+
+                $mainDataNEFT  = $mainDataNEFT->get();
+                $mainDataNEFT = $mainDataNEFT->groupBy('category_id')->toArray();
+
+                // Cheque
+                $ivfCheque = array_merge(!empty($mainDataCheque[1]) ? $mainDataCheque[1] : [],!empty($mainDataCheque[2]) ? $mainDataCheque[2] : []);
+                $iuiCheque = array_merge(!empty($mainDataCheque[3]) ? $mainDataCheque[3] : [],!empty($mainDataCheque[4]) ? $mainDataCheque[4] : []);
+                $ancCheque = array_merge(!empty($mainDataCheque[5]) ? $mainDataCheque[5] : [],!empty($mainDataCheque[6]) ? $mainDataCheque[6] : []);
+                $gynecCheque = array_merge(!empty($mainDataCheque[17]) ? $mainDataCheque[17] : [],!empty($mainDataCheque[18]) ? $mainDataCheque[18] : []);
+
+                // UPI
+                $ivfUPI = array_merge(!empty($mainDataUPI[1]) ? $mainDataUPI[1] : [],!empty($mainDataUPI[2]) ? $mainDataUPI[2] : []);
+                $iuiUPI = array_merge(!empty($mainDataUPI[3]) ? $mainDataUPI[3] : [],!empty($mainDataUPI[4]) ? $mainDataUPI[4] : []);
+                $ancUPI = array_merge(!empty($mainDataUPI[5]) ? $mainDataUPI[5] : [],!empty($mainDataUPI[6]) ? $mainDataUPI[6] : []);
+                $gynecUPI = array_merge(!empty($mainDataUPI[17]) ? $mainDataUPI[17] : [],!empty($mainDataUPI[18]) ? $mainDataUPI[18] : []);
+
+                // NEFT
+                $ivfNEFT = array_merge(!empty($mainDataNEFT[1]) ? $mainDataNEFT[1] : [],!empty($mainDataNEFT[2]) ? $mainDataNEFT[2] : []);
+                $iuiNEFT = array_merge(!empty($mainDataNEFT[3]) ? $mainDataNEFT[3] : [],!empty($mainDataNEFT[4]) ? $mainDataNEFT[4] : []);
+                $ancNEFT = array_merge(!empty($mainDataNEFT[5]) ? $mainDataNEFT[5] : [],!empty($mainDataNEFT[6]) ? $mainDataNEFT[6] : []);
+                $gynecNEFT = array_merge(!empty($mainDataNEFT[17]) ? $mainDataNEFT[17] : [],!empty($mainDataNEFT[18]) ? $mainDataNEFT[18] : []);
+
+
+                $indoor = $this->IndoorBook
+                    ->whereIsFinalInvoice(1)
+                    ->whereNotNull('final_invoice_date')
+                    ->with([
+                        'getInvoice',
+                        'getPatientsDetails'
+                    ])
+                    ->orderBy('id', 'DESC');
+
+
+                $indoorCaseDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType($paymentType)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorCardDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('1')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorChequeDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('3')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorUPIDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('4')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorNEFTDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('5')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorDebit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                if(!empty($bank_id))
+                {
+                    $indoorCaseDeposit = $indoorCaseDeposit->whereBankId($bank_id);
+                    $indoorCardDeposit = $indoorCardDeposit->whereBankId($bank_id);
+                    $indoorChequeDeposit = $indoorChequeDeposit->whereBankId($bank_id);
+                    $indoorUPIDeposit = $indoorUPIDeposit->whereBankId($bank_id);
+                    $indoorNEFTDeposit = $indoorNEFTDeposit->whereBankId($bank_id);
+                    $indoorDebit = $indoorDebit->whereBankId($bank_id);
+                }
+                if($fromdate || $todate) {
+                    $indoor = $indoor->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCaseDeposit = $indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCardDeposit = $indoorCardDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorChequeDeposit = $indoorChequeDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorUPIDeposit = $indoorUPIDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorNEFTDeposit = $indoorNEFTDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorDebit = $indoorDebit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                }
+                
+                $indoorCaseDeposit = $indoorCaseDeposit->get()->toArray();
+                $indoorCardDeposit = $indoorCardDeposit->get()->toArray();
+                $indoorChequeDeposit = $indoorChequeDeposit->get()->toArray();
+                $indoorUPIDeposit = $indoorUPIDeposit->get()->toArray();
+                $indoorNEFTDeposit = $indoorNEFTDeposit->get()->toArray();
+                $indoorDebit = $indoorDebit->get()->toArray();
+                $indoor = $indoor->get()->toArray();
+
+                if(!empty($bank_id))
+                {
+                    $indoor = collect($indoor)->where('get_invoice.bank_id', '=', $bank_id);
+                    // $indoorCheque = collect($indoor)->where('get_invoice.bank_id', '=', $bank_id);
+                    // $indoorUPI = collect($indoor)->where('get_invoice.bank_id', '=', $bank_id);
+                    // $indoorNEFT = collect($indoor)->where('get_invoice.bank_id', '=', $bank_id);
+                    // $indoorCard = collect($indoor)->where('get_invoice.bank_id', '=', $bank_id);
+
+                }
+                $indoorCash = collect($indoor)->where('get_invoice.payment_mode', '=', $paymentType)->all();
+                $indoorCash = array_slice($indoorCash, 0);
+
+                $indoorCheque = collect($indoor)->where('get_invoice.payment_mode', '=', 3)->all();
+                $indoorCheque = array_slice($indoorCheque, 0);
+
+                $indoorUPI = collect($indoor)->where('get_invoice.payment_mode', '=', 4)->all();
+                $indoorUPI = array_slice($indoorUPI, 0);
+
+                $indoorNEFT = collect($indoor)->where('get_invoice.payment_mode', 5)->all();
+                $indoorNEFT = array_slice($indoorNEFT, 0);
+
+                $indoorCard = collect($indoor)->where('get_invoice.payment_mode', 1)->all();
+                $indoorCard = array_slice($indoorCard, 0);
+
+                $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
+                $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
+                $incomePaymentType = $paymentMethodValueData[$paymentType];
+                $income = $this->IncomeManager->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                )
+                    ->orderBy('id', 'desc');
+                if($fromdate || $todate){
+                    $income = $income->whereBetween('date', [$fromdate, $todate]);
+                }
+                if(!empty($bank_id))
+                {
+                    $income = $income->where('bank_id', $bank_id);
+                }
+                // expense
+                $expense = $this->ExpenseManager->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                )
+                    ->orderBy('id', 'desc');
+
+                if($fromdate || $todate){
+                    $expense = $expense->whereBetween('date', [$fromdate, $todate]);
+                }
+                if(!empty($bank_id))
+                {
+                    $expense = $expense->where('bank_id', $bank_id);
+                }
+                // $usgGrandTotal = $usg->sum('usg');
+                $incomeGrandTotal = $income->sum('amount');
+                $expenseGrandTotal = $expense->sum('amount');
+
+                if($request->isprint==1){
+                    $usg = $usg->get();
+                    $hormon = $hormon->get();
+                    $iui = $iui->get();
+                    $ivf = $ivf->get();
+                    $income = $income->get();
+                    $expense = $expense->get();
+                    $collectionReport = $collectionReport->get();
+                    $reportDatails['total'] = $collectionReport->sum('netamount');
+                    $reportDatails['count'] = $collectionReport->count();
+
+                    return response()->json([
+                        View::make('admin.report.ca_expense.preview',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard','iuiCard', 'ancCard', 'procedures','indoorDebit','bank_details','paymentType'))->render()
+                    ]);
+                }
+                $collectionReport = $collectionReport->paginate(100);
+                $reportDatails['total'] = $collectionReport->sum('netamount');
+                $reportDatails['count'] = $collectionReport->count();
+
+                $usg = $usg->paginate(100, ['*'], 'usg');
+                $hormon = $hormon->paginate(100, ['*'], 'hormon');
+                $iui = $iui->paginate(100, ['*'], 'iui');
+                $ivf = $ivf->paginate(100, ['*'], 'ivf');
+                $income = $income->paginate(100, ['*'], 'income');
+                $expense = $expense->paginate(100, ['*'], 'expense');
+                $bank_details = $this->BankDetail->pluck('name','id');
+                return response()->json([
+                    View::make('admin.report.ca_expense.data',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard', 'iuiCard', 'ancCard', 'procedures','indoorDebit','bank_details'))->render()
+                ]);
+            }
+            return view('admin.report.ca_expense.index',compact('referenceDoctor','bank_details'));
+        }catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+    /**
+    * Store CA expense
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function storeCaExpense(Request $request)
+    {
+        try{
+            if($request->ajax()){
+                $table = $request->ca_expense_table;
+                $id = $request->ca_expense_row_id;
+                $txt_amount = $request->txt_amount;
+                $bank_id = $request->bank_id;
+                $invoice_no = $request->invoice_no;
+                $detail = $request->detail;
+                $ca_expense_data = $this->$table->where('id',$id)->first();
+                $ca_expense_data->txt_amount = $txt_amount;
+                $ca_expense_data->invoice_no = $invoice_no;
+                $ca_expense_data->bank_id = $bank_id;
+                $ca_expense_data->detail = $detail;
+                $ca_expense_data->save();
+                if($ca_expense_data)
+                {
+                    $data['status'] = 1;
+                }
+                else
+                {
+                    $data['status'] = 2;
+
+                }
+                return $data;
+            }
+            
+        }catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+    /**
+    * Get CA expense detail 
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getCaExpense(Request $request)
+    {
+        try{
+            if($request->ajax()){
+                $table = $request->ca_expense_table;
+                $id = $request->ca_expense_row_id;
+                $ca_expense_data = $this->$table->where('id',$id)->first();
+                $data['status'] = 1;
+                $data['data'] = $ca_expense_data;
+            }
+            else
+            {
+                $data['status'] = 2;
+            }
+            return $data;
+        }catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+}

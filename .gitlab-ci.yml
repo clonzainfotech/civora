@@ -3,4 +3,5 @@ stages:
 deploy:
   stage: deploy
   script:
+    -  php artisan config:clear
     - cp -R dist/* /var/www/candor

@@ -4,7 +4,7 @@ deploy:
   stage: deploy
   script:
     - cd /var/www/html
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web /var/www/html
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/* /var/www/html/
     - php artisan config:clear
     - php artisan config:cache
     - php artisan view:clear

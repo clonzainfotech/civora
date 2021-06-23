@@ -1420,7 +1420,6 @@ class ANCController extends AdminController
                         $investigationReport = $this->allInvestigationReport();
                         $now = Carbon::now()->format('Y-m-d');
                         $usgStatus = 0;
-                        $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
                         $usg = json_encode($ancData->usg);
                         if(((!empty($usg['nt_scan']) && $usg['nt_scan'] == $usg['follow_up']) || (!empty($usg['early_scan']) && $usg['early_scan'] == $usg['follow_up']) || (!empty($usg['anomalies_miles']) && $usg['anomalies_miles'] == $usg['follow_up']) || (!empty($usg['growth_scan']) && $usg['growth_scan'] == $usg['follow_up']))){
                             $usgStatus = 1;
@@ -1458,7 +1457,6 @@ class ANCController extends AdminController
                         $investigationReport = $this->allInvestigationReport();
                         $now = Carbon::now()->format('Y-m-d');
                         $usgStatus = 0;
-                        $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
                         $usg = json_encode($ancData->usg);
                         
                         // dd($weight);

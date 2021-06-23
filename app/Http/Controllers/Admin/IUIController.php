@@ -708,9 +708,14 @@ class IUIController extends AdminController
         try{
             $id = decrypt($patientsId);
             $iui = $this->IUI->wherePatientsId($id)->orderBy('id','DESC')->first();
+            if($request->iui_cycle_no)
+            {
+                $iui = $this->IUI->wherePatientsId($id)->whereCycleNo($request->iui_cycle_no)->first();
+            }
             $firstVisitLmpDate = $iui->lmp_date;
             $lastAppointmentData = $this->Appointment->where('patients_id',$id)->orderBy('id','DESC')->first();
             $iuiSecondVisit = $this->IuiHistory->where('patients_id',$id)->whereVisit(2)->whereCycleNo($iui->cycle_no)->first();
+            
             $oldDate = null;
             $lmdData = null;
             $historyCo = null;
@@ -744,7 +749,8 @@ class IUIController extends AdminController
             }
             $durationOfData = ['other'=>'Other'] + getDurationOfData(2)['data'];
             $thirdDescription = !empty($iuiThirdVisit) ? json_decode($iuiThirdVisit->description) : null;
-            if(isset($thirdDescription->ovalution) && $thirdDescription->ovalution == 'yes') {
+            //if select cycle from dropdown thwn don't change visitNo
+            if(isset($thirdDescription->ovalution) && $thirdDescription->ovalution == 'yes' && (!isset($request->iui_cycle_no))) {
                 $cycleNo = $iuiThirdVisit->cycle_no;
                 $visitNo = 4;
             }

@@ -7,7 +7,6 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
 @endphp
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-
         {{Form::open(['class'=>'form iui','files'=>'true','id'=>'iui-form'])}}
             {{Form::hidden('patients_id',encrypt($iui->patients_id), ['id' => 'patients_id'])}}
             {{Form::hidden('cycle_no', $cycleNo, ['id' => 'cycle_no'])}}
@@ -4488,7 +4487,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                 <div class="row mt-2">
                     <div class="col-md-1 div-seen-by">
                         <label class="vertical-form-label pr-0">
-                            Seen By :
+                            Seen By:
                         </label>
                     </div>
                     <div class="col-md-3 div-seen-by">
@@ -5169,97 +5168,99 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                     @endif
                                     @endforeach
                             </tbody>
-                            <tfoot>
-                                <td colspan="8">
-                                    <div class="row treatment-data" id="t_data_1">
-                                        <div class="col-md-2 pr-2">
-                                            <label class="vertical-form-label pr-0">
-                                                Select Medicine :
-                                            </label>
-                                        </div>
-                                        <div class="col-md-8 complain-multi mb-3 medicine-picker">
-                                            {{Form::select('data[treatment][medicinedata][]',$medicines,$historyMedicineKey,['id'=>'treatment-medicine','class'=>'form-control medicine','placeholder'=>"Enter medicine name",'data-type'=>'iui-cycle'])}}
-                                        </div>
-                                    </div>
-                                    <div class="page-loader-wrapper medicine-loader d-none">
-                                        <div class="loader">
-                                            <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
-                                        </div>
-                                    </div>
-                                    @if(!empty($historyTreatment))
-                                        @foreach($historyTreatment as $key=>$row)
-                                        {{-- @if(isset($medicines[$row->medicine])) --}}
-                                            <?php
-                                            $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
-                                            $firstCharacter = substr($mId, 0, 3);
-                                            $notinject = "";
-                                            if($firstCharacter=="inj" || $firstCharacter=="INJ") {
-                                                $notinject = "is-inj";
-                                                $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day",'7'=>"6 hourly",'8'=>"8 hourly",'9'=>"12 hourly",'10'=>"24 hourly"];
-
-                                            }
-                                            $till_follow_up = (empty($row->no)) ? 'till-follow-up' : '';
-                                            ?>
-                                            <div class="{{'row mt-2 '.$notinject}}" data-id="{{$mId}}">
-                                                <div class='col-md-2'>
-                                                    <div class='input-group'>
-                                                        <span class='input-group-addon'>M : </span>
-                                                        {{Form::text('data[treatment]['.$mId.'][medicine]',ucwords($row->medicine),['class'=>'form-control','readonly'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1 notinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][quantity]',$medqty,$row->quantity,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1 notinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][quantity_2]',$medqty,@$row->quantity_2,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1 notinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][quantity_3]',$medqty,@$row->quantity_3,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1 notinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][quantity_4]',$medqty,@$row->quantity_4,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-2 notinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][medicine_status]',$medicine_status,$row->medicine_status,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-2 isinject'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][medicine_time]',$medicine_time,@$row->medicine_time,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-2'>
-                                                    <div class='form-group'>
-                                                        {{Form::select('data[treatment]['.$mId.'][dose]',$dose,$row->dose,['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1'>
-                                                    <div class='input-group'>
-                                                        <span class='input-group-addon'>Day :</span>
-                                                        {{Form::number('data[treatment]['.$mId.'][no]',$row->no,['class'=>'form-control '.$till_follow_up])}}
-                                                    </div>
-                                                </div>
-                                                <div class='col-md-1 medicine-data-remove'>
-                                                    <span class=""><i class="material-icons">close</i></span>
-                                                </div>
+                            @if($iuiHistoryData[count($iuiHistoryData)-1]['visit'] != 4 && $prevAppointmentDate)
+                                <tfoot>
+                                    <td colspan="8">
+                                        <div class="row treatment-data" id="t_data_1">
+                                            <div class="col-md-2 pr-2">
+                                                <label class="vertical-form-label pr-0">
+                                                    Select Medicine :
+                                                </label>
                                             </div>
-                                            {{-- @endif --}}
-                                        @endforeach
-                                    @endif
-                                    
-                                    <div class="medicine-data"></div>
-                                    {{Form::hidden('old_medicine_data',!empty($historyMedicineKey) ? implode(',',$historyMedicineKey) : null,['class'=>'old-medicine-data'])}}
-                                </td>
-                            </tfoot>
+                                            <div class="col-md-8 complain-multi mb-3 medicine-picker">
+                                                {{Form::select('data[treatment][medicinedata][]',$medicines,$historyMedicineKey,['id'=>'treatment-medicine','class'=>'form-control medicine','placeholder'=>"Enter medicine name",'data-type'=>'iui-cycle'])}}
+                                            </div>
+                                        </div>
+                                        <div class="page-loader-wrapper medicine-loader d-none">
+                                            <div class="loader">
+                                                <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                            </div>
+                                        </div>
+                                        @if(!empty($historyTreatment))
+                                            @foreach($historyTreatment as $key=>$row)
+                                            {{-- @if(isset($medicines[$row->medicine])) --}}
+                                                <?php
+                                                $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
+                                                $firstCharacter = substr($mId, 0, 3);
+                                                $notinject = "";
+                                                if($firstCharacter=="inj" || $firstCharacter=="INJ") {
+                                                    $notinject = "is-inj";
+                                                    $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day",'7'=>"6 hourly",'8'=>"8 hourly",'9'=>"12 hourly",'10'=>"24 hourly"];
+
+                                                }
+                                                $till_follow_up = (empty($row->no)) ? 'till-follow-up' : '';
+                                                ?>
+                                                <div class="{{'row mt-2 '.$notinject}}" data-id="{{$mId}}">
+                                                    <div class='col-md-2'>
+                                                        <div class='input-group'>
+                                                            <span class='input-group-addon'>M : </span>
+                                                            {{Form::text('data[treatment]['.$mId.'][medicine]',ucwords($row->medicine),['class'=>'form-control','readonly'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1 notinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][quantity]',$medqty,$row->quantity,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1 notinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][quantity_2]',$medqty,@$row->quantity_2,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1 notinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][quantity_3]',$medqty,@$row->quantity_3,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1 notinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][quantity_4]',$medqty,@$row->quantity_4,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-2 notinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][medicine_status]',$medicine_status,$row->medicine_status,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-2 isinject'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][medicine_time]',$medicine_time,@$row->medicine_time,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-2'>
+                                                        <div class='form-group'>
+                                                            {{Form::select('data[treatment]['.$mId.'][dose]',$dose,$row->dose,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1'>
+                                                        <div class='input-group'>
+                                                            <span class='input-group-addon'>Day :</span>
+                                                            {{Form::number('data[treatment]['.$mId.'][no]',$row->no,['class'=>'form-control '.$till_follow_up])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='col-md-1 medicine-data-remove'>
+                                                        <span class=""><i class="material-icons">close</i></span>
+                                                    </div>
+                                                </div>
+                                                {{-- @endif --}}
+                                            @endforeach
+                                        @endif
+                                        
+                                        <div class="medicine-data"></div>
+                                        {{Form::hidden('old_medicine_data',!empty($historyMedicineKey) ? implode(',',$historyMedicineKey) : null,['class'=>'old-medicine-data'])}}
+                                    </td>
+                                </tfoot>
+                            @endif
                         </table>
                     </div>
                     

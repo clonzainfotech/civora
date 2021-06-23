@@ -223,10 +223,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             $('.anc-date').val(ancDate);
             $('.anc-date').selectpicker('refresh');
         }
-        //set childwise data
-        var oeValue = $(this).val();
-        oeNumber(oeValue);
-
+       
         getAncHistoryData(qstring);
 
         $(document).on('click','.submit',function(e){

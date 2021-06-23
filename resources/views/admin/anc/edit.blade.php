@@ -2703,7 +2703,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             {
                                 if(empty($ancHistoryId))
                                 {
-                                    if(!empty($value->blighted_ovum) && $value->blighted_ovum != 'yes')
+                                    if((!isset($value->blighted_ovum)) || (empty($value->blighted_ovum) && $value->blighted_ovum != 'yes') || (!empty($value->blighted_ovum) &&  $value->blighted_ovum == 'no'))
                                     {
                                         array_push($utdataArray,$value);
                                     }

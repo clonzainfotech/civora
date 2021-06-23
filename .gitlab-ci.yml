@@ -4,12 +4,12 @@ deploy:
   stage: deploy
   script:
     - cd /var/www/html
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/app/* /var/www/html/app/
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/assets/* /var/www/html/assets/
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/database/* /var/www/html/database/
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/resources/* /var/www/html/resources/
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/routes/* /var/www/html/routes/
-    - cp /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/storage/* /var/www/html/storage/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/app/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/app/* /var/www/html/app/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/assets/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/assets/* /var/www/html/assets/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/database/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/database/* /var/www/html/database/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/resources/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/resources/* /var/www/html/resources/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/routes/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/routes/* /var/www/html/routes/
+    - rsync -av --exclude=/var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/storage/* /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/storage/* /var/www/html/storage/
     - php artisan config:clear
     - php artisan config:cache
     - php artisan view:clear

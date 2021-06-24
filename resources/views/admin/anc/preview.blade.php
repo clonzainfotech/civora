@@ -622,47 +622,48 @@
                                 {{$oe->remark}}
                             </th>
                             @endif
-                            @php
-                                $investigationDetails = !empty($blood->investigation_details) ? (array)$blood->investigation_details : null;
-                            @endphp
-                            {{-- @if(!empty($blood->investigation_blood_group) && substr ($blood->investigation_blood_group, -3) == '-VE') --}}
-                            @if($investigationDetails && (substr ($investigationDetails['12'], -3) == '-VE' || $investigationDetails['12'] == 'negative' || strpos($investigationDetails['12'], 'negative') !== false))
+                        </tr>
+                        <tr>
                             <th class="text-danger">
-                                <span class="anc-label ">Blood Group :</span>
-                                {{-- {{$blood->investigation_blood_group}} --}}
-                                {{$investigationDetails['12']}}
-                            </th>
-                            @endif
-                            @if(!empty($blood->anc_hiv) && $blood->anc_hiv == 'positive')
-                            <th class="text-danger">
-                                <span class="anc-label ">HIV :</span>
-                                {{$blood->anc_hiv}}
-                            </th>
-                            @endif
-                            @if(!empty($blood->anc_hbsag) && $blood->anc_hbsag == 'positive')
-                            <th class="text-danger">
-                                <span class="anc-label ">HBSAG:</span>
-                                {{$blood->anc_hbsag}}
-                            </th>
-                            @endif
-                            @if(!empty($blood->anc_vdrl) && $blood->anc_vdrl == 'positive')
-                            <th class="text-danger">
-                                <span class="anc-label ">VDRL:</span>
-                                {{$blood->anc_vdrl}}
-                            </th>
-                            @endif
-                            @if(!empty($blood->investigation_growth_fbs) && $blood->investigation_growth_fbs > 100)
-                            <th class="text-danger">
-                                <span class="anc-label ">FBS:</span>
-                                {{$blood->investigation_growth_fbs}}
-                            </th>
-                            @endif
-                            @if(!empty($blood->investigation_growth_pp2bs) && $blood->investigation_growth_pp2bs > 150)
-                            <th class="text-danger">
-                                <span class="anc-label ">PP2BS:</span>
-                                {{$blood->investigation_growth_pp2bs}}
-                            </th>
-                            @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['blood_group']))
+                                    <span class="anc-label ">*Blood Group:</span>
+                                        {{$ancAutoRemark['blood_group']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['hbsag']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*HBSAG:</span>
+                                        {{$ancAutoRemark['hbsag']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['hiv']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*HIV:</span>
+                                        {{$ancAutoRemark['hiv']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['vdrl']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*VDRL:</span>
+                                        {{$ancAutoRemark['vdrl']}}
+                                @endif
+                                
+                                @if($ancAutoRemark && !empty($ancAutoRemark['late_concept']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Late Conception:</span>
+                                    Yes
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['cesarean']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Previous:</span>
+                                        {{$ancAutoRemark['cesarean']. ' - LSCS'}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['position']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Position:</span>
+                                        {{$ancAutoRemark['position']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['liquor']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Liquor:</span>
+                                        {{$ancAutoRemark['liquor']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['placenta']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Placenta:</span>
+                                        {{$ancAutoRemark['placenta']}}
+                                @endif
+                                
+                                </th>
                         </tr>
                         <tr>
                             <th>
@@ -1560,7 +1561,7 @@
                                                 @endif
                                                 @if(@$value->oe_ut_sac_1 && $value->oe_ut_sac_1>=13)
                                                     @php
-                                                        $instra = "પેટમાં કે કમરમાં થોડી થોડી વારે દુખાવો આવે એટલે કે ડિલિવરીનો દુખાવો હોય, ખુન પડે, પાણી પડે કે બાળકો ઓછું ફરકે તો હોસ્પિટલ તાત્કાલિક તપાસ માટે આવું.";
+                                                        $instra = "પેટમાં કે કમરમાં થોડી થોડી વારે દુખાવો આવે એટલે કે ડિલિવરીનો દુખાવો હોય, ખુન પડે, પાણી પડે કે બાળકો ઓછું ફરકે તો હોસ્પિટલ તાત્કાલિક તપાસ માટે આવવું.";
                                                     @endphp
                                                 @endif
                                             </span>
@@ -1568,7 +1569,7 @@
                                     </tr>
                                     
                                 @endif
-                                    @if (!empty($oe->oe_no) && ($oe->oe_no >= 3))
+                                    {{-- @if (!empty($oe->oe_no) && ($oe->oe_no >= 3))
                                         <tr>
                                             <td>
                                                 {{!empty($value->oe_ut_sac_details) ? $value->oe_ut_sac_details : null}} &nbsp;&nbsp;&nbsp;
@@ -1585,13 +1586,13 @@
                                                 ];
                                                 @endphp
                                                 @if (!empty($value->child_type) && array_key_exists($value->child_type, $childType))
-                                                    {{ 'Child Type: ' . $childType[$value->child_type] }}
+                                                    {{ 'Child Type: ' . $childType[$value->] }}
                                                 @else
                                                     {{ 'Child Type: -'}}
                                                 @endif
                                             </td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
                                     @if ($key == 1 && isset($oe->fefal_reduction))
                                         <tr>
                                             @if (isset($oe->fefal_reduction->type) && $oe->fefal_reduction->type == 'yes')
@@ -2360,7 +2361,7 @@
             @elseif($isNextAppointment == 1)
                 <h4>{{"ફરીવાર ".\Carbon\Carbon::parse($nextAppointmentDate)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>
             @endif
-            <h4>{{$instra}}</h4>
+            <h6>{{$instra}}</h6>
         @endif
     </div>
 </div>

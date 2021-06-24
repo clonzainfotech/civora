@@ -91,104 +91,61 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
             </small>
         </h5>
     @endif
-    @if (!empty($previousAncOe->late_data) && !empty($previousAncOe->late_data->late_concept) && $previousAncOe->late_data->late_concept == 'Yes' && !empty(($previousAncOe->late_data->late_concept_week)))
-        <h5 class="remarkhide"> Late Conception:
+    <h5 class="autoRemark">
+        @if($ancAutoRemark && !empty($ancAutoRemark['blood_group']))
+            &nbsp;&nbsp;&nbsp;*Blood Group:
             <small>
-                Yes
-            </small>
-        </h5>
-    @endif
-    <h5>
-        @if(!empty($previousAncinvestigation->anc_hiv) && $previousAncinvestigation->anc_hiv == 'positive')
-            HIV:
-            <small>
-                {{$previousAncinvestigation->anc_hiv}}
+                {{$ancAutoRemark['blood_group']}}
             </small>
         @endif
-        @php
-            $investigationDetails = !empty($previousAncinvestigation->investigation_details) ? (array)$previousAncinvestigation->investigation_details : null;
-        @endphp
-        @if($investigationDetails && isset($investigationDetails['12'])  && (substr (strtolower($investigationDetails['12']), -3) == '-ve' || strtolower($investigationDetails['12']) == 'negative' || strpos(strtolower($investigationDetails['12']), 'negative') !== false))
-            &nbsp;Blood Group:
+        @if($ancAutoRemark && !empty($ancAutoRemark['hbsag']))
+            &nbsp;&nbsp;&nbsp;*HBSAG:
             <small>
-                {{$investigationDetails['12']}}
+                {{$ancAutoRemark['hbsag']}}
             </small>
         @endif
-        @if($investigationDetails && isset($investigationDetails['8']) && (substr (strtolower($investigationDetails['8']), -3) == '+ve' || strtolower($investigationDetails['8']) == 'positive' || strpos(strtolower($investigationDetails['8']), 'positive') !== false))
-            &nbsp;HBSAG:
+        @if($ancAutoRemark && !empty($ancAutoRemark['hiv']))
+            &nbsp;&nbsp;&nbsp;*HIV:
             <small>
-                {{$investigationDetails['8']}}
+                {{$ancAutoRemark['hiv']}}
             </small>
         @endif
-        @if($investigationDetails && isset($investigationDetails['10']) && (substr (strtolower($investigationDetails['10']), -3) == '+ve' || strtolower($investigationDetails['10']) == 'positive' || strpos(strtolower($investigationDetails['10']), 'positive') !== false))
-            &nbsp;HIV:
+        @if($ancAutoRemark && !empty($ancAutoRemark['vdrl']))
+            &nbsp;&nbsp;&nbsp;*VDRL:
             <small>
-                {{$investigationDetails['10']}}
+                {{$ancAutoRemark['vdrl']}}
             </small>
         @endif
-        @if(!empty($previousAncinvestigation->anc_vdrl) && $previousAncinvestigation->anc_vdrl == 'positive')
-            &nbsp;VDRL:
+        
+        @if($ancAutoRemark && !empty($ancAutoRemark['late_concept']))
+            &nbsp;&nbsp;&nbsp;*Late Conception:
+            <small>Yes</small>
+        @endif
+        @if($ancAutoRemark && !empty($ancAutoRemark['cesarean']))
+            &nbsp;&nbsp;&nbsp;*Previous:
             <small>
-                {{$previousAncinvestigation->anc_vdrl}}
+                {{$ancAutoRemark['cesarean']. ' - LSCS'}}
             </small>
         @endif
-        @if(!empty($previousAncinvestigation->investigation_growth_fbs) && $previousAncinvestigation->investigation_growth_fbs > 100)
-            &nbsp;FBS:
+        @if($ancAutoRemark && !empty($ancAutoRemark['position']))
+            &nbsp;&nbsp;&nbsp;*Position:
             <small>
-                {{$previousAncinvestigation->investigation_growth_fbs}}
+                {{$ancAutoRemark['position']}}
             </small>
         @endif
-        @if(!empty($previousAncinvestigation->investigation_growth_pp2bs) && $previousAncinvestigation->investigation_growth_pp2bs > 150)
-            &nbsp;PP2BS:
+        @if($ancAutoRemark && !empty($ancAutoRemark['liquor']))
+            &nbsp;&nbsp;&nbsp;*Liquor:
             <small>
-                {{$previousAncinvestigation->investigation_growth_pp2bs}}
+                {{$ancAutoRemark['liquor']}}
             </small>
         @endif
-        @php
-            $previousUTData = !empty($previousAncOe->utdata) ? $previousAncOe->utdata : [];
-            $previousPatientObs = !empty($previousAncPatientObs->child->child_data) ? $previousAncPatientObs->child->child_data : [];
-        @endphp
-        @foreach($previousPatientObs as $key => $value)
-            @if(isset($value->ho_type_value) && $value->ho_type_value == 'cesarean')
-            @php
-                $totalCesarean = $key;
-            @endphp
-            @endif
-        @endforeach
-        @if(!empty($totalCesarean))
-        <small>
-            &nbsp;Previous:
-            {{$totalCesarean.' LSCS'}}
-        </small>
+        @if($ancAutoRemark && !empty($ancAutoRemark['placenta']))
+            &nbsp;&nbsp;&nbsp;*Placenta:
+            <small>
+                {{$ancAutoRemark['placenta']}}
+            </small>
         @endif
-        @foreach($previousUTData as $key => $value)
-            @if(!empty($value->position_type) && ($value->position_type == 'breech' || $value->position_type == 'transverse' || $value->position_type == 'oblique'))
-                &nbsp;Presentation:
-                <small>
-                    {{$value->position_type}}
-                </small>
-            @endif
-            @if(!empty($value->liquor_type) && ($value->liquor_type == 'oligo' || $value->liquor_type == 'poly'))
-                &nbsp;Liquor:
-                <small>
-                    {{$value->liquor_type}}
-                </small>
-            @endif
-            @if(!empty($value->placenta))
-            @php
-                $placentaValue = '';
-            @endphp
-                &nbsp;Placenta:
-                <small>
-                    @foreach($value->placenta as $value)
-                    @php 
-                        $placentaValue = !empty($placentaValue) ? ', '.$placenta[$value] : $placenta[$value];
-                    @endphp
-                    {{$placentaValue}}
-                    @endforeach
-                </small>
-            @endif
-        @endforeach
+        
     </h5>
 </span>
 @if ($isGsac == true && empty($ancId))

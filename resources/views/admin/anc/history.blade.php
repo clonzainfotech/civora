@@ -38,6 +38,11 @@
         {
             border: 2px solid #b9afaf !important;
         }
+        .autoRemark
+        {
+            font-size: 1.3em;
+            font-weight: 400;
+        }
     </style>
 @stop
 

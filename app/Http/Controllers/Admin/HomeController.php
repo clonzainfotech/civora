@@ -343,11 +343,16 @@ class HomeController extends AdminController
             $categoryId = array_values(array_filter($category));
             // $appointment = $this->Appointment->whereIn('category_id',$category);
             $nowDate = Carbon::now()->format('Y-m-d');
-
+            $authUserId = Auth::user()->id;
             $appointment = $this->Appointment
                     ->where('is_procedure',0)
                     ->where('category_id', '!=', 7)
                     ->whereNotNull('arrival_time');
+            $appointment = $appointment->where(function($query) use($authUserId) {
+                    $query ->WhereHas('getPatientsDetails', function($query) use($authUserId) {
+                        $query->where('hospital_doctor_id', $authUserId);
+                    });
+                });
                     // ->orderBy('date','ASC')
                     // ->orderBy('id','DESC');
             $patientId = $request->patient_id;
@@ -436,6 +441,7 @@ class HomeController extends AdminController
             }
             return view('admin.anc_iui_ivf.index',compact('appointment','categoryData','referenceDoctor','doctor','hospitalDoctor','patients'));
         }catch(\Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }

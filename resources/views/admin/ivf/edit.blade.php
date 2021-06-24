@@ -1565,7 +1565,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-md-12 text-center">
                                                 <div class="radio is-conceived">
@@ -1634,7 +1633,26 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row present-ir-regular-data">
+                                            <div class="col-md-2">
+                                                <label class="vertical-form-label">
+                                                    Withdrawal By Medicine :
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="radio is-conceived">
+                                                    {{Form::radio("mh[present_withdrawal_medicine]",'yes',!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes' ? true : false,['id'=>'withdrawal_medicine_yes','class'=>'present-m'])}}
+                                                    <label for="withdrawal_medicine_yes">
+                                                        Yes
+                                                    </label>
 
+                                                    {{Form::radio("mh[present_withdrawal_medicine]",'no',!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'no' ? true : false,['id'=>'withdrawal_medicine_no','class'=>'present-m'])}}
+                                                    <label for="withdrawal_medicine_no">
+                                                        No
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="input-group">

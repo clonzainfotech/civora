@@ -1279,7 +1279,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="row present-ir-regular-data d-none">
+                                                <div class="col-md-2">
+                                                    <label class="vertical-form-label">
+                                                        Withdrawal By Medicine :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("mh[present_withdrawal_medicine]",'yes','',['id'=>'withdrawal_medicine_yes','class'=>'present-m'])}}
+                                                        <label for="withdrawal_medicine_yes">
+                                                            Yes
+                                                        </label>
+    
+                                                        {{Form::radio("mh[present_withdrawal_medicine]",'no',true,['id'=>'withdrawal_medicine_no','class'=>'present-m'])}}
+                                                        <label for="withdrawal_medicine_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="input-group">

@@ -712,6 +712,9 @@
                                 @else
                                     Regular, Moderate, Painless
                                 @endif
+                                @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
+                                    | Withdrawal by Medicine 
+                                @endif
                             </th>
                         </tr>
                         @if(!empty($mh->same_past) && $mh->same_past == 'exit')
@@ -730,6 +733,9 @@
                                         | {{ !empty($mh->present_month) ? $mh->present_month : ''}}
                                     @else
                                         Regular, Moderate, Painless
+                                    @endif
+                                    @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
+                                        | Withdrawal by Medicine 
                                     @endif
                                 </th>
                             </tr>

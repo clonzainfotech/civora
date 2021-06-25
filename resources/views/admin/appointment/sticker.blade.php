@@ -43,11 +43,27 @@ td{
 .w-12{
     width: 11rem;
 }
+.label-table
+{
+    border: 1px solid;
+    padding: 4% 45%;
+    border-radius: 25px;
+}
 /* width: 50%;
     height: auto;
     vertical-align: initial; */
 
 </style>
+@if(isset($is_label) && $is_label == 1)
+<table id="sticker-table" class="sticker-table label-table">
+    <tbody>
+        <tr>
+            <td>gdfg</td>
+        </tr>
+    </tbody>
+</table>
+@else
+
 <table id="sticker-table" class="sticker-table">
     <tbody>
         <tr>
@@ -169,3 +185,4 @@ td{
         </tr>
     </tbody>
 </table>
+@endif

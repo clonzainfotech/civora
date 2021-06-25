@@ -797,7 +797,8 @@ class AppointmentController extends AdminController
                         $ivfData = json_decode($ivfHistory->description);
                         
                             $ivfData->follow_up = Carbon::parse($newFollowUpDate)->format('D d M Y');
-                            // dd($ivfData);
+                            $ivfData->transfer->follow_up = Carbon::parse($newFollowUpDate)->format('D d M Y');
+                            
                             $ivfHistory->description = json_encode($ivfData);
 
                             $ivfHistory->save();
@@ -869,28 +870,43 @@ class AppointmentController extends AdminController
     */
     public function sticker(Request $request)
     {
-        $is_indoor = $request->is_indoor;
-        $appointmentId = decrypt($request->appointmentId);
-        $appointment = $this->Appointment
-            ->with('getPatientsDetails','getPatientsDetails.getReferenceDoctor')
-            ->where('id',$appointmentId)
-            ->first();
-            if($request->is_indoor == 1){
-                $indoorBook = $this->IndoorBook->wherePatientId($appointment->getPatientsDetails['id'])->first();
-                $appointment->date =  $request->date;
-            }
-        $gender = 'Male';
-        if($appointment->getPatientsDetails['gender']==2)
+        if(!isset($request->is_label))
         {
-            $gender = 'Female';
+
+            $is_indoor = $request->is_indoor;
+            $appointmentId = decrypt($request->appointmentId);
+            $appointment = $this->Appointment
+                ->with('getPatientsDetails','getPatientsDetails.getReferenceDoctor')
+                ->where('id',$appointmentId)
+                ->first();
+                if($request->is_indoor == 1){
+                    $indoorBook = $this->IndoorBook->wherePatientId($appointment->getPatientsDetails['id'])->first();
+                    $appointment->date =  $request->date;
+                }
+            $gender = 'Male';
+            if($appointment->getPatientsDetails['gender']==2)
+            {
+                $gender = 'Female';
+            }
+            $appointment->gender = $gender;
+            $qrcode=QrCode::size(500)
+                ->format('png')
+                ->generate(public_path('images/qrcode.png'));
+            return response()->json([
+                View::make('admin.appointment.sticker', compact('appointment','qrcode','is_indoor'))->render()
+            ]);
         }
-        $appointment->gender = $gender;
-        $qrcode=QrCode::size(500)
-            ->format('png')
-            ->generate(public_path('images/qrcode.png'));
-        return response()->json([
-            View::make('admin.appointment.sticker', compact('appointment','qrcode','is_indoor'))->render()
-        ]);
+        else
+        {
+            $procedure_name = $request->procedure_name;
+            $label_name = $request->label_name;
+            $is_label = 1;
+            return response()->json([
+                View::make('admin.appointment.sticker', compact('procedure_name','label_name','is_label'))->render()
+            ]);
+        }
+
+        
     }
 
      /**

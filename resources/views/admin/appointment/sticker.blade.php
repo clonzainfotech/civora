@@ -48,8 +48,8 @@ td{
 {
     border: 1px solid;
     /* padding: 4% 45%; */
-    padding-bottom:2%;
-    padding-top: 2%; 
+    padding-bottom:3%;
+    padding-top: 3%; 
     padding-left: 5%;
     border-radius: 25px;
     text-align: left;
@@ -57,6 +57,7 @@ td{
 .font-7
 {
     font-size: 4em;
+    font-weight: bold;
 }
 .pro_name
 {

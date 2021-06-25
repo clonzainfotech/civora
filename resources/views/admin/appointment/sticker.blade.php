@@ -56,7 +56,7 @@ td{
 }
 .font-7
 {
-    font-size: 5em;
+    font-size: 4em;
 }
 .pro_name
 {
@@ -72,11 +72,7 @@ td{
 @if(isset($is_label) && $is_label == 1)
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
 <div class="label-table">
-    @php
-        $patientName = explode(' ',$label_name);
-        // $middleName = substr($patientName[1], 0, 1);
-    @endphp
-    <div><span class="font-7">{{ucwords(strtolower($patientName[0].' '.$patientName[1][0].'. '.$patientName[2]))}}</span><span class="pro_name">({{$procedure_name}})</span></div>
+    <div><span class="font-7">{{ucwords(strtolower($label_name))}}</span><span class="pro_name">({{$procedure_name}})</span></div>
 </div>
 @else
 

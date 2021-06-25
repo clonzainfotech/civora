@@ -78,6 +78,8 @@
                         <a href="javascript:void(0)" class="btn btn-primary btn-sm change-hormon change-hormon-{{$key}} ivf-payment-font" data-id={{$key}} data-amount={{$row->total}} data-categoryid={{$row->charge_type}} data-hormon={{encrypt($row->id)}}>Change</a>
                         <a href="javascript:void(0)" class="btn btn-primary btn-sm save-hormon save-hormon-{{$key}} ivf-payment-font d-none" data-id={{$key}} data-amount={{$row->total}} data-categoryid={{$row->charge_type}} data-hormon={{encrypt($row->id)}}>Save</a>
                     @endif
+                    <a href="javascript:void(0)" class="btn btn-primary btn-sm receipt-hormon ivf-payment-font"  data-hormon={{encrypt($row->id)}}>Print</a>
+
                 </td>
             </tr>
         @empty

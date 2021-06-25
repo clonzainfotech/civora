@@ -1,37 +1,58 @@
+
 <style type="text/css">
-    .print-invoice-table, .invoice-header, .invoice-receipt, .invoice-data {
+    .print-deposit-table, .deposit-header, .deposit-receipt, .deposit-data {
         font-family: 'Montserrat', Arial, Tahoma, sans-serif;
         width: 100%;
     }
-    .invoice-header,.invoice-data{
+    .deposit-header,.deposit-data{
         border: 1px solid #ddd;
     }
-
-    .invoice-width {
+    .print-deposit-table .deposite-receipt {
+        width:100%;
+    }
+    .deposit-width {
         width: 100%;
     }
-    .invoice-hospital{
+    .deposit-hospital{
         height: 50px;
         font-size: 28px;
         font-weight: 900;
     }
-    .invoice-address{
+    .deposit-address{
         text-align: center;
         height: 45px;
     }
 
-    .invoice-receipt {
+    .deposit-receipt {
         background-color: #ddd;
     }
 
-    .invoice-receipt-th {
+    .deposit-receipt-th {
         line-height: 15px;
         font-size: 18px;
         font-weight: 900;
+        text-transform: uppercase;
+        background-color: darkgrey;
     }
 
-    .invoice-data {
+    .deposit-data {
         padding: 10px 10px;
+    }
+    .deposit-data .deposit-patient-name {
+        text-transform: capitalize;
+    }
+
+    .deposit-data .hospital-name {
+        text-transform: uppercase;
+    }
+    .deposit-data tr td h4{
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .deposit-data tr td h3{
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
     }
 
     .text-center {
@@ -46,7 +67,7 @@
         padding: 10px 10px;
     }
 
-    .invoice td {
+    .deposit td {
         height: 25px;
         font-size: 14px;
         padding: 10px 10px;
@@ -62,66 +83,93 @@
     }
 
 </style>
-<table id="print-invoice-table" class="print-invoice-table">
+
+<table id="print-deposit-table" class="print-deposit-table">
     <tbody>
-    <br />
-    <br />
-    <br />
-    <br />
-        <tr>
-            <td>
-                <table class="invoice-receipt" cellpadding="0" cellspacing="0">
-                    <thead>
+    <tr>
+        <td>
+            <table class="deposit-header invoice">
+                <thead>
+                    @php
+                        $hAddress = hospitalAddress();
+                    @endphp
+                <tr class="deposit-hospital">
+                    <th class="text-center">{{strtoupper(config('app.hospitalname1'))}}</th>
+                </tr>
+                <tr class="deposit-address">
+                    <td>{{$hAddress->address}}</td>
+                </tr>
+                <tr class="deposit-address">
+                    <td>Email: {{$hAddress->email}}</td>
+                </tr>
+                <tr class="deposit-address">
+                    <td>Ph.No: {{$hAddress->mobile}}</td>
+                </tr>
+                </thead>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="deposite-receipt" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="deposit-receipt-th text-center">Receipt</th>
+                </tr>
+                </thead>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="deposit-data deposit" cellpadding="0" cellspacing="0">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="2" class="text-right">Date : {{$hormon->created_at->format('d-m-Y')}}</td>
+                </tr>
+                    @if($hormon->charge_type == 1)
                         <tr>
-                            <th class="invoice-receipt-th text-center">HORMON</th>
-                        </tr>
-                    </thead>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table class="invoice-data invoice" cellpadding="0" cellspacing="0">
-                    <thead>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Patient Name :</td>
-                            <td>{{ucwords(strtolower($patientname[0]))}}</td>
-                        </tr>
-                         @if($hormon->charge_type == 1)
-                        <tr>
-                            <td>Charge Type</td>
-                            <td>HORMON</td>
+                            <td>Charge Type : <b>HORMON</b></td>
                         </tr>
                          <tr>
-                            <td>Injection</td>
-                            <td>{{$hormon->injection}}</td>
+                            <td>Injection : {{$hormon->injection}}</td>
                         </tr>
-                        @elseif($hormon->charge_type == 2)
+                    @elseif($hormon->charge_type == 2)
                         <tr>
-                            <td>Charge Type</td>
-                            <td>IVF</td>
+                            <td>Charge Type : IVF</td>
                         </tr>
-                        @else
+                    @else
                         <tr>
-                            <td>Charge Type</td>
-                            <td>IUI </td>
+                            <td>Charge Type : IUI</td>
                         </tr>
-                        @endif
-                        <tr>
-                            <td>Refrence Doctor</td>
-                            <td>{{$doctor[0]}} </td>
-                        </tr>
-                        <tr>
-                            <td>Charge Amount</td>
-                            <td>
-                                 {{$hormon->amount}}
-                            </td>
-                        </tr>
-                    <tbody>
-                </table>
-            </td>
-        </tr>
+                    @endif
+                <tr>
+                    <td><h4>Received With Thanks From</h4></td>
+                </tr>
+                <tr>
+                    <td class="text-center deposit-patient-name"><h3>{{ucwords(strtolower($patientname->name))}}</h3></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>The Sum of Rs. {{$depositeWord}} as Deposit.</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center"><h3>{{$hormon->amount}}</h3></td>
+                </tr>
+                <tr>
+                    <td class="text-right hospital-name">For {{strtoupper(config('app.hospitalname1'))}}</td>
+                </tr>
+
+                <tr>
+                    <td class="text-center" colspan="2" style="border: 1px solid #000000"><h3>Thank You</h3></td>
+                </tr>
+                <tbody>
+            </table>
+        </td>
+    </tr>
     </tbody>
 </table>

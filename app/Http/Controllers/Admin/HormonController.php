@@ -191,46 +191,10 @@ class HormonController extends AdminController
                 if($ivfPaymentData->package <= $totalAmount){
                     $isCompleted = 1;
                 }
-                // $ivfPaymentNewData = $this->IvfPayment;
-                // $ivfPaymentNewData->patients_id = $hormon->patient_id;
-                // $patient = $this->OpdPatients->find($hormon->patient_id);
-                // $ivfPaymentNewData->patient_name = $patient->name;
-                // $ivfPaymentNewData->husband_name = $request->h_name;
-                // $ivfPaymentNewData->sonography_charge = $request->sonography_charge;
-                // $ivfPaymentNewData->ivf_lab_charge = $request->ivf_lab_charge;
-                // $ivfPaymentNewData->embroy_tranfer = $request->embryo_transfer_charge;
-                // $ivfPaymentNewData->embroy_freezing = $request->embryo_freezing;
-                // $ivfPaymentNewData->hystrocopy = $request->hystrocopy;
-                // $ivfPaymentNewData->icsi_ivf_charge = $request->icsi_ivf_charge;
-                // $ivfPaymentNewData->medical_medicines = $request->medical_medicines;
-                // // $ivfPaymentNewData->unconscious_charge = $request->unconscious_charge;
-                // $ivfPaymentNewData->anesthescis_doctor = $request->anesthescis_doctor;
-                // $ivfPaymentNewData->blood_report = $request->blood_report;
-                // $ivfPaymentNewData->tesa_pesa = $request->tesa_pesa;
-                // $ivfPaymentNewData->cycle_no = $ivfPaymentData->cycle_no;
-                // $ivfPaymentNewData->payment = $request->hcharge;
-                // $ivfPaymentNewData->package = $ivfPaymentData->package;
-                // $ivfPaymentNewData->payment_type = $request->payment_type;
-                // $ivfPaymentNewData->time = $ivfPaymentData->time;
-                // $ivfPaymentNewData->created_by = Auth::user()->id;
-                // $ivfPaymentNewData->visit = 2;
-                // $ivfPaymentNewData->remark = $request->remark;
-                // $ivfPaymentNewData->condition = $ivfPaymentData->condition;
-                // $ivfPaymentNewData->donor_charge = $request->donor_charge;
-                // $ivfPaymentNewData->is_completed = $isCompleted;
-                // $ivfPaymentNewData->created_at = Carbon::parse($request->date)->format('Y-m-d'.' '.date('H:i:s'));
-                // $ivfPaymentNewData->remaining_day = $request->remaining_day;
-
-                // $ivfPaymentNewData->total_payment = ($ivfPaymentData->package) - (($lastTotal == null) ? $hormon->amount : ($lastTotal + $hormon->amount));
-                // if ($request->remaining_day == '') {
-                //    $ivfPaymentNewData->remaining_date = null;
-                // }else{
-                //     $today = Carbon::now();
-                //     $next_date = Carbon::parse($today.$request->remaining_day."days")->format('Y-m-d');;
-                //     $ivfPaymentNewData->remaining_date = $next_date;
-                // }
-                // $ivfPaymentNewData->save();
+                
             }
+            $hormon->valuinword = $this->getWordOfNumber($hormon->amount);
+            $depositeWord = $hormon->valuinword;
             $patientname=$this->OpdPatients->where('id',$hormon->patient_id)->first();
             // print_r($patientname);die();
             if($request->isprint){
@@ -240,7 +204,7 @@ class HormonController extends AdminController
                     $data = View::make('admin.ivf.payment_preview', compact('ivfPayment'))->render();
                 }else{
                     $status = 1;
-                    $data = View::make('admin.appointment.hormon.hormon_preview', compact('hormon','patientname','doctor'))->render();
+                    $data = View::make('admin.appointment.hormon.hormon_preview', compact('hormon','patientname','doctor','depositeWord'))->render();
                 }
                 return response()->json([
                     'status' => $status,
@@ -463,6 +427,32 @@ class HormonController extends AdminController
             }
             return ['status'=>1];
         }catch(Exception $e){
+            abort(500);
+            return ['status'=>2];
+        }
+    }
+
+    public function getHormonReceipt(Request $request,$hormonId)
+    {
+        try{
+            $hormonId = decrypt($hormonId);
+            $hormon = $this->IndoorDeposit->whereId($hormonId)->first();
+            $status = 0;
+            if($hormon)
+            {
+                $patientname=$this->OpdPatients->where('id',$hormon->patient_id)->first();
+                $hormon->valuinword = $this->getWordOfNumber($hormon->amount);
+                $depositeWord = $hormon->valuinword;
+                $status = 1;
+                $data = View::make('admin.appointment.hormon.hormon_preview', compact('hormon','patientname','depositeWord'))->render();
+            }
+            return response()->json([
+                'status' => $status,
+                'data' => $data
+            ]);
+            
+        }
+        catch(Exception $e){
             abort(500);
             return ['status'=>2];
         }

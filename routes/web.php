@@ -111,6 +111,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('hormon/change-amount/{hormonId}','HormonController@hormonChangeAmount');
     Route::get('hormon/add','HormonController@create');
     Route::post('hormon/add','HormonController@store');
+    Route::get('hormon/receipt/{hormonId}','HormonController@getHormonReceipt');
+
     Route::get('get-hormon-data','HormonController@getHormonData');
 
     Route::get('appointment-sticker','AppointmentController@sticker');

@@ -240,8 +240,25 @@
                 });
             });
         });
+        $(document).on('click','.receipt-hormon',function(){
+            var hormonId = $(this).data('hormon');
+            $.ajax({
+                url:"{{URL::to('hormon/receipt')}}"+'/'+hormonId,
+                dataType: 'json',
+            }).done(function(data){
+                if(data.status == 1)
+                {
+                    w = window.open(window.location.href, "_blank");
+                    w.document.open();
+                    w.document.write(data.data);
+                    w.document.close();
+                    w.window.print();
+                }
+                
+            }).fail(function(error){
 
-
+            });
+        });
 
         function showConfirmMessage() {
             swal({

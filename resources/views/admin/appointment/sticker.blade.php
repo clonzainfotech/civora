@@ -1,3 +1,4 @@
+
 <style>
 @media print {
     #Header, #Footer { display: none !important; }
@@ -46,8 +47,22 @@ td{
 .label-table
 {
     border: 1px solid;
-    padding: 4% 45%;
+    /* padding: 4% 45%; */
+    padding-bottom:2%;
+    padding-top: 2%; 
+    padding-left: 5%;
     border-radius: 25px;
+    text-align: left;
+}
+.font-7
+{
+    font-size: 5em;
+}
+.pro_name
+{
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: 24px;
 }
 /* width: 50%;
     height: auto;
@@ -55,13 +70,14 @@ td{
 
 </style>
 @if(isset($is_label) && $is_label == 1)
-<table id="sticker-table" class="sticker-table label-table">
-    <tbody>
-        <tr>
-            <td>gdfg</td>
-        </tr>
-    </tbody>
-</table>
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<div class="label-table">
+    @php
+        $patientName = explode(' ',$label_name);
+        // $middleName = substr($patientName[1], 0, 1);
+    @endphp
+    <div><span class="font-7">{{ucwords(strtolower($patientName[0].' '.$patientName[1][0].'. '.$patientName[2]))}}</span><span class="pro_name">({{$procedure_name}})</span></div>
+</div>
 @else
 
 <table id="sticker-table" class="sticker-table">

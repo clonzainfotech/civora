@@ -596,6 +596,7 @@
         });
         $(document).on('click','.label-link',function(){
            label_name = $(this).data('name');
+           $('.procedure_name').val('');
         });
         $(document).on('click','.procedure-print',function(){
             var procedure_name = $('.procedure_name').val();

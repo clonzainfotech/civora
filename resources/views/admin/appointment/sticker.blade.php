@@ -56,7 +56,7 @@ td{
 }
 .font-7
 {
-    font-size: 4em;
+    font-size: 3.5em;
     font-weight: bold;
 }
 .pro_name

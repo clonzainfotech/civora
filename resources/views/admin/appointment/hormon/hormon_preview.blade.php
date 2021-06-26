@@ -20,7 +20,7 @@
     }
     .deposit-address{
         text-align: center;
-        height: 45px;
+        height: 25px;
     }
 
     .deposit-receipt {
@@ -36,7 +36,7 @@
     }
 
     .deposit-data {
-        padding: 10px 10px;
+        padding: 7px 10px;
     }
     .deposit-data .deposit-patient-name {
         text-transform: capitalize;
@@ -154,7 +154,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <h4>The Sum of Rs. {{$depositeWord}} as Deposit.</h4>
+                        <h4>The Sum of Rs. {{$depositeWord}}.</h4>
                     </td>
                 </tr>
                 <tr>

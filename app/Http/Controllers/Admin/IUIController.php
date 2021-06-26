@@ -1405,6 +1405,8 @@ class IUIController extends AdminController
             $iuiExtraVisit->treatment = json_encode($request->treatment);
             $iuiExtraVisit->save();
 
+            $now = Carbon::now()->format('Y-m-d');
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
             $appointmentTime = null;
             $followDate = date('Y-m-d',strtotime($followupDate));

@@ -114,7 +114,7 @@
     @section('content')
 @endif  
 <div class="main-print-anc-div">
-    @if($anc_print == '3')
+    @if(isset($anc_print) && $anc_print== '3')
         <div class="ivf-print-data">
             <div class="row mb-2 patient-detail">
                 <div class="col-md-12">

@@ -327,7 +327,7 @@
                                                             <td>{{$j == 1 && !empty($data->et_details) ? $data->et_details : '-'}}
                                                             </td>
                                                             <td>{{!empty($row->time) ? $row->time : '-'}}</td>
-                                                            <td>{{$historyData->remark}}
+                                                            <td>{{!empty($historyData->remark) ? $historyData->remark : ''}}
                                                                 @if($j == 1 && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
 {{--                                                                    <div class="col-md-1"><button class="btn btn-primary edit-visit-data btn-sm" data-id="{{encrypt($datarow->id)}}">Edit</button></div>--}}
                                                                 @endif

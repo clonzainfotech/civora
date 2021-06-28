@@ -716,10 +716,11 @@ class ANCController extends AdminController
             $ancAutoRemark = $this->getAutoRemark($patientsId);
 
             if($request->isprint){
+                $anc_print = !empty($request->isprint) ? $request->isprint : 0;
                 return response()->json([
                     'status'=>1,
                     'id' => encrypt($ancData->id),
-                    'data' => View::make('admin.anc.preview', compact('investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','patients','ancAutoRemark'))->render()
+                    'data' => View::make('admin.anc.preview', compact('investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','patients','ancAutoRemark','anc_print'))->render()
                 ]);
             }
             if($request->is_pdf == 1){

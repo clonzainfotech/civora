@@ -4635,10 +4635,27 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             Admission for
                         </label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
 
-                            {{Form::select("usg[termination_type]",$terminationtype,@$usg->termination_type,['class'=>'form-control'])}}
+                            {{Form::select("usg[termination_type]",$terminationtype,@$usg->termination_type,['class'=>'form-control termination_type'])}}
+                        </div>
+                    </div>
+                    @php
+                        $terminationTypeTermStatus = !empty($ancHistoryId) && !empty($usg->termination_type) && $usg->termination_type == 'Delivery' ? '' : 'd-none';
+                    @endphp
+                    <div class="{{'col-sm-2 termination_type_term '.$terminationTypeTermStatus}}">
+                        <div class="radio is-conceived">
+                            {{Form::radio("usg[termination_type_trem]",'full',!empty($ancHistoryId) && !empty($usg->termination_type_trem) && $usg->termination_type_trem == 'full' ? true : false,['id'=>'termination_term_yes','class'=>'termination_type_term'])}}
+                            <label for="termination_term_yes">
+                                Full Term
+                            </label>
+
+                            {{Form::radio("usg[termination_type_trem]",'pre',!empty($ancHistoryId) && !empty($usg->termination_type_trem) && $usg->termination_type_trem == 'pre' ? true : false,['id'=>'termination_term_no','class'=>'termination_type_term'])}}
+                            <label for="termination_term_no">
+                                Pre Term
+                            </label>
+                            
                         </div>
                     </div>
                     <div class="col-md-4">

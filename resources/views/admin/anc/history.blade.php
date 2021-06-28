@@ -101,6 +101,8 @@
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     {{-- <a class="btn btn-primary next-appointment text-white">Save & Next Appointment</a> --}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>
+                                    <button type="submit" class="btn btn-primary admission-print submit d-none" value="3">Admission Print</button>
+
                                     <a href="{{URL::to('anc')}}" class="btn btn-default">Cancel</a>
                                 </div>
                             {{Form::close()}}
@@ -241,9 +243,13 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             if(this.value==1){
                 formData.append('isprint', 1);
             }
+            
             if(this.value==2){
                 formData.append('is_pdf', 1);
                 $(this).prop('disabled',true);
+            }
+            if(this.value==3){
+                formData.append('isprint', 3);
             }
             ancFormData(formData);
         });

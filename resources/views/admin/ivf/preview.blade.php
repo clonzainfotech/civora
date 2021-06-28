@@ -1304,7 +1304,7 @@
             @endif
             <?php
             unset($treatment->medicinedata);
-        ?>
+            ?>
             {{-- treatment tab --}}
             @if(count((array)$treatment) > 0)
                 <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">

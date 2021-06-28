@@ -130,11 +130,6 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="#" class="label-link"  data-toggle="modal" data-target="#label-modal" data-name="{{$roomData->getPatientsDetails['name']}}">
-                                                            Label
-                                                        </a>
-                                                    </li>
-                                                    <li>
                                                         @if($dischargeCard == 0)
                                                             <a href="{{URL::to('indoor/discardcreate/'.encrypt($roomData->id))}}" class="dischargecard" >
                                                                 Discharge
@@ -415,40 +410,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="label-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog sticker-modal-width" role="document">
-            <div class="modal-content">
-                <!-- header -->
-                <div class="modal-header justify-content-center">
-                    <h4 class="title" id="next-appointment">Procedure Name</h4>
-                </div>
-                <!-- body -->
-                {{Form::open(['class'=>'form-inline','id'=>''])}}
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                Procedure
-                            </div>
-                            <div class="col-md-5">
-                                {{Form::text("procedure_name",'',['class'=>'form-control procedure_name','required'])}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <div class="col-md-8">
-                                <span class="form-error-msg procedure-date d-none">The date field is required.</span>
-                            </div>
-                        </div>
-                        <!-- footer -->
-                        <div class="modal-footer mt-3 procedure-modal-footer">
-                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary waves-effect procedure procedure-print">Print</button>
-                        </div>
-                    </div>
-                {{Form::close()}}
-            </div>
-        </div>
-    </div>
+    
 @stop
 
 @section('page-script')
@@ -594,31 +556,7 @@
                 $('#sticker-modal').modal('hide');
             });
         });
-        $(document).on('click','.label-link',function(){
-           label_name = $(this).data('name');
-           $('.procedure_name').val('');
-        });
-        $(document).on('click','.procedure-print',function(){
-            var procedure_name = $('.procedure_name').val();
-            
-            $('.procedure-date').addClass('d-none');
-            if(procedure_name == ''){
-                $('.procedure-date').removeClass('d-none');
-                return true;
-            }
-            $.ajax({
-                url: "{{URL::to('appointment-sticker')}}",
-                data:{procedure_name:procedure_name,label_name:label_name,'is_label':1},
-                dataType: 'json',
-            }).done(function(data) {
-                w = window.open(window.location.href,"_blank");
-                w.document.open();
-                w.document.write(data);
-                w.document.close();
-                w.window.print();
-                $('#label-modal').modal('hide');
-            });
-        });
+        
         function printDepositData(depositId) {
             $.ajax({
                 headers: {

@@ -53,7 +53,7 @@
                                             <td class="patient_name">{{strtolower($requests->getPatients['name'])}}</td>
                                             <td>
                                                 <a class="apt-approve" data-id="{{encrypt($requests->id)}}"><span class="badge is-bill badge-success">Approve</span></a>
-                                                <a class="apt-reject" data-id="{{encrypt($requests->id)}}"><span class="badge is-bill badge-danger">Reject</span></a>
+                                                <a class="apt-reject" data-id="{{encrypt($requests->id)}}" data-target="#reject-modal" data-toggle="modal"><span class="badge is-bill badge-danger">Reject</span></a>
                                             </td>
                                         </tr>
                                         @empty
@@ -65,6 +65,39 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+@stop
+@section('modal')
+    <div class="modal fade" id="reject-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- header -->
+                <div class="modal-header justify-content-center">
+                    <h4 class="title" id="next-appointment">Appointment Reject</h4>
+                </div>
+                <!-- body -->
+                {{Form::open(['class'=>'form-inline','id'=>'reject-form'])}}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-2 form-padding">
+                                    Reason:
+                                </div>
+                                <div class="col-md-8 form-padding">
+                                    {{Form::textarea('remark','',['class'=>'form-control remark w-inherit','placeholder'=>'Reason for Reject Appointment','rows'=>3])}}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="form-error-msg remark-error d-none">This Field is Required</span>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer w-100 justify-content-center">
+                        <button type="button" class="btn btn-primary waves-effect reject-apt" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default waves-effect ml-3" data-dismiss="modal">Close</button>
+                    </div>
+                {{Form::close()}}
             </div>
         </div>
     </div>
@@ -96,7 +129,15 @@
 
         $('.apt-reject').click(function () {
             apRequestId = $(this).data('id');
-
+        });
+        $('.reject-apt').click(function() {
+            $('.remark-error').addClass('d-none');
+            var reason = $('.remark').val();
+            if(reason == '')
+            {
+                $('.remark-error').removeClass('d-none');
+                return false;
+            }
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -104,6 +145,7 @@
                 url: 'appointment-request/'+ apRequestId +'/reject',
                 type: "POST",
                 dataType: 'json',
+                data:{reason:reason},
             }).done(function() {
                 location.reload();
             }).fail(function() {

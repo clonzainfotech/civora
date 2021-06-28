@@ -60,6 +60,7 @@ class AppointmentController extends ApiController
                             $currentTime = \Carbon\Carbon::now()->format('H:i:s');
                             $book = $value->is_book;
                             $status = $book == 0 ? 'Pending' : 'Rejected';
+                            $value->reason = $value->remark;
                             if($value->created_by){
                                 // if (strtotime($value->date) < strtotime($currentDate) && $value->is_done == 0) {
                                 //     $status = "Nsot Visited";

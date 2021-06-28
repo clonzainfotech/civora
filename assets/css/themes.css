@@ -2618,4 +2618,7 @@ input[type=number]::-webkit-outer-spin-button {
 {
     border: 1px solid;
 }
-
+.w-inherit
+{
+    width: inherit !important;
+}

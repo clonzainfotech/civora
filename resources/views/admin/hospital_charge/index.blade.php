@@ -3,10 +3,7 @@
 @section('title', 'Hospital Charges')
 @section('page-style')
 <style>
-.w-inherit
-{
-    width: inherit !important;
-}
+
 </style>
 
 @stop
@@ -119,6 +116,7 @@
                                 </div>
                             </div>
                         </div>
+                        <span class="form-error-msg charge-error"></span>
                     </div>
                     <!-- footer -->
                     <div class="modal-footer w-100 justify-content-center">

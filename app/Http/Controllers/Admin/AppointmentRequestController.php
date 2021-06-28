@@ -118,6 +118,7 @@ class AppointmentRequestController extends AdminController
             if($apRequestId) {
                 $appRequestData = $this->AppointmentRequest->whereId($apRequestId)->first();
                 $appRequestData->is_book = 2;
+                $appRequestData->remark = (!empty($request->reason)) ? $request->reason : '';
                 $appRequestData->save();
                 $this->storeAppointmentNotification($appRequestData->patients_id,0);
                 //$this->Notification::sendNotificationToPatients($apRequestId);

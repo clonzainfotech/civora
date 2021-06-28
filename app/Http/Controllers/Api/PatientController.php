@@ -83,7 +83,7 @@ class PatientController extends ApiController
         $get_token = $this->PatientToken->where('token', $token)->first();
         if ($get_token) {
             $user = OpdPatients::where('id', $get_token->patients_id)->first();
-            if ($user && empty($user->code)) {         
+            if ($user && !empty($user->code)) {         
                 $rule = [
                     'surname' => 'required',
                     'firstname' => 'required',

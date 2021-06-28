@@ -11,6 +11,7 @@
             <th>Other Number</th>
             <th>City, State</th>
             <th>Reference Doctor</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +40,10 @@
                 </td>
                 <td>{{$row->city .', ' . $row->getState['name']}}</td>
                 <td>{{$row->getReferenceDoctor['name']}}</td>
+                <td><a href="#" class="label-link font-bold"  data-toggle="modal" data-target="#label-modal" data-name="{{$row->name}}">
+                    Label
+                </a>
+                </a></td>
             </tr>
         @empty
             <td colspan='10' class="text-center patientdata">No records available</td>

@@ -470,7 +470,6 @@ class AppointmentController extends AdminController
             $appointment->patients_id = $updatePatient->id;
             $appointment->remark = $request->remark;
             $appointment->usg_status= $request->is_usg ? 1 : 0;
-            dd($request->hospital_doctor);
 
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by :$request->hospital_doctor;
 
@@ -487,7 +486,6 @@ class AppointmentController extends AdminController
 
             return;
         }else{
-            dd($request->hospital_doctor);
             $updatePatient->reference_doctor_id =  $patients->reference_doctor_id;
             $updatePatient->reference_doctor_pro_id =  $patients->reference_doctor_pro_id;
             $updatePatient->save();

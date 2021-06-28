@@ -58,6 +58,7 @@ class HospitalChargeController extends AdminController
                 $hospital_charge = $this->HospitalCharge;
                 $hospital_charge->title = $request->title;
                 $hospital_charge->charge = $request->charge;
+                $hospital_charge->created_by = Auth::user()->id;
                 $hospital_charge->save();
                 $data['status'] = 1;
             }
@@ -65,6 +66,7 @@ class HospitalChargeController extends AdminController
                 $hospital_charge = $this->HospitalCharge->find($request->charge_id);
                 $hospital_charge->title = $request->title;
                 $hospital_charge->charge = $request->charge;
+                $hospital_charge->updated_by = Auth::user()->id;
                 $hospital_charge->save();
                 $data['status'] = 0;
             }

@@ -106,7 +106,8 @@ class ReportController extends AdminController
             $category = $this->Category->pluck('name','id');
             $reportDatails = [];
             $reportDatails['category'] = '';
-            $reportDatails['doctor'] = 'Jaydev Dhameliya';
+            $reportDatails['doctor'] = '';
+            $allCategoryCount = [];
             if($request->ajax()){
 
 
@@ -118,6 +119,27 @@ class ReportController extends AdminController
                     $categoryReport = $categoryReport->WhereHas('getAppointment', function ($query) use ($fromdate, $todate) {
                         $query->whereBetween('date', [$fromdate, $todate]);
                     });
+                    if($request->reportType == 2)
+                    {
+                        $hospitalDoctorId = $request->hospital_doctor_id;
+                        $allCategoryCount = $this->AppointmentCharges
+                                        ->leftJoin('appointments','appointment_charges.appointment_id','appointments.id')
+                                        ->leftJoin('patients','appointments.patients_id','patients.id')
+                                        ->leftJoin('category','appointments.category_id','category.id')
+                                        ->whereBetween('appointments.date',[$fromdate, $todate])
+                                        ->WhereNull('appointments.deleted_at')
+                                        ->select('appointment_charges.*','appointments.category_id','category.name as category_name',DB::raw('count(appointments.category_id) as totalAppointment'))
+                                        ->groupBy('appointments.category_id');
+                        if($hospitalDoctorId)
+                        {
+                            $allCategoryCount = $allCategoryCount->where(function($query) use($hospitalDoctorId) {
+                                $query->whereHas('getAppointment.getPatientsDetails', function($query) use($hospitalDoctorId) {
+                                    $query->where('hospital_doctor_id', $hospitalDoctorId);
+                                });
+                            });
+                        }
+                        $allCategoryCount = $allCategoryCount->get();
+                    }
                 }
                 $categoryId = $request->categoryId;
                 if($categoryId){
@@ -139,21 +161,25 @@ class ReportController extends AdminController
                     $categoryReport = $categoryReport->get();
                     $reportDatails['total'] = $categoryReport->sum('netamount');
                     $reportDatails['count'] = $categoryReport->count();
+                    $reportDatails['allCategoryCount'] = $allCategoryCount;
                     $reportDatails['type'] = $request->reportType;
                     return response()->json([
-                        View::make('admin.report.category.preview', compact('categoryReport','reportDatails'))->render()
+                        View::make('admin.report.category.preview', compact('categoryReport','reportDatails','category'))->render()
                     ]);
                 }
+                
                 $reportDatails['total'] = $categoryReport->sum('netamount');
-                $categoryReport = $categoryReport->paginate(100);
                 $reportDatails['count'] = $categoryReport->count();
+                $reportDatails['allCategoryCount'] = $allCategoryCount;
+                $categoryReport = $categoryReport->paginate(100);
                 $reportDatails['type'] = $request->reportType;
                 return response()->json([
-                    View::make('admin.report.category.data',compact('categoryReport','reportDatails'))->render()
+                    View::make('admin.report.category.data',compact('categoryReport','reportDatails','category'))->render()
                 ]);
             }
             return view('admin.report.category.index',compact('category','hospitalDoctor'));
         }catch(Exception $e){
+            log::debug($e);
             abort(500);
         }
     }

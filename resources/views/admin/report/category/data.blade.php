@@ -75,7 +75,11 @@
                 <th>Total Patient</th>
             </tr>
             <tr>
+                @if(!empty($reportDatails['doctor']))
                 <th colspan="2">Doctor Name : {{$reportDatails['doctor']}}</th>
+                @else
+                <th colspan="2">OverAll Analysis</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -84,6 +88,25 @@
                     <td>{{$reportDatails['category']}}</td>
                     <td>{{$reportDatails['count']}}</td>
                 </tr>
+            @else
+                @if(!empty($reportDatails['allCategoryCount']))
+                    <?php $total = 0;?>
+                    @foreach($reportDatails['allCategoryCount'] as $row)
+                        <?php 
+                            $total = $total+$row->totalAppointment;
+                        ?>
+                        <tr>
+                            <td>{{$row->category_name}}</td>
+                            <td>{{$row->totalAppointment}}</td>
+                        </tr>
+                    @endforeach
+                    @if ($total > 0)
+                        <tr class="categorydata">
+                            <th class="bt-none">GrandTotal</th>
+                            <th class="grand-total-top-border">{{$total}}</th>
+                        </tr>
+                    @endif
+                @endif
             @endif
         </tbody>
     </table>

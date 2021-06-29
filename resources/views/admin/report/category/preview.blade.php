@@ -78,7 +78,7 @@ tr td th {
             <th colspan="5">{{strtoupper(config('app.hospitalname1'))}}</th>
         </tr>
         <tr>
-            <th>Doctor / Category Wise @if($reportDatails['type']==2) Summary @endif Report</th>
+            <th>@if(!empty($reportDatails['doctor']))Doctor /@endif Category Wise @if($reportDatails['type']==2) Summary @endif Report</th>
         </tr>
     </thead>
 </table>
@@ -139,7 +139,11 @@ tr td th {
             <th>Total Patient</th>
         </tr>
         <tr>
-            <th colspan="2">Doctor Name : {{$reportDatails['doctor']}}</th>
+            @if(!empty($reportDatails['doctor']))
+                <th colspan="2">Doctor Name : {{$reportDatails['doctor']}}</th>
+            @else
+                <th colspan="2">OverAll Analysis</th>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -148,6 +152,25 @@ tr td th {
                 <td>{{$reportDatails['category']}}</td>
                 <td>{{$reportDatails['count']}}</td>
             </tr>
+         @else
+            @if(!empty($reportDatails['allCategoryCount']))
+                <?php $total = 0;?>
+                @foreach($reportDatails['allCategoryCount'] as $row)
+                    <?php 
+                        $total = $total+$row->totalAppointment;
+                    ?>
+                    <tr>
+                        <td>{{$row->category_name}}</td>
+                        <td>{{$row->totalAppointment}}</td>
+                    </tr>
+                @endforeach
+                @if ($total > 0)
+                    <tr class="categorydata">
+                        <th class="bt-none">GrandTotal</th>
+                        <th class="grand-total-top-border">{{$total}}</th>
+                    </tr>
+                @endif
+            @endif
         @endif
     </tbody>
 @endif

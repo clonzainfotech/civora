@@ -742,7 +742,7 @@
                                  <div class="col-md-2">
                                     <div class="input-group form-padding">
                                         <span class="input-group-addon payment-form">Extra Charge : &nbsp;</span>
-                                        {{Form::number('extra_charge',(isset($ivfPaymentHistory) && !empty($ivfPaymentHistory->extra_charge)) ? $ivfPaymentHistory->extra_charge : '',['class'=>'form-control add_sum ivf_payment','id' => 'extra_charge','min'=>1,'onkeypress'=>"return event.charCode >= 48 && event.charCode <= 57",$is_readonly])}}
+                                        {{Form::number('extra_charge',(isset($ivfPaymentHistory) && !empty($ivfPaymentHistory->extra_charge)) ? $ivfPaymentHistory->extra_charge : '',['class'=>'form-control add_sum ivf_payment','id' => 'extra_charge','min'=>1,'onkeypress'=>"return event.charCode >= 48 && event.charCode <= 57"])}}
                                     </div>
                                     <span class="form-error-msg p-total-payment-extra_charge m-0"></span>
 
@@ -750,7 +750,7 @@
                                 <div class="col-md-2">
                                     <div class="input-group form-padding">
                                         <span class="input-group-addon payment-form">Discount : &nbsp;</span>
-                                        {{Form::number('discount',(isset($ivfPaymentHistory) && !empty($ivfPaymentHistory->discount)) ? $ivfPaymentHistory->discount : '',['class'=>'form-control p-total-payment add_sum ivf_payment','id' => 'discount','min'=>1,'onkeypress'=>"return event.charCode >= 48 && event.charCode <= 57",$is_readonly])}}
+                                        {{Form::number('discount',(isset($ivfPaymentHistory) && !empty($ivfPaymentHistory->discount)) ? $ivfPaymentHistory->discount : '',['class'=>'form-control p-total-payment add_sum ivf_payment','id' => 'discount','min'=>1,'onkeypress'=>"return event.charCode >= 48 && event.charCode <= 57"])}}
                                     </div>
                                 </div> 
                             </div>

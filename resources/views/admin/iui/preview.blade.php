@@ -1662,25 +1662,27 @@
                                                     $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                                     $firstCharacter = strtoupper(substr($mId, 0, 3));
                                                     if($firstCharacter == "INJ"){
-                                                        switch($row->medicine_time){
-                                                            case '1':
-                                                                $medicine_status = 'IV';
-                                                                break;
-                                                            case '2':
-                                                                $medicine_status = 'IM';
-                                                                break;
-                                                            case '3':
-                                                                $medicine_status = 'SC';
-                                                                break;
-                                                            case '4':
-                                                                $medicine_status = 'Oral';
-                                                                break;
-                                                            case '5':
-                                                                $medicine_status = 'P/V';
-                                                                break;
-                                                            case '6':
-                                                                $medicine_status = 'P/A';
-                                                                break;
+                                                        if(!empty($row->medicine_time)){
+                                                            switch($row->medicine_time){
+                                                                case '1':
+                                                                    $medicine_status = 'IV';
+                                                                    break;
+                                                                case '2':
+                                                                    $medicine_status = 'IM';
+                                                                    break;
+                                                                case '3':
+                                                                    $medicine_status = 'SC';
+                                                                    break;
+                                                                case '4':
+                                                                    $medicine_status = 'Oral';
+                                                                    break;
+                                                                case '5':
+                                                                    $medicine_status = 'P/V';
+                                                                    break;
+                                                                case '6':
+                                                                    $medicine_status = 'P/A';
+                                                                    break;
+                                                            }
                                                         }
                                                         $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
                                                         if($mData==$medicine_status) {
@@ -2609,25 +2611,27 @@
                                                     $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                                     $firstCharacter = strtoupper(substr($mId, 0, 3));
                                                     if($firstCharacter == "INJ"){
-                                                        switch($row->medicine_time){
-                                                            case '1':
-                                                                $medicine_status = 'IV';
-                                                                break;
-                                                            case '2':
-                                                                $medicine_status = 'IM';
-                                                                break;
-                                                            case '3':
-                                                                $medicine_status = 'SC';
-                                                                break;
-                                                            case '4':
-                                                                $medicine_status = 'Oral';
-                                                                break;
-                                                            case '5':
-                                                                $medicine_status = 'P/V';
-                                                                break;
-                                                            case '6':
-                                                                $medicine_status = 'P/A';
-                                                                break;
+                                                        if(!empty($row->medicine_time)){
+                                                            switch($row->medicine_time){
+                                                                case '1':
+                                                                    $medicine_status = 'IV';
+                                                                    break;
+                                                                case '2':
+                                                                    $medicine_status = 'IM';
+                                                                    break;
+                                                                case '3':
+                                                                    $medicine_status = 'SC';
+                                                                    break;
+                                                                case '4':
+                                                                    $medicine_status = 'Oral';
+                                                                    break;
+                                                                case '5':
+                                                                    $medicine_status = 'P/V';
+                                                                    break;
+                                                                case '6':
+                                                                    $medicine_status = 'P/A';
+                                                                    break;
+                                                            }
                                                         }
                                                         $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
                                                         if($mData==$medicine_status) {
@@ -3149,7 +3153,7 @@
                                     @if($row->visit != 1)
                                         @php
                                             
-                                            if(!empty($data->hcg->type))
+                                            if(!empty($data->hcg->type) && $data->hcg->type == 'yes')
                                             {
                                                 $hcgDataArray[] = (array)$data->hcg;
                                             }

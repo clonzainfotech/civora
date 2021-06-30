@@ -372,7 +372,7 @@ class AppointmentController extends ApiController
                             if(!empty($ivf->o_e)) {
                                 $reportsArr = json_decode($ivf->o_e, true);
                             }
-                            $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id));
+                            // $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id));
                             $reportsData[] = $reportsArr;
                         }
                         // else {
@@ -381,7 +381,12 @@ class AppointmentController extends ApiController
                                 $madicineData = null;
                                 $reportsArr = null;
                                 $reportsData[] = $reportsArr;
-                                $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1');
+                                $historyData = json_decode($ivfHistory->description);
+                                $collectionData = !empty($historyData->collection) ? $historyData->collection : [];
+                                if (in_array('transfer',$collectionData))
+                                {
+                                    $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_trasnfer=1');
+                                }
                             }
                             else {
                                 // $url = [];

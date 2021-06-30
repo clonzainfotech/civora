@@ -53,8 +53,10 @@ class EventController extends AdminController
             $rule = [
                 'title' => 'required',
                 'discription' => 'required',
-                'startDate' => 'required|date|after_or_equal:'. date('Y-m-d'),
-                'endDate' => 'required|date|after_or_equal:startDate',
+                'venue' => 'required',
+                'time' => 'required',
+                // 'startDate' => 'required|date|after_or_equal:'. date('Y-m-d'),
+                // 'endDate' => 'required|date|after_or_equal:startDate',
                 'event_picture' => 'nullable|image',
             ];
 
@@ -74,6 +76,8 @@ class EventController extends AdminController
             $event->title = $request->title;
             $event->created_by = Auth::user()->id;
             $event->discription = $request->discription;
+            $event->venue = $request->venue;
+            $event->time = $request->time;
             $event->start_date = Carbon::parse($request->startDate)->format('Y-m-d');
             $event->end_date = Carbon::parse($request->endDate)->format('Y-m-d');
             $event->status = 1;
@@ -145,8 +149,10 @@ class EventController extends AdminController
             $rule = [
                 'title' => 'required',
                 'discription' => 'required',
-                'startDate' => 'required|date|after_or_equal:'. date('Y-m-d'),
-                'endDate' => 'required|date|after_or_equal:startDate',
+                'venue' => 'required',
+                'time' => 'required',
+                // 'startDate' => 'required|date|after_or_equal:'. date('Y-m-d'),
+                // 'endDate' => 'required|date|after_or_equal:startDate',
                 'event_picture' => 'nullable|image',
                 'status' => 'required',
             ];
@@ -164,6 +170,8 @@ class EventController extends AdminController
             $event->title = $request->title;
             $event->created_by = Auth::user()->id;
             $event->discription = $request->discription;
+            $event->venue = $request->venue;
+            $event->time = $request->time;
             $event->start_date = Carbon::parse($request->startDate)->format('Y-m-d');
             $event->end_date = Carbon::parse($request->endDate)->format('Y-m-d');
              $event->status =$request->status;

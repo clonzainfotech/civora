@@ -56,6 +56,30 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    {{Form::text('venue',$event->venue,[
+                                        'class'=>'form-control venue',
+                                        'placeholder'=>'Venue',
+                                        'required'
+                                    ])}}
+                                </div>
+                                <span class="form-error-msg">
+                                    {{$errors->first('venue')}}
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{Form::text('time',(!empty($event->time)) ? \Carbon\Carbon::parse($event->time)->format('h:i a') : null,[
+                                        'class'=>'form-control time timepicker',
+                                        'placeholder'=>'Time',
+                                        'required'
+                                    ])}}
+                                </div>
+                                <span class="form-error-msg">
+                                    {{$errors->first('time')}}
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     {{Form::text('startDate',\Carbon\Carbon::parse($event->start_date)->format('D d M Y'),[
                                         'class'=>'form-control datetimepicker date startDate',
                                         'placeholder'=>'Start Date',
@@ -117,13 +141,13 @@
         height = img.naturalHeight;
         console.log(width,height);
         window.URL.revokeObjectURL( img.src );
-        if( width >= 1000 && height >= 600 ) {
+        // if( width >= 1000 && height >= 600 ) {
             form.submit();
-        }
-        else {
-            document.getElementById('image').innerHTML=" image doesn't look like the size we wanted.we require 1000 x 640 size image.";
-        return false;
-        }
+        // }
+        // else {
+        //     document.getElementById('image').innerHTML=" image doesn't look like the size we wanted.we require 1000 x 640 size image.";
+        // return false;
+        // }
         };
     }
     else {

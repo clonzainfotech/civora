@@ -68,6 +68,30 @@
                                                 </div> 
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
+                                                        {{Form::text('venue','',[
+                                                            'class'=>'form-control venue',
+                                                            'placeholder'=>'Venue',
+                                                            'required'
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('venue')}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        {{Form::text('time','',[
+                                                            'class'=>'form-control time timepicker',
+                                                            'placeholder'=>'Time',
+                                                            'required'
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('time')}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
                                                         {{Form::text('startDate',\Carbon\Carbon::now('Asia/Kolkata')->format('D d M Y'),[
                                                             'class'=>'form-control datetimepicker date startDate',
                                                             'placeholder'=>'Start Date',
@@ -127,13 +151,13 @@ $("form").submit( function( e ) {
                 height = img.naturalHeight;
             window.URL.revokeObjectURL( img.src );
 
-            if( width >= 1000 && height >= 600 ) {
+            // if( width >= 1000 && height >= 600 ) {
                 form.submit();
-            }
-            else {
-                document.getElementById('image').innerHTML=" image doesn't look like the size we wanted.we require 1000 x 600 size image.";
-        return false;
-            }
+        //     }
+        //     else {
+        //         document.getElementById('image').innerHTML=" image doesn't look like the size we wanted.we require 1000 x 600 size image.";
+        // return false;
+        //     }
         };
     }
     else { 
@@ -148,6 +172,13 @@ $("form").submit( function( e ) {
         time: false,
         weekStart: 1
     });
+    $('.timepicker').bootstrapMaterialDatePicker({
+                date: false,
+                shortTime: true,
+                format: 'hh:mm a',
+                switchOnClick: true,
+                clearButton: true,
+            });
     });
 </script>
 @stop

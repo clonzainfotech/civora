@@ -42,20 +42,13 @@
     </div>
 @stop
 @section('modal')
-    <div class="modal"
-         id="myModal">
-        <div class="modal-dialog modal-lg"
-             role="document"
-             style="width:1250px;">
+    <div class="modal"  id="EventModal">
+        <div class="modal-dialog modal-lg" role="document" style="width:1250px;">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h5 class="modal-title"
-                        id="myModal">Display Event</h5>
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close">
+                    <h5 class="modal-title" id="myModal">Display Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -81,11 +74,11 @@
 
             $(document).on('click','.popup img',function(){
                 var $src = $(this).attr("src");
-                $(".modal").fadeIn();
+                $("#EventModal").fadeIn();
                 $(".modal-body img").attr("src", $src);
             });
-            $(".close , #close").click(function () {
-                $(".modal").fadeOut();
+            $(document).on('click',"#EventModal .close, #EventModal #close" ,function () {
+                $("#EventModal").fadeOut();
             });
 
             getUserData(qstring);

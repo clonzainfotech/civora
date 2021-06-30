@@ -372,10 +372,16 @@ class AppointmentController extends ApiController
                             if(!empty($ivf->o_e)) {
                                 $reportsArr = json_decode($ivf->o_e, true);
                             }
-                            // $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id));
+                            $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id));
                             $reportsData[] = $reportsArr;
                         }
                         // else {
+                            //PickUp report
+                            $ivfPlanReport = $this->IvfPlanReport->where('patients_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->first();
+                            if($ivfPlanReport)
+                            {
+                                $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_pickup=1');
+                            }
                             $ivfHistory = $this->IvfHistory->where('patients_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->first();
                             if(!empty($ivfHistory)) {
                                 $madicineData = null;
@@ -383,13 +389,13 @@ class AppointmentController extends ApiController
                                 $reportsData[] = $reportsArr;
                                 $historyData = json_decode($ivfHistory->description);
                                 $collectionData = !empty($historyData->collection) ? $historyData->collection : [];
+                                //Transfer Report
                                 if (in_array('transfer',$collectionData))
                                 {
                                     $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_trasnfer=1');
                                 }
                             }
                             else {
-                                // $url = [];
                                 $madicineData = null;
                                 $reportsData = null;
                             }

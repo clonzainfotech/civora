@@ -231,12 +231,12 @@
                                             if(!empty($row->ho_term)){
                                                 $hoValue.= $row->ho_term  == 'full' ? 'FT' : 'PT';
                                             }
-                                            if(!empty($row->ho_type)){
-                                                if($row->ho_type_type == 'normal'){
+                                            if(!empty($row->ho_type_value)){
+                                                if($row->ho_type_value == 'normal'){
                                                     $hoValue.= 'ND';
-                                                }elseif($row->ho_type_type == 'cesarean'){
+                                                }elseif($row->ho_type_value == 'cesarean'){
                                                     $hoValue.= ' LSCS';
-                                                }elseif ($row->ho_type_type == 'instrumental'){
+                                                }elseif ($row->ho_type_value == 'instrumental'){
                                                     $hoValue.= ' Instrumental Delivery';
                                                 }
                                             }
@@ -443,12 +443,12 @@
                                             if(!empty($row->ho_term)){
                                                 $secondHoValue.= $row->ho_term  == 'full' ? 'FT' : 'PT';
                                             }
-                                            if(!empty($row->ho_type_type)){
-                                                if($row->ho_type_type == 'normal'){
+                                            if(!empty($row->ho_type_value)){
+                                                if($row->ho_type_value == 'normal'){
                                                     $secondHoValue.= 'ND';
-                                                }elseif($row->ho_type_type == 'cesarean'){
+                                                }elseif($row->ho_type_value == 'cesarean'){
                                                     $secondHoValue.= ' LSCS';
-                                                }elseif ($row->ho_type_type == 'instrumental'){
+                                                }elseif ($row->ho_type_value == 'instrumental'){
                                                     $secondHoValue.= ' Instrumental Delivery';
                                                 }
                                             }

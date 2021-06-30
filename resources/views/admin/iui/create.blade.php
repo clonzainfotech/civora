@@ -445,17 +445,17 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
-                                                        {{Form::radio("oh[child][child_data][1][ho_type]",'normal',true,['id'=>'normal'])}}
+                                                        {{Form::radio("oh[child][child_data][1][ho_type_value]",'normal',true,['id'=>'normal'])}}
                                                         <label for="normal">
                                                             Normal
                                                         </label>
 
-                                                        {{Form::radio("oh[child][child_data][1][ho_type]",'cesarean','',['id'=>'cesarean'])}}
+                                                        {{Form::radio("oh[child][child_data][1][ho_type_value]",'cesarean','',['id'=>'cesarean'])}}
                                                         <label for="cesarean">
                                                             Cesarean
                                                         </label>
 
-                                                        {{Form::radio("oh[child][child_data][1][ho_type]",'instrumental','',['id'=>'instrumental'])}}
+                                                        {{Form::radio("oh[child][child_data][1][ho_type_value]",'instrumental','',['id'=>'instrumental'])}}
                                                         <label for="instrumental">
                                                             Instrumental
                                                         </label>
@@ -814,17 +814,17 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
-                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type]",'normal',true,['id'=>'second_normal'])}}
+                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type_value]",'normal',true,['id'=>'second_normal'])}}
                                                         <label for="second_normal">
                                                             Normal
                                                         </label>
 
-                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type]",'cesarean','',['id'=>'second_cesarean'])}}
+                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type_value]",'cesarean','',['id'=>'second_cesarean'])}}
                                                         <label for="second_cesarean">
                                                             Cesarean
                                                         </label>
 
-                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type]",'instrumental','',['id'=>'second_instrumental'])}}
+                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_type_value]",'instrumental','',['id'=>'second_instrumental'])}}
                                                         <label for="second_instrumental">
                                                             Instrumental
                                                         </label>

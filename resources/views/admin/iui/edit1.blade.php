@@ -387,17 +387,17 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="radio is-conceived">
-                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type]",'normal',!empty($row->ho_type) && $row->ho_type == 'normal' ? true : false,['id'=>'normal_'.$key])}}
+                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type_value]",'normal',!empty($row->ho_type_value) && $row->ho_type_value == 'normal' ? true : false,['id'=>'normal_'.$key])}}
                                                     <label for={{'normal_'.$key}}>
                                                         Normal
                                                     </label>
 
-                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type]",'cesarean',!empty($row->ho_type) && $row->ho_type == 'cesarean' ? true : false,['id'=>'cesarean_'.$key])}}
+                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type_value]",'cesarean',!empty($row->ho_type_value) && $row->ho_type_value == 'cesarean' ? true : false,['id'=>'cesarean_'.$key])}}
                                                     <label for={{'cesarean_'.$key}}>
                                                         Cesarean
                                                     </label>
 
-                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type]",'instrumental',!empty($row->ho_type) && $row->ho_type == 'instrumental' ? true : false,['id'=>'instrumental_'.$key])}}
+                                                    {{Form::radio("oh[child][child_data][".$key."][ho_type_value]",'instrumental',!empty($row->ho_type_value) && $row->ho_type_value == 'instrumental' ? true : false,['id'=>'instrumental_'.$key])}}
                                                     <label for="{{'instrumental_'.$key}}">
                                                         Instrumental
                                                     </label>
@@ -834,17 +834,17 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="radio is-conceived">
-                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type]",'normal',!empty($row->ho_type) && $row->ho_type == 'normal' ? true : false,['id'=>'second_normal_'.$key])}}
+                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type_value]",'normal',!empty($row->ho_type_value) && $row->ho_type_value == 'normal' ? true : false,['id'=>'second_normal_'.$key])}}
                                                     <label for={{'second_normal_'.$key}}>
                                                         Normal
                                                     </label>
 
-                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type]",'cesarean',!empty($row->ho_type) && $row->ho_type == 'cesarean' ? true : false,['id'=>'second_cesarean_'.$key])}}
+                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type_value]",'cesarean',!empty($row->ho_type_value) && $row->ho_type_value == 'cesarean' ? true : false,['id'=>'second_cesarean_'.$key])}}
                                                     <label for={{'second_cesarean_'.$key}}>
                                                         Cesarean
                                                     </label>
 
-                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type]",'instrumental',!empty($row->ho_type) && $row->ho_type == 'instrumental' ? true : false,['id'=>'second_instrumental_'.$key])}}
+                                                    {{Form::radio("oh[second_marriage][child][child_data][".$key."][ho_type_value]",'instrumental',!empty($row->ho_type_value) && $row->ho_type_value == 'instrumental' ? true : false,['id'=>'second_instrumental_'.$key])}}
                                                     <label for="{{'second_instrumental_'.$key}}">
                                                         Instrumental
                                                     </label>

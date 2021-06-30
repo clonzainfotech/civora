@@ -2121,16 +2121,26 @@ class IVFController extends AdminController
                     'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
                 ]);
             }else{
+                $patientId = decrypt($request->patient_id);
+                $historyDate = $request->date;
+                $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                 if(isset($request->is_trasnfer) && $request->is_trasnfer == 1)
                 {
-                    $patientId = decrypt($request->patient_id);
-                    $historyDate = $request->date;
-                    $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                     $ivfData = $this->IvfHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     if($ivfData)
                     {
                         $transferReport = $this->IvfTransferReport->where('patient_id',$patientId)->where('cycle_no',$ivfData->cycle_no)->first();
                         return view('admin.ivf.transfer_report', compact('transferReport'));
+                    }
+                    return 'no record available';
+                }
+                elseif(isset($request->is_pickup) && $request->is_pickup == 1)
+                {
+                    $ivfReport = $this->IvfPlanReport->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
+                    if($ivfReport)
+                    {
+                        $printPreview = 1;
+                        return view('admin.ivf.ivf_plan_report_print', compact('ivfReport','printPreview'));
                     }
                     return 'no record available';
                 }

@@ -1096,9 +1096,9 @@ $(document).ready(function(){
                 '<input type=text name="oh[child][child_data][' + i + '][ho_term_details]" id="term_details_' + i + '" class="form-control" placeholder="Term Details">' +
             "</div>"+
             "<div class='col-md-3'><div class='radio is-conceived'>"+
-                '<input type=radio name="oh[child][child_data]['+i+'][ho_type]" value="normal" checked id="normal_'+i+'"><label for="normal_'+i+'">Normal</label>'+
-                '<input type=radio name="oh[child][child_data]['+i+'][ho_type]" value="cesarean" id="cesarean_' + i + '"><label for="cesarean_' + i + '">Cesarean</label>' +
-                '<input type=radio name="oh[child][child_data]['+i+'][ho_type]" value="instrumental" id="instrumental_'+i+'"><label for="instrumental_'+i+'">Instrumental</label>'+
+                '<input type=radio name="oh[child][child_data]['+i+'][ho_type_value]" value="normal" checked id="normal_'+i+'"><label for="normal_'+i+'">Normal</label>'+
+                '<input type=radio name="oh[child][child_data]['+i+'][ho_type_value]" value="cesarean" id="cesarean_' + i + '"><label for="cesarean_' + i + '">Cesarean</label>' +
+                '<input type=radio name="oh[child][child_data]['+i+'][ho_type_value]" value="instrumental" id="instrumental_'+i+'"><label for="instrumental_'+i+'">Instrumental</label>'+
             "</div></div>"+
             "<div class='col-md-3'><div class='radio is-conceived'>"+
                 '<input type=radio name="oh[child][child_data]['+i+'][ho_gender]" value="male" id="ho_male_'+i+'"><label for="ho_male_'+i+'">Male</label>'+
@@ -2533,9 +2533,9 @@ $(document).ready(function(){
                     '<input type=text name="oh[second_marriage][child][child_data][' + i + '][ho_term_details]" id="term_details_' + i + '" class="form-control" placeholder="Term Details">' +
                 "</div>"+
                 "<div class='col-md-3'><div class='radio is-conceived'>"+
-                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type]" value="normal" checked id="second_normal_'+i+'"><label for="second_normal_'+i+'">Normal</label>'+
-                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type]" value="cesarean" id="second_cesarean_' + i + '"><label for="second_cesarean_' + i + '">Cesarean</label>' +
-                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type]" value="instrumental" id="second_instrumental_'+i+'"><label for="second_instrumental_'+i+'">Instrumental</label>'+
+                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type_value]" value="normal" checked id="second_normal_'+i+'"><label for="second_normal_'+i+'">Normal</label>'+
+                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type_value]" value="cesarean" id="second_cesarean_' + i + '"><label for="second_cesarean_' + i + '">Cesarean</label>' +
+                    '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_type_value]" value="instrumental" id="second_instrumental_'+i+'"><label for="second_instrumental_'+i+'">Instrumental</label>'+
                 "</div></div>"+
                 "<div class='col-md-3'><div class='radio is-conceived'>"+
                 '<input type=radio name="oh[second_marriage][child][child_data]['+i+'][ho_gender]" value="male" id="second_ho_male_'+i+'"><label for="second_ho_male_'+i+'">Male</label>'+

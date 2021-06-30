@@ -1288,6 +1288,7 @@ class IVFController extends AdminController
             if($cycleData && $cycleData->cycle_status == 1){
                 if($ivfHistory && $ivfHistory->cycle_status == 1){
                     $isForm = true;
+                    $plan = $ivfHistory->plan;
                     $lastIvfHistory = json_decode($cycleData->description);
                     $protocolIvfHistoryData = $this->IvfHistory->wherePatientsId($id)->where('description->protocol',"NOT LIKE",'%[]%')->orderBy('id','DESC')->first();
                     if($protocolIvfHistoryData){
@@ -1397,7 +1398,8 @@ class IVFController extends AdminController
 
 
             $ivfHistory = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cycleNumber)->where('plan',$plan)->orderBy('id','asc')->get();
-            $triggerHistory = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cycleNumber)->where('plan',$plan)->whereNotNull('trigger_date')->orderBy('id','DESC')->first();
+            $triggerHistory = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cNo)->where('plan',$plan)->whereNotNull('trigger_date')->orderBy('id','DESC')->first();
+            // dd($plan);
             $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             $historySemenFreezing = $this->IvfHistory
                                 ->where('patients_id',$id)

@@ -347,12 +347,8 @@ class HomeController extends AdminController
             $appointment = $this->Appointment
                     ->where('is_procedure',0)
                     ->where('category_id', '!=', 7)
-                    ->whereNotNull('arrival_time');
-            $appointment = $appointment->where(function($query) use($authUserId) {
-                    $query ->WhereHas('getPatientsDetails', function($query) use($authUserId) {
-                        $query->where('hospital_doctor_id', $authUserId);
-                    });
-                });
+                    ->whereNotNull('arrival_time')
+                    ->where('seen_by',$authUserId);
                     // ->orderBy('date','ASC')
                     // ->orderBy('id','DESC');
             $patientId = $request->patient_id;

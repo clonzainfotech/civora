@@ -628,6 +628,7 @@ class IVFController extends AdminController
                         $ancData->c_o = $ivfFirstVisitData->c_o;
                         $ancData->o_e = json_encode($autoRemark);
                         $ancData->treatment = $ivfFirstVisitData->treatment;
+                        $ancData->edd = $ivf_mh_data->edd;
                         $ancData->save();
                         $isAnc = true;
                     }

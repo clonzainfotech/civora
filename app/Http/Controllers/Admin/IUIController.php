@@ -433,6 +433,7 @@ class IUIController extends AdminController
                     $ancData->h_o = $iuiPatientsData->h_o;
                     $ancData->c_o = $iuiPatientsData->c_o;
                     $ancData->o_e = json_encode($autoRemark);
+                    $ancData->edd = $iui_mh_data->edd;
                     $ancData->treatment = $iuiPatientsData->treatment;
                     $ancData->save();
                     $isAnc = true;

@@ -18,7 +18,7 @@ class EventController extends ApiController
         $token = $request->header('Authorization');
         if($token) {
             $today = Carbon::now()->format('Y-m-d');
-            $eventData = collect($this->Event::select('id','title','discription','event_picture','venue','time','start_date','end_Date')->where('end_date','>',$today)->where('status',1)->get())->map(function($q){
+            $eventData = collect($this->Event::select('id','title','discription','event_picture','venue','time','start_date','end_Date')->where('end_date','>=',$today)->where('status',1)->get())->map(function($q){
                 $q->event_picture = $q->event_picture ? url($q->event_picture) : null;
                 return $q;
             });

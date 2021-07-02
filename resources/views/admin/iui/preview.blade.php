@@ -3131,7 +3131,7 @@
                                         $inducing_agent = implode(',',$inducingAgentDataValue);
                                     }
                                 @endphp
-                                    @if(!empty($inducing_agent) && ($date < $appointmentDate) && (!empty($valueData->date) && ($date != $appointmentDate)))
+                                    @if(!empty($inducing_agent) && ($inducing_diff < $diff) && (!empty($date)) && ($date != $appointmentDate))
                                         <tr >
                                             <td>{{$date}}</td>
                                             <td>{{$inducing_diff}}</td>
@@ -3255,7 +3255,7 @@
                                         
                                     }
                                 @endphp
-                                    @if(!empty($inducing_agent) && ($date > $appointmentDate) && (!empty($valueData->date) && ($date != $appointmentDate)))
+                                    @if(!empty($inducing_agent) && ($inducing_diff > $diff) && (!empty($date)) && ($date != $appointmentDate))
                                         <tr  >
                                             <td>{{$date}}</td>
                                             <td>{{$inducing_diff}}</td>

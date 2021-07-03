@@ -25,10 +25,7 @@
         .anc-details-close{
             margin-top: -22px !important;
         }
-        .modal-lg
-        {
-            max-width: 1100px !important;
-        }
+        
         .sepreator
         {
             border-top: 1px solid black;
@@ -66,6 +63,16 @@
                     <div class="row">
                         <div class="col-md-12 col-lg-12">
                             <strong class="pr-3">ANC Previous Visit</strong>
+                            <ul class="header-dropdown col-md-12 align-right">
+                                <li class="w-50">
+                                    @if(!empty($getTotalAncNumber))
+                                    <li class="w-25">
+                                        {{Form::select("previous_anc_id",$getTotalAncNumber,'',['class'=>'form-control select-padding-0 anc_visit_id','placeholder'=>'Select Previous Anc.','data-class'=>'previous'])}}
+                                    </li>
+                                        {{-- <button class="btn btn-primary preview-file" data-class="previous" data-id="{{encrypt($firstANCData->id)}}">Previous ANC</button> --}}
+                                    @endif
+                                </li>
+                            </ul>
                             @if(count($date)>0)
                                 <?php
                                 $date = array_reverse($date);
@@ -82,7 +89,7 @@
                                     </label>
                                 @endforeach
                             @endif
-                            <a href="javascript:void(0)" class="preview-file mt-0">Preview all</a>
+                            <a href="javascript:void(0)" class="preview-file mt-0" data-class="current" data-id="{{encrypt($ancCurrent->id)}}">Preview all</a>
                         </div>
                     </div>
                 </div>
@@ -212,7 +219,8 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
     var ancQstring = '';
     var status = '1';
     var type = '1';
-    var appintmentDate = "{{$ancLastVisitData->created_at}}";
+    var ancStatus = 'current';
+    var anc_id = '';
     $(document).ready(function(){
         $(window).keydown(function(event){
             if(event.keyCode == 13) {
@@ -254,11 +262,32 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             ancFormData(formData);
         });
 
+        $(document).on('change','select.anc_visit_id',function(e){
+            e.preventDefault();
+            anc_id = $(this).val();
+            if(anc_id != '')
+            {
+                ancStatus = $(this).data('class');
+                $('.preview-file-modal').modal('hide');
+                $('.anc-details-data').html('');
+                $('.preview-file-modal').modal('show');
+                
+                ancQstring = 'patient_id='+patientsId+'&status='+status+'&type='+type+'&anc_id='+anc_id;
+                getANCHistoryData(ancQstring);
+            }
+            
+        });
         $(document).on('click','.preview-file',function(e){
             e.preventDefault();
+            anc_id = $(this).data('id');
+            ancStatus = $(this).data('class');
+            $('.preview-file-modal').modal('hide');
+            $('.anc-details-data').html('');
             $('.preview-file-modal').modal('show');
-            ancQstring = 'patient_id='+patientsId+'&appointment_date='+appintmentDate+'&status='+status+'&type='+type;
+            
+            ancQstring = 'patient_id='+patientsId+'&status='+status+'&type='+type+'&anc_id='+anc_id;
             getANCHistoryData(ancQstring);
+            
         });
 
         // $(document).on('click','.next-appointment-form',function(e){
@@ -324,7 +353,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
 
     $(document).on('click','.print-btn',function(){
         date = $(this).data('date');
-        qstring = 'patient_id='+patientsId+'&history_date='+date;
+        qstring = 'patient_id='+patientsId+'&history_date='+date+'&anc_id='+anc_id;
         getANCHistoryData(qstring);
     });
 
@@ -642,7 +671,15 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
                         var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
                         var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
                     }
-                    buttonHtml = ancPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+                    if(ancStatus == 'current')
+                    {
+                        buttonHtml = ancPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+
+                    }
+                    else{
+                        buttonHtml = ancPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+
+                    }
                     ancPreview = buttonHtml + data.data[i];
                     $('.anc-details-data').html(ancPreview);
                     ancPreview = ancPreview + '<div class="row sepreator"></div>';

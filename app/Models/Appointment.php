@@ -111,4 +111,16 @@ class Appointment extends BaseModel
         $status = $childNumber ? $childNumber : 0;
         return $status;
     }
+    public function getAppointmentDateANC()
+    {
+        $status = 0;
+        $anc = ANC::where('patients_id',$this->patients_id)
+                    ->whereDate('created_at','=',$this->date)
+                    ->first();
+        if($anc)
+        {
+            $status = 1;
+        }
+        return $status;
+    }
 }

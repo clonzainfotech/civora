@@ -472,6 +472,7 @@ class AppointmentController extends AdminController
             $appointment->usg_status= $request->is_usg ? 1 : 0;
 
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by :$request->hospital_doctor;
+            $appointment->is_new_anc = !empty($request->is_new_anc) ? $request->is_new_anc :0;
 
             $appointment->save();
             if($request->category){
@@ -509,7 +510,8 @@ class AppointmentController extends AdminController
             $appointment->usg_status= $request->is_usg ? 1 : 0;
             $appointment->remark = $request->remark;
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by : $request->hospital_doctor;
-
+            $appointment->is_new_anc = !empty($request->is_new_anc) ? $request->is_new_anc :0;
+            
             $appointment->save();
             // store on patients category table
             if($request->category){
@@ -733,6 +735,7 @@ class AppointmentController extends AdminController
             $appointment->updated_by = Auth::user()->id;
             $appointment->remark = $request->remark;
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by : $patients->hospital_doctor_id;
+            $appointment->is_new_anc = !empty($request->is_new_anc) ? $request->is_new_anc :0;
             $appointment->save();
             $newFollowUpDate = $appointment->date;
             $lastAppointment = $this->Appointment->where('date','<',$appointment->date)->where('patients_id',$patients->id)->orderBy('id','DESC')->first();

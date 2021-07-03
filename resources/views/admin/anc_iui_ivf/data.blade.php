@@ -52,7 +52,11 @@
                 @php
                     $categoryName = 'ANC';
                     $cName = 'ANC';
-                    $type = $row->getPatientsDetails->getAnc ? 'history' : 'next-appointment';
+                    $type = $row->getPatientsDetails->getAnc && $row->is_new_anc == 0? 'history' : 'next-appointment';
+                    if(($row->is_new_anc == 0 || $row->getAppointmentDateANC() == 1))
+                    {
+                        $type = 'history';
+                    }
                 @endphp
             @endif
             @if($categoryId == '4' || $categoryId == '3')
@@ -87,7 +91,11 @@
                 @php
                     $categoryName = 'ANC'; 
                     $cName = 'ANC';
-                    $type = $row->getPatientsDetails->getAnc ? 'history' : 'next-appointment';
+                    $type = $row->getPatientsDetails->getAnc && $row->is_new_anc == 0 ? 'history' : 'next-appointment';
+                    if(($row->is_new_anc == 0 || $row->getAppointmentDateANC() == 1))
+                    {
+                        $type = 'history';
+                    }
                 @endphp
             @endif
             @php
@@ -96,7 +104,7 @@
             <tr data-id="{{encrypt($row->getPatientsDetails['id'])}}" data-type="{{$type}}" data-catname="{{$cName}}"
                 class="anc-iui-ivf-edit appointmentdata
                     @if($categoryId != '4' && $categoryId != '3' && $categoryId != '1' && $categoryId != '2' && $categoryId != '17')
-                        {{$row->getPatientsDetails->getAnc ? 'old-anc' : 'new-anc'}}
+                        {{$row->getPatientsDetails->getAnc &&  $row->is_new_anc == 0  ? 'old-anc' : 'new-anc'}}
                     @endif
                     @if($categoryId == '4' || $categoryId == '3')
                         {{$row->getPatientsDetails->getIui ? 'old-iui' : 'new-iui'}}

@@ -141,6 +141,7 @@
 
                                         <div class="col-md-3 col-sm-12">
                                             <div class="form-group">
+                                                {{Form::hidden('is_new_anc','0',['class'=>'form-control is_new_anc'])}}
                                                 {{Form::select('category',$category,!empty($patientData->getAppointment['category_id']) ? $patientData->getAppointment['category_id'] : null,['class'=>'form-control select-padding-0 category_data','placeholder'=>'Select Category'])}}
                                             </div>
                                             <span class="form-error-msg">
@@ -811,7 +812,26 @@
         }).fail(function(error) {
         });
     }
-
+    $('select[name="category"]').on('change', function(){
+        $('.is_new_anc').val(0);
+        if($(this).val() == 5)
+        {
+            ancConfirmMessage();
+        }
+    })
+    function ancConfirmMessage() {
+            swal({
+                title: "Are you sure?",
+                text: "Is this new Pregnency?",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#00cfd1",
+                confirmButtonText: "Yes",
+                closeOnConfirm: true
+            }, function () {
+                $('.is_new_anc').val(1);
+            });
+        }
     function proReferenceDoctor(value){
         $('.ref-pro-doctor-data').addClass('d-none');
         if(value == 'other'){

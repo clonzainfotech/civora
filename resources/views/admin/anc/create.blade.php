@@ -34,13 +34,20 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
         <div class="col-md-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Anc Appointment</strong>
-                    </h2>
-                    <ul class="header-dropdown">
-
+                    <h2><strong>ANC Previous Visit</strong></h2>
+                    
+                    <ul class="header-dropdown col-md-12 align-right">
+                        <li class="w-50">
+                            @if(!empty($getTotalAncNumber))
+                                <li class="w-25">
+                                    {{Form::select("previous_anc_id",$getTotalAncNumber,'',['class'=>'form-control select-padding-0 anc_visit_id','placeholder'=>'Select Previous Anc.','data-class'=>'previous'])}}
+                                </li>
+                            @endif
+                        </li>
                     </ul>
                 </div>
                 <div class="body">
+                    
                     <div class="col-md-12 col-lg-12">
                         @if(Session::has('msg'))
                             <div class="alert alert-danger">
@@ -979,7 +986,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-5">
+                                            <div class="col-sm-3">
                                                 <div class="form-group">
                                                     {{Form::text("mh[age_of_manopause]",'',['class'=>'form-control','placeholder'=>'Age Of Manopause'])}}
                                                 </div>
@@ -3376,6 +3383,31 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
         </div>
     </div>
     </div>
+    <div class="modal fade preview-file-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header header-bottom-border">
+
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="modal-title" id="myModalLabel">ANC History</h5>
+                    </div>
+                </div>
+                    <button type="button" class="close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="anc-details-data">
+                    </div>
+                </div>
+
+                <div class="modal-footer footer-top-border text-right d-inline-block">
+                    <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 @section('page-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
@@ -3387,6 +3419,9 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
         var durationData = @json($durationOfData);
         var code = '';
         var isChangeCategory = 0;
+        var ancQstring = '';
+        var patientsId = $('#pID').val();
+        var prevoiusAnc_id = '';
         $(function () {
             //Datetimepicker plugin
             $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -3638,6 +3673,59 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
             }
             $('.is-gynec').val(isGynec);
            
+        }
+        $(document).on('click','.print-btn',function(){
+            date = $(this).data('date');
+            qstring = 'patient_id='+patientsId+'&history_date='+date;
+            getANCHistoryData(qstring);
+        });
+        $(document).on('change','select.anc_visit_id',function(e){
+            e.preventDefault();
+            prevoiusAnc_id = $(this).val();
+            if(prevoiusAnc_id != '')
+            {
+                ancStatus = $(this).data('class');
+                $('.preview-file-modal').modal('hide');
+                $('.anc-details-data').html('');
+                $('.preview-file-modal').modal('show');
+                
+                ancQstring = 'patient_id='+patientsId+'&anc_id='+prevoiusAnc_id;
+                getANCHistoryData(ancQstring);
+            }
+            
+        });
+        function getANCHistoryData(ancQstring){
+            $.ajax({
+                url:'{{URL::to("get-anc-details")}}?'+ancQstring,
+                type:'GET',
+                dataType:'json'
+            }).done(function(data){
+                if(data.anc_type == 1){
+                    var ancPreview = $('.anc-details-data').html();
+                    var buttonHtml = '';
+                    var previewData = '';
+                    for(i=0; i<data.data.length;i++)
+                    {
+                        if(typeof data.date[i] != 'undefined'){
+                            var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                            var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                        }
+                        buttonHtml = ancPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+                        ancPreview = buttonHtml + data.data[i];
+                        $('.anc-details-data').html(ancPreview);
+                        ancPreview = ancPreview + '<div class="row sepreator"></div>';
+                    }
+                }
+                if(data.anc_type == 2){
+                    w = window.open(window.location.href, "_blank");
+                    w.document.open();
+                    w.document.write(data.data);
+                    w.document.close();
+                    w.window.print();
+                }
+            }).fail(function(error){
+
+            });
         }
         var medicinesValue = @json($medicines);
         var weekData = @json($weekData);

@@ -113,7 +113,7 @@
 @if(isset($printPreview) && $printPreview != 0)
     @section('content')
 @endif  
-<div class="main-print-anc-div">
+<div class="main-print-anc-div mb-5">
     @if(isset($anc_print) && $anc_print== '3')
         <div class="ivf-print-data">
             <div class="row mb-2 patient-detail">

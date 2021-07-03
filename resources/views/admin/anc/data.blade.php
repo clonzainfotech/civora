@@ -26,7 +26,7 @@
     @forelse($appointment as $row)
         @php
             $checkAnc = '';
-            if($row->getPatientsDetails->getAnc){
+            if($row->getPatientsDetails->getAnc && $row->is_new_anc == 0){
                 $checkAnc = 'selected-tr anc';
             }
             $name = ucwords(strtolower($row->getPatientsDetails['name']));

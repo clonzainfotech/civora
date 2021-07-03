@@ -2496,3 +2496,11 @@ function terminationTypeTerm(value)
     }
 
 }
+$(document).on('click','.anc-remark, .gynec-remark',function ()
+{
+    $(this).val(0);
+    if($(this).prop('checked'))
+    {
+        $(this).val(1);
+    }
+})

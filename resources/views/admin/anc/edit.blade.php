@@ -897,11 +897,23 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                 @endif
             </div>
             <div class="row">
+                <div class="col-md-2 checkbox">
+                    {{Form::checkbox('is_patient_remark',!empty($oe->is_patient_remark) && $oe->is_patient_remark == '1' ? '1' : '0',!empty($oe->is_patient_remark) && $oe->is_patient_remark == 1 ? true : false,[
+                        'id'=>'is_patient_remark',
+                        'class'=>'gynec-remark'
+                    ])}}
+                    <label for="is_patient_remark">
+                      
+                    </label>
+                </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         {{Form::textarea('oe[remark]', !empty($oe->remark) ? $oe->remark : null, ['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"><span class="font-12 text-danger">*If check Patient's Reamrk then remark is display in  patient's Application*</span></div>
             </div>
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="headingThree_1">
@@ -3375,11 +3387,23 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-2 checkbox">
+                        {{Form::checkbox('oe[is_patient_remark]',!empty($oe->is_patient_remark) && $oe->is_patient_remark == '1' ? '1' : '0',!empty($oe->is_patient_remark) && $oe->is_patient_remark == 1 ? true : false,[
+                            'id'=>'is_patient_remark',
+                            'class'=>'anc-remark'
+                        ])}}
+                        <label for="is_patient_remark">
+                          Patient's Remark
+                        </label>
+                    </div>
+                    <div class="col-md-10">
                         <div class="form-group">
                             {{Form::textarea('oe[remark]', !empty($oe->remark) ? $oe->remark : null, ['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><span class="font-12 text-danger">*If check Patient's Reamrk then remark is display in  patient's Application*</span></div>
                 </div>
             </div>
         </div>

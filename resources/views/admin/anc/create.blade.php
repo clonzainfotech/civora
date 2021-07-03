@@ -1971,11 +1971,23 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-2 checkbox">
+                                                {{Form::checkbox('oe[is_patient_remark]','0','',[
+                                                    'id'=>'is_patient_remark',
+                                                    'class'=>'anc-remark'
+                                                ])}}
+                                                <label for="is_patient_remark">
+                                                  Patient's Remark
+                                                </label>
+                                            </div>
+                                            <div class="col-md-8">
                                                 <div class="form-group">
                                                     {{Form::textarea('oe[remark]', null, ['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12"><span class="font-12 text-danger">*If check Patient's Reamrk then remark is display in  patient's Application*</span></div>
                                         </div>
                                     </div>
                                 </div>

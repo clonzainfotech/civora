@@ -668,11 +668,20 @@
                     <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
                         <tbody>
                             <tr>
-                                @if(!empty($oe->remark))
-                                <th class="text-danger">
-                                    <span class="anc-label ">O/E Remark :</span>
-                                    {{$oe->remark}}
-                                </th>
+                                @if(isset($patients_remark))
+                                    @if($patients_remark == 1 && !empty($oe->remark))
+                                    <th class="text-danger">
+                                        <span class="anc-label ">O/E Remark :</span>
+                                        {{$oe->remark}}
+                                    </th>
+                                    @endif
+                                @else
+                                    @if(!empty($oe->remark))
+                                    <th class="text-danger">
+                                        <span class="anc-label ">O/E Remark :</span>
+                                        {{$oe->remark}}
+                                    </th>
+                                    @endif
                                 @endif
                             </tr>
                             <tr>

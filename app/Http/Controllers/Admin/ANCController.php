@@ -1524,7 +1524,7 @@ class ANCController extends AdminController
                 $ancData = $this->ANC->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                 $p_info = !empty($ancData->patients_info) ? json_decode($ancData->patients_info) : null;
                 $weight = !empty($p_info->weight) ? $p_info->weight : null;
-                $anc_id = $ancData->id;
+                $anc_id = !empty($ancData) ? $ancData->id : '';
                 if(!$ancData){
                     $ancData = $this->AncHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     $h_o = !empty($ancData->h_o) ? json_decode($ancData->h_o) : null;
@@ -1542,6 +1542,7 @@ class ANCController extends AdminController
                 $usgStatus = 0;
                 $usg = json_decode($ancData->usg,true);
                 $oeData = !empty($ancData->o_e) ? json_decode($ancData->o_e,true) : null;
+                $patients_remark = !empty($oeData) && isset($oeData['is_patient_remark']) ? $oeData['is_patient_remark'] : '';
                 $oe_followUp = !empty($oeData['follow_up']) ? Carbon::parse($oeData['follow_up'])->format('D d M Y') : '';
                 // dd($weight);
                 if(((!empty($usg['nt_scan']) && $usg['nt_scan'] == $oe_followUp) || (!empty($usg['early_scan']) && $usg['early_scan'] == $oe_followUp) || (!empty($usg['anomalies_miles']) && $usg['anomalies_miles'] == $oe_followUp) || (!empty($usg['growth_scan']) && $usg['growth_scan'] == $oe_followUp))){
@@ -1561,7 +1562,7 @@ class ANCController extends AdminController
                 $printPreview = 1;
                 $ancAutoRemark = $this->getAutoRemark($patientId,$anc_id);
 
-                return view('admin.anc.preview', compact('investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','date','patients','printPreview','ancAutoRemark'));
+                return view('admin.anc.preview', compact('investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','date','patients','printPreview','ancAutoRemark','patients_remark'));
             }
         }catch(Exception $e){
             log::debug($e);

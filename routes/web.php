@@ -361,6 +361,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('create-patient','PatientsController@create');
     Route::put('update-patient/{id?}','PatientsController@update');
     Route::any('patient-report','PatientsController@getPatientReport');
+    Route::get('get-all-report/{id}','PatientsController@getAllReports');
+
 
     // get iui details
     Route::get('get-iui-details','IUIController@getIuiDetails');

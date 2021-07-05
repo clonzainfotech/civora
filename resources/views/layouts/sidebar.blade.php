@@ -60,7 +60,7 @@
 
                     {{--visit--}}
                     @if(in_array(Auth::user()->role,[1,3,6,7,8]))
-                    <li class="visit {{ Request::segment(1) === 'anc-iui-ivf' || (Request::segment(1) === 'report' && !empty(Request::segment(2))) || Request::segment(1) === 'anc' || Request::segment(1) === 'iui' || Request::segment(1) === 'ivf' || Request::segment(1) === 'call-reminder' || Request::segment(1) === 'iui-result' ? 'active open' : null }}">
+                    <li class="visit {{ Request::segment(1) === 'anc-iui-ivf' || (Request::segment(1) === 'report' && !empty(Request::segment(2))) || Request::segment(1) === 'anc' || Request::segment(1) === 'iui' || Request::segment(1) === 'ivf' || Request::segment(1) === 'call-reminder' || Request::segment(1) === 'iui-result' || Request::segment(1) === 'get-anc-report' ? 'active open' : null }}">
                         <a href="javascript:void(0);"  class="menu-toggle waves-effect waves-block">
                         <span>VISIT</span></a>
                         <ul class="ml-menu" style="display: none;">
@@ -69,7 +69,7 @@
                                     <span>APPOINTMENTS</span>
                                 </a>
                             </li>
-                            <li class="{{ Request::segment(1) === 'anc' ? 'sub active open' : null }}"><a href="{{URL::to('anc')}}">
+                            <li class="{{ Request::segment(1) === 'anc' || Request::segment(1) === 'get-anc-report' ? 'sub active open' : null }}"><a href="{{URL::to('anc')}}">
                                 <span>ANC ({{$ancCount}})</span>&nbsp;</a></li>
                             <li class="{{ Request::segment(1) === 'ivf' ? 'sub active open' : null }}"><a href="{{URL::to('ivf')}}">
                                 <span>IVF ({{$ivfCount}})</span>&nbsp;</a></li>

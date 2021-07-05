@@ -1666,9 +1666,17 @@
         @endif
         <br>
         <div class="row mt-1">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <label>Remark:</label>
                 <div class="form-group">
-                    {{Form::textarea('data[remark]',!empty($ivfData->remark) ? $ivfData->remark : null, ['class' => 'form-control no-resize remark call-response','placeholder' => 'Remark','rows' => '5'])}}
+                    {{Form::textarea('data[remark]',!empty($ivfData->remark) ? $ivfData->remark : null, ['class' => 'form-control no-resize remark call-response','placeholder' => 'Remark','rows' => '3'])}}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label>Patient'sRemark:</label>
+                <div class="input-group">
+                    {{Form::textarea("data[pt_remark]",!empty($ivfData->pt_remark) ? $ivfData->pt_remark : '',['class'=>'form-control no-resize pt_remark','placeholder'=>"Patient's Remark",'rows'=>'3'])}}
                 </div>
             </div>
         </div><br>

@@ -750,7 +750,7 @@
                                                             @endif
                                                         </div>
                                                         <div class="row mt-1">
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-4">
                                                                 <div class="checkbox">
                                                                     {{Form::checkbox('data[collection][]','progesterone','',['id'=>'progesterone'])}}
                                                                     <label for="progesterone">
@@ -962,6 +962,13 @@
                                                                     {{Form::text("data[p_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group">
+                                                                {{Form::textarea("data[pt_remark]",'',['class'=>'form-control no-resize pt_remark','placeholder'=>"Patient's Remark",'rows'=>'2'])}}
+                                                            </div>
+                                                        </div>
                                                         </div>
                                                         <div class="row mt-1">
                                                             <div class="col-xs-6 col-md-4">
@@ -1922,7 +1929,7 @@
                                         {{Form::hidden('data[collected][report][embroy][type]',!empty($historyData->collected->report->embroy->type) ? $historyData->collected->report->embroy->type : null)}}
                                     @endif
                                     <div class="row mt-1">
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="checkbox">
                                                 {{Form::checkbox('data[collection][]','progesterone','',['id'=>'progesterone'])}}
                                                 <label for="progesterone">
@@ -2958,9 +2965,14 @@
                                     @endif
                                     <br>
                                      <div class="row mt-1">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 {{Form::textarea('data[remark]','', ['class' => 'form-control no-resize remark call-response','placeholder' => 'Remark','rows' => '5'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                {{Form::textarea("data[pt_remark]",'',['class'=>'form-control no-resize pt_remark','placeholder'=>"Patient's Remark",'rows'=>'5'])}}
                                             </div>
                                         </div>
                                     </div><br>

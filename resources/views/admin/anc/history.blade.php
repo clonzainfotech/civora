@@ -47,11 +47,16 @@
     <div class="row clearfix">
         <div class="col-md-12 p-0">
             <div class="card patients-list">
-                <div class="header">
-                    @php
-                        $careOf = (!empty($ancData->getPatients['reference_doctor_id']) && isset($referenceDoctor[$ancData->getPatients['reference_doctor_id']])) ? $referenceDoctor[$ancData->getPatients['reference_doctor_id']] : '';
-                    @endphp
-                    <h2><strong class="text-secondary"> {{ucwords($ancPatients->name)}}</strong>{{' care of '.$careOf}}</h2>
+                <div class="header d-flex">
+                    <div class="col-md-6">
+                        @php
+                            $careOf = (!empty($ancData->getPatients['reference_doctor_id']) && isset($referenceDoctor[$ancData->getPatients['reference_doctor_id']])) ? $referenceDoctor[$ancData->getPatients['reference_doctor_id']] : '';
+                        @endphp
+                        <h2><strong class="text-secondary"> {{ucwords($ancPatients->name)}}</strong>{{' care of '.$careOf}}</h2>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="{{URL::to('get-all-report/'.encrypt($ancData->getPatients['id']))}}" class="btn btn-primary m-n3">View Reports</a>
+                    </div>
                 </div>
             </div>
         </div>

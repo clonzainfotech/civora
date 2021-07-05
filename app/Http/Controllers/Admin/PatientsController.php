@@ -269,4 +269,49 @@ class PatientsController extends AdminController
         $code = preg_replace('/[^A-Za-z0-9\-]/', 'R', $code);
         return ['code'=>$code];
     }
+    /**
+     * return all anc and anc history reports
+     * @return  array
+     * @param $patients(Patient's id)
+     */
+    public function getAllReports($patient_id)
+    {
+        //Get all uploded reports
+        $patients = decrypt($patient_id);
+        $allReports = [];
+        $patientsDetails = $this->OpdPatients->whereId($patients)->first();
+        $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
+        $ancAllVisit = $this->ANC->where('patients_id',$patients)->get();
+        $ancAllHistoryVisit = $this->AncHistory->where('patients_id',$patients)->get();
+        if($ancAllVisit)
+        {
+            foreach($ancAllVisit as $ancVisit)
+            {
+                $reportDate = Carbon::parse($ancVisit->created_at)->format('Y-m-d');
+                $investigationReport = !empty($ancVisit->investigation) ? json_decode($ancVisit->investigation,true) : '';
+                $usgReport = !empty($ancVisit->usg) ? json_decode($ancVisit->usg,true) : '';
+                $allReports[$reportDate]['early_scan'] = !empty($investigationReport['investigation_early_scan_type']['images']) ? $investigationReport['investigation_early_scan_type']['images'] : [];
+                $allReports[$reportDate]['growth_report'] = !empty($investigationReport['growth_report']['images']) ? $investigationReport['growth_report']['images'] : [];
+                $allReports[$reportDate]['other_report'] = !empty($investigationReport['other_report_data']['images']) ? $investigationReport['other_report_data']['images'] : [];
+                $allReports[$reportDate]['anc_report'] = !empty($investigationReport['anc']['images']) ? $investigationReport['anc']['images'] : [];
+                $allReports[$reportDate]['usg_report'] = !empty($usgReport['images']) ? $usgReport['images'] : [];
+            }
+        }
+        if($ancAllHistoryVisit)
+        {
+            foreach($ancAllHistoryVisit as $ancHistoryVisit)
+            {
+                $reportDate = Carbon::parse($ancHistoryVisit->created_at)->format('Y-m-d');
+                $investigationHistoryReport = !empty($ancHistoryVisit->investigation) ? json_decode($ancHistoryVisit->investigation,true) : '';
+                $usgHistoryReport = !empty($ancHistoryVisit->usg) ? json_decode($ancHistoryVisit->usg,true) : '';
+                $allReports[$reportDate]['early_scan'] = !empty($investigationHistoryReport['investigation_early_scan_type']['images']) ? $investigationHistoryReport['investigation_early_scan_type']['images'] : [];
+                $allReports[$reportDate]['growth_report'] = !empty($investigationHistoryReport['growth_report']['images']) ? $investigationHistoryReport['growth_report']['images'] : [];
+                $allReports[$reportDate]['other_report'] = !empty($investigationHistoryReport['other_report_data']['images']) ? $investigationHistoryReport['other_report_data']['images'] : [];
+                $allReports[$reportDate]['anc_report'] = !empty($investigationHistoryReport['anc']['images']) ? $investigationHistoryReport['usg']['images'] : [];
+                $allReports[$reportDate]['usg_report'] = !empty($usgHistoryReport['images']) ? $usgHistoryReport['images'] : [];
+            }
+        }
+        krsort($allReports);
+        return view('admin.appointment.patient.all-reports',compact('allReports','patientsDetails','referenceDoctor'));
+    }
 }

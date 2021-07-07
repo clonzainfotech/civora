@@ -10,7 +10,7 @@ class AncHistory extends BaseModel
     protected $table = 'anc_history';
 
     public function getAncs() {
-        return $this->belongsTo('App\Models\ANC','patients_id','patients_id');
+        return $this->belongsTo('App\Models\ANC','anc_id','id');
     }
     
     public function getPatients(){

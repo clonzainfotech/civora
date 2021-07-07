@@ -145,6 +145,10 @@
                             <a href="{{url('ivf/ivfedit/'.encrypt($patient_id))}}" class="mb-1 ml-1">
                                 <button class="btn btn-primary pull-right">Visit-1</button>
                             </a>
+                            <a href="{{URL::to('get-all-report/'.encrypt($patient_id).'?status=ivf')}}" class="mb-1 ml-1">
+                                <button class="btn btn-primary pull-right">View Reports</button>
+                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -788,14 +792,15 @@
                                                             </div>
                                                             <div class="col-md-6 bloodreport d-none">
                                                                 <div class="row">
-                                                                    <div class="col-md-8">
+                                                                    <div class="col-md-4">
                                                                         <div class="input-group">
                                                                             <span class="input-group-addon">Blood report: &nbsp;</span>
                                                                             {{Form::text("data[blood][report]",'',['class'=>'form-control'])}}
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-4">
-                                                                        {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}}
+                                                                    <div class="col-md-8">
+                                                                        {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                                        <div class="blood-images"></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1778,17 +1783,18 @@
                                         </div> --}}
                                     </div>
                                 </div>
+                                
                                 @if($visit != 2 &&   $cycleNumber == $cycleNumber)
-                                <div class="row mt-1">
-                                    <div class="col-md-2 pr-0">
-                                        <label class="vertical-form-label pr-0">
-                                            ET :
-                                        </label>
+                                    <div class="row mt-1">
+                                        <div class="col-md-2 pr-0">
+                                            <label class="vertical-form-label pr-0">
+                                                ET :
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{Form::text("data[et_details]",'',['class'=>'form-control','placeholder'=>'Enter ET Details'])}}
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        {{Form::text("data[et_details]",'',['class'=>'form-control','placeholder'=>'Enter ET Details'])}}
-                                    </div>
-                                </div>
                                     
                                     {{Form::hidden('is_trigger','yes')}}
                                     @php
@@ -2100,29 +2106,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="row mt-1">
-                                        <div class="col-md-2">
-                                            <div class="checkbox">
-                                                {{Form::checkbox('data[collection][]','blood','',['id'=>'blood'])}}
-                                                <label for="blood">
-                                                Blood Report
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 bloodreport d-none">
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Blood report: &nbsp;</span>
-                                                        {{Form::text("data[blood][report]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                   
                                     @if($pStatus != 3 )
                                         <div class="row mt-1">
                                             <div class="col-md-2">
@@ -2321,7 +2305,30 @@
                                         </div>
                                     @endif
                                 @endif
-
+                                <div class="row mt-1">
+                                    <div class="col-md-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('data[collection][]','blood','',['id'=>'blood'])}}
+                                            <label for="blood">
+                                            Blood Report
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 bloodreport d-none">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Blood report: &nbsp;</span>
+                                                    {{Form::text("data[blood][report]",'',['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                <div class="blood-images"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 {{-- end ivf comman form --}}
                                 <br>
                                 {{-- pre operative data --}}
@@ -4719,6 +4726,8 @@
         $('.laproscopy-images').imageUploader({
             imagesInputName: 'investigation[laproscopy][images]',
         });
-        
+        $('.blood-images').imageUploader({
+        imagesInputName: 'data[blood][image]',
+    });
 </script>
 @stop

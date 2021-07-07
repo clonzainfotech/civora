@@ -2437,364 +2437,34 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Blood Report :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("investigation[blood_report][type]",'yes','',['id'=>'blood_type_yes','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                        <label for="blood_type_yes">
+                                                            Yes
+                                                        </label>
+
+                                                        {{Form::radio("investigation[blood_report][type]",'no',true,['id'=>'blood_type_no','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                        <label for="blood_type_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 pr-0 blood-type d-none">
+                                                    <div class="blood-images"></div>
+                                                </div>
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- end investigation --}}
-
-                                <!--8. Investigation  -->
-                                {{-- <div class="{{'panel panel-primary'}}">
-                                    <div class="panel-heading" role="tab" id="headingThree_1">
-                                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#investigation" href="#investigation" aria-expanded="false"
-                                                aria-controls="investigation">8. Investigation</a></h4>
-                                    </div>
-                                    <div id="investigation" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
-                                        <div class="panel-body">
-
-                                            <div class="row">
-                                                <div class="col-md-2 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        Early Scan Report :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[early_scan_type]",'yes','',['id'=>'early_scan_type_yes','class'=>'early-scan-type'])}}
-                                                        <label for="early_scan_type_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("investigation[early_scan_type]",'no',true,['id'=>'early_scan_type_no','class'=>'early-scan-type'])}}
-                                                        <label for="early_scan_type_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3 early-scan-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Date : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_early_scan_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 early-scan-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            HB : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_early_scan_hb]",'',['class'=>'form-control hb-value'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2 hb-extra-details d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            HB Details : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_early_scan_hb_details]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row early-scan-data d-none">
-                                                <div class="col-sm-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            TSH : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_tsh]",'',['class'=>'form-control tsh-value'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 tsh-details d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            RX : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_tsh_details]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 rbs-data">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            RBS : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_rbs]",'',['class'=>'form-control rbs-value'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 rbs-details d-none">
-                                                    <div class="form-group">
-                                                        {{Form::text("investigation[investigation_rbs_details]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-
-                                            <div class="row anc-profile">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        ANC Profile :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[anc_profile_type]",'yes','',['id'=>'anc_profile_type_yes','class'=>'anc-profile-type'])}}
-                                                        <label for="anc_profile_type_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("investigation[anc_profile_type]",'no',true,['id'=>'anc_profile_type_no','class'=>'anc-profile-type'])}}
-                                                        <label for="anc_profile_type_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3 anc-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Date : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_anc_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 anc-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            CBC MP : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_cbc_mp]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 anc-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Urine : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_urine]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="row anc-data d-none">
-                                                <div class="col-sm-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Blood Group : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_blood_group]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            RBS : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_anc_rbs]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        HIV :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[anc_hiv]",'positive','',['id'=>'anc_profile_hiv_positive','class'=>'anc-profile-hiv'])}}
-                                                        <label for="anc_profile_hiv_positive">
-                                                            Positive
-                                                        </label>
-
-                                                        {{Form::radio("investigation[anc_hiv]",'negative','',['id'=>'anc_profile_hiv_nagative','class'=>'anc-profile-hiv'])}}
-                                                        <label for="anc_profile_hiv_nagative">
-                                                            Negative
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        HBSAG :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[anc_hbsag]",'positive','',['id'=>'anc_profile_hbsag_positive','class'=>'anc-profile-hbsag'])}}
-                                                        <label for="anc_profile_hbsag_positive">
-                                                            Positive
-                                                        </label>
-
-                                                        {{Form::radio("investigation[anc_hbsag]",'negative','',['id'=>'anc_profile_hbsag_nagative','class'=>'anc-profile-hbsag'])}}
-                                                        <label for="anc_profile_hbsag_nagative">
-                                                            Negative
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="row anc-data d-none">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        VDRL :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[anc_vdrl]",'positive','',['id'=>'anc_profile_vdrl_positive','class'=>'anc-profile-vdrl'])}}
-                                                        <label for="anc_profile_vdrl_positive">
-                                                            Positive
-                                                        </label>
-
-                                                        {{Form::radio("investigation[anc_vdrl]",'negative','',['id'=>'anc_profile_vdrl_nagative','class'=>'anc-profile-vdrl'])}}
-                                                        <label for="anc_profile_vdrl_nagative">
-                                                            Negative
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-2 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        Growth Report :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[growth_report_type]",'yes','',['id'=>'growth_report_type_yes','class'=>'growth-report-type'])}}
-                                                        <label for="growth_report_type_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("investigation[growth_report_type]",'no',true,['id'=>'growth_report_type_no','class'=>'growth-report-type'])}}
-                                                        <label for="growth_report_type_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-4 growth-report-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Date : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_growth_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 growth-report-data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            HB : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_growth_hb]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="row growth-report-data d-none">
-                                                <div class="col-sm-3 fbs-data">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            FBS : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_growth_fbs]",'',['class'=>'form-control fbs-value'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 fbs-details d-none">
-                                                    <div class="form-group">
-                                                        {{Form::text("investigation[investigation_growth_fbs_details]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            PP2BS : &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[investigation_growth_pp2bs]",'',['class'=>'form-control pp2bs-value'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3 pp2bs-details d-none">
-                                                    <div class="form-group">
-                                                        {{Form::text("investigation[investigation_growth_pp2bs_details]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row">
-
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        Other Report :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("investigation[other_report_type]",'yes','',['id'=>'other_report_type_yes','class'=>'other-report-type'])}}
-                                                        <label for="other_report_type_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("investigation[other_report_type]",'no',true,['id'=>'other_report_type_no','class'=>'other-report-type'])}}
-                                                        <label for="other_report_type_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-2 d-none or-details">
-                                                    <div class="checkbox">
-                                                        {{Form::checkbox('investigation[other_report][]','double_marker','',['id'=>'d-marker'])}}
-                                                        <label for="d-marker">
-                                                            Double marker
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 d-none or-details">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Double Marker Date: &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[d_m_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 d-none or-details">
-                                                    <div class="checkbox">
-                                                        {{Form::checkbox('investigation[other_report][]','genetic_test','',['id'=>'genetic-test'])}}
-                                                        <label for="genetic-test">
-                                                            Genetic Test
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="row d-none or-details">
-                                                <div class="col-md-2">
-                                                    <div class="checkbox">
-                                                        {{Form::checkbox('investigation[other_report][]','amniocentesis','',['id'=>'amniocentesis'])}}
-                                                        <label for="amniocentesis">
-                                                            Amniocentesis
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            Amniocentesis Date: &nbsp;
-                                                        </span>
-                                                        {{Form::text("investigation[amniocentesis_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div> --}}
-
+                                
                                 <!--8. Husband Factor -->
                                 <div class="{{'panel panel-primary '.$donar}}">
                                     <div class="panel-heading" role="tab" id="headingThree_1">
@@ -3349,229 +3019,7 @@
                                     </div>
                                 </div>
                                 {{Form::hidden('old_medicine_data','',['class'=>'old-medicine-data'])}}
-                                <!-- Patients Detailed H/O -->
-                                {{-- <div class="{{'panel panel-primary'}}">
-                                    <div class="panel-heading" role="tab" id="headingThree_1">
-                                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#patients-detailed-ho" href="#patients-detailed-ho" aria-expanded="false"
-                                                aria-controls="patients-detailed-ho">9. Patients Detailed H/O</a></h4>
-                                    </div>
-                                    <div id="patients-detailed-ho" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
-                                        <div class="panel-body">
-
-                                                <div class="row">
-                                                    <div class="col-md-2 pr-0">
-                                                        <label class="vertical-form-label pr-0">
-                                                            Personal History :
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            {{Form::select("p_detailes[personal_history_history_type]",['diabetes_mellitus'=>"Diabetes Mellitus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'heart_disease'=>"Heart Disease"],'',['class'=>'form-control select-padding-0'])}}
-                                                        </div>
-                                                        <span class="form-error-msg">
-                                                            {{$errors->first('personal_history_type')}}
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                Date : &nbsp;
-                                                            </span>
-                                                            {{Form::text("p_detailes[personal_history_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date'])}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-2 pr-0">
-                                                            <label class="vertical-form-label pr-0">
-                                                                Family History :
-                                                            </label>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                {{Form::text("p_detailes[family_history]",'',['class'=>'form-control'])}}
-                                                            </div>
-                                                            <span class="form-error-msg">
-                                                                {{$errors->first('family_history')}}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-2 pr-0">
-                                                            <label class="vertical-form-label pr-0">
-                                                                Past History :
-                                                            </label>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                {{Form::select("p_detailes[past_history_type]",['tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'],'',['class'=>'form-control select-padding-0'])}}
-                                                            </div>
-                                                            <span class="form-error-msg">
-                                                                {{$errors->first('past_history_type')}}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                        </div>
-                                    </div>
-                                </div> --}}
-
-                                <!--  h/o rx-->
-                                {{-- <div class="{{'panel panel-primary'}}">
-                                    <div class="panel-heading" role="tab" id="headingThree_1">
-                                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#horex" href="#horex" aria-expanded="false"
-                                                aria-controls="collapseThree_1">11. H/O Rx.</a> </h4>
-                                    </div>
-                                    <div id="horex" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        H/O Rx Taken :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("p_ho[ho_rx]",'yes','',['id'=>'p_ho_yes'])}}
-                                                        <label for="p_ho_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("p_ho[ho_rx]",'no','',['id'=>'p_ho_no'])}}
-                                                        <label for="p_ho_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">At : &nbsp;</span>
-                                                        {{Form::text("p_ho[at]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('at')}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Induction Done With : &nbsp;</span>
-                                                        {{Form::text("p_ho[induction_done_with_1]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('induction_done_with')}}
-                                                    </span>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Induction Done With : &nbsp;</span>
-                                                        {{Form::text("p_ho[induction_done_with_2]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('induction_done_with')}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Induction Done With : &nbsp;</span>
-                                                        {{Form::text("p_ho[induction_done_with_3]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('induction_done_with')}}
-                                                    </span>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Induction Done With : &nbsp;</span>
-                                                        {{Form::text("p_ho[induction_done_with_4]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('induction_done_with')}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        IUI :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("p_ho[ho_iui]",'yes','',['id'=>'p_ho_iui_yes','class'=>'iui'])}}
-                                                        <label for="p_ho_iui_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("p_ho[ho_iui]",'no','',['id'=>'p_ho_iui_no','class'=>'iui'])}}
-                                                        <label for="p_ho_iui_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 ho-rx-time d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Time : &nbsp;</span>
-                                                        {{Form::text("p_ho[time]",\Carbon\Carbon::now()->format('h:i a'),['class'=>'form-control timepicker time','placeholder'=>'Time','required'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('time')}}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        H/O Scopy :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("p_ho[ho_scopy]",'yes','',['id'=>'p_scopy_yes','class'=>'ho-scopy'])}}
-                                                        <label for="p_scopy_yes">
-                                                            Yes
-                                                        </label>
-
-                                                        {{Form::radio("p_ho[ho_scopy]",'no','',['id'=>'p_scopy_no','class'=>'ho-scopy'])}}
-                                                        <label for="p_scopy_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 ho-rx-ho-scopy d-none">
-                                                    <div class="form-group">
-                                                        {{Form::select("p_ho[finding]",[1=>1,2=>2,3=>3,],'',['class'=>'form-control select-padding-0','placeholder'=>'Finding'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('finding')}}
-                                                    </span>
-                                                </div>
-                                                <div class="col-md-3 ho-rx-ho-scopy d-none">
-                                                    <div class="input-group">
-                                                    <span class="input-group-addon">Date : &nbsp;</span>
-                                                        {{Form::text("p_ho[date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date','required'])}}
-                                                    </div>
-                                                    <span class="form-error-msg">
-                                                        {{$errors->first('date')}}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div> --}}
+                                
                                 
                                 {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                                 {{Form::hidden('next_time','',['class'=>'next-time-value'])}}
@@ -3709,6 +3157,9 @@
         $('.hcg-images').imageUploader({
             imagesInputName: 'investigation[hcg][images]',
         });
+        $('.blood-images').imageUploader({
+            imagesInputName: 'investigation[blood_report][image]',
+        });
         $(document).ready(function(){
             setAppointmentDate();
             $('.complain-multi .show-tick').addClass('d-none');
@@ -3726,33 +3177,29 @@
 
             $(document).on('click','.submit',function(e){
                 e.preventDefault();
-                var ivf = new FormData($("#ivf-form")[0]);
-                // var ivf = $('#ivf-form').serialize();
+               
+                var data = new FormData();
+                var form_data =  $("#ivf-form").serializeArray();
+                $.each(form_data, function (key, input) {
+                    data.append(input.name, input.value);
+                });
                 if(this.value==1){
-                    ivf.append('isprint', 1);
+                    data.append('isprint', 1);
                 }
-                ivfFormData(ivf);
+                var file_data = $('input[name="investigation[hystroscopy][images][]"]')[0].files;
+                for (var i = 0; i < file_data.length; i++) {
+                    data.append("investigation[hystroscopy][images][]", file_data[i]);
+                }
+                var file_data = $('input[name="investigation[laproscopy][images][]"]')[0].files;
+                for (var i = 0; i < file_data.length; i++) {
+                    data.append("investigation[laproscopy][images][]", file_data[i]);
+                }
+                var file_data = $('input[name="investigation[blood_report][image][]"]')[0].files;
+                for (var i = 0; i < file_data.length; i++) {
+                    data.append("investigation[blood_report][image][]", file_data[i]);
+                }
+                ivfFormData(data);
             });
-
-            // $(document).on('change','select.ctgry',function(e){
-            //     e.preventDefault();
-            //     ctgry = $(this).val();
-            //     var pId = document.getElementById("pId").value;
-            //     var aId = document.getElementById("aId").value;
-            //     var type = 'create';
-            //     if(ctgry == 5 || ctgry == 6){
-            //         var url = "{{URL::to('anc')}}"+'/next-appointment'+'/'+pId+'/'+aId;;
-            //         window.location.href=url;
-            //     }
-            //     if(ctgry == 4 || ctgry == 3){
-            //         var url = "{{URL::to('iui')}}"+'/'+type+'/'+pId+'/'+aId;;
-            //         window.location.href=url;
-            //     }
-            //     if(ctgry == 17 || ctgry == 18){
-            //         var url = "{{URL::to('gynec')}}"+'/'+type+'/'+pId+'/'+aId;;
-            //         window.location.href=url;
-            //     }
-            // });
 
             $(document).on('change','select.refence-doctor',function(e){
                 var refDoctorId = $(this).val();
@@ -3842,11 +3289,6 @@
             // $('.ho-tab').removeClass('show');
             $('.p-info').removeClass('show');
             var weight=document.getElementById('weight').value;
-            // if($('select.ho-data').val() == ''){
-            //     valid = 0;
-            //     $('.ho-data-msg').text('The ho field is required.');
-            //     $('.ho-tab').addClass('show');
-            // }
             if(weight == ''){
                 // document.getElementById('error_weight').innerHTML="The weight is required";
                 $('.weight').text('The weight is required');
@@ -3867,8 +3309,12 @@
                 return true;
             }
             $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     url:'{{URL::to("ivf")}}',
                     type:'POST',
+                    enctype: 'multipart/form-data',
                     dataType:'json',
                     data:data,
                     cache: false,

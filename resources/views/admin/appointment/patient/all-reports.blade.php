@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('parentPageTitle', 'ANC Report')
-@section('title', 'ANC Report')
+@section('parentPageTitle', 'Patient All Report')
+@section('title', 'Patient All Report')
 @section('page-style')
 <link href="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/css/lightgallery.css" rel="stylesheet">
 <link href="{{URL::to('public/css/light-gallery.css')}}" rel="stylesheet">

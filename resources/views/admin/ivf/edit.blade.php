@@ -52,7 +52,7 @@
                 @endphp
                 <div class="body">
                     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                        {{Form::open(['class'=>'form ivf','id'=>'ivf-form'])}}
+                        {{Form::open(['class'=>'form ivf','files'=>true,'id'=>'ivf-form'])}}
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="vertical-form-label pr-0">
@@ -2791,6 +2791,33 @@
                                                 </div>
                                             </div>
                                         </div>
+                                            @php
+                                                $bloodReportClass = !empty($investigation->blood_report) && !empty($investigation->blood_report->type) && $investigation->blood_report->type == 'yes' ? true : false;
+                                                $bloodReportClassName = $bloodReportClass ? '' : 'd-none';
+                                        @endphp
+                                        <div class="row">
+                                            <div class="col-md-1 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    Blood Report :
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="radio is-conceived">
+                                                    {{Form::radio("investigation[blood_report][type]",'yes',$bloodReportClass,['id'=>'blood_type_yes','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                    <label for="blood_type_yes">
+                                                        Yes
+                                                    </label>
+
+                                                    {{Form::radio("investigation[blood_report][type]",'no',!empty($investigation->blood_report) && !empty($investigation->blood_report->type) && $investigation->blood_report->type == 'no' ? true : false,['id'=>'blood_type_no','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                    <label for="blood_type_no">
+                                                        No
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="{{'col-md-8 pr-0 blood-type '.$bloodReportClassName}}">
+                                                <div class="edit-blood-images"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -3546,6 +3573,7 @@
 <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
 <script type="text/javascript">
     var doseData = @json($doseData);
+    var ivfPrint = '';
    $(function () {
         //Datetimepicker plugin
             $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -3593,9 +3621,13 @@
         $('.laproscopy-images').imageUploader({
             imagesInputName: 'investigation[laproscopy][images]',
         });
+        $('.edit-blood-images').imageUploader({
+            imagesInputName: 'investigation[blood_report][image]',
+        });
         var hystroscopyImages = @json($hystroscopyImagesData);
         var hcgImages = @json($hcgImagesData);
         var laproscopyImages = @json($laproscopyImagesData);
+        var bloodReportImages = @json($bloodReportImagesData);
         $(document).ready(function(){
             if(hystroscopyImages != 'null') {
                 $('.hystroscopy-images').imageUploader({
@@ -3618,18 +3650,26 @@
                     preloadedInputName: 'laproscopy_old'
                 });
             }
+            if(bloodReportImages != 'null') {
+                $('.edit-blood-images').imageUploader({
+                    preloaded: jQuery.parseJSON(bloodReportImages),
+                    imagesInputName: 'investigation[blood_report][image]',
+                    preloadedInputName: 'blood_report_old'
+                });
+            }
             $('.complain-multi .show-tick').addClass('d-none');
             $('.select2-search__field').css('width','280px');
             $('.ho-value .selectized').addClass('d-none');
             regularType($('select.past-mh-2').val(),'past-ir-regular-data');
             regularType($('select.present-mh-2').val(),'present-ir-regular-data');
             $(document).on('click','.submit',function(e){
-                e.preventDefault();
-                var ivf = new FormData($("#ivf-form")[0]);
-                if(this.value==1){
-                    ivf.append('isprint', 1);
-                }
-                ivfFormData(ivf);
+                // e.preventDefault();
+                // var ivf = new FormData($("#ivf-form")[0]);
+                // if(this.value==1){
+                //     ivf.append('isprint', 1);
+                // }
+                // ivfFormData(ivf);
+                ivfPrint = $(this).val();
             });
 
             $(document).on('change','select.duration-data',function(){
@@ -3641,21 +3681,38 @@
                 }
             });
 
-            
-
-        function ivfFormData(data){
+        // function ivfFormData(data){
+        $(document).on('submit','#ivf-form',function(e){
+             e.preventDefault();
             var valid = 1;
+            var data = new FormData();
+            var form_data =  $("#ivf-form").serializeArray();
+            $.each(form_data, function (key, input) {
+                data.append(input.name, input.value);
+            });
+            if(ivfPrint == 1)
+            {
+                data.append('isprint',ivfPrint);
+            }
+            var file_data = $('input[name="investigation[hystroscopy][images][]"]')[0].files;
+            for (var i = 0; i < file_data.length; i++) {
+                data.append("investigation[hystroscopy][images][]", file_data[i]);
+            }
+            var file_data = $('input[name="investigation[laproscopy][images][]"]')[0].files;
+            for (var i = 0; i < file_data.length; i++) {
+                data.append("investigation[laproscopy][images][]", file_data[i]);
+            }
+            var file_data = $('input[name="investigation[blood_report][image][]"]')[0].files;
+            for (var i = 0; i < file_data.length; i++) {
+                data.append("investigation[blood_report][image][]", file_data[i]);
+            }
+            
             $('.seen-by-error').text('');
             $('.ho-data-msg').text('');
             $('.weight').text('');
             // $('.ho-tab').removeClass('show');
             $('.p-info').removeClass('show');
             var weight=document.getElementById('weight').value;
-            // if($('select.ho-data').val() == ''){
-            //     valid = 0;
-            //     $('.ho-data-msg').text('The ho field is required.');
-            //     $('.ho-tab').addClass('show');
-            // }
             if(weight == ''){
                 // document.getElementById('error_weight').innerHTML="The weight is required";
                 $('.weight').text('The weight is required');
@@ -3676,13 +3733,16 @@
                 return false;
             }
             $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     url:'{{URL::to("ivf")}}',
                     type:'POST',
-                    dataType:'json',
-                    data:data,
-                    cache: false,
+                    // enctype: 'multipart/form-data',
+                    dataType: 'json',
                     contentType: false,
                     processData: false,
+                    data: data,
             }).done(function(data){
                 if(data.status == 'true'){
                     var url = "{{URL::to('ivf')}}";
@@ -3695,10 +3755,10 @@
                     w.window.print();
                     $('#anc_id').val(data.id);
                 }else{
-                    location.reload();
+                    // location.reload();
                 }
             });
-        }
+        });
         var medicinesValue = @json($medicines);
     });
 </script>

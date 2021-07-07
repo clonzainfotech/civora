@@ -145,6 +145,7 @@ class IVFController extends AdminController
             $hystroscopyImagesData = [];
             $hcgImagesData = [];
             $laproscopyImagesData = [];
+            $bloodReportImagesData = [];
             $patientsInfo = json_decode($ivf->patients_info);
             $ho = json_decode($ivf->h_o);
             $co = json_decode($ivf->c_o);
@@ -198,6 +199,13 @@ class IVFController extends AdminController
                     $laproscopyImagesData[$key]['src'] = url($row);
                 }
             }
+            $bloodReportImages = !empty($investigation->blood_report->image) ? $investigation->blood_report->image : null;
+            if($bloodReportImages){
+                foreach($bloodReportImages as $key=>$row){
+                    $bloodReportImagesData[$key]['id'] = $key;
+                    $bloodReportImagesData[$key]['src'] = url($row);
+                }
+            }
             if(!empty($treatment)){
                 $medicineKey = (array)$treatment;
                 $medicineKey = array_column($medicineKey,'medicine');
@@ -221,6 +229,7 @@ class IVFController extends AdminController
             $data['hystroscopyImagesData'] = json_encode($hystroscopyImagesData,true);
             $data['hcgImagesData'] = json_encode($hcgImagesData,true);
             $data['laproscopyImagesData'] = json_encode($laproscopyImagesData,true);
+            $data['bloodReportImagesData'] = json_encode($bloodReportImagesData,true);
             $data['investigation'] = $investigation;
             $data['husbandFactor'] = $husbandFactor;
             $data['planManagement'] = $planManagement;
@@ -269,6 +278,7 @@ class IVFController extends AdminController
     */
     public function store(Request $request){
         try{
+
             $isProcudure = 0;
             $appointmentTime = null;
             if($request->appointment_time){
@@ -297,11 +307,15 @@ class IVFController extends AdminController
                 $hystroscopyOldImages = [];
                 $laproscopyOldImages = [];
                 $hcgOldImages = [];
+                $bloodOldImages = [];
                 $checkIvf = $ivf->wherePatientsId($patientsId)->first();
                 if($checkIvf){
+                // dd($request);
+
                     $this->getImagesData('hystroscopy_old','ivf',$patientsId,$request->hystroscopy_old ? $request->hystroscopy_old : [-1]);
                     $this->getImagesData('laproscopy_old','ivf',$patientsId,$request->laproscopy_old ? $request->laproscopy_old : [-1]);
                     $this->getImagesData('hcg_old','ivf',$patientsId,$request->hcg_old ? $request->hcg_old : [-1]);
+                    $this->getImagesData('blood_report_old','ivf',$patientsId,$request->blood_report_old ? $request->blood_report_old : [-1]);
                     $checkIvf = $ivf->wherePatientsId($patientsId)->first();
                     $ivf = $checkIvf;
                     $oldInvestigationData = json_decode($ivf->investigation);
@@ -309,6 +323,7 @@ class IVFController extends AdminController
                         $hystroscopyOldImages = !empty($oldInvestigationData->hystroscopy->images) ? (array)$oldInvestigationData->hystroscopy->images : [];
                         $laproscopyOldImages = !empty($oldInvestigationData->laproscopy->images) ? (array)$oldInvestigationData->laproscopy->images : [];
                         $hcgOldImages = !empty($oldInvestigationData->hcg->images) ? (array)$oldInvestigationData->hcg->images : [];
+                        $bloodOldImages = !empty($oldInvestigationData->blood_report->image) ? (array)$oldInvestigationData->blood_report->image : [];
                     }
                 }
                 if(!empty($request->ho['ho_details'])){
@@ -411,6 +426,16 @@ class IVFController extends AdminController
                 }else{
                     $investigationData['hcg']['images'] = $hcgOldImages;
                 }
+                
+                if(!empty($request['investigation']['blood_report']['image'])){
+                    foreach($request['investigation']['blood_report']['image'] as $key=>$row){
+                        $name = $this->uploadImage($row, 'public/upload/ivf/blood/');
+                        $bloodImagesData[] = 'public/upload/ivf/blood/' . $name;
+                    }
+                    $investigationData['blood_report']['image'] = array_merge($bloodImagesData,$bloodOldImages);
+                }else{
+                    $investigationData['blood_report']['image'] = $bloodOldImages;
+                }
                 if($gynecStatus == 0){
                     $ivf->m_h = json_encode($mhData);
                 }else{
@@ -472,6 +497,7 @@ class IVFController extends AdminController
             }
             if($request->visit){
                 $lmpDateValue = !empty($request->data['lmp']['date']) ? $request->data['lmp']['date'] : null;
+                $bloodReportOldImages = [];
                 if($lmpDateValue){
                     $ivf = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
                     $ivf->lmp_date = Carbon::parse($lmpDateValue)->format('Y-m-d');
@@ -552,19 +578,7 @@ class IVFController extends AdminController
                     }
                 }
                 else{
-                    if(!empty($request->data['blood']['image'])){
-                        $imagePath = 'public/upload/ivf/blood';
-                        $picture = $request->data['blood']['image'];
-                        $imageName = $this->uploadImage($picture, $imagePath);
-                        $data['blood']['image'] = $imagePath.'/'.$imageName;
-                    }else{
-                        if($ivfHistory){
-                            $bloodData = json_decode($ivfHistory->description);
-                            if(!empty($bloodData->blood->image)){
-                                $data['blood']['image'] = $bloodData->blood->image;
-                            }
-                        }
-                    }
+                    
                     $rightOveryData = !empty($request->data['oe']['ovary']['right']['details']) ? array_filter($request->data['oe']['ovary']['right']['details']) : [];
                     $leftOveryData = !empty($request->data['oe']['ovary']['left']['details']) ? array_filter($request->data['oe']['ovary']['left']['details']) : [];
                     if(!empty($leftOveryData)){
@@ -575,10 +589,7 @@ class IVFController extends AdminController
                         $rdata = array_unique($rightOveryData);
                         addOvaryAbnormalData($rdata,2);
                     }
-                    // if(!empty($request['treatment']['medicinedata'])){
-                    //     $this->medicineData($request['treatment']['medicinedata']);
-                    //     $this->treatmentData($request['data']['medicinedata']);
-                    // }
+                    
                     $data['medicinedata'] = !empty($data['medicinedata']) ? $data['medicinedata'] : (!empty($data['old_medicine']) ? $data['old_medicine'] : []);
                     $ivfHistory->cycle_status = 1;
                     $skip = false;
@@ -637,23 +648,6 @@ class IVFController extends AdminController
                         if(!empty($protocol)){
                             $this->doseData($protocol);
                         }
-                        // $protocolTable = $request->data['protocol'];
-                        // $protocolTableKey = array_key_first($protocolTable);
-                        // $sDays = array_first($protocolTable)['s_day'];
-                        // $cDays = array_first($protocolTable)['day'];
-                        // $i = 1;
-                        // $ptData = [];
-                        // foreach($protocolTable as $key=>$pValue){
-                        //     if(!empty($pValue['hmg']) || !empty($pValue['hmg_brand_name']) || !empty($pValue['fsh']) || !empty($pValue['fsh_brand_name']) || !empty($pValue['antagonist'])){
-                        //         $protocolTable[$key]['day'] = $i == 1 ? $cDays : $cDays + 1;
-                        //         $protocolTable[$key]['s_day'] = $i == 1 ? $sDays : $sDays + 1;
-                        //         $ptData[$i] = $protocolTable[$key];
-                        //         $i++;
-                        //     }else{
-                        //         unset($protocolTable[$key]);
-                        //     }
-                        // }
-                        // $data['protocol'] = $ptData;
                     }
                     $triggerTime = null;
                     if(!empty($hcgTime) || !empty($decapeptylTime)){
@@ -681,16 +675,22 @@ class IVFController extends AdminController
                         
                         $this->getImagesData('hystroscopy_old','ivf_history',$checkIvfHistory->id,$request->hystroscopy_old ? $request->hystroscopy_old : [-1]);
                         $this->getImagesData('laproscopy_old','ivf_history',$checkIvfHistory->id,$request->laproscopy_old ? $request->laproscopy_old : [-1]);
+                        $this->getImagesData('blood_report_old','ivf_history',$checkIvfHistory->id,$request->blood_report_old ? $request->blood_report_old : [-1]);
                         $checkIvfHistory = $this->IvfHistory->wherePatientsId($patientsId)
                                                     ->wherePlan($request->plan_type)
                                                     ->whereCycleNo($request->cycle_no)
                                                     ->whereVisit($request->visit)
                                                     ->first();
                         $oldInvestigationData = json_decode($checkIvfHistory->investigation);
+                        $ivfHistoryData = json_decode($checkIvfHistory->description);
                         if(!empty($oldInvestigationData)){
                             $hystroscopyOldImages = !empty($oldInvestigationData->hystroscopy->images) ? (array)$oldInvestigationData->hystroscopy->images : [];
                             $laproscopyOldImages = !empty($oldInvestigationData->laproscopy->images) ? (array)$oldInvestigationData->laproscopy->images : [];
                             $hcgOldImages = !empty($oldInvestigationData->hcg->images) ? (array)$oldInvestigationData->hcg->images : [];
+                        }
+                        if($ivfHistoryData)
+                        {
+                            $bloodReportOldImages = !empty($ivfHistoryData->report->image) ? (array)$ivfHistoryData->report->image : [];
                         }
                     }
                     if(!empty($request['investigation']['hystroscopy']['images'])){
@@ -712,6 +712,16 @@ class IVFController extends AdminController
                     }else{
                         $investigationData['laproscopy']['images'] = $laproscopyOldImages;
 
+                    }
+                    if(!empty($request->data['blood']['image'])){
+                        foreach($request->data['blood']['image'] as $key=>$row){
+                            $name = $this->uploadImage($row, 'public/upload/ivf/blood/');
+                            $bloodReport[] = 'public/upload/ivf/blood/' . $name;
+                        }
+                        $data['blood']['image'] = array_merge($bloodReport,$bloodReportOldImages);
+                    }
+                    else{
+                        $data['blood']['image'] = $hystroscopyOldImages;
                     }
                     $ivfHistory->description = json_encode($data);
                     $ivfHistory->investigation = isset($request->investigation) ? json_encode($investigationData) : null;
@@ -923,7 +933,6 @@ class IVFController extends AdminController
                 return ['status'=>'true'];
             }
         }catch(Exception $e){
-            // dd($e);
             log::debug($e);
             abort(500);
             return ['status'=>'false'];
@@ -1150,7 +1159,7 @@ class IVFController extends AdminController
                 $data['history'] = View::make('admin.ivf.edit',$data)->render();
                 return $data;
             }
-            return view('admin.ivf.new_history',$data)->with('ivf-msg','Your event successfully added.');
+            return view('admin.ivf.new_history',$data)->with('ivf-msg','Your Record successfully added.');
         }catch(Exception $e){
             log::debug($e);
             abort(500);
@@ -1797,6 +1806,7 @@ class IVFController extends AdminController
         try{
             $hystroscopyImagesData = [];
             $laproscopyImagesData = [];
+            $bloodReportImagesData = [];
             $ivfHistoryId = decrypt($ivfHistoryId);
             $data['ivf'] = $this->IvfHistory->find($ivfHistoryId);
             $lastIvf = $this->IvfHistory->where('id','<',$ivfHistoryId)->where('cycle_no',$data['ivf']['cycle_no'])->where('plan',$data['ivf']['plan'])->where('patients_id',$data['ivf']['patients_id'])->orderBy('id','DESC')->first();
@@ -1823,6 +1833,7 @@ class IVFController extends AdminController
             }
             if($data['ivf'])
             {
+                $description = !empty($data['ivf']) ? json_decode($data['ivf']['description']) : null;
                 $investigation = json_decode($data['ivf']['investigation']);
                 $hystroscopyImages  = !empty($investigation->hystroscopy->images) ? $investigation->hystroscopy->images : null;
                 if($hystroscopyImages){
@@ -1836,6 +1847,13 @@ class IVFController extends AdminController
                     foreach($laproscopyImages as $key=>$row){
                         $laproscopyImagesData[$key]['id'] = $key;
                         $laproscopyImagesData[$key]['src'] = url($row);
+                    }
+                }
+                $bloodReportImages = !empty($description) && !empty($description->blood->image) ? $description->blood->image : null;
+                if($bloodReportImages){
+                    foreach($bloodReportImages as $key=>$row){
+                        $bloodReportImagesData[$key]['id'] = $key;
+                        $bloodReportImagesData[$key]['src'] = url($row);
                     }
                 }
             }
@@ -1862,6 +1880,7 @@ class IVFController extends AdminController
             $data['lmpDate'] = $lmpDate;
             $data['hystroscopyImagesData'] = json_encode($hystroscopyImagesData,true);
             $data['laproscopyImagesData'] = json_encode($laproscopyImagesData,true);
+            $data['bloodReportImagesData'] = json_encode($bloodReportImagesData,true);
             $data['hospitalDoctor'] = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
             $data['semenFreezing'] = !empty($semenFreezing) ? 1 : 0;
             $data['embroyReady'] = !empty($embroyReady) ? 1 : 0;

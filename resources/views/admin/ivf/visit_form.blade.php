@@ -422,6 +422,7 @@
             $hystroscopy_detail = !empty($hystroscopy->type) && $hystroscopy->type == 'yes' ? '':'d-none';
             $laproscopy = !empty($ivf->investigation) && isset(json_decode($ivf->investigation)->laproscopy) ? json_decode($ivf->investigation)->laproscopy : null;
             $laproscopy_detail = !empty($laproscopy->type) && $laproscopy->type == 'yes' ? '':'d-none';
+            $bloodStatus = in_array('blood',$collectionData) ? '' : 'd-none';
         @endphp
         <div class="row mt-1">
             <div class="col-md-1 pr-0">
@@ -479,6 +480,7 @@
                 </div> --}}
             </div>
         </div>
+        
         @if($ivf->visit != 2)
             <div class="row mt-1">
                 <div class="col-md-2 pr-0">
@@ -503,45 +505,7 @@
             @endphp
             
             {{Form::hidden('is_trigger','no')}}
-            {{-- <div class="{{'simen_data ml-3 '}}"> --}}
-                {{-- <div class="row mt-1">
-                    <div class="col-md-2">
-                        <label class="vertical-form-label pr-0">
-                            Semen Freezing :
-                        </label>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="radio is-conceived">
-                            {{Form::radio("data[collected][frozen][type]",'yes',!empty($ivfData->collected->frozen->type) && $ivfData->collected->frozen->type == 'yes' ? true : false,['id'=>'progesteroneyes'])}}
-                            <label for="progesteroneyes">
-                                Yes
-                            </label>
-                            {{Form::radio("data[collected][frozen][type]",'no',!empty($ivfData->collected->frozen->type) && $ivfData->collected->frozen->type == 'no' ? true : false,['id'=>'progesteroneno'])}}
-                            <label for="progesteroneno">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                    {{Form::hidden('ivf_report_id', '' , ['id' => 'ivf_report_id'])}}
-                    <div class="col-md-2">
-                        <label class="vertical-form-label pr-0">
-                            Embroy Ready :
-                        </label>
-                    </div>
-                    <div class="{{'col-md-2 embroy-yes '}}">
-                        <div class="radio is-conceived">
-                            {{Form::radio("data[collected][report][embroy][type]",'yes',!empty($embroyType) ? false : true,['id'=>'embroyyes'])}}
-                            <label for="embroyyes">
-                                Yes
-                            </label>
-                            {{Form::radio("data[collected][report][embroy][type]",'no',!empty($embroyType) ? true : false,['id'=>'embroyno'])}}
-                            <label for="embroyno">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </div> --}}
-            {{-- </div> --}}
+            
             <div class="{{'row embroy-button '.$simonReportType}}">
                 {{Form::hidden('ivf_report_id',!empty($ivfReport->id) ? encrypt($ivfReport->id) : null)}}
                 <div class="col-md-1"></div>
@@ -843,34 +807,7 @@
                     </div>
                 </div>
             @endif
-            {{-- <div class="row mt-1">
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        {{Form::checkbox('data[collection][]','blood',!empty($bloodStatus) ? false : true,['id'=>'blood'])}}
-                        <label for="blood">
-                            Blood Report
-                        </label>
-                    </div>
-                </div>
-                <div class="{{'col-md-8 bloodreport '.$bloodStatus}}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-addon">Blood report: &nbsp;</span>
-                                {{Form::text("data[blood][report]",!empty($ivfData->blood->report) ? $ivfData->blood->report : null,['class'=>'form-control'])}}
-                            </div>
-                        </div>
-                        @if(!empty($ivfData->blood->image))
-                            <div class="col-md-2">
-                                <img src="{{URL::to($ivfData->blood->image)}}" height="100px" width="100px">
-                            </div>
-                        @endif
-                        <div class="col-md-4">
-                            {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}}
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+            
             @if($ivf->plan != 3 )
                 <div class="row mt-1">
                     <div class="col-md-2">
@@ -907,7 +844,31 @@
                 {{Form::hidden('data[transfer][method]',!empty($ivfData->transfer->method) ? $ivfData->transfer->method : null)}}
             @endif
         @endif
+        <div class="row mt-1">
+            <div class="col-md-2">
+                <div class="checkbox">
+                    {{Form::checkbox('data[collection][]','blood',!empty($bloodStatus) ? false : true,['id'=>'blood'])}}
+                    <label for="blood">
+                        Blood Report
+                    </label>
+                </div>
+            </div>
+            <div class="{{'col-md-8 bloodreport '.$bloodStatus}}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">Blood report: &nbsp;</span>
+                            {{Form::text("data[blood][report]",!empty($ivfData->blood->report) ? $ivfData->blood->report : null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="edit-blood-images"></div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
         {{-- end ivf comman form --}}
         <br>
         <div class="row">
@@ -1478,7 +1439,6 @@
                                             {{Form::text("investigation[".$value."][investigation_details][31]",(!empty($patientsInvestigation)) && !empty($investigationValue[31]) ? $investigationValue[31] : null,['class'=>'form-control','placeholder'=>'HB Details'])}}
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -1810,8 +1770,12 @@
     $('.edit-laproscopy-images').imageUploader({
         imagesInputName: 'investigation[laproscopy][images]',
     });
+    $('.edit-blood-images').imageUploader({
+        imagesInputName: 'data[blood][image]',
+    });
     var hystroscopyImages = @json($hystroscopyImagesData);
     var laproscopyImages = @json($laproscopyImagesData);
+    var bloodReport = @json($bloodReportImagesData);
         if(hystroscopyImages != 'null') {
             $('.edit-hystroscopy-images').imageUploader({
                 preloaded: jQuery.parseJSON(hystroscopyImages),
@@ -1826,4 +1790,11 @@
                 preloadedInputName: 'laproscopy_old'
             });
         }
+        if(bloodReport != 'null'){
+                $('.edit-blood-images').imageUploader({
+                    preloaded: jQuery.parseJSON(bloodReport),
+                    preloadedInputName: 'data[blood][image]',
+                    imagesInputName: 'blood_report_old'
+                });
+            }
     </script>

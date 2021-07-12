@@ -338,7 +338,7 @@ class PatientsController extends AdminController
                 // dd($investigationHistoryReport['hystroscopy']['images']);
                 $IVFReports[$reportDate]['hystroscopy'] = !empty($investigationHistoryReport['hystroscopy']['images']) ? $investigationHistoryReport['hystroscopy']['images'] : [];
                 $IVFReports[$reportDate]['laproscopy'] = !empty($investigationHistoryReport['laproscopy']['images']) ? $investigationHistoryReport['laproscopy']['images'] : [];
-                $IVFReports[$reportDate]['blood_report'] = !empty($investigationHistoryData) && !empty($investigationHistoryData['blood']['image']) ? $investigationHistoryData['blood']['image'] : [];
+                $IVFReports[$reportDate]['blood_report'] = !empty($investigationHistoryData) && !empty($investigationHistoryData['blood_report']['image']) ? $investigationHistoryData['blood_report']['image'] : [];
             }
         }
         $iuiAllVisit = $this->IUI->where('patients_id', $patients)->get();

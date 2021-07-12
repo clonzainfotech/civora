@@ -428,6 +428,7 @@ class IUIController extends AdminController
                 if(!empty($request->data['result']) && $request->data['result'] == 'consive' && (isset($request->data['upt_type']) && $request->data['upt_type'] == 'positive')){
                     $ancData = $this->ANC;
                     $autoRemark = [];
+                    
                     //set EDD date and lmpdate from second visit
                     $iuiSecondVisit = $this->IuiHistory->where('patients_id',$patientsId)->whereCycleNo($request->cycle_no)->where('visit',2)->first();
                     $iuiSecondVisitData = json_decode($iuiSecondVisit->description);

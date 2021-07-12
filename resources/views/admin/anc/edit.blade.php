@@ -1334,10 +1334,10 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     <div class="col-sm-4">
                         <div class="input-group">
                             <span class="input-group-addon">First Marriage Life : &nbsp;</span>
-                            {{Form::text("p_obstratics[marriage_life]",!empty($patientsObstratics->marriage_life) ? $patientsObstratics->marriage_life : null,['class'=>'form-control'])}}
+                            {{Form::text("p_obstratics[first_marriage_life]",!empty($patientsObstratics->first_marriage_life) ? $patientsObstratics->first_marriage_life : null,['class'=>'form-control'])}}
                         </div>
                         <span class="form-error-msg">
-                            {{$errors->first('marriage_life')}}
+                            {{$errors->first('first_marriage_life')}}
                         </span>
                     </div>
                 </div>

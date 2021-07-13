@@ -156,6 +156,7 @@
         var search = '';
         var date = '';
         var qstring = 'page=' + page + '&patient_id=' + patientId + '&reference_doctor_id=' + referenceDoctorId+'&search='+search;
+        var label_name = '';
 
 
         $(document).ready(function(){

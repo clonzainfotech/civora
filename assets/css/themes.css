@@ -2637,3 +2637,14 @@ input[type=number]::-webkit-outer-spin-button {
 .all_type_payment tbody tr,.all_type_payment th{
 line-height: 6px !important;
 }
+@media (min-width: 576px){
+    .view-file-modal-dialog {
+        max-width: 1600px !important;
+        margin: 1.75rem auto;
+    }
+}
+.sepreator
+{
+    border-top: 1px solid black;
+    margin-bottom: 25px;
+}

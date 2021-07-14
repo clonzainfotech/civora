@@ -1191,10 +1191,11 @@
                                 </th>
                             </tr>
                         @endif
+                        @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
                         <tr>
                             <th>
-                                <span class="ivf-label">Right Ovary</span>
                                 @if (!empty($oe->ovary->right->updated_details))
+                                <span class="ivf-label">Right Ovary</span>
                                     @foreach ($oe->ovary->right->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
@@ -1207,10 +1208,13 @@
                                 @endif
                             </th>
                         </tr>
+                        @endif
+                        @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
                         <tr>
                             <th>
-                                <span class="ivf-label">Left Ovary</span>
+                                
                                 @if(!empty($oe->ovary->left->updated_details))
+                                <span class="ivf-label">Left Ovary</span>
                                     @foreach($oe->ovary->left->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
@@ -1223,6 +1227,7 @@
                                 @endif
                             </th>
                         </tr>
+                        @endif
                     </tbody>
                 </table>
             @endif
@@ -1342,25 +1347,28 @@
                                             $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                             $firstCharacter = strtoupper(substr($mId, 0, 3));
                                             if($firstCharacter == "INJ"){
-                                                switch($row->medicine_time){
-                                                    case '1':
-                                                        $medicine_status = 'IV';
-                                                        break;
-                                                    case '2':
-                                                        $medicine_status = 'IM';
-                                                        break;
-                                                    case '3':
-                                                        $medicine_status = 'SC';
-                                                        break;
-                                                    case '4':
-                                                        $medicine_status = 'Oral';
-                                                        break;
-                                                    case '5':
-                                                        $medicine_status = 'P/V';
-                                                        break;
-                                                    case '6':
-                                                        $medicine_status = 'P/A';
-                                                        break;
+                                                if($row->medicine_time)
+                                                {
+                                                    switch($row->medicine_time){
+                                                        case '1':
+                                                            $medicine_status = 'IV';
+                                                            break;
+                                                        case '2':
+                                                            $medicine_status = 'IM';
+                                                            break;
+                                                        case '3':
+                                                            $medicine_status = 'SC';
+                                                            break;
+                                                        case '4':
+                                                            $medicine_status = 'Oral';
+                                                            break;
+                                                        case '5':
+                                                            $medicine_status = 'P/V';
+                                                            break;
+                                                        case '6':
+                                                            $medicine_status = 'P/A';
+                                                            break;
+                                                    }
                                                 }
                                                 $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
                                                 if($mData==$medicine_status) {
@@ -1868,46 +1876,47 @@
                                     </th>
                                 @endif
                                 </tr>
-                                <tr>
-                                    <th>
-                                        @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
-                                            <span class="ivf-label">OvaryRight :</span>
+                                @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
+                                    <tr>
+                                        <th>
+                                            
+                                                <span class="ivf-label">OvaryRight :</span>
+                                                <br>
+                                            @if (!empty($oe->ovary->right->updated_details))
                                             <br>
-                                        @endif
-                                        @if (!empty($oe->ovary->right->updated_details))
-                                        <br>
-                                            @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                                @php
-                                                    echo !empty($value) ? $value .  '<br />' : '-' . '<br />';
-                                                @endphp
-                                            @endforeach
-                                        @endif
-                                        @if(!empty($oe->ovary->right->afcs))
-                                            <span class="ivf-label">Follicle numbers per ovary: </span>
-                                            {{$oe->ovary->right->afcs}}
-                                        @endif
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        @if (!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
-                                            <span class="ivf-label">OvaryLeft :</span>
-                                            <br>
-                                        @endif
-                                        @if (!empty($oe->ovary->left->updated_details))
-                                        
-                                                @foreach($oe->ovary->left->updated_details as $key => $value)
+                                                @foreach ($oe->ovary->right->updated_details as $key => $value)
                                                     @php
-                                                        echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                        echo !empty($value) ? $value .  '<br />' : '-' . '<br />';
                                                     @endphp
                                                 @endforeach
-                                        @endif
-                                        @if (!empty($oe->ovary->left->afcs))
-                                            <span class="ivf-label">Follicle numbers per ovary: </span>
-                                            {{ $oe->ovary->left->afcs }}
-                                        @endif
-                                    </th>
-                                </tr>
+                                            @endif
+                                            @if(!empty($oe->ovary->right->afcs))
+                                                <span class="ivf-label">Follicle numbers per ovary: </span>
+                                                {{$oe->ovary->right->afcs}}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if (!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
+                                    <tr>
+                                        <th>
+                                                <span class="ivf-label">OvaryLeft :</span>
+                                                <br>
+                                            @if (!empty($oe->ovary->left->updated_details))
+                                            
+                                                    @foreach($oe->ovary->left->updated_details as $key => $value)
+                                                        @php
+                                                            echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                        @endphp
+                                                    @endforeach
+                                            @endif
+                                            @if (!empty($oe->ovary->left->afcs))
+                                                <span class="ivf-label">Follicle numbers per ovary: </span>
+                                                {{ $oe->ovary->left->afcs }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
                                 @if(!empty($description->oe->endometrial_cavity->cavity) || !empty($description->oe->endometrial_cavity->size))
                                     {{-- <tr>
                                         @if(!empty($description->oe->endometrial_cavity->cavity))
@@ -1934,55 +1943,61 @@
                     <br>
                         <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
                             <tbody>
+                                @if((isset($oe->oe_type) && !empty($oe->oe_type)))
                                 <tr>
-                                    @if((isset($oe->oe_type) && !empty($oe->oe_type)))
-                                        <th>
-                                            <span class="ivf-label"> O / E :</span>
-                                            {{-- {{ strtoupper($oe->oe_type->type) }} --}}
-                                            @php
-                                                if($oe->oe_type->type == 'tvs'){
-                                                    echo "Transvaginal sonography";
-                                                }
-                                                if($oe->oe_type->type == 'pa')
-                                                {
-                                                    echo "Transabdominal sonography";
-                                                }
-                                            @endphp
-                                        </th>
-                                    @endif
+                                    <th>
+                                        <span class="ivf-label"> O / E :</span>
+                                        {{-- {{ strtoupper($oe->oe_type->type) }} --}}
+                                        @php
+                                            if($oe->oe_type->type == 'tvs'){
+                                                echo "Transvaginal sonography";
+                                            }
+                                            if($oe->oe_type->type == 'pa')
+                                            {
+                                                echo "Transabdominal sonography";
+                                            }
+                                        @endphp
+                                    </th>
                                 </tr>
+                                @endif
+                                @if (isset($oe->ut->ut_type) && !empty($oe->ut->ut_type))
+                                    <tr>
+                                            <th>
+                                                <br>
+                                                <span class="ivf-label">Uterus: </span>
+                                                {{ ($oe->ut->ut_type == 1) ? 'Normal' : 'Abnormal' }}
+                                            </th>
+                                    
+                                    </tr>
+                                @endif
+                                @if (isset($oe->ut->ut_type) && $oe->ut->ut_type == 2 && !empty($oe->ut->details))
+                                    <tr>
+                                        
+                                            <th>
+                                                <span class="ivf-label"> UT Details:</span>
+                                                {{  $oe->ut->details }}
+                                            </th>
+                                    
+                                    </tr>
+                                @endif
+                                @if(!empty($ovary->ovary_type->right->details))
                                 <tr>
-                                    @if (isset($oe->ut->ut_type) && !empty($oe->ut->ut_type))
-                                        <th>
-                                            <br>
-                                            <span class="ivf-label">Uterus: </span>
-                                            {{ ($oe->ut->ut_type == 1) ? 'Normal' : 'Abnormal' }}
-                                        </th>
-                                    @endif
-                                </tr>
-                                    @if (isset($oe->ut->ut_type) && $oe->ut->ut_type == 2 && !empty($oe->ut->details))
-                                        <th>
-                                            <span class="ivf-label"> UT Details:</span>
-                                            {{  $oe->ut->details }}
-                                        </th>
-                                    @endif
-                                </tr>
-                                <tr>
-                                    @if(!empty($ovary->ovary_type->right->details))
                                         <th>
                                             <span class="ivf-label"> Overy Right:</span>
                                             {{$ovary->ovary_type->right->details}}
                                         </th>
-                                    @endif
                                 </tr>
+                                @endif
+                                @if(!empty($ovary->ovary_type->left->details))
                                 <tr>
-                                    @if(!empty($ovary->ovary_type->left->details))
+                                    
                                         <th>
                                             <span class="ivf-label"> Overy Left:</span>
                                             {{$ovary->ovary_type->left->details}}
                                         </th>
-                                    @endif
+                                   
                                 </tr>
+                                @endif
                                 
                                     {{-- @if(!empty($description->oe->endometrial_cavity->cavity))
                                         <tr>
@@ -2247,228 +2262,89 @@
                 </tbody>
             </table>
                     @if($plan != 2 && $cycle == $cycle)
-                        {{-- @if(!empty($historyData->pre_operative->type) && $historyData->pre_operative->type == 'yes')
-                            <tr>
-                                <th>Pre Operative Minor:</th>
-                                <th>Yes</th>
-                                <th>Wife</th>
-                                @if(!empty($historyData->pre_operative->type) && $historyData->pre_operative->type == 'yes')
-                                    <tr>
-                                        <th>
-                                            <span class="ivf-label">HIV :</span>
-                                            {{!empty($historyData->pre_operative->hiv_type) && $historyData->pre_operative->hiv_type == 'positive' ? 'Positive' : 'Negative'}}
-                                        </th>
-                                        <th>
-                                            <span class="ivf-label">HBSAG :</span>
-                                            {{!empty($historyData->pre_operative->hbsag_type) && $historyData->pre_operative->hbsag_type == 'positive' ? 'Positive' : 'Negative'}}
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <span class="ivf-label">Date :</span>
-                                            {{!empty($historyData->pre_operative->date) ? $historyData->pre_operative->date : (!empty($lastAppointmentData->date) ? \Carbon\Carbon::parse($lastAppointmentData->date)->format('D d M Y') : '-')}}
-                                        </th>
-                                        @if(!empty($historyData->pre_operative->cbc_mp))
-                                            <th>
-                                                <span class="ivf-label">CBC MP :</span>
-                                                {{$historyData->pre_operative->cbc_mp}}
-                                            </th>
-                                        @endif
-                                        @if(!empty($historyData->pre_operative->vdrl))
-                                            <th>
-                                                <span class="ivf-label">VDRL :</span>
-                                                {{$historyData->pre_operative->vdrl == 'positive' ? 'Positive' : 'Negative'}}
-                                            </th>
-                                        @endif
-                                    </tr>
-                                @endif
-                            </tr>
-                        @endif --}}
-                        
-                        @if(!empty($ivf->investigation))
-                            @php
-                                $historyWifeInvestigation = (isset(json_decode($ivf->investigation)->wife)) ? json_decode($ivf->investigation)->wife : null;
-                                $historyHubInvestigation = (isset(json_decode($ivf->investigation)->hub)) ? json_decode($ivf->investigation)->hub : null;
-                                $investigationValueDetails = [];
-                                $investigationReport = $investigationReport['reportData'];
-                            @endphp
-                            @if(!empty($historyWifeInvestigation))
-                                <tr>
-                                    <th>
-                                        <br>
-                                        @php
-                                            
-                                            $investigationData = [];
-                                            $investigationValueDetails['wife'] = [];
-                                            $data = (!empty($historyWifeInvestigation->investigation_data)) ? $historyWifeInvestigation->investigation_data : [];
-                                            $investigationValueData = (array)$historyWifeInvestigation->investigation_details;
-                                            foreach($data as $key => $value){
-                                                if(!empty($investigationValueData[$value])){
-                                                    $investigationValueDetails['wife'][$investigationReport[$value]] = $investigationValueData[$value];
-                                                }else{
-                                                    $investigationData[] = $investigationReport[$value];
-                                                }
-                                            }
-                                        @endphp
-                                        @if(count($investigationData)>0)
-                                            <span class="ivf-label">Investigation Advise for wife : </span>{{implode(',',$investigationData)}}
-                                        @endif
-                                    </th>
-                                </tr>
-                                {{-- @if(!empty($investigationValueDetails))
-                                <tr>
-                                    <th>
-                                            <span class="ivf-label">Investigation Done :</span>
-                                            @foreach($investigationValueDetails as $key => $value)
-                                                {!! '<span class="ivf-label">'.$key.' : </span>' .  $value !!}
-                                            @endforeach
-                                    </th>
-                                </tr>
-                                @endif --}}
-                            @endif
-                            @if(!empty($historyHubInvestigation))
-                                <tr>
-                                    <th>
-                                        <br>
-                                        @php
-                                            
-                                            $investigationData = [];
-                                            $investigationValueDetails['hub'] = [];
-                                            $data = !empty($historyHubInvestigation->investigation_data) ? $historyHubInvestigation->investigation_data : [];
-                                            $investigationValueData = (array)$historyHubInvestigation->investigation_details;
-                                            foreach($data as $key => $value){
-                                                if(!empty($investigationValueData[$value])){
-                                                    $investigationValueDetails['hub'][$investigationReport[$value]] = $investigationValueData[$value];
-                                                }else{
-                                                    $investigationData[] = $investigationReport[$value];
-                                                }
-                                            }
-                                        @endphp
-                                        @if(count($investigationData)>0)
-                                            <span class="ivf-label">Investigation Advise for Husband: </span>{{implode(',',$investigationData)}}
-                                        @endif
-                                    </th>
-                                </tr>
-                                {{-- @if(!empty($investigationValueDetails))
-                                <tr>
-                                    <th>
-                                            <span class="ivf-label">Investigation Done :</span>
-                                            @foreach($investigationValueDetails as $key => $value)
-                                                {!! '<span class="ivf-label">'.$key.' : </span>' .  $value !!}
-                                            @endforeach
-                                    </th>
-                                </tr>
-                                @endif --}}
-                            @endif
-                            @if(!empty($investigationValueDetails['hub']) || !empty($investigationValueDetails['wife']))
-                                <br>
-                                <table class="module-report-table w-30">
-                                    <thead>
+                        <table class="module-report-table">
+                            <tbody>
+                                @if(!empty($ivf->investigation))
+                                    @php
+                                        $historyWifeInvestigation = (isset(json_decode($ivf->investigation)->wife)) ? json_decode($ivf->investigation)->wife : null;
+                                        $historyHubInvestigation = (isset(json_decode($ivf->investigation)->hub)) ? json_decode($ivf->investigation)->hub : null;
+                                        $investigationValueDetails = [];
+                                        $investigationReport = $investigationReport['reportData'];
+                                    @endphp
+                                    @if(!empty($historyWifeInvestigation))
                                         <tr>
-                                            <th>Investigation</th>
-                                            <th>Wife</th>
-                                            <th>Husband</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($investigationReport as $key => $value)
-                                            @if(array_key_exists($value,$investigationValueDetails['hub']) || array_key_exists($value,$investigationValueDetails['wife']))
-                                            <tr>
-                                                <td>{{$value}}</td>
-                                                <td>{{!empty($investigationValueDetails['wife'][$value]) ? $investigationValueDetails['wife'][$value] : '-'}}</td>
-                                                <td>{{!empty($investigationValueDetails['hub'][$value]) ? $investigationValueDetails['hub'][$value] : '-'}}</td>
-                                            </tr>
-                                            @endif
-                                        @endforeach
-                                        
-                                    </tbody>
-                                </table>
-                            @endif
-                        @endif
-                    @endif
-                    {{-- @if(!empty($historyData->pre_operative->type) && $historyData->pre_operative->type == 'yes' && (!empty($historyData->pre_operative->urine) || !empty($historyData->pre_operative->blood_group) || !empty($historyData->pre_operative->rbs)) )
-                        <tr>
-                            @if(!empty($historyData->pre_operative->urine))
-                                <th>
-                                    <span class="ivf-label">Urine :</span>
-                                    {{$historyData->pre_operative->urine}}
-                                </th>
-                            @endif
-                            @if(!empty($historyData->pre_operative->blood_group))
-                                <th>
-                                    <span class="ivf-label">Blood Group :</span>
-                                    {{$historyData->pre_operative->blood_group}}
-                                </th>
-                            @endif
-                            @if(!empty($historyData->pre_operative->rbs))
-                                <th>
-                                    <span class="ivf-label">RBS :</span>
-                                    {{$historyData->pre_operative->rbs}}
-                                </th>
-                            @endif
-                        </tr>
-                    @endif
-
-                    @if($plan != 2 && $cycle == $cycle)
-                        @if(!empty($historyData->pre_operative->hub->type) && $historyData->pre_operative->hub->type == 'yes')
-                            <tr>
-                                <th>Pre Operative Minor:</th>
-                                <th>Yes</th>
-                                <th>HUSBAND</th>
-                                @if(!empty($historyData->pre_operative->hub->type) && $historyData->pre_operative->hub->type == 'yes')
-                                    <tr>
-                                        <th>
-                                            <span class="ivf-label">HIV :</span>
-                                            {{!empty($historyData->pre_operative->hub->hiv_type) && $historyData->pre_operative->hub->hiv_type == 'positive' ? 'Positive' : 'Negative'}}
-                                        </th>
-                                        <th>
-                                            <span class="ivf-label">HBSAG :</span>
-                                            {{!empty($historyData->pre_operative->hub->hbsag_type) && $historyData->pre_operative->hub->hbsag_type == 'positive' ? 'Positive' : 'Negative'}}
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <span class="ivf-label">Date :</span>
-                                            {{!empty($historyData->pre_operative->hub->date) ? $historyData->pre_operative->hub->date : (!empty($lastAppointmentData->date) ? \Carbon\Carbon::parse($lastAppointmentData->date)->format('D d M Y') : '-')}}
-                                        </th>
-                                        @if(!empty($historyData->pre_operative->hub->cbc_mp) )
                                             <th>
-                                                <span class="ivf-label">CBC MP :</span>
-                                                {{$historyData->pre_operative->hub->cbc_mp}}
+                                                @php
+                                                    
+                                                    $investigationData = [];
+                                                    $investigationValueDetails['wife'] = [];
+                                                    $data = (!empty($historyWifeInvestigation->investigation_data)) ? $historyWifeInvestigation->investigation_data : [];
+                                                    $investigationValueData = (array)$historyWifeInvestigation->investigation_details;
+                                                    foreach($data as $key => $value){
+                                                        if(!empty($investigationValueData[$value])){
+                                                            $investigationValueDetails['wife'][$investigationReport[$value]] = $investigationValueData[$value];
+                                                        }else{
+                                                            $investigationData[] = $investigationReport[$value];
+                                                        }
+                                                    }
+                                                @endphp
+                                                @if(count($investigationData)>0)
+                                                    <span class="ivf-label">Investigation Advise for wife : </span>{{implode(',',$investigationData)}}
+                                                @endif
                                             </th>
-                                        @endif
-                                        <th>
-                                            <span class="ivf-label">VDRL :</span>
-                                            {{!empty($historyData->pre_operative->hub->vdrl) && $historyData->pre_operative->hub->vdrl == 'positive' ? 'Positive' : 'Negative'}}
-                                        </th>
-                                    </tr>
+                                        </tr>
+                                    @endif
+                                    @if(!empty($historyHubInvestigation))
+                                        <tr>
+                                            <th>
+                                                @php
+                                                    
+                                                    $investigationData = [];
+                                                    $investigationValueDetails['hub'] = [];
+                                                    $data = !empty($historyHubInvestigation->investigation_data) ? $historyHubInvestigation->investigation_data : [];
+                                                    $investigationValueData = (array)$historyHubInvestigation->investigation_details;
+                                                    foreach($data as $key => $value){
+                                                        if(!empty($investigationValueData[$value])){
+                                                            $investigationValueDetails['hub'][$investigationReport[$value]] = $investigationValueData[$value];
+                                                        }else{
+                                                            $investigationData[] = $investigationReport[$value];
+                                                        }
+                                                    }
+                                                @endphp
+                                                @if(count($investigationData)>0)
+                                                    <span class="ivf-label">Investigation Advise for Husband: </span>{{implode(',',$investigationData)}}
+                                                @endif
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(!empty($investigationValueDetails['hub']) || !empty($investigationValueDetails['wife']))
+                                        <br>
+                                        <table class="module-report-table w-30">
+                                            <thead>
+                                                <tr>
+                                                    <th>Investigation</th>
+                                                    <th>Wife</th>
+                                                    <th>Husband</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($investigationReport as $key => $value)
+                                                    @if(array_key_exists($value,$investigationValueDetails['hub']) || array_key_exists($value,$investigationValueDetails['wife']))
+                                                    <tr>
+                                                        <td>{{$value}}</td>
+                                                        <td>{{!empty($investigationValueDetails['wife'][$value]) ? $investigationValueDetails['wife'][$value] : '-'}}</td>
+                                                        <td>{{!empty($investigationValueDetails['hub'][$value]) ? $investigationValueDetails['hub'][$value] : '-'}}</td>
+                                                    </tr>
+                                                    @endif
+                                                @endforeach
+                                                
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 @endif
-                            </tr>
-                        @endif
+                            </tbody>
+                        </table>
                     @endif
-                    @if(!empty($historyData->pre_operative->hub->type) && $historyData->pre_operative->hub->type == 'yes' && (!empty($historyData->pre_operative->hub->urine) || !empty($historyData->pre_operative->hub->blood_group) || !empty($historyData->pre_operative->hub->rbs)) )
-                        <tr>
-                            @if(!empty($historyData->pre_operative->hub->urine))
-                                <th>
-                                    <span class="ivf-label">Urine :</span>
-                                    {{$historyData->pre_operative->hub->urine}}
-                                </th>
-                            @endif
-                            @if(!empty($historyData->pre_operative->hub->blood_group))
-                                <th>
-                                    <span class="ivf-label">Blood Group :</span>
-                                    {{$historyData->pre_operative->hub->blood_group}}
-                                </th>
-                            @endif
-                            @if(!empty($historyData->pre_operative->hub->rbs))
-                                <th>
-                                    <span class="ivf-label">RBS :</span>
-                                    {{$historyData->pre_operative->hub->rbs}}
-                                </th>
-                            @endif
-                        </tr>
-                    @endif --}}
-                
             @php
                 $protocolTable = !empty($historyData->protocol) ? $historyData->protocol : [];
                 $countProtocolTable = count((array)$protocolTable);
@@ -2565,25 +2441,28 @@
                                         $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                         $firstCharacter = strtoupper(substr($mId, 0, 3));
                                         if($firstCharacter == "INJ"){
-                                            switch($row->medicine_time){
-                                                case '1':
-                                                    $medicine_status = 'IV';
-                                                    break;
-                                                case '2':
-                                                    $medicine_status = 'IM';
-                                                    break;
-                                                case '3':
-                                                    $medicine_status = 'SC';
-                                                    break;
-                                                case '4':
-                                                    $medicine_status = 'Oral';
-                                                    break;
-                                                case '5':
-                                                    $medicine_status = 'P/V';
-                                                    break;
-                                                case '6':
-                                                    $medicine_status = 'P/A';
-                                                    break;
+                                            if(!empty($row->medicine_time))
+                                            {
+                                                switch($row->medicine_time){
+                                                    case '1':
+                                                        $medicine_status = 'IV';
+                                                        break;
+                                                    case '2':
+                                                        $medicine_status = 'IM';
+                                                        break;
+                                                    case '3':
+                                                        $medicine_status = 'SC';
+                                                        break;
+                                                    case '4':
+                                                        $medicine_status = 'Oral';
+                                                        break;
+                                                    case '5':
+                                                        $medicine_status = 'P/V';
+                                                        break;
+                                                    case '6':
+                                                        $medicine_status = 'P/A';
+                                                        break;
+                                                }
                                             }
                                             $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
                                             if($mData==$medicine_status) {
@@ -2719,25 +2598,28 @@
                                         $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                         $firstCharacter = strtoupper(substr($mId, 0, 3));
                                         if($firstCharacter == "INJ"){
-                                            switch($row->medicine_time){
-                                                case '1':
-                                                    $medicine_status = 'IV';
-                                                    break;
-                                                case '2':
-                                                    $medicine_status = 'IM';
-                                                    break;
-                                                case '3':
-                                                    $medicine_status = 'SC';
-                                                    break;
-                                                case '4':
-                                                    $medicine_status = 'Oral';
-                                                    break;
-                                                case '5':
-                                                    $medicine_status = 'P/V';
-                                                    break;
-                                                case '6':
-                                                    $medicine_status = 'P/A';
-                                                    break;
+                                            if($row->medicine_time)
+                                            {
+                                                switch($row->medicine_time){
+                                                    case '1':
+                                                        $medicine_status = 'IV';
+                                                        break;
+                                                    case '2':
+                                                        $medicine_status = 'IM';
+                                                        break;
+                                                    case '3':
+                                                        $medicine_status = 'SC';
+                                                        break;
+                                                    case '4':
+                                                        $medicine_status = 'Oral';
+                                                        break;
+                                                    case '5':
+                                                        $medicine_status = 'P/V';
+                                                        break;
+                                                    case '6':
+                                                        $medicine_status = 'P/A';
+                                                        break;
+                                                }
                                             }
                                             $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
                                             if($mData==$medicine_status) {

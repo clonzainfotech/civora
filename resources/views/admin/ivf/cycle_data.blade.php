@@ -106,6 +106,11 @@
         {
             margin-left: -5rem !important;
         }
+        .frozen-table  tfoot td.frozen_table_footer
+        {
+            text-align: inherit !important; 
+            padding-left:10px !important;
+        }
         
     </style>
 @stop
@@ -134,11 +139,11 @@
                                 
                         </div>
                         <div class="col-md-4">
-                            @if($pStatus != 1)
+                            {{-- @if($pStatus != 1)
                                 <a href="#" class="mb-1">
                                     <button class="btn btn-primary fet-btn pull-right fet-report">FET Report</button>
                                 </a>
-                            @endif
+                            @endif --}}
                             <a href="#" class="mb-1">
                                 <button class="btn btn-primary pull-right view-file-edit">View File & Edit</button>
                             </a>
@@ -676,7 +681,7 @@
                                                     
                                                 @endforeach
                                             
-                                                @if(!empty($lastHistoryData) && $resultValue == 0 && $skipValue == 0)
+                                                @if(!empty($lastHistoryData) && $resultValue == 0 && $skipValue == 0 && $isForm == true)
                                                     @php
                                                         $date = \Carbon\Carbon::parse($lastHistoryData->follow_up)->format('d-m-Y');
                                                         $diff = \Carbon\Carbon::parse($ivfSecondVisitData->lmp->date)->diffInDays(\Carbon\Carbon::parse($date));
@@ -702,7 +707,13 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                <td colspan="7" style="text-align: inherit !important; padding-left:10px !important;">
+                                                <td colspan="7" class="frozen_table_footer">
+                                                    @if(!$isForm && $lastHistoryData->plan != $pStatus)
+                                                    <div class="mb-2">
+                                                        <span class="visit-lable">Transfer Plan :- </span> 
+                                                        <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
+                                                    </div>
+                                                    @endif
                                                     @if(!$isTransfer && $isForm && $skipPlan == $pStatus && $skipValue == 0 && $resultValue == 0)
                                                     
                                                         {{Form::hidden('data[is_transfer]','no',['class'=>'is-transfer'])}}
@@ -1061,7 +1072,7 @@
                                                         {{Form::hidden("data[is_upt]",'yes')}}
                                                         {{Form::hidden('data[is_transfer]','yes',['class'=>'is-transfer'])}}
                                                         {{Form::hidden('data[is_transfer_print]','yes')}}
-                                                        @if($resultValue == 0)
+                                                        @if($resultValue == 0 && $isForm)
                                                             <div class="row">
                                                                     {{-- upt --}}
                                                                     <div class="col-md-1">
@@ -1146,28 +1157,30 @@
                                                                     <br>
                                                             </div>
                                                         @else
-                                                            @php
-                                                                $visitDate = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y');
-                                                                $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $row->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
-                                                                $diff = $diff + 1;
-                                                            @endphp
-                                                            <h5 class=""><u>Result:</u></h5>
-                                                            <table class="table follicular-table frozen-table table-bordered">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Date</th>
-                                                                        <th>UPT</th>
-                                                                        <th>Result</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>{{$visitDate}}</td>
-                                                                        <td>{{$lastHistoryData->transfer->upt_type}}</td>
-                                                                        <td>{{$lastHistoryData->transfer->result_type}}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                                            @if(!empty($lastHistoryData->transfer->result_type))
+                                                                @php
+                                                                    $visitDate = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y');
+                                                                    $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $row->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
+                                                                    $diff = $diff + 1;
+                                                                @endphp
+                                                                <h5 class=""><u>Result:</u></h5>
+                                                                <table class="table follicular-table frozen-table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Date</th>
+                                                                            <th>UPT</th>
+                                                                            <th>Result</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>{{$visitDate}}</td>
+                                                                            <td>{{$lastHistoryData->transfer->upt_type}}</td>
+                                                                            <td>{{$lastHistoryData->transfer->result_type}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
                                                         @endif
                                                         
                                                     @endif
@@ -1235,7 +1248,7 @@
                                                                             | {{ $old_dose[$row->dose] }}
                                                                         @endif
                                                                     @endif
-                                                                    @if (!empty($row->no)) | No : {{ $row->no }} @endif
+                                                                    @if (!empty($row->no)) | Days : {{ $row->no }} @endif
                                                                     @if($notinject != "is-inj")
                                                                     @php
                                                                         $qty = (!empty($row->quantity)) ? $row->quantity : 0;
@@ -1264,6 +1277,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <td colspan="6">
+                                                    @if($isForm == true)
                                                     <div class="row treatment-data" id="t_data_1">
                                                         <div class="col-md-2 pr-2">
                                                             <label class="vertical-form-label pr-0">
@@ -1279,6 +1293,7 @@
                                                             <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
                                                         </div>
                                                     </div>
+                                                    @endif
                                                     @if(!empty($historyTreatment))
                                                         @foreach($historyTreatment as $key=>$row)
                                                         {{-- @if(isset($medicines[$row->medicine])) --}}
@@ -3639,8 +3654,6 @@
                 </div>
                 <!-- footer -->
                 <div class="modal-footer next-appointment-footer">
-                    {{-- <a href="#" class="btn btn-primary waves-effect save-btn disabled next-appointment-form">Save</a>
-                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button> --}}
                 </div>
             </div>
         </div>
@@ -3654,7 +3667,7 @@
               <button type="button" class="close anc-details-close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <div class="row">
                     <div class="col-md-12">
-                        <h5 class="modal-title rm-btn" id="myModalLabel">Date:- <span class="ivf-appointment-date"></span></h5>
+                        <h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan"></span></h5>
                     </div>
                 </div>
                 <div class="row">
@@ -3662,15 +3675,15 @@
                         <h5 class="modal-title" id="myModalLabel">Cycle No:- <span class="ivf-appointment-cycle-no"></span></h5>
                     </div>
                 </div>
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-12">
                         <h5 class="modal-title rm-btn" id="myModalLabel">Visit:- <span class="ivf-appointment-visit-no"></span></h5>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="col-md-12 mr-5">
-                        <a class="btn edit-btn rm-btn btn-sm btn-primary">Edit</a>
-                        <a class="btn print-btn btn-sm btn-primary">Print</a>
+                            {{-- <a class="btn edit-btn rm-btn btn-sm btn-primary">Edit</a>
+                            <a class="btn print-btn btn-sm btn-primary">Print</a> --}}
                         <a class="btn print-fet-report btn-sm btn-primary">Print</a>
                     </div>
                 </div>
@@ -3680,8 +3693,8 @@
             </div>
 
             <div class="modal-footer footer-top-border text-right d-inline-block">
-                <button type="button" class="btn btn-primary next-appointment-details rm-btn" data-type="1">Prev</button>
-                <button type="button" class="btn btn-primary next-appointment2 next-appointment-details rm-btn" data-type="2">Next</button>
+                {{-- <button type="button" class="btn btn-primary next-appointment-details rm-btn" data-type="1">Prev</button>
+                <button type="button" class="btn btn-primary next-appointment2 next-appointment-details rm-btn" data-type="2">Next</button> --}}
             </div>
           </div>
         </div>
@@ -3763,8 +3776,10 @@
 
             $(document).on('click','.print-btn',function(e){
                 e.preventDefault();
-                ivfVisit = $('.next-appointment-details').data('visit');
-                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visit='+ivfVisit+'&is_print=1';
+                // ivfVisit = $('.next-appointment-details').data('visit');
+                var visitDate = $(this).data('date');
+                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visitDate='+visitDate+'&is_print=1';
+                // ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visit='+ivfVisit+'&is_print=1';
                 getIvfHistoryData(ivfString);
             });
 
@@ -3775,8 +3790,8 @@
             });
 
             $(document).on('click','.edit-btn',function(){
-                ivfVisit = $('.next-appointment-details').data('visit');
-                if(ivfVisit == null){
+                ivfVisit = $(this).data('visit');
+                if(ivfVisit == 1){
                     window.location.href = "{{URL::to('ivf/ivfedit/')}}"+'/'+ivfPId;
                     return true;
                 }
@@ -4631,22 +4646,46 @@
                 type:'GET',
                 dataType:'json'
             }).done(function(data){
-                
-                $('.edit-btn').data('id','');
-                console.log(data);
+               
                 if(data.ivf_type == 1){
-                    $('.ivf-appointment-cycle-no').text(ivfCycleNo);
-                    $('.ivf-appointment-date').text('');
-                    $('.ivf-details-data').html(data.data);
-                    var visitNumberValue = data.visit == null ? 1 : data.visit;
-                    $('.ivf-appointment-visit-no').text(visitNumberValue);
-                    $('.next-appointment-details').data('visit',data.visit);
-                    $('.next-appointment2').data('type',2);
-                    $('.edit-btn').data('id',data.enc_ivf_id);
-                    if(typeof data.date != 'undefined'){
-                        var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
-                        var date = moment(new Date(data.date)).format('DD MMMM YYYY');
-                        $('.ivf-appointment-date').text(date);
+                $('.ivf-details-data').html('');
+
+                    // $('.ivf-appointment-cycle-no').text(ivfCycleNo);
+                    // $('.ivf-appointment-date').text('');
+                    // $('.ivf-details-data').html(data.data);
+                    // var visitNumberValue = data.visit == null ? 1 : data.visit;
+                    // $('.ivf-appointment-visit-no').text(visitNumberValue);
+                    // $('.next-appointment-details').data('visit',data.visit);
+                    // $('.next-appointment2').data('type',2);
+                    // $('.edit-btn').data('id',data.enc_ivf_id);
+                    // if(typeof data.date != 'undefined'){
+                    //     var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
+                    //     var date = moment(new Date(data.date)).format('DD MMMM YYYY');
+                    //     $('.ivf-appointment-date').text(date);
+                    // }
+                    var ivfPreview = $('.ivf-details-data').html();
+                    var buttonHtml = '';
+                    var previewData = '';
+                    
+                    // if(typeof data.date != 'undefined'){
+                    //     var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
+                    //     var date = moment(new Date(data.date)).format('DD MMMM YYYY');
+                    //     $('.ivf-appointment-date').text(date);
+                    // }plan
+                    $('.ivf-appointment-plan').html(data.plan);
+                    $('.ivf-appointment-cycle-no').html(data.cycle);
+                    for(i=0; i<data.data.length;i++)
+                    {
+                        if(typeof data.date[i] != 'undefined'){
+                            var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                            var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                        }
+                        
+                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-4 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-4"><h5>Visit :'+data.visitNumber[i]+'</h5></div><div class="col-md-4 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'">Print</a></div></div>';
+
+                        ivfPreview = buttonHtml + data.data[i];
+                        $('.ivf-details-data').html(ivfPreview);
+                        ivfPreview = ivfPreview + '<div class="row sepreator"></div>';
                     }
                 }
                 if(data.ivf_type == 2){
@@ -4669,6 +4708,7 @@
             }).done(function(data){
                 $('.edit-btn').data('id','');
                 if(data.status == 1){
+                    $('.ivf-details-data').html('')
                     $('.ivf-report-model').addClass('fet-report-data');
                     $('.ivf-appointment-cycle-no').text(ivfCycleNo);
                     $('.ivf-appointment-date').text('');

@@ -26,11 +26,6 @@
             margin-top: -22px !important;
         }
         
-        .sepreator
-        {
-            border-top: 1px solid black;
-            margin-bottom: 25px;
-        }
         .G-sac-border
         {
             border: 2px solid #b9afaf !important;

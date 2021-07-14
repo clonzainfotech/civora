@@ -1425,6 +1425,7 @@ class IVFController extends AdminController
                                 ->where('description->collected->report->embroy->type', 'yes')
                                 ->first();
             $getIvfByPlanAndCycle = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cNumber)->where('plan',$pStatus)->orderBy('id','DESC')->first();
+            
             $data = [];
             $data['pickupDate'] = $pickupDate;
             $data['sProtocol'] = $sProtocol;
@@ -2136,64 +2137,130 @@ class IVFController extends AdminController
             if($request->ajax()){
                 $patientId = decrypt($request->patient_id);
                 $lastAppointmentData = $this->Appointment->wherePatientsId($patientId)->orderBy('id','DESC')->first();
-                $ivfData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
-                $ivf = $ivfData;
+                // $ivfData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
+                // $ivf = $ivfData;
                 $isIvfHistory = '1';
                 $plan = $request->plan;
                 $cycleNo = $request->cycle_no;
                 $visitNo = $request->visit == 'null' ? 1 : $request->visit;
                 $type = $request->type;
-                $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('id','DESC')->first();
-                if($ivfHistory){
-                    $isIvfHistory = '2';
-                    if($type){
-                        $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo);
-                        if($type == 2){
-                            $visitNo = $visitNo + 1;
-                        }else{
-                            $visitNo = $visitNo - 1;
-                            if($visitNo == 1){
-                                $isIvfHistory = '1';
-                            }
-                        }
-                        $ivfHistory = $ivfHistory->where('visit',$visitNo)->first();
-                    }
-                }
-                if($visitNo == 1 && $request->visit == 'null'){
-                    $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('id','asc')->first();
-                }
-                if($isIvfHistory != '1' && $ivfHistory){
-                    $ivf = $ivfHistory;
-                    $historyData = json_decode($ivf->description);
-                    $doseData = $this->Dose->pluck('name','name');
-                }
-                $ivfType = 1;
-                if($request->is_print == 1){
+                $ivfHistoryDate = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('created_at','DESC')->pluck('created_at','created_at')->toArray();
+                $ivfDateData = $this->IVF->where('patients_id',$patientId)->orderBy('created_at','DESC')->first();
+                $ivfDate = [Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')];
+                $ivfVisitDate = array_merge($ivfHistoryDate,$ivfDate);
+                $encIvfId = [];
+                if($request->visitDate && !empty($request->visitDate))
+                {
+                    $visitDate = $request->visitDate;
+                    $ivf = $this->IVF->where('patients_id',$patientId)->where('created_at',$visitDate)->first();
+                    $isIvfHistory = '1';
                     $ivfType = 2;
-                    if($request->visit == 'null'){
-                        $ivf = $ivfData;
-                        $isIvfHistory = '1';
-                    }else{
-                        $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('visit',$request->visit)->where('cycle_no',$cycleNo)->first();
+                    if(!$ivf)
+                    {
+                        $isIvfHistory = '2';
+                        $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->where('created_at',$visitDate)->first();
                         $ivf = $ivfHistory;
+                       
                         $historyData = json_decode($ivf->description);
                         $doseData = $this->Dose->pluck('name','name');
-                        $isIvfHistory = '2';
+                    }
+                    $visitNumber[] = $isIvfHistory;
+                    $viewAllVisit[] =  View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
+                        // $viewAllVisit,$preview);
+                    $dateValue[] = $visitDate;
+                }
+                else
+                {
+                    foreach($ivfVisitDate as $key => $date)
+                    {
+                        $ivf = $this->IVF->where('patients_id',$patientId)->where('created_at',$key)->first();
+                        $isIvfHistory = '1';
+                        $ivfType = 1;
+                        if($ivf)
+                        {
+                            $visitNumber[]  = '1';
+                        }
+                        if(!$ivf)
+                        {
+                            $isIvfHistory = '2';
+                            $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->where('created_at',$key)->first();
+                            $ivf = $ivfHistory;
+                            $historyData = json_decode($ivf->description);
+                            $doseData = $this->Dose->pluck('name','name');
+                            $visitNumber[] = $ivf->visit;
+                        }
+                        
+                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
+                        // $viewAllVisit,$preview);
+                        $dateValue[] = $key;
+                        $ivfId = $ivf->id;
+                        $encIvfId[] = encrypt($ivfId);
                     }
                 }
-                $ivfId = $ivf->id;
-                $encIvfId = encrypt($ivfId);
-                // dd($printPreview);
+                
+                // if($ivfHistory){
+                //     $isIvfHistory = '2';
+                //     if($type){
+                //         $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo);
+                //         if($type == 2){
+                //             $visitNo = $visitNo + 1;
+                //         }else{
+                //             $visitNo = $visitNo - 1;
+                //             if($visitNo == 1){
+                //                 $isIvfHistory = '1';
+                //             }
+                //         }
+                //         $ivfHistory = $ivfHistory->where('visit',$visitNo)->first();
+                //     }
+                // }
+                // if($visitNo == 1 && $request->visit == 'null'){
+                //     $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('id','asc')->first();
+                // }
+                // if($isIvfHistory != '1' && $ivfHistory){
+                //     $ivf = $ivfHistory;
+                //     $historyData = json_decode($ivf->description);
+                //     $doseData = $this->Dose->pluck('name','name');
+                // }
+                // $ivfType = 1;
+                // if($request->is_print == 1){
+                //     $ivfType = 2;
+                //     if($request->visit == 'null'){
+                //         $ivf = $ivfData;
+                //         $isIvfHistory = '1';
+                //     }else{
+                //         $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('visit',$request->visit)->where('cycle_no',$cycleNo)->first();
+                //         $ivf = $ivfHistory;
+                //         $historyData = json_decode($ivf->description);
+                //         $doseData = $this->Dose->pluck('name','name');
+                //         $isIvfHistory = '2';
+                //     }
+                // }
+                $planData = ['1'=>'Self','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
+                
                 return response()->json([
-                    'ivf_type' => $ivfType,
-                    'cycle'=>$ivf->cycle_no,
-                    'visit'=>$ivf->visit,
-                    'date'=>Carbon::parse($ivf->created_at)->format('Y-m-d H:i:s'),
+                    'status'=>1,
+                    'ivf_type'=>$ivfType,
+                    'cycle'=>$cycleNo,
                     'status' => 1,
-                    'id' => $ivfId,
+                    // 'id' => $ivfId,
                     'enc_ivf_id' => $encIvfId,
-                    'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
+                    'plan' => $planData[$plan],
+                    // 'type' => $type,
+                    'date' => $dateValue,
+                    'visitNumber'=>$visitNumber,
+                    'data' => $viewAllVisit
                 ]);
+                // dd($printPreview);
+                // return response()->json([
+                //     'ivf_type' => $ivfType,
+                //     'cycle'=>$ivf->cycle_no,
+                //     'visit'=>$ivf->visit,
+                //     'date'=>Carbon::parse($ivf->created_at)->format('Y-m-d H:i:s'),
+                //     'status' => 1,
+                //     'id' => $ivfId,
+                //     'enc_ivf_id' => $encIvfId,
+                //     'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
+                // ]);
             }else{
                 $patientId = decrypt($request->patient_id);
                 $historyDate = $request->date;
@@ -2295,12 +2362,15 @@ class IVFController extends AdminController
             $data['ivfPlanReport'] = $ivfPlanReport;
             $status = $request->is_print ? 2 : 1;
             $data['status'] = $status;
+            // dd(View::make('admin.ivf.fet_report_data',$data)->render());
             return response()->json([
                 'status' => $status,
-                'data' => View::make('admin.ivf.fet_report_data',compact('data'))->render()
+                'data' => View::make('admin.ivf.fet_report_data',$data)->render()
             ]);
+            
         }catch(Exception $e){
             // dd($e);
+            Log::debug($e);
             return ['status'=>2];
         }
     }

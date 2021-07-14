@@ -202,6 +202,10 @@
                                             <span>Cycle {{$row}}</span>    
                                         </a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>
+                                        <a href="{{URL::to('get-all-report/'.$patientsId.'?status=ivf')}}" class="mb-1 ml-1">
+                                            <button class="btn btn-primary btn-sm btn-ivf-report">View Reports</button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -211,9 +215,52 @@
         </div>    
     </div>
 @stop
+@section('modal')
+<div class="modal fade preview-file-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog view-file-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header header-bottom-border">
+
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="modal-title" id="myModalLabel">IVF History</h5>
+                </div>
+            </div>
+                <button type="button" class="close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan"></span></h5>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="modal-title" id="myModalLabel">Cycle No:- <span class="ivf-appointment-cycle-no"></span></h5>
+                </div>
+                
+            </div>
+            <div class="row">
+                
+            </div>
+            <div class="modal-body">
+                <div class="ivf-details-data">
+                </div>
+            </div>
+
+            <div class="modal-footer footer-top-border text-right d-inline-block">
+                <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+@stop
 @section('page-script')
     <script type="text/javascript">
         var injectionString = '';
+        var ivfString = '';
+        var ivfPId = "{{$patientsId}}";
+        var ivfPlan = '';
+        var ivfCycleNo = '';
         $(document).ready(function(){
             
             $(document).on('click','.injection-report',function(e){
@@ -224,8 +271,70 @@
                 injectionString = 'cycle_no='+cycleNo+'&plan='+plan+'&patient_id='+pId;
                 getCycleWiseInjection(injectionString);
             });
+            $(document).on('click','.preview-file-btn',function(e){
+                e.preventDefault();
+                ivfPId = $(this).data('pid');
+                ivfCycleNo = $(this).data('cycleno');
+                ivfPlan = $(this).data('plan');
+                $('.rm-btn').removeClass('d-none');
+                $('.print-btn').removeClass('d-none');
+                $('.print-fet-report').addClass('d-none');
+                $('.preview-file-modal').modal('show');
+                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan;
+                
+                getIvfHistoryData(ivfString);
+            });
         });
+        $(document).on('click','.print-btn',function(e){
+                e.preventDefault();
+                var visitDate = $(this).data('date')
+                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visitDate='+visitDate+'&is_print=1';
+                getIvfHistoryData(ivfString);
+            });
+        function getIvfHistoryData(ivfString){
+            $.ajax({
+                url:'{{URL::to("get-ivf-details")}}?'+ivfString,
+                type:'GET',
+                dataType:'json'
+            }).done(function(data){
+                
+                $('.edit-btn').data('id','');
+                if(data.ivf_type == 1){
+                    var ivfPreview = $('.ivf-details-data').html();
+                    var buttonHtml = '';
+                    var previewData = '';
+                    $('.edit-btn').data('id',data.enc_ivf_id);
+                    // if(typeof data.date != 'undefined'){
+                    //     var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
+                    //     var date = moment(new Date(data.date)).format('DD MMMM YYYY');
+                    //     $('.ivf-appointment-date').text(date);
+                    // }plan
+                    $('.ivf-appointment-plan').html(data.plan);
+                    $('.ivf-appointment-cycle-no').html(data.cycle);
+                    for(i=0; i<data.data.length;i++)
+                    {
+                        if(typeof data.date[i] != 'undefined'){
+                            var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                            var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                        }
+                        
+                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'">Print</a></div></div>';
 
+                        ivfPreview = buttonHtml + data.data[i];
+                        $('.ivf-details-data').html(ivfPreview);
+                        ivfPreview = ivfPreview + '<div class="row sepreator"></div>';
+                    }
+                }
+                if(data.ivf_type == 2){
+                    w = window.open(window.location.href, "_blank");
+                    w.document.open();
+                    w.document.write(data.data);
+                    w.document.close();
+                    w.window.print();
+                }
+            }).fail(function(error){
+            });
+        }
         function getCycleWiseInjection(injectionString){
             $.ajax({
                 url:'{{URL::to("get-injection-details")}}?'+injectionString,

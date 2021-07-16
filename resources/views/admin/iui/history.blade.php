@@ -3,7 +3,8 @@
 @section('title', 'Update IUI Appointment')
 @section('page-style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
-    <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet">
+    <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         body{
             min-height:950px !important;
@@ -562,7 +563,31 @@
         </div>
     </div>
 </div>
+<div class="modal fade iui-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <span class="modal-title font-20 iui-report-title candor-color font-bold"></span>
+        </div>
+        <div class="modal-body">
+            <div class="iui-details-data">
+                <div class="w3-content w3-display-container">
+                    <div class="report-image">
+                        
+                    </div>
+                  
+                    <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                    <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+                  </div>
+            </div>
+        </div>
 
+        <div class="modal-footer text-right d-inline-block">
+        </div>
+      </div>
+    </div>
+</div>
 @stop
 @section('page-script')
     <script src="{{asset('public/js/iui.js')}}"></script>
@@ -584,6 +609,7 @@
         var isFirst = 1;
         var appintmentDate = "{{$iuiFirstVisitData->created_at}}";
         var iuiId = '';
+        var slideIndex = 1;
         $(document).ready(function(){
 
             $(document).on('click','.view-file-edit',function(e){
@@ -1212,6 +1238,14 @@
                         preloadedInputName: 'blood_report_old'
                     });
                 }
+                if(data.historyData != null && data.usgImages != 'null')
+                {
+                    $('.data-usg-images').imageUploader({
+                        preloaded: jQuery.parseJSON(data.usgImages),
+                        imagesInputName: 'data[usg][images]',
+                        preloadedInputName: 'usg_old'
+                    });
+                }
                 $('.view-file-edit-modal').modal('hide');
                 $('.select-padding-0').selectpicker('refresh');
                 follicleUpdateType($('.follicle').val());
@@ -1339,6 +1373,14 @@
                         preloadedInputName: 'blood_report_old'
                     });
                 }
+                if(data.usgImages != 'null')
+                {
+                    $('.data-usg-images').imageUploader({
+                        preloaded: jQuery.parseJSON(data.usgImages),
+                        imagesInputName: 'data[usg][images]',
+                        preloadedInputName: 'usg_old'
+                    });
+                }
                 $('.view-file-edit-modal').modal('hide');
                 $('.select-padding-0').selectpicker('refresh');
                 follicleUpdateType($('.follicle').val());
@@ -1402,5 +1444,58 @@
         }
 
     var medicinesValue = @json($medicines);
+    $(document).on('click','.report-btn', function(){
+            var iuiId = $(this).data('id');
+            var date = $(this).data('date');
+            var html = '';
+            $.ajax({
+                url:'{{URL::to("get-iui-report")}}'+'/'+iuiId,
+                type:'GET',
+                dataType:'json'
+            }).done(function(data){
+                $('.iui-report').modal('show');
+                $('.iui-report-title').html('IUI Report of '+date);
+                if(data.status == 1){
+                    $.each(data, function() {
+                        $.each(this, function(k, v) {
+                            if(v.length > 0)
+                            {
+                                $.each(v, function(index,image) {
+                                    var path = "{{url('')}}" + '/'+image;
+                                    console.log(path);
+                                   html += '<img class="mySlides" src="'+path+'">';
+                                });
+                                
+                            }
+                        });
+                        
+                    });
+                    $('.report-image').html(html);
+                    slideIndex= 1;
+                    showDivs(slideIndex);
+                }
+            }).fail(function(error){
+
+            });
+        });
+        
+
+        function plusDivs(n) {
+        showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            console.log(x.length);
+            console.log($('.report-image.mySlides').length);
+            if (n > x.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = x.length}
+            for (i = 0; i < x.length; i++) {
+                console.log('sdf');
+                x[i].style.display = "none";  
+            }
+            x[slideIndex-1].style.display = "block";  
+        }
 </script>
 @stop

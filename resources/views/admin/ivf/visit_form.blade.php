@@ -423,6 +423,7 @@
             $laproscopy = !empty($ivf->investigation) && isset(json_decode($ivf->investigation)->laproscopy) ? json_decode($ivf->investigation)->laproscopy : null;
             $laproscopy_detail = !empty($laproscopy->type) && $laproscopy->type == 'yes' ? '':'d-none';
             $bloodStatus = in_array('blood',$collectionData) ? '' : 'd-none';
+            $usgStatus = in_array('usg',$collectionData) ? '' : 'd-none';
         @endphp
         <div class="row mt-1">
             <div class="col-md-1 pr-0">
@@ -809,7 +810,7 @@
             @endif
             
             @if($ivf->plan != 3 )
-                <div class="row mt-1">
+                {{-- <div class="row mt-1">
                     <div class="col-md-2">
                         <div class="checkbox">
                             {{Form::checkbox('data[collection][]','usg',in_array('usg',$collectionData),['id'=>'usg'])}}
@@ -818,7 +819,7 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             @endif
             @php
                 $pStatus = !empty($ivfData->p_s->type) && $ivfData->p_s->type == 'yes' ? '' : 'd-none';
@@ -864,6 +865,31 @@
                     
                     <div class="col-md-8">
                         <div class="edit-blood-images"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2">
+                <div class="checkbox">
+                    {{Form::checkbox('data[collection][]','usg',!empty($usgStatus) ? false : true,['id'=>'usg'])}}
+                    <label for="usg">
+                        USG Report
+                    </label>
+                </div>
+            </div>
+            <div class="{{'col-md-8 usgreport '.$usgStatus}}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">USG report: &nbsp;</span>
+                            {{Form::text("data[usg][report]",!empty($ivfData->usg->report) ? $ivfData->usg->report : null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="edit-usg-images"></div>
 
                     </div>
                 </div>
@@ -1773,9 +1799,13 @@
     $('.edit-blood-images').imageUploader({
         imagesInputName: 'data[blood_report][image]',
     });
+    $('.edit-usg-images').imageUploader({
+        imagesInputName: 'data[usg][images]',
+    });
     var hystroscopyImages = @json($hystroscopyImagesData);
     var laproscopyImages = @json($laproscopyImagesData);
     var bloodReport = @json($bloodReportImagesData);
+    var usgReport = @json($usgReportImagesData);
         if(hystroscopyImages != 'null') {
             $('.edit-hystroscopy-images').imageUploader({
                 preloaded: jQuery.parseJSON(hystroscopyImages),
@@ -1791,11 +1821,19 @@
             });
         }
         if(bloodReport != 'null'){
-                $('.edit-blood-images').imageUploader({
-                    preloaded: jQuery.parseJSON(bloodReport),
-                    imagesInputName: 'data[blood_report][image]',
-                    preloadedInputName: 'blood_report_old'
+            $('.edit-blood-images').imageUploader({
+                preloaded: jQuery.parseJSON(bloodReport),
+                imagesInputName: 'data[blood_report][image]',
+                preloadedInputName: 'blood_report_old'
 
-                });
-            }
+            });
+        }
+        if(usgReport != 'null'){
+            $('.edit-usg-images').imageUploader({
+                preloaded: jQuery.parseJSON(usgReport),
+                imagesInputName: 'data[usg][images]',
+                preloadedInputName: 'usg_old'
+
+            });
+        }
     </script>

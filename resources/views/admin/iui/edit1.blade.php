@@ -4747,6 +4747,8 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                      @php
                 $bloodReportClass = !empty($historyData->blood_report) && !empty($historyData->blood_report->type) && $historyData->blood_report->type == 'yes' ? true : false;
                 $bloodReportClassName = $bloodReportClass ? '' : 'd-none';
+                $usgReportClass = !empty($historyData->usg) && !empty($historyData->usg->type) && $historyData->usg->type == 'yes' ? true : false;
+                $usgReportClassName = $usgReportClass ? '' : 'd-none';
                 @endphp
                 <div class="row">
                     <div class="col-md-1 pr-0">
@@ -4770,7 +4772,30 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     <div class="{{'col-md-8 pr-0 blood-type '.$bloodReportClassName}}">
                         <div class="data-blood-images"></div>
                     </div>
-                </div>     
+                </div> 
+                <div class="row">
+                    <div class="col-md-1 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            USG Report :
+                        </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="radio is-conceived">
+                            {{Form::radio("data[usg][type]",'yes',$usgReportClass,['id'=>'blood_type_yes','class'=>'usg-type iui-yes-no-status','data-type'=>'usg-type'])}}
+                            <label for="usg_type_yes">
+                                Yes
+                            </label>
+
+                            {{Form::radio("data[usg][type]",'no',!empty($historyData->usg) && !empty($historyData->usg->type) && $historyData->usg->type == 'no' ? true : false,['id'=>'usg_type_no','class'=>'usg-type iui-yes-no-status','data-type'=>'usg-type'])}}
+                            <label for="usg_type_no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="{{'col-md-8 pr-0 blood-type '.$usgReportClassName}}">
+                        <div class="data-usg-images"></div>
+                    </div>
+                </div>         
                 <div class="row">
                     <div class="col-md-6">
                         <div class="input-group">
@@ -5390,6 +5415,9 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
         });
         $('.data-blood-images').imageUploader({
             imagesInputName: 'data[blood_report][image]',
+        });
+        $('.data-usg-images').imageUploader({
+            imagesInputName: 'data[usg][images]',
         });
         $(document).on('click', '.add-row', function() {
             addRow();

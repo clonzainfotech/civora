@@ -144,6 +144,7 @@ class IUIController extends AdminController
             $ivfStatus = 0;
             $gynecStatus = 0;
             $bloodOldImages = [];
+            $usgOldImages = [];
             if($request->visit == 1){
                 $iui = $this->IUI;
                 $investigationData = $request->investigation;
@@ -196,8 +197,8 @@ class IUIController extends AdminController
                 }
                 if(!empty($request['investigation']['blood_report']['image'])){
                     foreach($request['investigation']['blood_report']['image'] as $key=>$row){
-                        $name = $this->uploadImage($row, 'public/upload/ivf/blood/');
-                        $bloodImagesData[] = 'public/upload/ivf/blood/' . $name;
+                        $name = $this->uploadImage($row, 'public/upload/iui/blood/');
+                        $bloodImagesData[] = 'public/upload/iui/blood/' . $name;
                     }
                     $investigationData['blood_report']['image'] = array_merge($bloodImagesData,$bloodOldImages);
                 }else{
@@ -351,6 +352,13 @@ class IUIController extends AdminController
                 if($request->iui_history_id){
                     $iui = $iui->find($request->iui_history_id);
                 }
+                if($iui)
+                {
+                    $this->getImagesData('blood_report_old','iui_history',$request->iui_history_id,$request->blood_report_old ? $request->blood_report_old : [-1]);
+                    $this->getImagesData('usg_old','iui_history',$request->iui_history_id,$request->usg_old ? $request->usg_old : [-1]);
+                    $iui = $iui->where('id',$request->iui_history_id)->first();
+                }
+                
                 $iui->visit = $request->visit;
                 $data = $request->data;
                 if(!empty($request->iui_history_id) && $request->visit == 2) {
@@ -537,19 +545,30 @@ class IUIController extends AdminController
                     // $inducingDate = array_combine(range(1, count($inducingDate)), $inducingDate);
                     // $data['inducing'] = $inducingDate;
                 }
+                
                 if(!empty($iui->description))
                 {
                     $description = json_decode($iui->description);
                     $bloodOldImages = !empty($description->blood_report->image) ? (array)$description->blood_report->image : [];
+                    $usgOldImages = !empty($description->usg->images) ? (array)$description->usg->images : [];
                 }
                 if(!empty($request['data']['blood_report']['image'])){
                     foreach($request['data']['blood_report']['image'] as $key=>$row){
-                        $name = $this->uploadImage($row, 'public/upload/ivf/blood/');
-                        $bloodImagesData[] = 'public/upload/ivf/blood/' . $name;
+                        $name = $this->uploadImage($row, 'public/upload/iui/blood/');
+                        $bloodImagesData[] = 'public/upload/iui/blood/' . $name;
                     }
                     $data['blood_report']['image'] = array_merge($bloodImagesData,$bloodOldImages);
                 }else{
                     $data['blood_report']['image'] = $bloodOldImages;
+                }
+                if(!empty($request['data']['usg']['images'])){
+                    foreach($request['data']['usg']['images'] as $key=>$row){
+                        $name = $this->uploadImage($row, 'public/upload/iui/report/');
+                        $uegImagesData[] = 'public/upload/iui/report/' . $name;
+                    }
+                    $data['usg']['images'] = array_merge($uegImagesData,$usgOldImages);
+                }else{
+                    $data['usg']['images'] = $usgOldImages;
                 }
                 $iui->description = json_encode($data);
                 if(!empty($request->data['oe']['ovary']['right']['details']) || !empty($request->data['oe']['ovary']['left']['details'])){
@@ -804,6 +823,7 @@ class IUIController extends AdminController
             $hcgImagesData = [];
             $laproscopyImagesData = [];
             $bloodImagesData = [];
+            $usgImagesData = [];
             $follicle = null;
             $iuiThirdVisitData = null;
 
@@ -978,11 +998,18 @@ class IUIController extends AdminController
                 if($description)
                 {
                     $bloodImages = !empty($description->blood_report->image) ? $description->blood_report->image : null;
+                    $usgImages = !empty($description->usg->images) ? $description->usg->images : null;
                     // dd($description->blood_report->image);
                     if($bloodImages){
                         foreach($bloodImages as $key=>$row){
                             $bloodImagesData[$key]['id'] = $key;
                             $bloodImagesData[$key]['src'] = url($row);
+                        }
+                    }
+                    if($usgImages){
+                        foreach($usgImages as $key=>$row){
+                            $usgImagesData[$key]['id'] = $key;
+                            $usgImagesData[$key]['src'] = url($row);
                         }
                     }
                 }
@@ -1016,6 +1043,7 @@ class IUIController extends AdminController
                 $data['hcgImages'] = json_encode($hcgImagesData);
                 $data['laproscopyImages'] = json_encode($laproscopyImagesData);
                 $data['bloodImages'] = json_encode($bloodImagesData);
+                $data['usgImages'] = json_encode($usgImagesData);
                 $data['ho'] = $ho;
                 $data['co'] = $co;
                 $data['mh'] = $mh;
@@ -1387,9 +1415,58 @@ class IUIController extends AdminController
             $iui->investigation = json_encode($iuiInvestigation);
             $iui->save();
         }
+        if($reportType == 'blood_report_old'){
+            if($type == 'iui_history')
+            {
+                $iuiDescription = json_decode($iui->description);
+                $iuiData = !empty($iuiDescription->blood_report) ? $iuiDescription->blood_report : [];
+                if(!empty($iuiData)){
+                    $blood_reportImages = $this->getBloodImagesKey($iuiData,$data)['key'];
+                    if(!empty($blood_reportImages)){
+                        foreach($blood_reportImages as $row){
+                            $this->removeImage($iuiData->image[$row]);
+                            unset($iuiData->image[$row]);
+                        }
+                        $iuiArray = (array)$iuiData->image;
+                        $iuiArrayData = array_values($iuiArray);
+                        $iuiData->image =  $iuiArrayData;
+                        $iuiDescription->blood_report = $iuiData;
+                        $iui->description = $iuiDescription;
+                    }
+                }
+                // dd($iuiDescription);
+                $iui->description = json_encode($iuiDescription);
+                $iui->save();
+            }
+            
+            
+        }
+        if($reportType == 'usg_old'){
+            if($type == 'iui_history')
+            {
+                $iuiDescription = json_decode($iui->description);
+                $iuiData = !empty($iuiDescription->usg) ? $iuiDescription->usg : [];
+                if(!empty($iuiData)){
+                    $usg_reportImages = $this->getImagesKey($iuiData,$data)['key'];
+                    if(!empty($usg_reportImages)){
+                        foreach($usg_reportImages as $row){
+                            $this->removeImage($iuiData->images[$row]);
+                            unset($iuiData->images[$row]);
+                        }
+                        $iuiArray = (array)$iuiData->images;
+                        $iuiArrayData = array_values($iuiArray);
+                        $iuiData->images =  $iuiArrayData;
+                        $iuiDescription->blood_report = $iuiData;
+                        $iui->description = $iuiDescription;
+                    }
+                }
+                $iui->description = json_encode($iuiDescription);
+                $iui->save();
+            }
+        }
         return ['status'=>true];
     }
-
+    //get images key
     private function getImagesKey($iuiData,$data){
         $imagesKey = [];
         $removedImageKey = [];
@@ -1401,7 +1478,18 @@ class IUIController extends AdminController
         }
         return ['key'=>$removedImageKey];
     }
-
+    //get blood_report image keys
+    private function getBloodImagesKey($ivfData,$data){
+        $imagesKey = [];
+        $removedImageKey = [];
+        if(!empty($ivfData->image)){
+            foreach($ivfData->image as $key=>$row){
+                $imagesKey[] =$key;
+            }
+            $removedImageKey = array_diff($imagesKey,$data);
+        }
+        return ['key'=>$removedImageKey];
+    }
     // store Ho data in database if not exist in table
     public function storeIUIHoData($nameData,$type){
         if(!empty($nameData)){
@@ -1657,6 +1745,29 @@ class IUIController extends AdminController
                 'success' => false,
                 'message'   => 'Something Went Wrong. Please try again!'
             ]);
+        }
+    }
+     /**
+     * get Report of IUI history
+     */
+    public function getIuiHistoryReport(Request $request ,$id)
+    {
+        try
+        {
+            $id = decrypt($id);
+            $iui = $this->IuiHistory->where('id',$id)->first();
+            $description = !empty($iui->description) ? json_decode($iui->description) : null;
+            $data['blood_report'] = !empty($description->blood_report) && !empty($description->blood_report->image)  ? (array)$description->blood_report->image : [];
+            $data['usg'] = !empty($description->usg) && !empty($description->usg->images)  ? (array)$description->usg->images : [];
+            return response()->json([
+                'status' => 1,
+                'data' => $data
+            ]);
+        }
+        catch(Exception $e){
+            // dd($e);
+            Log::debug($e);
+            return ['status'=>2];
         }
     }
 }

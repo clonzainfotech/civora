@@ -2648,3 +2648,12 @@ line-height: 6px !important;
     border-top: 1px solid black;
     margin-bottom: 25px;
 }
+.w3-black, .w3-hover-black:hover {
+    color: #fff!important;
+    background-color: #1a5154!important;
+}
+.mySlides {
+    display:none;
+    height: 250px;
+    width: 100%;
+}

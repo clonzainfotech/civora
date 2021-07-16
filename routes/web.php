@@ -162,6 +162,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::post('iui-report/{patientId}/{cycle}','IUIController@iuiReportStore');
     Route::post('iui/history/delete','IUIController@iuiHistoryDelete');
     // Route::get('iui-final-print/{patientId}/{cycle}','IUIController@iuiFinalPrint');
+    Route::get('get-iui-report/{id}','IUIController@getIuiHistoryReport');
 
     // get plan data
     Route::get('get-plandata/{type}','IUIController@getPlanData');
@@ -185,6 +186,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     // Route::get('ivf-report/{planId}/{patientsId}','IVFController@ivfReport');
     Route::get('remove-last-visit-cycle/{visitId}','IVFController@removeLastCycleVisit');
     Route::get('get-fet-report','IVFController@getFetReport');
+    Route::get('get-ivf-report/{id}','IVFController@getIvfHistoryReport');
     Route::get('get-ivf-followup-date', 'IVFController@getIvfFollowupDate');
 
     Route::get('ivf-payment/{patientsId}','IVFController@ivfPayment');

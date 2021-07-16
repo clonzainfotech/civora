@@ -5,6 +5,7 @@ $medicine_status = ['' => 'Select Medicine Status','1'=>'જમ્યા પછ�
 $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
 $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day"];
 @endphp
+{{-- <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet"/> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
         {{Form::open(['class'=>'form iui','files'=>'true','id'=>'iui-form'])}}
@@ -4792,10 +4793,16 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                                 {{isset($vascularity_of_endo[$row->vascularity_of_endo]) ? $vascularity_of_endo[$row->vascularity_of_endo] : null}}
                                             </td>
                                             <td class="editStudyReport">{{!empty($data->remark) ? $data->remark : ''}}</td>
-                                            <td class="editStudyReport text-center"><a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-iui-history" data-id="{{ encrypt($row->id) }}">
+                                            <td class="editStudyReport text-center">
+                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-iui-history" data-id="{{ encrypt($row->id) }}">
                                                     <i class="zmdi zmdi-delete material-icons"></i>
-                                            </a></i>
-                                            <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
+                                                </a>
+                                                <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                    <i class="zmdi zmdi-edit material-icons"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini report-btn" data-id="{{ encrypt($row->id) }}" data-date="{{\Carbon\Carbon::parse($row->created_at)->format('d M Y')}}">
+                                                    <i class="zmdi zmdi-camera material-icons"></i>
+                                                </a>
                                         </td>
                                         </tr>
                                         @if(!empty($dateAndInjectionData))
@@ -5168,6 +5175,29 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                                 </div>
                                             </div>
                                             <div class="row child-no-box">
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                       USG Report :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("data[usg][type]",'yes','',['id'=>'usg_type_yes','class'=>'usg-type iui-yes-no-status','data-type'=>'usg-type'])}}
+                                                        <label for="usg_type_yes">
+                                                            Yes
+                                                        </label>
+
+                                                        {{Form::radio("data[usg][type]",'no',false,['id'=>'usg_type_no','class'=>'usg-type iui-yes-no-status','data-type'=>'usg-type'])}}
+                                                        <label for="usg_type_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="{{'col-md-8 pr-0 usg-type d-none'}}">
+                                                    <div class="data-usg-images"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row child-no-box">
                                                 <div class="col-md-1">
                                                     <label class="vertical-form-label pr-0">
                                                         Follow Up :
@@ -5432,6 +5462,9 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
         });
         $('.data-blood-images').imageUploader({
             imagesInputName: 'data[blood_report][image]',
+        });
+        $('.data-usg-images').imageUploader({
+            imagesInputName: 'data[usg][images]',
         });
         $(document).on('click', '.add-row', function() {
             addRow();

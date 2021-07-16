@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/fontawesome.js">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
     <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style type="text/css">
         .history-lmp-date{
             color:green !important;
@@ -112,6 +113,10 @@
             padding-left:10px !important;
         }
         
+        .close
+        {
+            opacity: 1 !important;
+        }
     </style>
 @stop
 @php
@@ -660,10 +665,14 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
-                                                                    <i class="zmdi zmdi-delete material-icons"></i></a>
+                                                                    <i class="zmdi zmdi-delete material-icons"></i>
+                                                                </a>
                                                                     @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
                                                                     <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
                                                                     @endif
+                                                                    <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini report-btn" data-id="{{ encrypt($row->id) }}" data-date="{{\Carbon\Carbon::parse($row->created_at)->format('d M Y')}}">
+                                                                        <i class="zmdi zmdi-camera material-icons"></i>
+                                                                    </a>
                                                                 </td>
                                                         </tr>
                                                     @endif
@@ -815,15 +824,30 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            {{-- <div class="col-md-2">
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2">
                                                                 <div class="checkbox">
-                                                                    {{Form::checkbox('data[collection][]','blood','',['id'=>'blood'])}}
-                                                                    <label for="blood">
-                                                                    Blood Report
+                                                                    {{Form::checkbox('data[collection][]','usg','',['id'=>'usg'])}}
+                                                                    <label for="usg">
+                                                                        USG Report
                                                                     </label>
                                                                 </div>
-                                                            </div> --}}
-                                                            
+                                                            </div>
+                                                            <div class="col-md-6 usgreport d-none">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">USG report: &nbsp;</span>
+                                                                            {{Form::text("data[usg][report]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                                        <div class="usg-images"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         @if($pStatus != 1 )
                                                             <div class="row mt-1">
@@ -2344,6 +2368,30 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('data[collection][]','usg','',['id'=>'usg'])}}
+                                            <label for="usg">
+                                                USG Report
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 usgreport d-none">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">USG report: &nbsp;</span>
+                                                    {{Form::text("data[usg][report]",'',['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                <div class="usg-images"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 {{-- end ivf comman form --}}
                                 <br>
                                 {{-- pre operative data --}}
@@ -3664,7 +3712,7 @@
         <div class="modal-dialog view-file-modal-dialog">
           <div class="modal-content">
             <div class="modal-header header-bottom-border">
-              <button type="button" class="close anc-details-close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <button type="button" class="close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <div class="row">
                     <div class="col-md-12">
                         <h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan"></span></h5>
@@ -3699,6 +3747,31 @@
           </div>
         </div>
     </div>
+    <div class="modal fade ivf-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header header-bottom-border">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <span class="modal-title font-20 ivf-report-title candor-color font-bold"></span>
+            </div>
+            <div class="modal-body">
+                <div class="ivf-details-data">
+                    <div class="w3-content w3-display-container">
+                        <div class="report-image">
+                            
+                        </div>
+                      
+                        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+                      </div>
+                </div>
+            </div>
+
+            <div class="modal-footer footer-top-border text-right d-inline-block">
+            </div>
+          </div>
+        </div>
+    </div>
 @stop
 @section('page-script')
     <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
@@ -3708,6 +3781,7 @@
     <script type="text/javascript">
         var doseData = @json($doseData);
         var ivfTransferReportPrint = 0;
+        var slideIndex = 1;
         $('.datetimepicker').bootstrapMaterialDatePicker({
             format: 'dddd DD MMMM YYYY',
             clearButton: true,
@@ -4360,6 +4434,13 @@
                     $('.bloodreport').addClass('d-none');
                 }
             });
+            $(document).on('click','#usg',function(e){
+                if($(this).is(':checked')){
+                    $('.usgreport').removeClass('d-none');
+                }else{
+                    $('.usgreport').addClass('d-none');
+                }
+            });
 
             $(document).on('click','#embroy',function(e){
                 if($(this).is(':checked')){
@@ -4768,6 +4849,62 @@
         });
         $('.blood-images').imageUploader({
         imagesInputName: 'data[blood_report][image]',
-    });
+        });
+        $('.usg-images').imageUploader({
+        imagesInputName: 'data[usg][images]',
+        });
+        $(document).on('click','.report-btn', function(){
+            var ivfId = $(this).data('id');
+            var date = $(this).data('date');
+            var html = '';
+            $.ajax({
+                url:'{{URL::to("get-ivf-report")}}'+'/'+ivfId,
+                type:'GET',
+                dataType:'json'
+            }).done(function(data){
+                $('.ivf-report').modal('show');
+                $('.ivf-report-title').html('IVF Report of '+date);
+                if(data.status == 1){
+                    $.each(data, function() {
+                        $.each(this, function(k, v) {
+                            if(v.length > 0)
+                            {
+                                $.each(v, function(index,image) {
+                                    var path = "{{url('')}}" + '/'+image;
+                                    console.log(path);
+                                   html += '<img class="mySlides" src="'+path+'">';
+                                });
+                                
+                            }
+                        });
+                        
+                    });
+                    $('.report-image').html(html);
+                    slideIndex= 1;
+                    showDivs(slideIndex);
+                }
+            }).fail(function(error){
+
+            });
+        });
+        
+
+        function plusDivs(n) {
+        showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            console.log(x.length);
+            console.log($('.report-image.mySlides').length);
+            if (n > x.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = x.length}
+            for (i = 0; i < x.length; i++) {
+                console.log('sdf');
+                x[i].style.display = "none";  
+            }
+            x[slideIndex-1].style.display = "block";  
+        }
 </script>
 @stop

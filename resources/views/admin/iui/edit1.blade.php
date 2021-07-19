@@ -3838,7 +3838,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                     <div class="input-group">
                                         <span class="input-group-addon">Follow Up: &nbsp;</span>
                                         @if(!empty($historyPlan->follow_up))
-                                            {{Form::text("follow_up",!empty($historyPlan->follow_up) ? \Carbon\Carbon::parse($historyPlan->follow_up)->format('D d M Y') : null,['class'=>'form-control datetimepicker follow-up-date','disabled'])}}
+                                            {{Form::text("follow_up",!empty($historyPlan->follow_up) ? \Carbon\Carbon::parse($historyPlan->follow_up)->format('D d M Y') : null,['class'=>'form-control datetimepicker follow-up-date'])}}
                                             {{Form::hidden('data[plan][follow_up]',$historyPlan->follow_up)}}
                                             {{Form::hidden('data[new_follow_up]',$historyPlan->follow_up)}}
                                         @else

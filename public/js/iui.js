@@ -40,6 +40,7 @@ $(document).ready(function () {
             daysToAdd = 9;
         }
         $("input[name='data[plan][follow_up]']").val('');
+        $('.second-visit-inducing').val('');
         if (daysToAdd != 0) {
             var addedLmpDate =  new Date($(".second-visit-lmd-date").val());
             var lmd_date_diff = $('.lmd-date-diff-val').val();

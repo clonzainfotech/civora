@@ -463,4 +463,12 @@ class AdminController extends BaseController
             $patientNotification->read_by = $read_by;
             $patientNotification->save();
     }
+    function string_between_two_string($str, $starting_word, $ending_word){
+        $arr = explode($starting_word, $str);
+        if (isset($arr[1])){
+            $arr = explode($ending_word, $arr[1]);
+            return $arr[0];
+        }
+        return '';
+      }
 }

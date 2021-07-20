@@ -1384,7 +1384,7 @@ class IVFController extends AdminController
                 if($checkIsTransfer){
                     $checkIsTransfer = !empty($checkIsTransferData->plan) ? 0 : 1;
                 }
-                if($checkIsTransferData->is_transfer == 'yes' && $checkIsTransferData->is_upt == 'yes' && ($cData != $cNumber))
+                if(isset($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' && $checkIsTransferData->is_upt == 'yes' && ($cData != $cNumber))
                 {
                     // dd($pStatus);
                     $checkIsTransfer = !empty($checkIsTransferData->plan) ? 1 : 0;

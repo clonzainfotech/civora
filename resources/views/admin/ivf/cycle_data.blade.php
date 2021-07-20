@@ -273,7 +273,7 @@
                                                 $fshBrandArray = array_filter($fshBrandArray);
                                             }
                                         @endphp
-                                        @if($countProtocolTable > 0 && (!empty($hmgArray) || !empty($hmgBrandArray) || !empty($fshArray) || !empty($antagonistArray) || !empty($fshBrandArray)))
+                                        @if($countProtocolTable > 0)
                                             @if($i===1)
                                             <table class='unik-table table m-b-0'>
                                                 <thead>
@@ -304,7 +304,7 @@
                                                     @php
                                                         $j++;
                                                     @endphp
-                                                    @if(!empty($row->hmg) || !empty($row->hmg_brand_name) || !empty($row->fsh) || !empty($row->fsh_brand_name) || !empty($row->antagonist))
+                                                    {{-- @if(!empty($row->hmg) || !empty($row->hmg_brand_name) || !empty($row->fsh) || !empty($row->fsh_brand_name) || !empty($row->antagonist)) --}}
                                                         <tr>
                                                             <td>{{($j===1)?\Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y').'('.$datarow->visit .')':''}}</td>
                                                             <td>{{!empty($row->day) ? $row->day : '-'}}</td>
@@ -352,7 +352,7 @@
                                                                 $fshDose += !empty($row->fsh) && is_numeric($row->fsh) ? $row->fsh : 0;
                                                             @endphp
                                                         </tr>
-                                                    @endif
+                                                    {{-- @endif --}}
                                                 @endforeach
                                             @if($i===$cycle_no)
                                                 </tbody>

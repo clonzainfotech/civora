@@ -615,6 +615,7 @@ class IVFController extends AdminController
                         $data['plan'] = !empty($data['plan']) ? $data['plan'] : $request['plan_type'];
                         $data['transfer_type'] = 'new';
                         $data['skip_reason'] = null;
+                        $category_id = 5;
                         $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->update(['cycle_status'=>2]);
                         $ivfFirstVisitData = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
                         //set EDD date and lmpdate from second visit

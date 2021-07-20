@@ -1166,7 +1166,27 @@ class ANCController extends AdminController
             $weekData = [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>'8 Weeks',6=>'8 - 10 Weeks',7=>'10 - 12 Weeks',8=>'12 Weeks',9=>'Uterus Just Palpable',10=>'14 Weeks',11=>'16 Weeks',12=>'18 Weeks',13=>'20 Weeks',14=>'22 Weeks',15=>'24 Weeks',16=>'26 Weeks',17=>'28 Weeks',18=>'30 Weeks',19=>'32 Weeks',20=>'34 Weeks',21=>'36 Weeks',22=>'Full Term'];
             // $firstANCData = $this->ANC->where('patients_id',$patients)->where('created_at','<',$ancCurrent->created_at)->first();
             $getTotalAncNumber = $this->getTotalAncNumber($patients,$ancCurrent->id);
-            
+            $isConceivedIUI = false;
+            $isConceivedIVF = false;
+            $ancTranferDate = Carbon::parse($ancDateData->created_at)->format('Y-m-d H:i:s');
+            $iuiHistory = $this->IuiHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('visit',4)->where('cycle_status',2)->get();
+            if($iuiHistory)
+            {
+                foreach($iuiHistory as $iui)
+                {
+                    $iuiData = json_decode($iui->description);
+                    $isConceivedIUI = isset($iuiData) && (isset($iuiData->result) && !empty($iuiData->result) && $iuiData->result != 'fail') ? true : false;
+                }
+            }
+            $ivfHistory = $this->IvfHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('plan','!=','1')->where('cycle_status',2)->get();
+            if($ivfHistory)
+            {
+                foreach($ivfHistory as $ivf)
+                {
+                    $ivfData = json_decode($ivf->description);
+                    $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail'  && !empty($ivfData->transfer->upt_type) && $ivfData->transfer->upt_type == 'positive' ?  true : false;
+                }
+            }
             if($request->ajax()){
                 $oeDataCount = !empty($oe->utdata) ? count((array)$oe->utdata) : 0;
                 $data['patientsInfo'] = $patientsInfo;
@@ -1228,7 +1248,7 @@ class ANCController extends AdminController
                 return $data;
             }
 
-            return view('admin.anc.history',compact('ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent'));
+            return view('admin.anc.history',compact('ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent','isConceivedIUI','isConceivedIVF'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);

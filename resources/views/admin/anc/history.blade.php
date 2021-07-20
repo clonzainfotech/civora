@@ -51,7 +51,14 @@
                     </div>
                     <div class="col-md-6 text-right">
                         <a href="{{URL::to('get-all-report/'.encrypt($ancData->getPatients['id']).'?status=anc')}}" class="btn btn-primary m-n3">View Reports</a>
+                        @if($isConceivedIUI)
+                            <a href="{{URL::to('iui/history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary m-n3">IUI History</a>
+                        @endif
+                        @if($isConceivedIVF)
+                            <a href="{{URL::to('ivf/history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary m-n3">IVF History</a>
+                        @endif
                     </div>
+                    
                 </div>
             </div>
         </div>

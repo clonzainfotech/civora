@@ -316,12 +316,13 @@
                                                             <td>{{!empty($row->fsh) ? $row->fsh : '-'}}</td>
                                                             <td>{{!empty($row->fsh_brand_name) ? $row->fsh_brand_name : '-'}}</td>
                                                             <td>{{!empty($row->antagonist) ? $row->antagonist : '-'}}</td>
+                                                            
                                                             <td>
                                                                 @if($j == 1)
                                                                     @if($datarow->visit == 2)
-                                                                        {{!empty($data->oe->ovary->left->afcs) ? $data->oe->ovary->left->afcs : '-'}}
+                                                                        {{!empty($data->oe->ovary->right->afcs) ? $data->oe->ovary->right->afcs : '-'}}
                                                                     @else
-                                                                        {{!empty($data->ovary->ovary_type->left->details) ? $data->ovary->ovary_type->left->details : '-'}}
+                                                                        {{!empty($data->ovary->ovary_type->right->details) ? $data->ovary->ovary_type->right->details : '-'}}
                                                                     @endif
                                                                 @else
                                                                     -
@@ -330,9 +331,9 @@
                                                             <td>
                                                                 @if($j == 1)
                                                                     @if($datarow->visit == 2)
-                                                                        {{!empty($data->oe->ovary->right->afcs) ? $data->oe->ovary->right->afcs : '-'}}
+                                                                        {{!empty($data->oe->ovary->left->afcs) ? $data->oe->ovary->left->afcs : '-'}}
                                                                     @else
-                                                                        {{!empty($data->ovary->ovary_type->right->details) ? $data->ovary->ovary_type->right->details : '-'}}
+                                                                        {{!empty($data->ovary->ovary_type->left->details) ? $data->ovary->ovary_type->left->details : '-'}}
                                                                     @endif
                                                                 @else
                                                                     -

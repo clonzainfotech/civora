@@ -1497,9 +1497,9 @@ $(document).ready(function(){
         baseUrl = baseUrl.replace(avoid,'');
         // console.log($('.old-medicine-data').val());
         var oldMedicineData = [];
-        if ($('.old-medicine-data').val() != '') {
-            oldMedicineData = $('.old-medicine-data').val().split(',');
-        }
+        // if ($('.old-medicine-data').val() != '') {
+        //     oldMedicineData = $('.old-medicine-data').val().split(',');
+        // }
         // console.log(oldMedicineData);
         var difference = [];
         // jQuery.grep(value, function(el) {
@@ -1690,9 +1690,9 @@ $(document).ready(function(){
         baseUrl = baseUrl.replace(avoid,'');
         // console.log($('.old-medicine-data').val());
         var oldMedicineData = [];
-        if ($('.old-medicine-data').val() != '') {
-            oldMedicineData = $('.old-medicine-data').val().split(',');
-        }
+        // if ($('.old-medicine-data').val() != '') {
+        //     oldMedicineData = $('.old-medicine-data').val().split(',');
+        // }
         // console.log(oldMedicineData);
         var difference = [];
         // jQuery.grep(value, function(el) {
@@ -2207,7 +2207,7 @@ $(document).ready(function(){
             time = moment(dt).format('hh:mm a');
             var protocolData = "<table class='table m-b-0'>"+
                                         "<thead>"+
-                                            "<tr><th>Cycle Day</th><th>Simulation<br> Day</th><th>Date</th><th>Injecion</th><th>HMG</th><th>HMG Brand Name</th><th>FSH</th><th>FSH Brand Name</th><th>Antagonist</th><th>Time</th></tr>"+
+                                            "<tr><th>Cycle Day</th><th>Simulation<br> Day</th><th>Date</th><th>Injecion</th><th>HMG</th><th>HMG Brand Name</th><th>FSH</th><th>FSH Brand Name</th><th>Antagonist</th></tr>"+
                                         "</thead>"+
                                         "<tbody class='protocol-data-row'>";
             for(i=1;i<=total;i++){
@@ -2235,8 +2235,8 @@ $(document).ready(function(){
                                     protocolData += "<td><input type='text' name='data[protocol]["+i+"][hmg]' class='form-control hmg-data hmg-"+i+"'></td>"+
                                                     "<td><input type='text' name='data[protocol]["+i+"][hmg_brand_name]' class='form-control hmg-brand-data hmg-brand-"+i+"'></td><td><input type='text' name='data[protocol]["+i+"][fsh]' class='form-control fsh-data fsh-"+i+"'></td>"+
                                                     "<td><input type='text' name='data[protocol]["+i+"][fsh_brand_name]' class='form-control fsh-brand-data fsh-brand-"+i+"'></td><td><input type='text' name='data[protocol]["+i+"][antagonist]' class='form-control antagonist-data antagonist-"+i+"'></td>";
-                                    protocolData += "<td><input type='text' name='data[protocol]["+i+"][time]' value='"+time+"' class='form-control timepicker width-80'></td>"+
-                                "</tr>";
+                                    // protocolData += "<td><input type='text' name='data[protocol]["+i+"][time]' value='"+time+"' class='form-control timepicker width-80'></td>"+
+                                     protocolData +="</tr>";
                     lastDate = dateData;
             }
             protocolData += "</tbody></table>";
@@ -2300,8 +2300,8 @@ $(document).ready(function(){
                             protocolData += "<td><input type='text' name='data[protocol]["+id+"][hmg]' value='"+hmg+"' class='form-control hmg-data hmg-"+id+"'></td>"+
                                             "<td><input type='text' name='data[protocol]["+id+"][hmg_brand_name]' value='"+hmgBrand+"' class='form-control hmg-brand-data hmg-brand-"+id+"'></td><td><input type='text' name='data[protocol]["+id+"][fsh]' value='"+fsh+"' class='form-control fsh-data fsh-"+id+"'></td>"+
                                             "<td><input type='text' name='data[protocol]["+id+"][fsh_brand_name]' value='"+fshBrand+"' class='form-control fsh-brand-data fsh-brand-"+id+"'></td><td><input type='text' name='data[protocol]["+id+"][antagonist]' value='"+antagonistValue+"' class='form-control antagonist-data antagonist-"+id+"'></td>";
-                            protocolData += "<td><input type='text' name='data[protocol]["+id+"][time]' value='"+time+"' class='form-control timepicker width-80'></td>"+
-                        "</tr>";
+                            // protocolData += "<td><input type='text' name='data[protocol]["+id+"][time]' value='"+time+"' class='form-control timepicker width-80'></td>"+
+                            protocolData += "</tr>";
         $('.protocol-data-row').append(protocolData);
         setInjectionValue(injectionValue);
         $('.dose').selectpicker('refresh');

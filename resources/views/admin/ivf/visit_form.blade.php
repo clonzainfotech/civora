@@ -8,7 +8,7 @@
     $non_motile = $ivfReport && $ivfReport->non_motile ? json_decode($ivfReport->non_motile) : null;
     $morphology = $ivfReport && $ivfReport->morphology ? json_decode($ivfReport->morphology) : null;
     $pus_cells = $ivfReport && $ivfReport->pus_cells ? json_decode($ivfReport->pus_cells) : null;
-    $medicinesValue = $ivfData->medicinedata;
+    $medicinesValue = !empty($ivfData->medicinedata) ? $ivfData->medicinedata : null;
     $historyMedicineKey = [];
     if(!empty($medicines)){
         $historyMedicineKey = (array)$medicinesValue;
@@ -417,6 +417,52 @@
                 </div>
             {{-- @endif --}}
         </div>
+        @if($ivf->plan == 1)
+            <div class="row mt-3 mb-3">
+                    <div class="col-md-1 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            S.E2 :
+                        </label>
+                    </div>
+                    <div class="col-md-2">
+                        {{Form::text("data[s_e2]",isset($ivfData->s_e2) &&!empty($ivfData->s_e2) ? $ivfData->s_e2 : '',['class'=>'form-control','placeholder'=>'S.E2'])}}
+                    </div>
+                    <div class="col-md-1 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            S.LH :
+                        </label>
+                    </div>
+                    <div class="col-md-2">
+                        {{Form::text("data[s_lh]",isset($ivfData->s_lh) &&!empty($ivfData->s_lh) ? $ivfData->s_lh : '',['class'=>'form-control','placeholder'=>'S.LH'])}}
+                    </div>
+                    <div class="col-md-1 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            S.P2 :
+                        </label>
+                    </div>
+                    <div class="col-md-2">
+                        {{Form::text("data[s_p2]",isset($ivfData->s_p2) &&!empty($ivfData->s_p2) ? $ivfData->s_p2 : '',['class'=>'form-control','placeholder'=>'S.P2'])}}
+                    </div>
+            </div>
+            <div class="row">
+                <label class="vertical-form-label pr-0">
+                    Hystroscopy During Pickup :
+                </label>
+                <div class="col-sm-2">
+                    <div class="radio is-conceived">
+                        {{Form::radio("data[during_pickup]",'yes','',['id'=>'during_pickup_yes','class'=>'during-pickup'])}}
+                        <label for="during_pickup_yes">
+                            Yes
+                        </label>
+
+                        {{Form::radio("data[during_pickup]",'no','',['id'=>'during_pickup_no','class'=>'during-pickup'])}}
+                        <label for="during_pickup_no">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        @endif
         @php
             $hystroscopy = !empty($ivf->investigation) && isset(json_decode($ivf->investigation)->hystroscopy) ? json_decode($ivf->investigation)->hystroscopy : null;
             $hystroscopy_detail = !empty($hystroscopy->type) && $hystroscopy->type == 'yes' ? '':'d-none';
@@ -683,7 +729,7 @@
                     </div>
                 </div> --}}
             </div>
-            @if(!empty($lastIvfHistory->trigger->hcg->status) || !empty($lastIvfHistory->trigger->decapeptyl->status) || !empty($lastIvfHistory->trigger->dualtrigger->stauts))
+            @if(in_array('trigger',$collectionData) || !empty($ivfData->trigger->hcg->status) || !empty($ivfData->trigger->decapeptyl->status) || !empty($ivfData->trigger->dualtrigger->stauts))
                 @php
                     $trigger = 'trigger';
                     $hcg = !empty($ivfData->trigger->hcg->status) ? $ivfData->trigger->hcg->status : null;
@@ -726,7 +772,7 @@
                         <div class="{{'col-md-3 trigger '.$triggerStatus}}">
                             <div class="input-group">
                                 <span class="input-group-addon">Trigger Date: &nbsp;</span>
-                                {{Form::text("data[trigger_date]", \Carbon\Carbon::parse($ivfData->trigger_date)->format('D d M Y'), ['class'=>'form-control history-lmd-date'])}}
+                                {{Form::text("data[trigger_date]", !empty($ivfData->trigger_date) ? \Carbon\Carbon::parse($ivfData->trigger_date)->format('D d M Y') : '', ['class'=>'form-control history-lmd-date'])}}
                             </div>
                         </div>
                     </div>
@@ -895,6 +941,7 @@
                 </div>
             </div>
         </div>
+        
         {{-- end ivf comman form --}}
         <br>
         <div class="row">

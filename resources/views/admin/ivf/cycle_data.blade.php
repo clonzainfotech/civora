@@ -76,8 +76,16 @@
         .unik-table td{
             border:1px solid #dee2e6;
         }
-        .unik-header-table td, .unik-footer-table td, .unik-header-table th, .unik-footer-table th{
+        .unik-header-table td, .unik-header-table th{
             border: none !important;
+        }
+        .unik-footer-table td, .unik-footer-table th
+        {
+            border: none;
+        }
+        .unik-footer-table
+        {
+            border: 1px solid #dee2e6 !important;
         }
         .unik-header-table th:first-child{
             width: 70%;
@@ -117,6 +125,7 @@
         {
             opacity: 1 !important;
         }
+        
     </style>
 @stop
 @php
@@ -192,6 +201,7 @@
             $antaDose = 0;
             $fshDose = 0;
             $se2Data = [];
+            $sp2Data = [];
             $slhData = [];
             $bloodReport = [];
             $triggerHistoryData = $triggerHistory ? json_decode($triggerHistory->description) : null;
@@ -201,272 +211,1213 @@
             $cycle_no = count($cycle);
         @endphp
         @if($cycle_no>0 && $pStatus == 1)
-        <div class="card">
-            <div class="body">
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class='unik-header-table table m-b-0'>
-                            <thead>
-                            <tr>
-                                <th>Patient Name: {{ucwords($lastAppointment->getPatientsDetails->name)}}</th>
-                                <th>Plan: controlled ovarian stimulation</th>
-                            </tr>
-                            <tr>
-                                <th>Seen By: {{isset($hospitalDoctor[$cycle[0]->seen_by]) ? $hospitalDoctor[$cycle[0]->seen_by] : ''}}</th>
-                                <th>Age: {{ucwords($lastAppointment->getPatientsDetails->age)}}</th>
-                            </tr>
-                            <tr>
-                                <th>LMP Date: {{\Carbon\Carbon::parse($historyLmddateDate)->format('d-m-Y')}}</th>
-                                <div></div>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-                @foreach($cycle as $row)
-                    @php
-                        $i++;
-                        $datarow = $row;
-                            $historyData = json_decode($row->description);
-                            if($row->cycle_status == 2){
-                                $visit = $row->visit + 1;
-                            }
-
-                        $data = json_decode($row->description);
-                        if(!empty($data->s_e2)){
-                            $se2Data[] = $data->s_e2;
-                        }
-                        if(!empty($data->s_lh)){
-                            $slhData[] = $data->s_lh;
-                        }
-                        if(!empty($data->blood->report)){
-                            $bloodReport[] = $data->blood->report;
-                        }
-                        $duringPickupStatus = !empty($data->during_pickup) ? ucfirst($data->during_pickup) : null;
-                    @endphp
-                    <div class="row">
+            @foreach($cycle as $row)
+                <div class="card d-none {{'visit-card-'.$row->id}}">
+                    <div class="body">
                         <div class="col-md-12">
                             <div class="{{'visit-data-'.$row->id}}">
-                                @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
-                                    @php
-                                        {{$collectionData = !empty($historyData->collection) ? $historyData->collection : [];}}
-                                        {{$dataa = !empty($historyData->collected) ? $historyData->collected : []; }}
-                                    @endphp
-                                    @if($pStatus == 1)
-                                        @php
-                                            $protocolTable = !empty($historyData->protocol) ? $historyData->protocol : [];
-                                            $countProtocolTable = count((array)$protocolTable);
-                                            if($countProtocolTable > 0){
-                                                $protocolData = (array)$historyData->protocol;
-                                                $injectionArray = array_column($protocolData, 'injection');
-                                                $injectionArray = array_filter($injectionArray);
-                                                $hmgArray = array_column($protocolData, 'hmg');
-                                                $hmgArray = array_filter($hmgArray);
-                                                $hmgBrandArray = array_column($protocolData, 'hmg_brand_name');
-                                                $hmgBrandArray = array_filter($hmgBrandArray);
-                                                $fshArray = array_column($protocolData, 'fsh');
-                                                $fshArray = array_filter($fshArray);
-                                                $antagonistArray = array_column($protocolData, 'antagonist');
-                                                $antagonistArray = array_filter($antagonistArray);
-                                                $fshBrandArray = array_column($protocolData, 'fsh_brand_name');
-                                                $fshBrandArray = array_filter($fshBrandArray);
-                                            }
-                                        @endphp
-                                        @if($countProtocolTable > 0)
-                                            @if($i===1)
-                                            <table class='unik-table table m-b-0'>
-                                                <thead>
-                                                <tr>
-                                                    <th class="text-secondary">Visit Date</th>
-                                                    <th class="text-secondary">Day of <br> menses</th>
-                                                    <th class="text-secondary">Simulation Days</th>
-                                                    <th class="text-secondary">Date</th>
-                                                    <th class="text-secondary">Injection</th>
-                                                    <th class="text-secondary">HMG</th>
-                                                    <th class="text-secondary">HMG Brand Name</th>
-                                                    <th class="text-secondary">FSH</th>
-                                                    <th class="text-secondary">FSH Brand Name</th>
-                                                    <th class="text-secondary">Antagonist</th>
-                                                    <th class="text-secondary">Rt. Ovary</th>
-                                                    <th class="text-secondary">Lt. Ovary</th>
-                                                    <th class="text-secondary">ET</th>
-                                                    <th class="text-secondary">Time</th>
-                                                    <th class="text-secondary">Remark</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                            @endif
-                                            @php
-                                                $j=0;
-                                            @endphp
-                                                @foreach ($historyData->protocol as $row)
-                                                    @php
-                                                        $j++;
-                                                    @endphp
-                                                    {{-- @if(!empty($row->hmg) || !empty($row->hmg_brand_name) || !empty($row->fsh) || !empty($row->fsh_brand_name) || !empty($row->antagonist)) --}}
-                                                        <tr>
-                                                            <td>{{($j===1)?\Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y').'('.$datarow->visit .')':''}}</td>
-                                                            <td>{{!empty($row->day) ? $row->day : '-'}}</td>
-                                                            <td>{{!empty($row->s_day) ? 's'.$row->s_day : '-'}}</td>
-                                                            <td>{{!empty($row->date) ? \Carbon\Carbon::parse($row->date)->format('d/m/Y') : '-'}}</td>
-                                                            <td>{{!empty($row->injection) ? $injectionData[$row->injection] : '-'}}</td>
-                                                            <td>{{!empty($row->hmg) ? $row->hmg : '-'}}</td>
-                                                            <td>{{!empty($row->hmg_brand_name) ? $row->hmg_brand_name : '-'}}</td>
-                                                            <td>{{!empty($row->fsh) ? $row->fsh : '-'}}</td>
-                                                            <td>{{!empty($row->fsh_brand_name) ? $row->fsh_brand_name : '-'}}</td>
-                                                            <td>{{!empty($row->antagonist) ? $row->antagonist : '-'}}</td>
-                                                            
-                                                            <td>
-                                                                @if($j == 1)
-                                                                    @if($datarow->visit == 2)
-                                                                        {{!empty($data->oe->ovary->right->afcs) ? $data->oe->ovary->right->afcs : '-'}}
-                                                                    @else
-                                                                        {{!empty($data->ovary->ovary_type->right->details) ? $data->ovary->ovary_type->right->details : '-'}}
-                                                                    @endif
-                                                                @else
-                                                                    -
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if($j == 1)
-                                                                    @if($datarow->visit == 2)
-                                                                        {{!empty($data->oe->ovary->left->afcs) ? $data->oe->ovary->left->afcs : '-'}}
-                                                                    @else
-                                                                        {{!empty($data->ovary->ovary_type->left->details) ? $data->ovary->ovary_type->left->details : '-'}}
-                                                                    @endif
-                                                                @else
-                                                                    -
-                                                                @endif
-                                                            </td>
-                                                            <td>{{$j == 1 && !empty($data->et_details) ? $data->et_details : '-'}}
-                                                            </td>
-                                                            <td>{{!empty($row->time) ? $row->time : '-'}}</td>
-                                                            <td>{{!empty($historyData->remark) ? $historyData->remark : ''}}
-                                                                @if($j == 1 && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
-{{--                                                                    <div class="col-md-1"><button class="btn btn-primary edit-visit-data btn-sm" data-id="{{encrypt($datarow->id)}}">Edit</button></div>--}}
-                                                                @endif
-                                                            </td>
-                                                            @php
-                                                                $hmgDose += !empty($row->hmg) && is_numeric($row->hmg) ? $row->hmg : 0;
-                                                                $antaDose += !empty($row->antagonist) && is_numeric($row->antagonist) ? $row->antagonist : 0;
-                                                                $fshDose += !empty($row->fsh) && is_numeric($row->fsh) ? $row->fsh : 0;
-                                                            @endphp
-                                                        </tr>
-                                                    {{-- @endif --}}
-                                                @endforeach
-                                            @if($i===$cycle_no)
-                                                </tbody>
-                                            </table>
-                                            @endif
-                                        @endif
-                                        <br>
-                                    @endif
-                                @endif
                             </div>
                         </div>
                     </div>
-                @endforeach
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class='unik-footer-table table m-b-0'>
-                            <tbody>
-                            <tr>
-                                <td style="width: 30%">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>On day of trigger</td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td>S. E2:</td>
-                                                <td>{{implode(',',$se2Data)}}</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>S. LH:</td>
-                                                <td>{{implode(',',$slhData)}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>S. P4:</td>
-                                                <td>{{implode(',',$bloodReport)}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td style="width: 40%">
-                                    <table class="unik-table-border">
-                                        <tbody>
-                                            <tr>
-                                                <td style="width: 30%">Trigger</td>
-                                                <td style="width: 70%">{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Date & Time</td>
-                                                <td>
-                                                    @if($triggerHistoryData)
-                                                        {{$triggerHistory ? (\Carbon\Carbon::parse($triggerHistory->trigger_date)->format('D d M Y')) : ''}} {{!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null)}}
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>OPU</td>
-                                                <td>
-                                                    @if($triggerHistoryData)
-                                                        @php
-                                                            $nowDate = \Carbon\Carbon::parse($triggerHistory->trigger_date)->format('Y-m-d');
-                                                            $nowTime = \Carbon\Carbon::parse(!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null))->format('H:i:s');
-                                                            $triggerDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
-                                                            $triggerDate = \Carbon\Carbon::parse($triggerDateTime)->format('D d M Y');
-                                                        @endphp
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Date & Time</td>
-                                                <td>
-                                                    @if($triggerHistoryData)
-                                                        {{$triggerDate.' '.\Carbon\Carbon::parse($triggerDateTime)->format('h:i a')}}
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Hystroscopy</td>
-                                                <td>
-                                                    @if(!empty($duringPickupStatus))
-                                                        {{$duringPickupStatus}}
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table>
-                                        <tbody>
-                                        <tr>
-                                            <td>Total HMG dose:</td>
-                                            <td>{{$hmgDose}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Anta dose:</td>
-                                            <td>{{$antaDose}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total FSH dose:</td>
-                                            <td>{{$fshDose}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                </div>
+            @endforeach
+            <div class="card pick_up_table">
+                <div class="body">
+                    {{Form::open(['class'=>'form ivf','files'=>'true','id'=>'ivf-form'])}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class='unik-header-table table m-b-0'>
+                                <thead>
+                                <tr>
+                                    <th class="font-15"> <span class="font-bold">Patient Name: </span>{{ucwords($lastAppointment->getPatientsDetails->name)}}</th>
+                                    <th class="font-15"><span class="font-bold">Plan: </span> ovarian stimulation</th>
+                                </tr>
+                                <tr>
+                                    <th class="font-15"><span class="font-bold ">Seen By: </span>{{isset($hospitalDoctor[$cycle[0]->seen_by]) ? $hospitalDoctor[$cycle[0]->seen_by] : ''}}</th>
+                                    <th class="font-15"><span class="font-bold ">Age: </span>{{ucwords($lastAppointment->getPatientsDetails->age)}}</th>
+                                </tr>
+                                <tr>
+                                    <th class="font-15"><span class="font-bold ">LMP Date: </span>{{\Carbon\Carbon::parse($historyLmddateDate)->format('d-m-Y')}}</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <label class="vertical-form-label pr-0">
+                                Seen By :
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                {{Form::select('seen_by',$hospitalDoctor,'',['class'=>'form-control select-padding-0 seen-by','placeholder'=>'Select Doctor'])}}
+                            </div>
+                            <span class="seen-by-error text-danger mb-2"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class='unik-table table m-b-0'>
+                                <thead class="pick_up_table_thead">
+                                <tr>
+                                    <th class="text-secondary">Visit Date</th>
+                                    <th class="text-secondary">Day of <br> menses</th>
+                                    <th class="text-secondary">Simulation<br> Days</th>
+                                    <th class="text-secondary">Date</th>
+                                    <th class="text-secondary">Injection</th>
+                                    <th class="text-secondary">HMG</th>
+                                    <th class="text-secondary">HMG Brand Name</th>
+                                    <th class="text-secondary">FSH</th>
+                                    <th class="text-secondary">FSH Brand Name</th>
+                                    <th class="text-secondary">Antagonist</th>
+                                    <th class="text-secondary">Rt. Ovary</th>
+                                    <th class="text-secondary">Lt. Ovary</th>
+                                    <th class="text-secondary">ET</th>
+                                    <th class="text-secondary">Remark</th>
+                                    <th class="text-secondary">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="pick_up_table_tbody">
+                                    @foreach($cycle as $row)
+                                        @php
+                                            $i++;
+                                            $datarow = $row;
+                                                $historyData = json_decode($row->description);
+                                                if($row->cycle_status == 2){
+                                                    $visit = $row->visit + 1;
+                                                }
+
+                                            $data = json_decode($row->description);
+                                            if(!empty($data->s_e2)){
+                                                $se2Data[] = $data->s_e2;
+                                            }
+                                            if(!empty($data->s_lh)){
+                                                $slhData[] = $data->s_lh;
+                                            }
+                                            if(!empty($data->s_p2)){
+                                                $sp2Data[] = $data->s_p2;
+                                            }
+                                            if(!empty($data->blood->report)){
+                                                $bloodReport[] = $data->blood->report;
+                                            }
+                                            $duringPickupStatus = !empty($data->during_pickup) ? ucfirst($data->during_pickup) : null;
+                                        @endphp
+                                        {{-- <div> --}}
+                                            @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
+                                                @php
+                                                    {{$collectionData = !empty($historyData->collection) ? $historyData->collection : [];}}
+                                                    {{$dataa = !empty($historyData->collected) ? $historyData->collected : []; }}
+                                                @endphp
+                                                @if($pStatus == 1)
+                                                    @php
+                                                        $protocolTable = !empty($historyData->protocol) ? $historyData->protocol : [];
+                                                        $countProtocolTable = count((array)$protocolTable);
+                                                        if($countProtocolTable > 0){
+                                                            $protocolData = (array)$historyData->protocol;
+                                                            $injectionArray = array_column($protocolData, 'injection');
+                                                            $injectionArray = array_filter($injectionArray);
+                                                            $hmgArray = array_column($protocolData, 'hmg');
+                                                            $hmgArray = array_filter($hmgArray);
+                                                            $hmgBrandArray = array_column($protocolData, 'hmg_brand_name');
+                                                            $hmgBrandArray = array_filter($hmgBrandArray);
+                                                            $fshArray = array_column($protocolData, 'fsh');
+                                                            $fshArray = array_filter($fshArray);
+                                                            $antagonistArray = array_column($protocolData, 'antagonist');
+                                                            $antagonistArray = array_filter($antagonistArray);
+                                                            $fshBrandArray = array_column($protocolData, 'fsh_brand_name');
+                                                            $fshBrandArray = array_filter($fshBrandArray);
+                                                        }
+                                                    @endphp
+                                                    @if($countProtocolTable > 0)
+                                                        {{-- @if($i===1)
+                                                        
+                                                        @endif --}}
+                                                        @php
+                                                            $j=0;
+                                                        @endphp
+                                                            @foreach ($historyData->protocol as $row)
+                                                                @php
+                                                                    $j++;
+                                                                @endphp
+                                                                {{-- @if(!empty($row->hmg) || !empty($row->hmg_brand_name) || !empty($row->fsh) || !empty($row->fsh_brand_name) || !empty($row->antagonist)) --}}
+                                                                    <tr>
+                                                                        <td>{{($j===1)?\Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y'):''}}</td>
+                                                                        <td>{{!empty($row->day) ? $row->day : '-'}}</td>
+                                                                        <td>{{!empty($row->s_day) ? 's'.$row->s_day : '-'}}</td>
+                                                                        {{-- <td>{{!empty($row->date) ? \Carbon\Carbon::parse($row->date)->format('d/m/Y') : '-'}}</td> --}}
+                                                                        <td>{{ \Carbon\Carbon::parse($row->date)->format('d-m-Y')}}</td>
+                                                                        <td>{{!empty($row->injection) ? $injectionData[$row->injection] : '-'}}</td>
+                                                                        <td>{{!empty($row->hmg) ? $row->hmg : '-'}}</td>
+                                                                        <td>{{!empty($row->hmg_brand_name) ? $row->hmg_brand_name : '-'}}</td>
+                                                                        <td>{{!empty($row->fsh) ? $row->fsh : '-'}}</td>
+                                                                        <td>{{!empty($row->fsh_brand_name) ? $row->fsh_brand_name : '-'}}</td>
+                                                                        <td>{{!empty($row->antagonist) ? $row->antagonist : '-'}}</td>
+                                                                        
+                                                                        <td>
+                                                                            @if($j == 1)
+                                                                                @if($datarow->visit == 2)
+                                                                                    {{!empty($data->oe->ovary->right->afcs) ? $data->oe->ovary->right->afcs : '-'}}
+                                                                                @else
+                                                                                    {{!empty($data->ovary->ovary_type->right->details) ? $data->ovary->ovary_type->right->details : '-'}}
+                                                                                @endif
+                                                                            @else
+                                                                                -
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if($j == 1)
+                                                                                @if($datarow->visit == 2)
+                                                                                    {{!empty($data->oe->ovary->left->afcs) ? $data->oe->ovary->left->afcs : '-'}}
+                                                                                @else
+                                                                                    {{!empty($data->ovary->ovary_type->left->details) ? $data->ovary->ovary_type->left->details : '-'}}
+                                                                                @endif
+                                                                            @else
+                                                                                -
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>{{$j == 1 && !empty($data->et_details) ? $data->et_details : '-'}}
+                                                                        </td>
+                                                                        <td>
+                                                                            @if($j == 1)
+                                                                                @if(!empty($se2Data))
+                                                                                S.E2 : {{implode(',',$se2Data)}}
+                                                                                @endif
+                                                                                @if(!empty($slhData))
+                                                                                <br>
+                                                                                S.LH : {{implode(',',$slhData)}}
+                                                                                @endif
+                                                                                @if(!empty($sp2Data))
+                                                                                <br>
+                                                                                S.P2 : {{implode(',',$sp2Data)}}
+                                                                                @endif
+                                                                                {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                                                            @endif
+                                                                           
+                                                                        </td>
+                                                                        <td>
+                                                                            @if($j == 1)
+                                                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($datarow->id) }}">
+                                                                                    <i class="zmdi zmdi-delete material-icons"></i>
+                                                                                </a>
+                                                                                @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
+                                                                                <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($datarow->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
+                                                                                @endif
+                                                                            @endif
+                                                                        </td>
+                                                                        @php
+                                                                            $hmgDose += !empty($row->hmg) && is_numeric($row->hmg) ? $row->hmg : 0;
+                                                                            $antaDose += !empty($row->antagonist) && is_numeric($row->antagonist) ? $row->antagonist : 0;
+                                                                            $fshDose += !empty($row->fsh) && is_numeric($row->fsh) ? $row->fsh : 0;
+                                                                        @endphp
+                                                                    </tr>
+                                                                {{-- @endif --}}
+                                                                @php
+                                                                    $lastS_day = $row->s_day;
+                                                                @endphp
+                                                            @endforeach
+                                                        {{-- @if($i===$cycle_no) --}}
+                                                        
+                                                        {{-- @endif --}}
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        {{-- </div> --}}
+                                    @endforeach
+                                    @php
+                                        $lastCycleData = json_decode($cycle[count($cycle)-1]['description']);
+                                        $nextVisitNo = count($cycle) + 2;
+                                        $prevAppointmentDate = !empty($lastCycleData->follow_up) ? \Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y') : null;
+                                        $currentDateDiff = \Carbon\Carbon::parse($lastCycleData->lmp->date)->diffInDays(\Carbon\Carbon::parse($prevAppointmentDate));
+                                    @endphp
+                                    @if($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up))
+                                    @php
+                                        $left_class_name = 'td-left-overy-'.$prevAppointmentDate.'-text';
+                                        $right_class_name = 'td-right-overy-'.$prevAppointmentDate.'-text';
+                                    @endphp
+                                    <tr>
+                                        <td>{{\Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y')}}</td>
+                                        <td>{{$currentDateDiff + 1}}</td>
+                                        <td>{{!empty($lastS_day) ? 's'.($lastS_day+1) : ''}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <input class="{{$right_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][right][details]" type="text">
+                                            <i class="material-icons td-right-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-right-overy-'.$prevAppointmentDate}}'>keyboard</i>
+                                        </td>
+                                        <td>
+                                            <input class="{{$left_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][left][details]" type="text">
+                                                <i class="material-icons td-left-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-left-overy-'.$prevAppointmentDate}}'>keyboard</i>
+                                        </td>
+                                        <td>{{Form::text("data[et_details]",'',['class'=>'form-control  border-none bg-transparent','placeholder'=>'Enter ET Details'])}}</td>
+                                        <td>{{Form::textarea("data[remark]",'',['class'=>'form-control no-resize remark  border-none bg-transparent','placeholder'=>'Remark','rows'=>'2'])}}</td>
+                                        <td></td>
+                                    </tr>
+                                    @endif
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="15">
+                                                {{Form::hidden('visit',$visit,['class'=>'visit-no'])}}
+                                                {{Form::hidden('plan_type',$pStatus,['class'=>'plan_type'])}}
+                                                {{Form::hidden('cycle_no',$cycleNumber)}}
+                                                {{Form::hidden('cycle_no_data',encrypt($cycleNumber),['class'=>'cycle-no-data'])}}
+                                                {{Form::hidden('pickup_pln',encrypt(1),['class'=>'pickup-plan'])}}
+                                                {{Form::hidden('patients_id',$patientsId,['class'=>'patients-id'])}}
+                                                {{Form::hidden('last_s_days',$sDay,['class'=>'last-s-days'])}}
+                                                {{Form::hidden('last_protocol_date',$pDate,['class'=>'last-protocol-date'])}}
+                                                @if(!$isTransfer)
+                                                    {{Form::hidden('data[is_transfer]','no',['class'=>'is-transfer'])}}
+                                                    {{Form::hidden('data[is_transfer_print]','no')}}
+                                                   
+                                                    {{Form::hidden("data[lmp][date]",!empty($historyLmddateDate) ? \Carbon\Carbon::parse($historyLmddateDate)->format('D d M Y') : null ,['class'=>'form-control history-lmd-date','autocomplete'=>'off'])}}
+                                                    
+                                                    {{Form::hidden("data[lmp][lmp_date_diff]",$historyLmdDiff,['class'=>'form-control history-lmd-date-diff','maxlength'=>3,'placeholder'=>'Date Diff'])}}
+                                                    {{Form::hidden('appointment_date',$lastAppointment->date,['class'=>'last-appointment-date'])}}
+                                                    <div class="row mt-3 mb-3">
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                S.E2 :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{Form::text("data[s_e2]",'',['class'=>'form-control','placeholder'=>'S.E2'])}}
+                                                        </div>
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                S.LH :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{Form::text("data[s_lh]",'',['class'=>'form-control','placeholder'=>'S.LH'])}}
+                                                        </div>
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                S.P2 :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{Form::text("data[s_p2]",'',['class'=>'form-control','placeholder'=>'S.P2'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Hystroscopy During Pickup :
+                                                        </label>
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[during_pickup]",'yes','',['id'=>'during_pickup_yes','class'=>'during-pickup'])}}
+                                                                <label for="during_pickup_yes">
+                                                                    Yes
+                                                                </label>
+            
+                                                                {{Form::radio("data[during_pickup]",'no','',['id'=>'during_pickup_no','class'=>'during-pickup'])}}
+                                                                <label for="during_pickup_no">
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Hystroscopy :
+                                                            </label>
+                                                        </div>
+                                                        
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("investigation[hystroscopy][type]",'yes','',['id'=>'hystroscopy_type_yes','class'=>'hystroscopy-type iui-yes-no-status','data-type'=>'hystroscopy-type'])}}
+                                                                <label for="hystroscopy_type_yes">
+                                                                    Yes
+                                                                </label>
+                                                                {{Form::radio("investigation[hystroscopy][type]",'no','',['id'=>'hystroscopy_type_no','class'=>'hystroscopy-type iui-yes-no-status','data-type'=>'hystroscopy-type'])}}
+                                                                <label for="hystroscopy_type_no">
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 hystroscopy-type d-none">
+                                                            <div class="hystroscopy-images"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Laproscopy :
+                                                            </label>
+                                                        </div>
+                                                        
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("investigation[laproscopy][type]",'yes','',['id'=>'laproscopy_type_yes','class'=>'laproscopy-type iui-yes-no-status','data-type'=>'laproscopy-type'])}}
+                                                                <label for="laproscopy_type_yes">
+                                                                    Yes
+                                                                </label>
+                                                                {{Form::radio("investigation[laproscopy][type]",'no','',['id'=>'laproscopy_type_no','class'=>'laproscopy-type iui-yes-no-status','data-type'=>'laproscopy-type'])}}
+                                                                <label for="laproscopy_type_no">
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 laproscopy-type d-none">
+                                                            <div class="laproscopy-images"></div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                    {{Form::hidden('is_trigger','yes')}}
+                                                    @php
+                                                        $collectionEmbroyValueData = !empty($historyData->collected->report) && !empty($historyData->collected->report->embroy->type) && $historyData->collected->report->embroy->type == 'yes' ? false : true;
+                                                    @endphp
+                                                    @if($collectionEmbroyValueData)
+                                                        
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-5">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Reason : &nbsp;</span>
+                                                                    {{Form::text('reason',!empty($ivfReport->reason) ? $ivfReport->reason : null ,['class'=>'form-control reason'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Date : &nbsp;</span>
+                                                                    {{Form::text("report_date",\Carbon\Carbon::parse($lastAppointment->date)->format('D d M Y'),['class'=>'form-control datetimepicker report_date','required'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('report_date')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Volume : &nbsp;</span>
+                                                                    {{Form::number('volume[pre]',!empty($volume->pre) ? $volume->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('volume[post]',!empty($volume->post) ? $volume->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Sperm Count/ml : &nbsp;</span>
+                                                                    {{Form::number('sperm[pre]',!empty($sperm_count->pre) ? $sperm_count->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('sperm[post]',!empty($sperm_count->post) ? $sperm_count->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Total Motility (%): &nbsp;</span>
+                                                                    {{Form::number('motility[pre]',!empty($total_motility->pre) ? $total_motility->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('motility[post]',!empty($total_motility->post) ? $total_motility->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Actively Motile (%) : &nbsp;</span>
+                                                                    {{Form::number('actively[pre]',!empty($actively->pre) ? $actively->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('actively[post]',!empty($actively->post) ? $actively->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Sliggishly Motile (%) : &nbsp;</span>
+                                                                    {{Form::number('sluggishly[pre]',!empty($sluggishly->pre) ? $sluggishly->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('sluggishly[post]',!empty($sluggishly->post) ? $sluggishly->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Non-motile (%) : &nbsp;</span>
+                                                                    {{Form::number('motile[pre]',!empty($non_motile->pre) ? $non_motile->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('motile[post]',!empty($non_motile->post) ? $non_motile->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Normal Morphology : &nbsp;</span>
+                                                                    {{Form::number('morphology[pre]',!empty($morphology->pre) ? $morphology->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('morphology[post]',!empty($morphology->post) ? $morphology->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row embroy-button d-none">
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-11">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon col-md-2">Pus cells/hpf : &nbsp;</span>
+                                                                    {{Form::number('cells[pre]',!empty($pus_cells->pre) ? $pus_cells->pre : null,['class'=>'form-control name col-md-3','placeholder' => 'Pre-wash'])}}
+                                                                    {{Form::number('cells[post]',!empty($pus_cells->post) ? $pus_cells->post : null,['class'=>'form-control name col-md-3','placeholder' => 'Post-wash'])}}
+                                                                </div>
+                                                                <span class="form-error-msg">
+                                                                    {{$errors->first('name')}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        {{Form::hidden('data[collection][]','collected')}}
+                                                        {{Form::hidden('data[collected][frozen][type]',!empty($historyData->collected->frozen->report) ? $historyData->collected->frozen->report : null)}}
+                                                        {{Form::hidden('data[collected][date]',!empty($historyData->collected->date) ? $historyData->collected->date : null)}}
+                                                        {{Form::hidden('data[collected][report][embroy][status]',!empty($historyData->collected->report->embroy->status) ? $historyData->collected->report->embroy->status : null)}}
+                                                        {{Form::hidden('data[collected][report][embroy][type]',!empty($historyData->collected->report->embroy->type) ? $historyData->collected->report->embroy->type : null)}}
+                                                    @endif
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-4">
+                                                            <div class="checkbox">
+                                                                {{Form::checkbox('data[collection][]','progesterone','',['id'=>'progesterone'])}}
+                                                                <label for="progesterone">
+                                                                    Progesterone supplementation?
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        @if($pStatus == 1)
+                                                            <div class="col-md-2 progesterone_data d-none">
+                                                                <label for="progesterone">
+                                                                    Same Cycle Transfer?
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-2 progesterone_data d-none">
+                                                                <div class="radio is-conceived">
+                                                                    {{Form::radio("data[progesterone][status]",'yes','',['id'=>'progesterone_yes'])}}
+                                                                    <label for="progesterone_yes">
+                                                                        Yes
+                                                                    </label>
+                                                                    {{Form::radio("data[progesterone][status]",'no','',['id'=>'progesterone_no'])}}
+                                                                    <label for="progesterone_no">
+                                                                    No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                        @php
+                                                            $class = 'progesterone_data';
+                                                            if($pStatus == 1){
+                                                                $class = 'progesterone_yes';
+                                                            }
+                                                        @endphp
+                                                        <div class="{{'col-md-2 d-none '.$class}}">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[progesterone][type]",'day_3','',['id'=>'day_3','class'=>'progesterone-type'])}}
+                                                                <label for="day_3">
+                                                                    Day-3
+                                                                </label>
+                                                                {{Form::radio("data[progesterone][type]",'day_5','',['id'=>'day_5','class'=>'progesterone-type'])}}
+                                                                <label for="day_5">
+                                                                    Day-5
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{Form::hidden("data[trigger][update_status]",'no')}}
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-2">
+                                                            <div class="checkbox">
+                                                                {{Form::checkbox('data[collection][]','trigger','',['id'=>'trigger'])}}
+                                                                <label for="trigger">
+                                                                    Trigger
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 trigger d-none">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">Trigger Date: &nbsp;</span>
+                                                                {{Form::text("data[trigger_date]", \Carbon\Carbon::now()->format('D d M Y'), ['class'=>'form-control history-lmd-date'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="trigger d-none ml-3">
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2">
+                                                                <div class="checkbox">
+                                                                    {{Form::checkbox('data[trigger][hcg][status]','hcg','',['id'=>'hcg'])}}
+                                                                    <label for="hcg">
+                                                                        HCG
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="hcgtrigger d-none">
+                                                                <div class="row ml-3">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Time : &nbsp;</span>
+                                                                            {{Form::text("data[trigger][hcg][time]",'',['class'=>'form-control timepicker time','id'=>'hcg_time','placeholsder'=>'Brand'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Dose : &nbsp;</span>
+                                                                            {{Form::text("data[trigger][hcg][dose]",'10000',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Brand : &nbsp;</span>
+                                                                            {{Form::text("data[trigger][hcg][brand]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2">
+                                                                <div class="checkbox">
+                                                                    {{Form::checkbox('data[trigger][decapeptyl][status]','decapeptyl','',['id'=>'decapeptyl'])}}
+                                                                    <label for="decapeptyl">
+                                                                        Decapeptyl
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="decapeptyltrigger d-none">
+                                                                <div class="row ml-3">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Time : &nbsp;</span>
+                                                                                {{Form::text("data[trigger][decapeptyl][time]",'',['class'=>'form-control timepicker time','placeholsder'=>'Brand'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Dose : &nbsp;</span>
+                                                                        {{Form::text("data[trigger][decapeptyl][dose]",'1,2',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Brand : &nbsp;</span>
+                                                                        {{Form::text("data[trigger][decapeptyl][brand]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2">
+                                                                <div class="checkbox">
+                                                                    {{Form::checkbox('data[trigger][dualtrigger][stauts]','dualtrigger','',['id'=>'dualtrigger'])}}
+                                                                    <label for="dualtrigger">
+                                                                        Dule Trigger
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-2">
+                                                            <div class="checkbox">
+                                                                {{Form::checkbox('data[collection][]','blood','',['id'=>'blood'])}}
+                                                                <label for="blood">
+                                                                Blood Report
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 bloodreport d-none">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">Blood report: &nbsp;</span>
+                                                                        {{Form::text("data[blood_report][report]",'',['class'=>'form-control'])}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                                    <div class="blood-images"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1">
+                                                        <div class="col-md-2">
+                                                            <div class="checkbox">
+                                                                {{Form::checkbox('data[collection][]','usg','',['id'=>'usg'])}}
+                                                                <label for="usg">
+                                                                    USG Report
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 usgreport d-none">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">USG report: &nbsp;</span>
+                                                                        {{Form::text("data[usg][report]",'',['class'=>'form-control'])}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
+                                                                    <div class="usg-images"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        <a class="btn btn-primary btn-icon btn-icon-mini btn-round add-row d-none" data-id="5" data-day="0"><i class="material-icons">add</i></a>
+                                                        {{-- table append for protocol --}}
+                                                        <div class="protocol-table"></div>
+                                                        <br>
+                                                    <br>
+                                                    <div class="row">
+                                                        {{-- <div class="col-md-12"> --}}
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Follow Up: &nbsp;</span>
+                                                                            @if($pStatus != 1)
+                                                                                {{Form::text("data[follow_up]",\Carbon\Carbon::now()->addDays(1)->format('D d M Y'),['class'=>'form-control tranfer-follow-date datetimepicker lmp-date-follow-up next-date'])}}
+                                                                            @else
+                                                                                {{Form::text("data[follow_up]",'',['class'=>'form-control datetimepicker tranfer-follow-date follow-up-date next-date'])}}
+                                                                            @endif
+                                                                            {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <div class="form-group">
+                                                                            {{Form::text("followUp-dateDiff",'',['class'=>'form-control history-follow-date-diff','maxlength'=>3,'placeholder'=>'Date Diff'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 plan-transfer-data">
+                                                                        <div class="form-group">
+                                                                            {{Form::select("data[plan]",$planData,'',['class'=>'form-control select-padding-0 plan-transfer','placeholder'=>'Select Plan Transfer'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2 plan-transfer-data plan-transfer-data-type d-none">
+                                                                        <div class="radio is-conceived">
+                                                                            {{Form::radio("data[transfer_type]",'new',true,['id'=>'transfer-type-new','class'=>'upt-type'])}}
+                                                                            <label for="transfer-type-new">
+                                                                                NEW
+                                                                            </label>
+        
+                                                                            {{Form::radio("data[transfer_type]",'old','',['id'=>'transfer-type-old','class'=>'upt-type'])}}
+                                                                            <label for="transfer-type-old">
+                                                                                OLD
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="row skip-data">
+                                                                <div class="col-md-6">
+                                                                    <div class="checkbox">
+                                                                        {{Form::checkbox('data[skip_cycle]','yes','',['class'=>'skip-cycle','id'=>'skip-pick-up','data-id'=>'skip-cycle-data','data-plan="pick-up"'])}}
+                                                                        <label for="skip-pick-up" class="text-danger">
+                                                                            Do you want to skip this cycle?
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 skip-cycle-data d-none">
+                                                                    <div class="form-group">
+                                                                        {{Form::text("data[skip_reason]",'',['class'=>'form-control skip-reason','placeholder'=>'Enter Reason'])}}
+                                                                    </div>
+                                                                    <span class="skip-reason-error form-error-msg"></span>
+                                                                </div>
+                                                                <div class="col-md-3 skip-cycle-data d-none">
+                                                                    <div class="form-group">
+                                                                        {{Form::select("data[plan]",$planData,'',['class'=>'form-control select-padding-0 plan skip-plan','placeholder'=>'Select Plan'])}}
+                                                                    </div>
+                                                                    <span class="skip-plan-error form-error-msg"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mt-1">
+                                                                <div class="col-md-12">
+                                                                    <div class="input-group">
+                                                                        {{Form::textarea("data[pt_remark]",'',['class'=>'form-control no-resize pt_remark','placeholder'=>"Patient's Remark",'rows'=>'2'])}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col-md-4 float-right">
+                                                                <table class='unik-footer-table table m-b-0 float-right' border='1'>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        @if(!empty($triggerHistoryData))
+                                                                        <td style="">
+                                                                            <table class="">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="font-bold">Trigger : </td>
+                                                                                        <td style="" >{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>Date & Time : </td>
+                                                                                        <td>
+                                                                                            @if($triggerHistoryData)
+                                                                                                {{$triggerHistory ? (\Carbon\Carbon::parse($triggerHistory->trigger_date)->format('D d M Y')) : ''}} {{!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null)}}
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="font-bold">Ovum Pick Up:</td>
+                                                                                        <td>
+                                                                                            @if($triggerHistoryData)
+                                                                                                @php
+                                                                                                    $nowDate = \Carbon\Carbon::parse($triggerHistory->trigger_date)->format('Y-m-d');
+                                                                                                    $nowTime = \Carbon\Carbon::parse(!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null))->format('H:i:s');
+                                                                                                    $triggerDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                                                                                                    $triggerDate = \Carbon\Carbon::parse($triggerDateTime)->format('D d M Y');
+                                                                                                @endphp
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>Date & Time</td>
+                                                                                        <td>
+                                                                                            @if($triggerHistoryData)
+                                                                                                {{$triggerDate.' '.\Carbon\Carbon::parse($triggerDateTime)->format('h:i a')}}
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="font-bold">Hystroscopy : </td>
+                                                                                        <td>
+                                                                                            @if(!empty($duringPickupStatus))
+                                                                                                {{$duringPickupStatus}}
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                        @endif
+                                                                        <td class="border-left">
+                                                                            <table class=''>
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td class="">
+                                                                                        <table class="">
+                                                                                            <tbody>
+                                                                                            <tr>
+                                                                                                <td>Total HMG dose:</td>
+                                                                                                <td class="font-bold">{{$hmgDose}}</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>Total Anta dose:</td>
+                                                                                                <td class="font-bold">{{$antaDose}}</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>Total FSH dose:</td>
+                                                                                                <td class="font-bold">{{$fshDose}}</td>
+                                                                                            </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        {{-- </div> --}}
+                                                    </div>
+                                                    {{-- <br>
+                                                    <br>
+                                                    <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
+                                                        <div class="panel-body" id="parent">
+                                                            <div class="row treatment-data" id="t_data_1">
+                                                                <div class="col-md-2 pr-0">
+                                                                    <label class="vertical-form-label pr-0">
+                                                                        Select Medicine :
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-9 complain-multi medicine-picker">
+                                                                    {{Form::select("treatment[medicinedata][]",$medicines,'',['id'=>'treatment-medicine','class'=>'form-control co-value medicines-data','placeholder' =>'Enter medicine name'])}}
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="page-loader-wrapper medicine-loader d-none">
+                                                                <div class="loader">
+                                                                    <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="medicine-data treatment-medicine-data">
+
+                                                            </div>
+                                                            {{Form::hidden('old_medicine_data','',['class'=>'old-medicine-data'])}}
+                                                        </div>
+                                                    </div> --}}
+                                                    {{Form::hidden("data[is_upt]",'no')}}
+                                                {{-- @endif --}}
+                                                @else
+                                                    {{Form::hidden("data[is_upt]",'yes')}}
+                                                    {{Form::hidden('data[is_transfer]','yes',['class'=>'is-transfer'])}}
+                                                    {{Form::hidden('data[is_transfer_print]','yes')}}
+                                                    <div class="row">
+                                                        {{-- upt --}}
+                                                        <div class="col-md-1">
+                                                            <label class="vertical-form-label pr-0">
+                                                                UPT :
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[transfer][upt_type]",'positive','',['id'=>'transfer-positive','class'=>'upt-type'])}}
+                                                                <label for="transfer-positive">
+                                                                    Positive
+                                                                </label>
+
+                                                                {{Form::radio("data[transfer][upt_type]",'negative','',['id'=>'transfer-negative','class'=>'upt-type'])}}
+                                                                <label for="transfer-negative">
+                                                                    Negative
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {{-- result --}}
+                                                        <div class="col-md-1">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Result :
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[transfer][result_type]",'conceive','',['id'=>'transfer-conceive','class'=>'result-type'])}}
+                                                                <label for="transfer-conceive">
+                                                                    Conceive
+                                                                </label>
+
+                                                                {{Form::radio("data[transfer][result_type]",'fail','',['id'=>'transfer-fail','class'=>'result-type'])}}
+                                                                <label for="transfer-fail">
+                                                                    Fail
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {{-- end result --}}
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Report :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{Form::file('data[transfer][report][]',['class'=>'form-control',"multiple"=>"multiple"])}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">Follow Up: &nbsp;</span>
+                                                                {{Form::text("data[transfer][follow_up]",\Carbon\Carbon::now()->addDays(7)->format('D d M Y'),['class'=>'form-control tf-date datetimepicker'])}}
+                                                            </div>
+                                                            {{Form::hidden('data[follow_up]',\Carbon\Carbon::now()->addDays(7)->format('D d M Y'),['class'=>'t-follow-date'])}}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-3 plan-transfer-data">
+                                                            <div class="form-group">
+                                                                {{Form::select("data[plan]",$planData,'',['class'=>'form-control select-padding-0 plan-transfer','placeholder'=>'Select Plan Transfer'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2 plan-transfer-data plan-transfer-data-type d-none">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[transfer_type]",'new',true,['id'=>'transfer-type-new','class'=>'upt-type'])}}
+                                                                <label for="transfer-type-new">
+                                                                    NEW
+                                                                </label>
+
+                                                                {{Form::radio("data[transfer_type]",'old','',['id'=>'transfer-type-old','class'=>'upt-type'])}}
+                                                                <label for="transfer-type-old">
+                                                                    OLD
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-1 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                C/O :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-9 complain-multi">
+                                                            {{Form::select('data[co_type][]',$complaints,'',['class'=>'form-control co-value co_value_data complaint-data','placeholder'=>'Enter complain','multiple'=>true,'data-type'=>'1'])}}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    {{-- <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
+                                                        <div class="panel-body" id="parent">
+                                                            <div class="row treatment-data" id="t_data_1">
+                                                                <div class="col-md-2 pr-0">
+                                                                    <label class="vertical-form-label pr-0">
+                                                                        Select Medicine :
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-9 complain-multi medicine-picker">
+                                                                    {{Form::select("treatment[medicinedata][]",$medicines,'',['id'=>'treatment-medicine','class'=>'form-control co-value medicines-data','placeholder' =>'Enter medicine name'])}}
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="page-loader-wrapper medicine-loader d-none">
+                                                                <div class="loader">
+                                                                    <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="medicine-data treatment-medicine-data">
+
+                                                            </div>
+                                                            {{Form::hidden('old_medicine_data','',['class'=>'old-medicine-data'])}}
+                                                        </div>
+                                                    </div> --}}
+                                                    <br>
+                                                @endif
+                                                
+                                                
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                            </table>
+                            <br>
+                            <table class="table table-bordered">
+                                <thead class="pick_up_table_thead">
+                                    <tr>
+                                        <th class="text-secondary"> Date</th>
+                                        <th class="text-secondary"> Medicine</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="pick_up_table_tbody">
+                                    @foreach($cycle as $row)
+                                    @php
+                                        $data = json_decode($row->description);
+                                        $visitDate = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y');
+                                        $historyTreatmentView = null;
+                                        if(!empty($data->medicinedata)){
+                                            $historyTreatmentView = !empty($data->medicinedata) ? $data->medicinedata : null;
+                                        }
+                                    @endphp
+                                    @if(!empty($historyTreatmentView))
+                                    <tr>
+                                        <td class="">{{$visitDate}}</td>
+                                        <td style="text-align: justify!important">
+                                            
+                                            @if($historyTreatmentView)
+                                                @php
+                                                    unset($historyTreatmentView->medicinedata);
+                                                @endphp
+                                                @foreach($historyTreatmentView as $key=>$row)
+                                                @php
+                                                
+                                                    $firstCharacter = substr($row->medicine, 0, 3);
+                                                    $notinject = "";
+                                                    if($firstCharacter=="inj" || $firstCharacter=="INJ") {
+                                                        $notinject = "is-inj";
+                                                    } 
+                                                @endphp
+                                                <div class="mb-1">
+                                                    <span class="font-bold"> Medicine : &nbsp</span>
+                                                        {{ $row->medicine }}
+                                                        @if($notinject != "is-inj")
+                                                            | @switch($row->medicine_status)
+                                                                    @case('1')
+                                                                        જમ્યા પછી
+                                                                        @break
+                                                                    @case('2')
+                                                                        જમ્યા પહેલાં
+                                                                        @break
+                                                                    @case('3')
+                                                                        માસિકની જગ્યાએ મુકવી
+                                                                    @break
+                                                            @endswitch
+                                                        @endif
+                                                    @if(!empty($row->dose))
+                                                        @if (array_key_exists($row->dose, $old_dose))
+                                                            | {{ $old_dose[$row->dose] }}
+                                                        @endif
+                                                    @endif
+                                                    @if (!empty($row->no)) | Days : {{ $row->no }} @endif
+                                                    @if($notinject != "is-inj")
+                                                    @php
+                                                        $qty = (!empty($row->quantity)) ? $row->quantity : 0;
+                                                        $qty_2 = (!empty($row->quantity_2)) ? $row->quantity_2 : 0;
+                                                        $qty_3 = (!empty($row->quantity_3)) ? $row->quantity_3 : 0;
+                                                        $qty_4 = (!empty($row->quantity_4)) ? $row->quantity_4 : 0;
+                                                    @endphp | Quantity : {{$qty.'-'.$qty_2.'-'.$qty_3.'-'.$qty_4}}
+                                                    @endif
+                                                    @if($notinject == "is-inj")
+                                                        @if (!empty($row->medicine_time))
+                                                        |
+                                                                {{-- @foreach ($row->medicine_time as $time) --}}
+                                                                    {{$old_medicine_time[$row->medicine_time]}}
+                                                                {{-- @endforeach --}}
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                                    <br>
+                                                @endforeach
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endif
+                                @endforeach
+                                </tbody>
+                                @if($cycle[count($cycle)-1]['visit'] != 4 && $prevAppointmentDate && $cycle[count($cycle)-1]['cycle_status'] != 2)
+                                    <tfoot>
+                                        <td colspan="8">
+                                            <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
+                                                <div class="panel-body" id="parent">
+                                                    <div class="row treatment-data" id="t_data_1">
+                                                        <div class="col-md-2 pr-2">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Select Medicine :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-9 complain-multi medicine-picker">
+                                                            {{Form::select("data[treatment][medicinedata][]",$medicines,'',['id'=>'treatment-medicine','class'=>'form-control co-value medicines-data','placeholder' =>'Enter medicine name'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="page-loader-wrapper medicine-loader d-none">
+                                                        <div class="loader">
+                                                            <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="treatment-medicine-data mt-1">
+        
+                                                    </div>
+                                                    {{Form::hidden('old_medicine_data','',['class'=>'old-medicine-data'])}}
+                                                </div>
+                                            </div>
+                                            
+                                            @if(!empty($historyTreatment))
+                                                @foreach($historyTreatment as $key=>$row)
+                                                {{-- @if(isset($medicines[$row->medicine])) --}}
+                                                    <?php
+                                                    $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
+                                                    $firstCharacter = substr($mId, 0, 3);
+                                                    $notinject = "";
+                                                    if($firstCharacter=="inj" || $firstCharacter=="INJ") {
+                                                        $notinject = "is-inj";
+                                                        $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day",'7'=>"6 hourly",'8'=>"8 hourly",'9'=>"12 hourly",'10'=>"24 hourly"];
+    
+                                                    }
+                                                    $till_follow_up = (empty($row->no)) ? 'till-follow-up' : '';
+                                                    ?>
+                                                    <div class="{{'row mt-2 '.$notinject}}" data-id="{{$mId}}">
+                                                        <div class='col-md-2'>
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>M : </span>
+                                                                {{Form::text('data[treatment]['.$mId.'][medicine]',ucwords($row->medicine),['class'=>'form-control','readonly'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][quantity]',$medqty,$row->quantity,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][quantity_2]',$medqty,@$row->quantity_2,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][quantity_3]',$medqty,@$row->quantity_3,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][quantity_4]',$medqty,@$row->quantity_4,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][medicine_status]',$medicine_status,$row->medicine_status,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2 isinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][medicine_time]',$medicine_time,@$row->medicine_time,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('data[treatment]['.$mId.'][dose]',$dose,$row->dose,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1'>
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>Day :</span>
+                                                                {{Form::number('data[treatment]['.$mId.'][no]',$row->no,['class'=>'form-control '.$till_follow_up])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 medicine-data-remove'>
+                                                            <span class=""><i class="material-icons">close</i></span>
+                                                        </div>
+                                                    </div>
+                                                    {{-- @endif --}}
+                                                @endforeach
+                                            @endif
+                                            
+                                            <div class="medicine-data"></div>
+                                            {{-- {{Form::hidden('old_medicine_data',!empty($historyMedicineKey) ? implode(',',$historyMedicineKey) : null,['class'=>'old-medicine-data'])}} --}}
+                                        </td>
+                                    </tfoot>
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                    {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
+                    {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
+                    {{Form::button('submit',['class'=>'btn btn-primary submit'])}}
+                    {{Form::hidden('ivf_transfer_report_id', '' , ['id' => 'ivf_transfer_report_id'])}}
+                    <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
+                    <button type="submit" class="btn btn-primary submit transfer-report d-none" value="5">Transfer Report Preview</button>
+                    <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
+                    <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
+                    <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                    <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
+                    {{Form::close()}}
                 </div>
             </div>
-        </div>
         
         @else
             @if((!empty($cycleNumber) || ($plan == $pStatus) || ($cycleStatus == 2)) && ($pStatus != 1) && ($nextVisitValue >= 2))
@@ -1301,7 +2252,7 @@
                                                         </td>
                                                     </tr>
                                                     @endif
-                                                    @endforeach
+                                                @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <td colspan="6">
@@ -1420,7 +2371,7 @@
 
             @endif
         @endif
-        @if($isForm && $skipPlan == $pStatus && ($pStatus == 1 || $nextVisitValue < 2))
+        @if($isForm && $skipPlan == $pStatus && ($nextVisitValue < 2))
             <div class="card cycle-form">
                 <div class="body">
                     <div class="col-md-12 col-lg-12">
@@ -1447,7 +2398,7 @@
                             {{Form::hidden('last_s_days',$sDay,['class'=>'last-s-days'])}}
                             {{Form::hidden('last_protocol_date',$pDate,['class'=>'last-protocol-date'])}}
 
-                            <h4 class="col-md-2 visit-lable m-0">Visit :<span class="col-md-2 visit-lable-value">{{$visit}}
+                            <h4 class="col-md-2 visit-lable m-0">Visitt :<span class="col-md-2 visit-lable-value">{{$visit}}
                                 {{-- <span class="plan-text">{{!empty($ivfSecondVisitData->plan) ? $planData[$ivfSecondVisitData->plan] : null}}</span> --}}
                             </h4><br>
                             @if(!$isTransfer)
@@ -2151,7 +3102,7 @@
                                     @endif
                                    
                                     @if($pStatus != 3 )
-                                        <div class="row mt-1">
+                                        {{-- <div class="row mt-1">
                                             <div class="col-md-2">
                                                 <div class="checkbox">
                                                     {{Form::checkbox('data[collection][]','usg','',['id'=>'usg'])}}
@@ -2160,7 +3111,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     @endif
                                     <div class="row">
                                         <div class="col-md-1 pr-0">
@@ -4685,6 +5636,7 @@
                 dataType: 'json',
             }).done(function(data) {
                 $('.frozen-table').addClass('d-none');
+                $('.pick_up_table').addClass('d-none');
                 $('.visit-card-'+data.id).removeClass('d-none');
                 $('.visit-data-'+data.id).html(data.visitData);
                 $('.datetimepicker').bootstrapMaterialDatePicker({

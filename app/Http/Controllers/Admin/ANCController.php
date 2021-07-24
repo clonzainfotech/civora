@@ -1687,12 +1687,13 @@ class ANCController extends AdminController
             {
                 $ancAutoRemark['late_concept'] = 'Yes';
             }
-
+            $cesarean = 0;
             foreach($historyPatientObs as $key => $value)
             {
                 if(isset($value->ho_type_value) && $value->ho_type_value == 'cesarean')
                 {
-                    $ancAutoRemark['cesarean'] = $key;
+                    $cesarean++;
+                    $ancAutoRemark['cesarean'] = $cesarean;
                 }
             }
         }

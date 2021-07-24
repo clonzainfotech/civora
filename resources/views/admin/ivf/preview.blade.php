@@ -2378,7 +2378,7 @@
                             <th>FSH</th>
                             <th>F.Brand Name</th>
                             <th>Antagonist</th>
-                            <th>Time</th>
+                            {{-- <th>Time</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -2394,7 +2394,7 @@
                                     <td>{{!empty($row->fsh) ? $row->fsh : '-'}}</td>
                                     <td>{{!empty($row->fsh_brand_name) ? $row->fsh_brand_name : '-'}}</td>
                                     <td>{{!empty($row->antagonist) ? $row->antagonist : '-'}}</td>
-                                    <td>{{$row->time}}</td>
+                                    {{-- <td>{{$row->time}}</td> --}}
                                 </tr>
                             @endif
                         @endforeach

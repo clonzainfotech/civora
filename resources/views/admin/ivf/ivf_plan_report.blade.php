@@ -53,17 +53,9 @@ foreach($ivf as $ivf)
     {
         foreach($ivfData->protocol as $key=>$value)
         {
-            // $injectionBrand[] = !empty($value->hmg_brand_name) ? $value->hmg_brand_name : (!empty($value->fsh_brand_name) ? $value->fsh_brand_name : '');
             if(!empty($value->antagonist))
             {
-                // if(in_array($value->antagonist,$antagonist))
-                // {
-                //     $antagonist[] = $value->antagonist
-                // }
-                // else {
-                    $antagonist[] = $value->antagonist;
-                // }
-                
+                $antagonist[] = $value->antagonist;
             }
            
             if(!empty($value->hmg_brand_name))
@@ -91,17 +83,15 @@ foreach($ivf as $ivf)
     }
     
 }
-        $simulationDay = !empty($ivf->trigger_date) ? 'S'.$value->s_day : null;
-        $antagonist = array_unique($antagonist);
-        // print_r(array_count_values('Test'));
-        foreach($antagonist as $value)
-        {
-            // echo $value;
-            $antagonistCount = array_count_values($antagonist);
-            $antagonists[] = $value.'('.$antagonistCount[$value].')';
-        }
-        $injectionBrand = array_unique($injectionBrand);
-        $protocols = array_unique($protocols);
+    $simulationDay = !empty($ivf->trigger_date) ? 'S'.$value->s_day : null;
+    $antagonistCount = array_count_values($antagonist);
+    $antagonist = array_unique($antagonist);
+    foreach($antagonist as $value)
+    {
+        $antagonists[] = $value.'('.$antagonistCount[$value].')';
+    }
+    $injectionBrand = array_unique($injectionBrand);
+    $protocols = array_unique($protocols);
 @endphp
 <div class="row clearfix">
     <div class="col-md-12 p-0">

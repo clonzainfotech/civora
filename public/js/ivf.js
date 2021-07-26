@@ -497,6 +497,12 @@ $(document).ready(function(){
         var date = new Date($(this).val());
         var totalDate = $('.protocol-date').length;
         var dateId = $(this).attr('id');
+        var lmpDate = new Date($('.history-lmd-date').val());
+        var Difference_In_Time = date.getTime() - lmpDate.getTime();
+        var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24));
+        // console.log(diff);
+        $(this).closest('tr').find('td.protocol-day input').val(diff+1);
+        
         if(dateId == 'history-lmpdate-'+totalDate && date != 'Invalid Date'){
             date.setDate(date.getDate() + 1);
             var followupdate = moment(date).format('dddd DD MMMM YYYY');
@@ -2220,9 +2226,13 @@ $(document).ready(function(){
                     var dateData = moment(date).format('dddd DD MMMM YYYY');
                 }
                 var day = days + i;
+                var lmpdate  = new Date($('.history-lmd-date').val());
+                var date2 = new Date(dateData);
+                var Difference_In_Time = date2.getTime() - lmpdate.getTime();
+                var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24)) + 1;
                 var sDay = parseInt($('.last-s-days').val()) + i;
                 protocolData += "<tr>"+
-                                    "<td class='width-80'><input type='text' name='data[protocol]["+i+"][day]' value='"+day+"' class='form-control'></td>"+
+                                    "<td class='width-80 protocol-day'><input type='text' name='data[protocol]["+i+"][day]' value='"+diff+"' class='form-control'></td>"+
                                     "<td><span class='days-number'>s"+sDay+"</span><input type='hidden' name='data[protocol]["+i+"][s_day]' value="+sDay+" class='s-days-number' id='s-days-"+i+"'></td>"+
                                     "<td><input type='text' name='data[protocol]["+i+"][date]' value='"+dateData+"' class='form-control protocol-date datetimepicker' id='history-lmpdate-"+i+"'></td>";
                                     var injection  = {"1":"Only HMG","2":"Only FSH","3":"FSH + HMG","4":"Lupride","5":"Letrozole + HMG","6":"Letrozole + FSH","7":"Clomiphene Citrate + HMG","8":"Clomiphene Citrate + FSH","9":"Antagonist"};

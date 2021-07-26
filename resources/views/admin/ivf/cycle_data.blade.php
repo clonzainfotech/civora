@@ -259,7 +259,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <table class='unik-table table m-b-0'>
+                            <table class='unik-table table m-b-0 table-responsive'>
                                 <thead class="pick_up_table_thead">
                                 <tr>
                                     <th class="text-secondary">Visit Date</th>
@@ -1217,7 +1217,7 @@
                                     </tfoot>
                             </table>
                             <br>
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-responsive">
                                 <thead class="pick_up_table_thead">
                                     <tr>
                                         <th class="text-secondary"> Date</th>
@@ -1519,7 +1519,7 @@
                                         <span class="seen-by-error text-danger mb-2"></span>
                                     </div>
                                     <div class="col-md-12">
-                                        <table class="table follicular-table frozen-table table-bordered">
+                                        <table class="table follicular-table frozen-table table-bordered table-responsive">
                                             <thead>
                                                 <tr>
                                                     <th style="width:8% !important;">Date</th>
@@ -2143,7 +2143,7 @@
                                                                     $diff = $diff + 1;
                                                                 @endphp
                                                                 <h5 class=""><u>Result:</u></h5>
-                                                                <table class="table follicular-table frozen-table table-bordered">
+                                                                <table class="table follicular-table frozen-table table-bordered table-responsive">
                                                                     <thead>
                                                                         <tr>
                                                                             <th>Date</th>
@@ -2170,7 +2170,7 @@
                                         </table>
 
                                         <h4 class=""><u>Medicine:</u></h4>
-                                        <table class="table follicular-table frozen-table table-bordered ">
+                                        <table class="table follicular-table frozen-table table-bordered table-responsive">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight: bold !important;"> Date</th>

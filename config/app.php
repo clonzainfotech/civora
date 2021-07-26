@@ -254,6 +254,8 @@ return [
     'hospitalname2'=>'Candor Hospital & Maternity Home',
     'doctor'=>'Dr. Jaydev Dhameliya',
     'stopNotification' => ['anc','ivf','iui'],
+    'embroyologist_doctor' => "BHAVNA BORKHATARIA",
+    'embroyologist_degree' => "M.SC., PH.D." ,
 
     'GOOGLE_CLIENT_ID' => '984779626869-fjht6mtsrqfla3ug8rmdvpn1n55gn509.apps.googleusercontent.com',
     'GOOGLE_CLIENT_SECRET' => 'eSold9YPOYmRmF_j13M1WVZo',

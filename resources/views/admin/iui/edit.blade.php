@@ -4594,7 +4594,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         <span class="seen-by-error-3 text-danger mb-2"></span>
                     </div>
                     <div class="col-md-12">
-                        <table class="table follicular-table table-bordered">
+                        <table class="table follicular-table table-bordered table-responsive">
                             <thead>
                                 <tr>
                                     <th style="width:8% !important;">Date</th>
@@ -5263,7 +5263,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </table>
                         
                         <h4 class=""><u>Medicine:</u></h4>
-                        <table class="table follicular-table table-bordered ">
+                        <table class="table follicular-table table-bordered table-responsive">
                             <thead>
                                 <tr>
                                     <th class="font-bold"> Date</th>

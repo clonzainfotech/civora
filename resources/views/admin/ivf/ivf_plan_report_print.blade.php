@@ -90,18 +90,18 @@ body {margin-top :250px;}
                 <span>{{!empty($ivfReportData->simulation->protocol) ? $ivfReportData->simulation->protocol : '-'}}</span>
             </div>
             @if(!isset($pt_view) || $pt_view != 1)
-            <div>
-                <span>Injection:</span>
-                <span>{{!empty($ivfReportData->simulation->injection) ? $ivfReportData->simulation->injection : '-'}}</span>       
-            </div>
-            <div>
-                <span>Antagonist:</span>
-                <span>{{!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : '-'}}</span>
-            </div>
-            <div>
-                <span>Stimulation days:</span>
-                <span>{{!empty($ivfReportData->simulation->simulation_days) ? $ivfReportData->simulation->simulation_days : '-'}}</span>
-            </div>
+                <div>
+                    <span>Injection:</span>
+                    <span>{{!empty($ivfReportData->simulation->injection) ? $ivfReportData->simulation->injection : '-'}}</span>       
+                </div>
+                <div>
+                    <span>Antagonist:</span>
+                    <span>{{!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : '-'}}</span>
+                </div>
+                <div>
+                    <span>Stimulation days:</span>
+                    <span>{{!empty($ivfReportData->simulation->simulation_days) ? $ivfReportData->simulation->simulation_days : '-'}}</span>
+                </div>
             @endif
         </div>
 
@@ -190,23 +190,24 @@ body {margin-top :250px;}
                     <span>{{!empty($ivfReportData->ovum->totalocc) ? $ivfReportData->ovum->totalocc : '-'}}</span>
                 </div>
                 @if(!isset($pt_view) || $pt_view != 1)
-                <div>
-                    <span>MII:</span>
-                    <span>{{!empty($ivfReportData->ovum->mii) ? $ivfReportData->ovum->mii : '-'}}</span>
-                </div>
+                    <div>
+                        <span>MII:</span>
+                        <span>{{!empty($ivfReportData->ovum->mii) ? $ivfReportData->ovum->mii : '-'}}</span>
+                    </div>
+                
+                    <div>
+                        <span>MII Rate:</span>
+                        <span>{{!empty($ivfReportData->ovum->mii_rate) ? $ivfReportData->ovum->mii_rate : '-'}}</span>
+                    </div>
+                    <div>
+                        <span>MI:</span>
+                        <span>{{!empty($ivfReportData->ovum->mi) ? $ivfReportData->ovum->mi : '-'}}</span>
+                    </div>
+                    <div>
+                        <span>GV:</span>
+                        <span>{{!empty($ivfReportData->ovum->gv) ? $ivfReportData->ovum->gv : '-'}}</span>
+                    </div>
                 @endif
-                <div>
-                    <span>MII Rate:</span>
-                    <span>{{!empty($ivfReportData->ovum->mii_rate) ? $ivfReportData->ovum->mii_rate : '-'}}</span>
-                </div>
-                <div>
-                    <span>MI:</span>
-                    <span>{{!empty($ivfReportData->ovum->mi) ? $ivfReportData->ovum->mi : '-'}}</span>
-                </div>
-                <div>
-                    <span>GV:</span>
-                    <span>{{!empty($ivfReportData->ovum->gv) ? $ivfReportData->ovum->gv : '-'}}</span>
-                </div>
                 <div>
                     <span>Hysteroscopy:</span>
                     <span>{{!empty($ivfReportData->ovum->hysteroscopy_status) ? ucfirst($ivfReportData->ovum->hysteroscopy_status) : '-'}}</span>
@@ -270,18 +271,18 @@ body {margin-top :250px;}
 
         <div class="row doctor-info">
             <div class="col-md-4 col-sm-4">
-                <div class='drname'>{{config('app.doctor') }}</div>
-                <div class='degree'>(M.B., D.G.O)</div>
-                <div class='proffesion'>Chief consultant</div>
+                <div class='drname'>{{$ivfReport->getPatients->getHospitalDoctor['name'] }}</div>
+                <div class='degree'>{{$ivfReport->getPatients->getHospitalDoctor['degree'] }}</div>
+                <div class='proffesion'>{{$ivfReport->getPatients->getHospitalDoctor['designation'] }}</div>
             </div>
             <div class="col-md-4 col-sm-4">
                 <div class='drname'>Dr. juhi Dhameliya</div>
-                <div class='degree'>(M.B., D.G.O)</div>
+                <div class='degree'></div>
                 <div class='proffesion'>embryologist</div>
             </div>
             <div class="col-md-4 col-sm-4">
-                <div class='drname'>bhavna borkhataria</div>
-                <div class='degree'>(M.Sc., ph.D.)</div>
+                <div class='drname'>{{config('app.embroyologist_doctor')}}</div>
+                <div class='degree'>({{config('app.embroyologist_degree')}})</div>
                 <div class='proffesion'>embryologist</div>
             </div>
         </div>

@@ -445,6 +445,35 @@ class IUIController extends AdminController
                     $iui_mh_data->lmd_date_diff = !empty($iuiSecondVisitData->lmp->lmp_date_diff) ? $iuiSecondVisitData->lmp->lmp_date_diff : '';
                     $iui_mh_data->edd = !empty($iuiSecondVisitData->lmp->date) ? Carbon::parse($iuiSecondVisitData->lmp->date)->addMonths(9)->addDays(7)->format('Y-m-d') : '';
                     $iuiPatientsData->m_h = json_encode($iui_mh_data);
+                    if(!empty($iuiPatientsData->h_o))
+                    {
+                        $hoData = json_decode($iuiPatientsData->h_o);
+                        $hoDetails = $hoData->ho_details;
+                        $hoDetails = strtolower($hoDetails);
+                        $hoMonth = str_replace('month', '-', $hoDetails);
+                        if(strpos($hoDetails,'months') !== false || strpos($hoDetails,'days') !== false){
+                            $hoDetails = str_replace('s', '', $hoMonth);
+                        }else{
+                            $hoDetails = $hoMonth;
+                        }
+                        if(strpos($hoDetails,'day') !== false){
+                            $hoDetails = str_replace('day', '', $hoDetails);
+                        }
+                        $hoDetails = str_replace(' ', '', $hoDetails);
+                        $hoMonth = explode('-',$hoDetails);
+                        $hoMonthData = !empty($hoMonth[0]) ? $hoMonth[0] : 0;
+                        // dd($hoMonthData);
+                        $hoDay = !empty($hoMonth[1]) ? $hoMonth[1] : 0;
+                        $days = 30;
+                        $monthDays = ((int)$hoMonthData * (int)$days) + (int)str_replace(' ', '', $hoDay);
+                        $oldDate = Carbon::parse(!empty($iuiSecondVisitData->lmp->date) ? $iuiSecondVisitData->lmp->date : date('Y-m-d'))->format('Y-m-d');
+                        $nowDate = Carbon::now();
+                        $diffDays = Carbon::parse($oldDate)->diffInDays($nowDate);
+                        $totalDays = $monthDays + $diffDays;
+                        $hoData->ho_details = (int)($totalDays/$days).' month '.$totalDays % $days.' day';
+                        // $hoDetails->ho_details =  $hoDetails;
+                        $iuiPatientsData->h_o = json_encode($hoData);
+                    }
                     $autoRemark['remark'] = "Conceived from IUI";
                     $ancData->patients_id = $patientsId;
                     $ancData->patients_info = $iuiPatientsData->patients_info;

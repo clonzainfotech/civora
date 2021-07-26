@@ -31,6 +31,7 @@ $bloodReport = [];
 $protocols = [];
 $injectionBrand = [];
 $antagonist = [];
+$antagonists  = [];
 $simulationDay = null;
 $triggerDate = null;
 $hystrocopy = null;
@@ -55,7 +56,14 @@ foreach($ivf as $ivf)
             // $injectionBrand[] = !empty($value->hmg_brand_name) ? $value->hmg_brand_name : (!empty($value->fsh_brand_name) ? $value->fsh_brand_name : '');
             if(!empty($value->antagonist))
             {
-                $antagonist[] = $value->antagonist.'('.$ivf->visit.')';
+                // if(in_array($value->antagonist,$antagonist))
+                // {
+                //     $antagonist[] = $value->antagonist
+                // }
+                // else {
+                    $antagonist[] = $value->antagonist;
+                // }
+                
             }
            
             if(!empty($value->hmg_brand_name))
@@ -77,10 +85,23 @@ foreach($ivf as $ivf)
             {
                 $protocols[] = 'FSH -'.$value->fsh;
             }
-            $simulationDay = !empty($ivf->trigger_date) ? 'S'.$value->s_day : null;
+            
         }
+        
     }
+    
 }
+        $simulationDay = !empty($ivf->trigger_date) ? 'S'.$value->s_day : null;
+        $antagonist = array_unique($antagonist);
+        // print_r(array_count_values('Test'));
+        foreach($antagonist as $value)
+        {
+            // echo $value;
+            $antagonistCount = array_count_values($antagonist);
+            $antagonists[] = $value.'('.$antagonistCount[$value].')';
+        }
+        $injectionBrand = array_unique($injectionBrand);
+        $protocols = array_unique($protocols);
 @endphp
 <div class="row clearfix">
     <div class="col-md-12 p-0">
@@ -200,7 +221,7 @@ foreach($ivf as $ivf)
                     <div class="col-md-3">
                         <div class="input-group">
                             <span class="input-group-addon">Antagonist : &nbsp;</span>
-                            {{Form::text('data[simulation][antagonist]',!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : implode(',',$antagonist),['class'=>'form-control antagonist col-md-10'])}}
+                            {{Form::text('data[simulation][antagonist]',!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : implode(',',$antagonists),['class'=>'form-control antagonist col-md-10'])}}
                         </div>
                         <span class="form-error-msg">
                             {{$errors->first('antagonist')}}

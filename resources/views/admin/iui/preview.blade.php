@@ -3315,10 +3315,6 @@
                                 <td>
                                     @if(!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date))
                                         {{\Carbon\Carbon::parse($iui_decription->hcg_date)->format('d-m-Y')}}
-                                    
-                                    @elseif(!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date))
-                                        {{\Carbon\Carbon::parse($iui_decription->hcg_date.' '.$iui_decription->hcg->time)->addHours(36)->format('d-m-Y')}}
-                                   
                                     @elseif($row->visit == 4 && !empty($iui_decription->result))
                                         {{\Carbon\Carbon::parse($iui_decription->date)->format('d-m-Y')}}
                                    
@@ -3328,16 +3324,34 @@
                                 </td>
                                 <td>
                                         {{!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ': ''}}
-                                        {{-- {{$row->visit == 4 && !empty($iui_decription->result) ? $iui_decription->date : ''}} --}}
-                                        {{-- {{(!empty($iui_decription->ovalution) && $iui_decription->ovalution == 'yes') ? \Carbon\Carbon::parse($row->created_at)->format('d-m-Y') : ''}} --}}
                                 </td>
-                                <td>
-                                        {{!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ' : ''}}
-                                </td>
+                                <td></td>
                                 <td>{{!empty($iui_decription->no_follicle) ? $iui_decription->no_follicle : ''}}</td>
                                 <td>{{(!empty($iui_decription->ovalution) && $iui_decription->ovalution == 'yes') ? 'YES' : ''}}</td>
                                 <td>{{($row->visit == 4 && !empty($iui_decription->result)) ? ($iui_decription->result == 'consive' ? 'Conceived' : 'Fail') : ''}}</td>
                             </tr>
+                            @endif
+                            {{-- for IUI --}}
+                            @if(!empty($iui_decription->hcg) && ($iui_decription->hcg->type == 'yes' || $iui_decription->hcg->iui->status == 'yes'))
+                                <tr>
+                                    <td>
+                                       
+                                        @if(!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date))
+                                            @php
+                                                $cDate = \Carbon\Carbon::parse(!empty($iui_decription->hcg_date) ? $iui_decription->hcg_date : null)->format('d-m-Y') .' '.$iui_decription->hcg->time;
+                                                $iuiDtaeAndTime = \Carbon\Carbon::parse($cDate)->addHours(35)->format('d-m-Y');
+                                            @endphp
+                                            {{$iuiDtaeAndTime}}
+                                        @endif
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        {{!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ' : ''}}
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             @endif
                             @endforeach
                         </tbody>

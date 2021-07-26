@@ -852,7 +852,11 @@ class IVFController extends AdminController
                 }
             }
             $now = Carbon::now()->format('Y-m-d');
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+            // dd($request->ivf_visit_id);
+            if(!$request->ivf_visit_id)
+            {
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+            }
             $isIvfHistory =  '1';
             $historyData = null;
             $doseData = null;
@@ -2309,6 +2313,7 @@ class IVFController extends AdminController
                 //     'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
                 // ]);
             }else{
+                $pt_view = 1;
                 $patientId = decrypt($request->patient_id);
                 $historyDate = $request->date;
                 $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
@@ -2318,7 +2323,7 @@ class IVFController extends AdminController
                     if($ivfData)
                     {
                         $transferReport = $this->IvfTransferReport->where('patient_id',$patientId)->where('cycle_no',$ivfData->cycle_no)->first();
-                        return view('admin.ivf.transfer_report', compact('transferReport'));
+                        return view('admin.ivf.transfer_report', compact('transferReport','pt_view'));
                     }
                     return 'no record available';
                 }
@@ -2328,7 +2333,7 @@ class IVFController extends AdminController
                     if($ivfReport)
                     {
                         $printPreview = 1;
-                        return view('admin.ivf.ivf_plan_report_print', compact('ivfReport','printPreview'));
+                        return view('admin.ivf.ivf_plan_report_print', compact('ivfReport','printPreview','pt_view'));
                     }
                     return 'no record available';
                 }
@@ -2352,7 +2357,7 @@ class IVFController extends AdminController
                     }
                     $ivf = $ivfData;
                     $printPreview = 1;
-                    $pt_view = 1;
+                    
                     return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view'));
                 }
                 

@@ -4727,13 +4727,14 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                             <td class="{{$right_class_name}}" id="{{$row->id}}">
                                                 @if($row->visit != 1)
                                                     @php
-                                                        if(!empty($data->hcg) && ($data->hcg->type == 'yes' || $data->hcg->iui->status == 'yes'))
-                                                        {
-                                                            $hcgDataArray[] = (array)$data->hcg;
-                                                        }
+                                                    if((!empty($data->hcg->type) && $data->hcg->type == 'yes') || !empty($data->ovalution) && $data->ovalution == 'yes')
+                                                    {
+                                                        $hcgDataArray[] = (array)$data->hcg;
+                                                    }
                                                     @endphp
                                                     @if($row->visit == 2)
                                                         {{!empty($iuiSecondVisitData->oe->ovary->right->afcs) ? $iuiSecondVisitData->oe->ovary->right->afcs : null}}
+                                                        <!-- {{!empty($iuiSecondVisitData->oe->ovary->right->details) ? implode(',',$iuiSecondVisitData->oe->ovary->right->details) : null}} -->
                                                         {{!empty($iuiSecondVisitData->oe->ovary->right->residual_follicale) ? '/ RF : '.$iuiSecondVisitData->oe->ovary->right->residual_follicale : null}}
                                                     @else
                                                         {{!empty($data->ovary->ovary_type->right->details) ? $data->ovary->ovary_type->right->details : ''}}

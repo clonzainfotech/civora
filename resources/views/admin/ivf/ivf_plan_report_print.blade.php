@@ -28,7 +28,7 @@ h6 {
     text-transform: uppercase;
     font-size: 18px;
 }
-body {margin-top :100px;}
+body {margin-top :250px;}
 </style>
 @if(isset($printPreview) && $printPreview != 0)
     @section('content')
@@ -85,11 +85,12 @@ body {margin-top :100px;}
 
     <div class="row">
         <div class="col-md-6 col-sm-6">
-        <div>
-            <span>Protocol:</span>
-            <span>{{!empty($ivfReportData->simulation->protocol) ? $ivfReportData->simulation->protocol : '-'}}</span>
-        </div>
-        <div>
+            <div>
+                <span>Protocol:</span>
+                <span>{{!empty($ivfReportData->simulation->protocol) ? $ivfReportData->simulation->protocol : '-'}}</span>
+            </div>
+            @if(!isset($pt_view) || $pt_view != 1)
+            <div>
                 <span>Injection:</span>
                 <span>{{!empty($ivfReportData->simulation->injection) ? $ivfReportData->simulation->injection : '-'}}</span>       
             </div>
@@ -101,6 +102,7 @@ body {margin-top :100px;}
                 <span>Stimulation days:</span>
                 <span>{{!empty($ivfReportData->simulation->simulation_days) ? $ivfReportData->simulation->simulation_days : '-'}}</span>
             </div>
+            @endif
         </div>
 
         <div class="col-md-6 col-sm-6" style="border-left: 1px solid">
@@ -187,10 +189,12 @@ body {margin-top :100px;}
                     <span>Total OCC:</span>
                     <span>{{!empty($ivfReportData->ovum->totalocc) ? $ivfReportData->ovum->totalocc : '-'}}</span>
                 </div>
+                @if(!isset($pt_view) || $pt_view != 1)
                 <div>
                     <span>MII:</span>
                     <span>{{!empty($ivfReportData->ovum->mii) ? $ivfReportData->ovum->mii : '-'}}</span>
                 </div>
+                @endif
                 <div>
                     <span>MII Rate:</span>
                     <span>{{!empty($ivfReportData->ovum->mii_rate) ? $ivfReportData->ovum->mii_rate : '-'}}</span>
@@ -235,19 +239,27 @@ body {margin-top :100px;}
                 </div>
 
                 <div class="row" style="padding: 20px;">
-                    <span><strong>Oocyte Quality:</strong></span>
-                    <span>{{!empty($ivfReportData->ovum->quality) ? $ivfReportData->ovum->quality : '-'}}</span>
-                    <span><strong>Total Blastcyst:</strong></span>
-                    <span>{{!empty($ivfReportData->ovum->total_blastcyst) ? $ivfReportData->ovum->total_blastcyst : '-'}}</span>
-                    <span><strong>Blastcyst Rate:</strong></span>
-                    <span>{{!empty($ivfReportData->ovum->blastcyst_rate) ? $ivfReportData->ovum->blastcyst_rate : '-'}}</span>
+                    <div class="col-md-12 col-sm-12">
+                        <span><strong>Oocyte Quality:</strong></span>
+                        <span>{{!empty($ivfReportData->ovum->quality) ? $ivfReportData->ovum->quality : '-'}}</span>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <span class="mt-2"><strong>Total Blastcyst:</strong></span>
+                        <span>{{!empty($ivfReportData->ovum->total_blastcyst) ? $ivfReportData->ovum->total_blastcyst : '-'}}</span></br>
+                    </div>
+                    @if(!isset($pt_view) || $pt_view != 1)
+                    <div class="col-md-12 col-sm-12">
+                        <span><strong>Blastcyst Rate:</strong></span>
+                        <span>{{!empty($ivfReportData->ovum->blastcyst_rate) ? $ivfReportData->ovum->blastcyst_rate : '-'}}</span>
+                    </div>
+                    @endif
                 </div>
             </div>   
         </div>
 
         <div class="row" style="padding: 20px 0">
             <div class="col-md-12">
-                <span>Remark:</span>
+                <span><strong>Remark:<strong></span>
                 @if(isset($pt_view) && $pt_view == 1)
                 <span>{{isset($ivfReportData->pt_remark) && !empty($ivfReportData->pt_remark) ? $ivfReportData->pt_remark : '-'}}</span>
                 @else
@@ -257,12 +269,17 @@ body {margin-top :100px;}
         </div>
 
         <div class="row doctor-info">
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-4 col-sm-4">
                 <div class='drname'>{{config('app.doctor') }}</div>
                 <div class='degree'>(M.B., D.G.O)</div>
                 <div class='proffesion'>Chief consultant</div>
             </div>
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-4 col-sm-4">
+                <div class='drname'>Dr. juhi Dhameliya</div>
+                <div class='degree'>(M.B., D.G.O)</div>
+                <div class='proffesion'>embryologist</div>
+            </div>
+            <div class="col-md-4 col-sm-4">
                 <div class='drname'>bhavna borkhataria</div>
                 <div class='degree'>(M.Sc., ph.D.)</div>
                 <div class='proffesion'>embryologist</div>

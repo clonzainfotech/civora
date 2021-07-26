@@ -1347,7 +1347,7 @@
                                             $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                             $firstCharacter = strtoupper(substr($mId, 0, 3));
                                             if($firstCharacter == "INJ"){
-                                                if($row->medicine_time)
+                                                if(!empty($row->medicine_time))
                                                 {
                                                     switch($row->medicine_time){
                                                         case '1':
@@ -2598,7 +2598,7 @@
                                         $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                         $firstCharacter = strtoupper(substr($mId, 0, 3));
                                         if($firstCharacter == "INJ"){
-                                            if($row->medicine_time)
+                                            if(!empty($row->medicine_time))
                                             {
                                                 switch($row->medicine_time){
                                                     case '1':

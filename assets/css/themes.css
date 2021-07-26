@@ -2639,7 +2639,7 @@ line-height: 6px !important;
 }
 @media (min-width: 576px){
     .view-file-modal-dialog {
-        max-width: 1600px !important;
+        max-width: 1200px !important;
         margin: 1.75rem auto;
     }
 }

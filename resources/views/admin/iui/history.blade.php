@@ -173,7 +173,18 @@
             table-layout: fixed !important;
             width: inherit;
         }
-        
+        .view-file-modal-dialog .modal-content .modal-body
+        {
+            line-height:0.9 !important;
+        }
+        .follicular_div_1, .follicular_div_2
+        {
+            text-align:left !important;
+        }
+        .follicular_div_2
+        {
+            padding-left : 9rem !important;
+        }
     </style>
 @stop
 
@@ -204,9 +215,6 @@
                             {{Form::select("cycle_no",$iuiCycleNo,'',['class'=>'form-control select-padding-0 iui-cycle-no','placeholder'=>'Select Cycle No.'])}}
                         </li>
                         <li class="w-25">
-                            {{Form::select("date",[],'',['class'=>'form-control select-padding-0 iui-date','placeholder'=>'Select Date'])}}
-                        </li>
-                        <li class="w-50">
                             <button class="btn btn-primary view-file-edit">View File & Edit</button>
                         </li>
                     </ul>
@@ -448,7 +456,7 @@
       <div class="modal-content">
         <div class="modal-header header-bottom-border">
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-12">
                     <h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date"></span></h5>
                 </div>
@@ -462,16 +470,13 @@
                 <div class="col-md-12">
                     <h5 class="modal-title" id="myModalLabel">Visit:- <span class="iui-appointment-visit-no"></span></h5>
                 </div>
-            </div>
-            <div class="row">
+            </div> -->
+            <!-- <div class="row">
                 <div class="col-md-12 mr-5">
                     <a class="btn edit-btn btn-sm btn-primary">Edit</a>
                     <a class="btn print-btn btn-sm btn-primary">Print</a>
                 </div>
-            </div>
-            <button type="button" class="close anc-details-close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-header">
+            </div> -->
             <div class="row">
                 @foreach ($cycleData as $item)
                     <div class="col">
@@ -479,18 +484,15 @@
                     </div>
                 @endforeach
             </div>
-          {{-- <div class="row">
-              <div class="col-md-12 mr-5">
-              </div>
-          </div> --}}
+            <button type="button" class="close anc-details-close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
             <div class="anc-details-data"></div>
         </div>
 
         <div class="modal-footer footer-top-border text-right d-inline-block">
-            <button type="button" class="btn btn-primary next-appointment-details" data-type="2" data-cycle="{{$iuiFirstVisitData->cycle_no}}" data-date="{{$iuiFirstVisitData->created_at}}" data-status="2">Prev</button>
-            <button type="button" class="btn btn-primary next-appointment2 next-appointment-details" data-type="1" data-cycle="{{$iuiFirstVisitData->cycle_no}}" data-date="{{$iuiFirstVisitData->created_at}}" data-status="1">Next</button>
+        <button type="button" class="btn btn-primary mb-2" data-dismiss="modal" aria-hidden="true">Close</button>
+
         </div>
       </div>
     </div>
@@ -614,7 +616,8 @@
             $(document).on('click','.view-file-edit',function(e){
                 e.preventDefault();
                 $('.view-file-edit-modal').modal('show');
-                iuiString = 'patient_id='+patientsId+'&appointment_date='+appintmentDate+'&status='+status+'&type='+type+'&cycle_no='+cycleNo+'&is_first='+isFirst;
+                // cycleNo = '{{$iuiCurrentCycleNo}}';
+                iuiString = 'patient_id='+patientsId+'&appointment_date='+appintmentDate+'&status='+status+'&type='+type+'&is_first='+isFirst;
                 getIuiHistoryData(iuiString);
             });
 
@@ -1132,7 +1135,7 @@
                 dataType: 'json',
                 type:'GET',
             }).done(function(data) {
-                if(data.iui_completed == true)
+                if(data.iui_completed == true && data.historyData == null)
                 {
                     var lastCycle = $('select.iui-cycle-no option:last').val();
                     
@@ -1408,26 +1411,34 @@
         }
 
         function getIuiHistoryData(iuiString){
+            
             $.ajax({
                 url:'{{URL::to("get-iui-details")}}?'+iuiString,
                 type:'GET',
                 dataType:'json'
             }).done(function(data){
                 if(data.iui_type == 1){
-                    $('.anc-details-data').html(data.data);
-                    isFirst = 0;
-                    $('.next-appointment-details').data('date',data.date);
-                    $('.next-appointment-details').data('cycle',data.cycle);
-                    $('.iui-appointment-visit-no').text(data.visit);
-                    $('.iui-appointment-cycle-no').text(data.cycle);
-                    $('.next-appointment2').data('type',2);
-                    if(typeof data.date != 'undefined'){
-                        var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
-                    console.log(linkDate);
-                        var date = moment(new Date(data.date)).format('DD MMMM YYYY');
-                        $('.edit-btn').data('date',linkDate);
-                        $('.print-btn').data('date',linkDate);
-                        $('.anc-appointment-date').text(date);
+                    
+                    var buttonHtml = '';
+                    var previewData = '';
+                    $('.anc-details-data').empty();
+                    var iuiPreview = $('.anc-details-data').html();
+                    for(i=0; i<data.data.length;i++)
+                    {
+                        if(typeof data.date[i] != 'undefined'){
+                            var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                            var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                        }
+                        buttonHtml = iuiPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+
+                        if(data.table_view[i] == true)//table view
+                        {
+                            buttonHtml = iuiPreview + '<div class="row mb-1"><div class="col-md-6 text-left"></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-date="'+linkDate+'">Print</a></div></div>';
+
+                        }
+                        iuiPreview = buttonHtml + data.data[i];
+                        $('.anc-details-data').html(iuiPreview);
+                        // iuiPreview = iuiPreview + '<div class="row sepreator"></div>';
                     }
                 }
                 if(data.iui_type == 2){

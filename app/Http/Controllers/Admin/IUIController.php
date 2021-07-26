@@ -936,7 +936,10 @@ class IUIController extends AdminController
             $iui->created_by = Auth::user()->id;
             $iui->save();
             $now = Carbon::now()->format('Y-m-d');
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+            if(!$request->iui_history_id && !$request->iui_id)
+            {
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+            }
             if(!$request->iui_history_id && !$request->iui_id && $msg){
                 $seenBy = getSeenByDoctor($seenBy);
                 $patient = $this->OpdPatients->find($patientsId);
@@ -1901,6 +1904,7 @@ class IUIController extends AdminController
     public function getIuiDetails(Request $request){
         try{
             $inducingInjectionData = $this->inducingInjection()['inj'];
+            $investigationReport = $this->allInvestigationReport();
             $currentdate = Carbon::now()->format("d-m-y");
             $iuiFirstVisit = null;
             $iuiSecondVisit = null;
@@ -1908,60 +1912,119 @@ class IUIController extends AdminController
             $iuiHistoryData = null;
             if($request->ajax()){
                 $patientId = decrypt($request->patient_id);
-                $iuiHistoryFirstVisit = $this->IuiHistory->where('patients_id',$patientId)->orderBy('id','asc')->first();
+                $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
+                // $iuiHistorylastVisit = $this->IuiHistory->where('patients_id',$patientId)->orderBy('id','asc')->first();
                 $type = 1;
                 $cycle = $request->cycle_no;
-                $iuiData = $this->IUI->where('patients_id',$patientId)->where('cycle_no',$cycle)->orderBy('id','DESC')->first();
-                $date = $request->appointment_date;
+                $iuiAllData = $this->IUI->where('patients_id',$patientId)->orderBy('id','ASC')->get();
+                // $date = $request->appointment_date;
                 $historyDate = $request->history_date;
-                if($date){
-                    $iuiType = 1;
-                    if($iuiHistoryFirstVisit && $request->type == 1 && $request->status == 1){
-                        $date = $iuiHistoryFirstVisit->created_at;
-                        $type = 2;
-                    }
-                    if($request->type == 2 && $request->status == 1){
-
-                        $type = 2;
-                        $iuiHistoryVisit = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$cycle)->where('created_at','>',$date);
-                        if($request->is_first == 1){
-                            $iuiHistoryVisit = $iuiHistoryVisit->orderBy('id','DESC');
-                        }
-                        $iuiHistoryVisit = $iuiHistoryVisit->first();
-                        $date = $iuiHistoryVisit->created_at;
-                        $iuiData = $iuiHistoryVisit;
-                    }
-                    if($request->status == 2){
-
-                        $iuiHistoryVisit = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$cycle)->where('created_at','<',$date)->orderBy('id','DESC')->first();
-                        if($iuiHistoryVisit){
-                            $iuiData = $iuiHistoryVisit;
-                        }
-                        $date = $iuiData->created_at;
-                    }
+                
+                $viewAllVisit = [];
+                $dateValue = [];
+                $table_view = [];
+                if($request->cycle_no && !empty($request->cycle_no))
+                {
+                    $iuiVisitDate = [];
+                    $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->pluck('cycle_no','created_at')->toArray();
+                    $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->first();
+                    $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$cycle];
                     
+                    $iuiVisitDate = array_merge($iuiHistoryDate,$iuiDate);
+                    $iuiFirstVisit = $iuiDateData;
+                    $iuiHistoryData = collect($this->IuiHistory->wherePatientsId($patientId)->whereCycleNo($cycle)->get());
+                    $iuiSecondVisit = $iuiHistoryData->where('visit',2)->first();
+                    if($iuiSecondVisit){
+                        $iuiSecondVisit = json_decode($iuiSecondVisit->description);
+                    }
                 }
+                //all IUI cycle wise
+                else
+                {
+                    $iuiVisitDate = [];
+                    foreach($iuiAllData as $key => $iui_all_data)
+                    {
+                        $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$iui_all_data->cycle_no)->pluck('cycle_no','created_at')->toArray();
+                        $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$iui_all_data->cycle_no)->first();
+                        $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$iui_all_data->cycle_no];
+                        
+                        $iuiVisits = array_merge($iuiHistoryDate,$iuiDate);
+                        $iuiVisitDate = array_merge($iuiVisits,$iuiVisitDate);
+                        $iuiFirstVisit = $iuiDateData;
+                        
+                    }
+                }
+                
                 if($historyDate){
 
                     $iuiType = 2;
                     $iuiData = $this->IUI->where('patients_id',$patientId)->where('created_at','=',$historyDate)->first();
                     if(!$iuiData){
                         $iuiData = $this->IuiHistory->where('patients_id',$patientId)->where('created_at','=',$historyDate)->first();
+                        if($iuiData && $iuiData->visit > 2)
+                        {
+                            $iuiData->study_report = true;
+                        }
+                    }
+                    $iui = $iuiData;
+                    $viewAllVisit[] =  View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport'))->render();
+                    
+                }
+                else{
+                    $preview = 0;
+                    foreach($iuiVisitDate as $key => $value)
+                    {
+                        $iuiType = 1;
+                        $iuiHistoryData = collect($this->IuiHistory->wherePatientsId($patientId)->whereCycleNo($value)->get());
+                        $iuiSecondVisit = $iuiHistoryData->where('visit',2)->first();
+                        if($iuiSecondVisit){
+                            $iuiSecondVisit = json_decode($iuiSecondVisit->description);
+                        }
+                        $iuiData = $this->IUI->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->first();
+                        if($iuiData)
+                        {
+                            $preview = 0;
+                            $isTable_view = false;
+                        }
+                        if(empty($iuiData))
+                        {
+                            $iuiData = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->orderBy('id','DESC')->first();
+                            if($iuiData && ($iuiData->visit == 2)){
+                                
+                                $preview = 1;
+                                $isTable_view = false;
+                            }
+                            if($iuiData && ($iuiData->visit == 3 || $iuiData->visit == 4)){
+                                $iuiData->study_report = true;
+                                $isTable_view = true;
+                                $preview++;
+                            }
+                        }
+                        $iuiThirdVisit = $this->IuiHistory->wherePatientsId($patientId)->where('cycle_no',$value)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$key)->where('visit',3)->where('description->ovalution','yes')->first();
+                        if($iuiThirdVisit){
+                            $iuiThirdVisit = json_decode($iuiThirdVisit->description);
+                        }
+                        $iui = $iuiData;
+                        if($preview == 1 || $preview == 0) //display only one time  table view
+                        {
+                            $viewAllVisit[] =  View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport'))->render();
+                            $dateValue[] = $key;
+                            $table_view[] = $isTable_view;
+                        }
                     }
                 }
-                $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
-                $iui = $iuiData;
-                $investigationReport = $this->allInvestigationReport();
+                
                 
                 return response()->json([
                     'status' => 1,
-                    'visit' => $iui->visit ? $iui->visit : 1,
-                    'cycle' => $iui->cycle_no,
+                    // 'visit' => $iui->visit ? $iui->visit : 1,
+                    // 'cycle' => $iui->cycle_no,
                     'type' => $type,
                     'iui_type' => $iuiType,
-                    'date' => Carbon::parse($date)->format('Y-m-d H:i:s'),
-                    'id' => $iuiData->id,
-                    'data' => View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport'))->render()
+                    'date' => $dateValue,
+                    'table_view' => $table_view,
+                    // 'id' => $iuiData->id,
+                    'data' => $viewAllVisit
                 ]);
             }else{
                 // this code is use for api to generet report

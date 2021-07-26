@@ -2176,6 +2176,7 @@
                                         @endif
                                     </th>
                                 </tr>
+                                @if (!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs) || !empty($oe->ovary->left->residual_follicale))
                                 <tr>
                                     <th>
                                         
@@ -2198,11 +2199,10 @@
                                         @endif
                                     </th>
                                 </tr>
-                                <tr><th></th><tr>
-                                <tr><th></th><tr>
-                                <tr><th></th><tr>
+                                @endif
                                 @if(!empty($oe->p_s->type))
                                     <tr>
+                                        <br>
                                         <th>
                                             <span class="iui-label">P/S</span>
                                         </th>
@@ -2229,12 +2229,10 @@
                                         </th>
                                     @endif
                                 </tr>
-                                <tr><th></th></tr>
-                                <tr><th></th></tr>
                                 @if (isset($plan->agenet) && !empty($plan->agenet))
                                     <tr>
                                         <th>
-                                            
+                                            <br>
                                             @php
                                             if(isset($inducing) && !empty($inducing))
                                             {
@@ -3174,7 +3172,7 @@
                                     @if($row->visit != 1)
                                         @php
                                             
-                                            if(!empty($data->hcg->type) && $data->hcg->type == 'yes')
+                                            if((!empty($data->hcg->type) && $data->hcg->type == 'yes') || !empty($data->ovalution) && $data->ovalution == 'yes')
                                             {
                                                 $hcgDataArray[] = (array)$data->hcg;
                                             }
@@ -3316,22 +3314,22 @@
                             <tr>
                                 <td>
                                     @if(!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date))
-                                        {{\Carbon\Carbon::parse($iui_decription->hcg_date)->format('d/m/Y')}}
+                                        {{\Carbon\Carbon::parse($iui_decription->hcg_date)->format('d-m-Y')}}
                                     
                                     @elseif(!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date))
-                                        {{\Carbon\Carbon::parse($iui_decription->hcg_date.' '.$iui_decription->hcg->time)->addHours(36)->format('d/m/Y')}}
+                                        {{\Carbon\Carbon::parse($iui_decription->hcg_date.' '.$iui_decription->hcg->time)->addHours(36)->format('d-m-Y')}}
                                    
                                     @elseif($row->visit == 4 && !empty($iui_decription->result))
-                                        {{$iui_decription->date}}
+                                        {{\Carbon\Carbon::parse($iui_decription->date)->format('d-m-Y')}}
                                    
                                     @elseif((!empty($iui_decription->ovalution) && $iui_decription->ovalution == 'yes'))
-                                        {{\Carbon\Carbon::parse($row->created_at)->format('d/m/Y')}}
+                                        {{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}
                                     @endif
                                 </td>
                                 <td>
                                         {{!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ': ''}}
                                         {{-- {{$row->visit == 4 && !empty($iui_decription->result) ? $iui_decription->date : ''}} --}}
-                                        {{-- {{(!empty($iui_decription->ovalution) && $iui_decription->ovalution == 'yes') ? \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') : ''}} --}}
+                                        {{-- {{(!empty($iui_decription->ovalution) && $iui_decription->ovalution == 'yes') ? \Carbon\Carbon::parse($row->created_at)->format('d-m-Y') : ''}} --}}
                                 </td>
                                 <td>
                                         {{!empty($iui_decription->hcg->iui->status) && $iui_decription->hcg->iui->status == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ' : ''}}

@@ -11,6 +11,18 @@
         width: 175px !important;
         height: 115px !important;
     }
+    .er_image
+    {
+        height: 70%;
+        width: 70%;
+        border-radius: 10%
+    }
+    .er_image_name{
+        /* position: absolute; */
+    /* top: 15%; */
+    /* right: 45%; */
+    font-weight: bold;
+    }
 
 </style>
 @stop
@@ -367,24 +379,7 @@ foreach($ivf as $ivf)
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-addon">Er Photo : </span>
-                            {{Form::file('data[ovum][erphoto]',['class'=>'form-control report-file'])}}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group">
-                        <span>
-                            @if (!empty($ivfReportData->ovum->erphoto))
-                            <img src="{{$file}}" class="mt-2 mb-2" width="100px"/>
-                            @endif
-                        </span>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div class="row">
                     <div class="col-md-3">
@@ -450,10 +445,7 @@ foreach($ivf as $ivf)
                         </span>
                     </div>
                 </div>
-                <div class="row">
-                    
-                </div>
-
+                
                 <div class="row">
                     <div class="col-md-3">
                         <div class="input-group">
@@ -509,8 +501,24 @@ foreach($ivf as $ivf)
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                @php
+                    $erImageArray = ['good','medium','poor','gv','m1'];
+                    $baseUrl = asset('assets/images');
+                @endphp
+                <div class="row mb-2">
+                    @foreach($erImageArray as $erImage)
                     
+                        @if(getimagesize($baseUrl.'/'.$erImage.'.jpg'))
+                            <div class="col-md-2 text-center">
+                                {{-- <div class="input-group"> --}}
+                                    <img src="{{asset('assets/images/'.$erImage.'.jpg')}}" class="er_image mb-1">
+                                    <br>
+                                    <span class="er_image_name">{{ucwords($erImage)}}</span>
+                                    {{Form::text('data[er]['.$erImage.']',isset($ivfReportData->er->$erImage) && !empty($ivfReportData->er->$erImage) ? $ivfReportData->er->$erImage : null,['class'=>'form-control good'])}}
+                                {{-- </div> --}}
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
 
                 <div class="row">

@@ -14,6 +14,7 @@
 }
 .ivf-report-print {
     padding: 20px;
+    font-size: 20px;
 }
 .doctor-info {
     padding: 50px 0;
@@ -29,6 +30,34 @@ h6 {
     font-size: 18px;
 }
 body {margin-top :250px;}
+.pick-up-table
+{
+    /* width: 50% !important; */
+}
+.pick-up-table th, .pick-up-table td
+{
+    padding: .45rem !important;
+}
+.mt-3
+{
+    margin-top: 1.7rem !important;
+}
+.candor-color
+{
+ color: #1e5f63;
+}
+.er_image
+    {
+        width: 100%;
+        border-radius: 10%;
+        -webkit-print-color-adjust: exact;
+    }
+    .er_image_name{
+        position: absolute;
+        top: 40%;
+        right: 35%;
+        font-weight: bold;
+    }
 </style>
 @if(isset($printPreview) && $printPreview != 0)
     @section('content')
@@ -40,251 +69,243 @@ body {margin-top :250px;}
     @endphp
 
     <div class="ivf-report-print">
-    <div class="row">
-        <div class="col-md-10">
-            <span>Patient Name:</span>
-            <strong class="p-name">{{ ucwords(strtolower($ivfReport->getPatients['name']))}}</strong>
-        </div>
-        <div class="col-md-2 col-sm-2">
-            <span>Age:</span>
-            <span>{{!empty($ivfReport->getPatients['age']) ? $ivfReport->getPatients['age'] : '-'}}</span>
-        </div>
-    </div>
-    <div class="row">
-        @if(!empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status == 'yes')
-            <div class="col-md-2">
-                <span>Surgery/Donor : </span>
-                <span>{{'Yes'}}</span>
+        <div class="row">
+            <div class="col-md-10">
+                <span>Patient Name:</span>
+                <strong class="p-name">{{ ucwords(strtolower($ivfReport->getPatients['name']))}}</strong>
             </div>
-        @endif
-        @if (isset($ivfReportData->is_donor->status) && !empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status =='yes')
-            <div class="col-md-8">
-                <span>Donor Name:</span>
-                <span>{{ucwords(strtolower($ivfReportData->donor->name))}}</span>
+            <div class="col-md-2 col-sm-2">
+                <span><strong>Age:</strong></span>
+                <span>{{!empty($ivfReport->getPatients['age']) ? $ivfReport->getPatients['age'] : '-'}}</span><br>
             </div>
-            <div class="col-md-2">
-                <span>Age:</span>
-                <span>{{$ivfReportData->donor->age}}</span>
-            </div>
-        @endif
-    </div>
-
-    <div class="row" style="padding-bottom: 20px">
-        <div class="col-md-12">
-            <span>Indication:</span>
-            <span>{{!empty($ivfReportData->indication) ? $ivfReportData->indication : ''}}</span>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div><h6><strong>Stimulation:</strong></h6></div>
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col-md-6 col-sm-6">
-            <div>
-                <span>Protocol:</span>
-                <span>{{!empty($ivfReportData->simulation->protocol) ? $ivfReportData->simulation->protocol : '-'}}</span>
-            </div>
-            @if(!isset($pt_view) || $pt_view != 1)
-                <div>
-                    <span>Injection:</span>
-                    <span>{{!empty($ivfReportData->simulation->injection) ? $ivfReportData->simulation->injection : '-'}}</span>       
+        <div class="row">
+            @if(!empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status == 'yes')
+                <div class="col-md-2">
+                    <span>Surgery/Donor : </span>
+                    <span>{{'Yes'}}</span>
                 </div>
-                <div>
-                    <span>Antagonist:</span>
-                    <span>{{!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : '-'}}</span>
+            @endif
+            @if (isset($ivfReportData->is_donor->status) && !empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status =='yes')
+                <div class="col-md-8">
+                    <span>Donor Name:</span>
+                    <span>{{ucwords(strtolower($ivfReportData->donor->name))}}</span>
                 </div>
-                <div>
-                    <span>Stimulation days:</span>
-                    <span>{{!empty($ivfReportData->simulation->simulation_days) ? $ivfReportData->simulation->simulation_days : '-'}}</span>
+                <div class="col-md-2">
+                    <span>Age:</span>
+                    <span>{{$ivfReportData->donor->age}}</span>
                 </div>
             @endif
         </div>
 
-        <div class="col-md-6 col-sm-6" style="border-left: 1px solid">
-            <div>
-                <span>Trigger:</span>
-                <span>{{!empty($ivfReportData->simulation->trigger->trigger) ? $ivfReportData->simulation->trigger->trigger : '-'}}</span>
+        <div class="row" style="padding-bottom: 20px">
+            <div class="col-md-10 col-sm-10">
+                <span>Indication:</span>
+                <span>{{!empty($ivfReportData->indication) ? $ivfReportData->indication : ''}}</span>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <span>Date:</span>
-                    <span>{{!empty($ivfReportData->simulation->trigger->date) ? $ivfReportData->simulation->trigger->date : '-'}}</span>  
-                </div>
-                <div class="col-md-6">
-                    <span>Time:</span>
-                    <span>{{!empty($ivfReportData->simulation->trigger->time) ? $ivfReportData->simulation->trigger->time : '-'}}</span>
-                </div>   
-            </div>
-            
-            <div>
-                <span>Total ACF:</span>
-                <span>{{!empty($ivfReportData->simulation->totalacf) ? $ivfReportData->simulation->totalacf : '-'}}</span>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    <span>Rt:</span>
-                    <span>{{!empty($ivfReportData->simulation->rt) ? $ivfReportData->simulation->rt : '-'}}</span>  
-                </div>
-                <div class="col-md-6 col-sm-6">
-                    <span>Lt:</span>
-                    <span>{{!empty($ivfReportData->simulation->lt) ? $ivfReportData->simulation->lt : '-'}}</span>
-                </div>   
-            </div>
-            <div>
-                <span>ET:</span>
-                <span>{{!empty($ivfReportData->simulation->et) ? $ivfReportData->simulation->et : '-'}}</span>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    <span>sp2:</span>
-                    <span>{{!empty($ivfReportData->simulation->sp2) ? $ivfReportData->simulation->sp2 : '-'}}</span>  
-                </div>
-                <div class="col-md-6 col-sm-6">
-                    <span>Date:</span>
-                    <span>{{!empty($ivfReportData->simulation->sp2date) ? $ivfReportData->simulation->sp2date : '-'}}</span>
-                </div>   
-            </div>
-            
+            <div class="col-md-2 col-sm-2">
+                <span><strong>Weight:</strong></span>
+                <span>{{!empty($ivfReport->getPatients['weight']) ? $ivfReport->getPatients['weight'] : '-'}}</span><br>
             </div>
 
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <div><h6><strong>Ovum pick up:</strong></h6></div>
+                <div><h6 class="candor-color"><strong><u>Stimulation:</u></strong></h6></div>
             </div>
         </div>
+
 
         <div class="row">
             <div class="col-md-6 col-sm-6">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <span>Date:</span>
-                        <span>{{!empty($ivfReportData->ovum->date) ? $ivfReportData->ovum->date : '-'}}</span>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <span>Time:</span>
-                        <span>{{!empty($ivfReportData->ovum->time) ? $ivfReportData->ovum->time : '-'}} </span>
-                    </div>
-                </div>
+                <table class="table table-bordered pick-up-table" width="50">
+                    <tbody>
+                        <tr>
+                            <td><strong>Protocol</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->protocol) ? $ivfReportData->simulation->protocol : '-'}}</td>
+                        </tr>
+                        @if(!isset($pt_view) || $pt_view != 1)
+                        <tr>
+                            <td><strong>Injection</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->injection) ? $ivfReportData->simulation->injection : '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Antagonist</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->antagonist) ? $ivfReportData->simulation->antagonist : '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stimulation days</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->simulation_days) ? $ivfReportData->simulation->simulation_days : '-'}}</td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td><strong>Total ACF</strong></td>
+                            <td colspan="3">{{!empty($ivfReportData->simulation->totalacf) ? $ivfReportData->simulation->totalacf : '-'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                {{-- <div class="row">
-                    <div class="col-md-12">
-                        <span>ER Photo:</span>
-                        @php
-                        $erPhoto = !empty($ivfReportData->ovum->erphoto) ? $ivfReportData->ovum->erphoto : null;    
-                        @endphp
-                    <span><img src="{{asset($erPhoto)}}" alt="" height="100px" width="100px"></span>
-                    </div>
-                </div> --}}
+            <div class="col-md-6 col-sm-6">
+                <table class="table table-bordered pick-up-table" width="50">
+                    <tbody>
+                        <tr>
+                            <td><strong>Trigger</strong></td>
+                            <td colspan="3">{{!empty($ivfReportData->simulation->trigger->trigger) ? $ivfReportData->simulation->trigger->trigger : '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->trigger->date) ? $ivfReportData->simulation->trigger->date : '-'}}</td>
+                            <td><strong>Time</strong></td>
+                            <td>{{!empty($ivfReportData->simulation->trigger->time) ? $ivfReportData->simulation->trigger->time : '-'}}</td>
+                        </tr>
+                    
+                        <tr>
+                            <td><strong>ET:</strong></td>
+                            <td colspan="3">{{!empty($ivfReportData->simulation->et) ? $ivfReportData->simulation->et : '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RT</strong></td>
+                            <td colspan="">{{!empty($ivfReportData->simulation->rt) ? $ivfReportData->simulation->rt : '-'}}</td>
+                            <td><strong>LT</strong></td>
+                            <td colspan="">{{!empty($ivfReportData->simulation->lt) ? $ivfReportData->simulation->lt : '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>sp2:</strong></td>
+                            <td colspan="">{{!empty($ivfReportData->simulation->sp2) ? $ivfReportData->simulation->sp2 : '-'}}</td>
+                            <td><strong>Date</strong></td>
+                            <td colspan="">{{!empty($ivfReportData->simulation->sp2date) ? $ivfReportData->simulation->sp2date : '-'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="col-md-6 col-sm-6">
+                    <table class="table table-bordered pick-up-table" width="50">
+                        <thead>
+                            <tr><h6 class="candor-color"><strong><u>Ovum pick up:</u></strong></h6></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Date</strong></td>
+                                <td colspan="">{{!empty($ivfReportData->ovum->date) ? $ivfReportData->ovum->date : '-'}}</td>
+                                <td><strong>Time</strong></td>
+                                <td colspan="">{{!empty($ivfReportData->ovum->time) ? $ivfReportData->ovum->time : '-'}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total OCC:</strong></td>
+                                <td colspan="3">{{!empty($ivfReportData->ovum->totalocc) ? $ivfReportData->ovum->totalocc : '-'}}</td>
+                            </tr>
+                            @if(!isset($pt_view) || $pt_view != 1)
+                                <tr>
+                                    <td><strong>MII</strong></td>
+                                    <td colspan="">{{!empty($ivfReportData->ovum->mii) ? $ivfReportData->ovum->mii : '-'}}</td>
+                                    <td><strong>MII Rate</strong></td>
+                                    <td colspan="">{{!empty($ivfReportData->ovum->mii_rate) ? $ivfReportData->ovum->mii_rate : '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MI</strong></td>
+                                    <td colspan="">{{!empty($ivfReportData->ovum->mi) ? $ivfReportData->ovum->mi : '-'}}</td>
+                                    <td><strong>GV</strong></td>
+                                    <td colspan="">{{!empty($ivfReportData->ovum->gv) ? $ivfReportData->ovum->gv : '-'}}</td>
+                                </tr>
+                            @endif
+                            <tr>
+                                <td><strong>Hysteroscopy</strong></td>
+                                <td colspan="3">{{!empty($ivfReportData->ovum->hysteroscopy_status) ? ucfirst($ivfReportData->ovum->hysteroscopy_status) : '-'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <div>
-                    <span>Total OCC:</span>
-                    <span>{{!empty($ivfReportData->ovum->totalocc) ? $ivfReportData->ovum->totalocc : '-'}}</span>
-                </div>
-                @if(!isset($pt_view) || $pt_view != 1)
-                    <div>
-                        <span>MII:</span>
-                        <span>{{!empty($ivfReportData->ovum->mii) ? $ivfReportData->ovum->mii : '-'}}</span>
-                    </div>
-                
-                    <div>
-                        <span>MII Rate:</span>
-                        <span>{{!empty($ivfReportData->ovum->mii_rate) ? $ivfReportData->ovum->mii_rate : '-'}}</span>
-                    </div>
-                    <div>
-                        <span>MI:</span>
-                        <span>{{!empty($ivfReportData->ovum->mi) ? $ivfReportData->ovum->mi : '-'}}</span>
-                    </div>
-                    <div>
-                        <span>GV:</span>
-                        <span>{{!empty($ivfReportData->ovum->gv) ? $ivfReportData->ovum->gv : '-'}}</span>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                    <table class="table table-bordered pick-up-table mt-3" width="50">
+                        <tbody>
+                            <tr>
+                                <td><strong>Semen Report</strong></td>
+                                <td colspan="3">{{!empty($ivfReportData->ovum->semenreport) ? $ivfReportData->ovum->semenreport : '-'}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan=""><strong>Sperm Morphology (ICSI)</strong></td>
+                                <td>{{!empty($ivfReportData->ovum->sperm) ? $ivfReportData->ovum->sperm : '-'}}</td>
+                                <td><strong>Count</strong></td>
+                                <td>{{!empty($ivfReportData->ovum->count) ? $ivfReportData->ovum->count : '-'}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Motility</strong></td>
+                                <td colspan="">{{!empty($ivfReportData->ovum->motility) ? $ivfReportData->ovum->motility : '-'}}</td>
+                                <td><strong>Active</strong></td>
+                                <td colspan="">{{!empty($ivfReportData->ovum->active) ? $ivfReportData->ovum->active : '-'}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Oocyte Quality</strong></td>
+                                <td colspan="3">{{!empty($ivfReportData->ovum->quality) ? $ivfReportData->ovum->quality : '-'}}</td>
+                            </tr>
+                            @if(!isset($pt_view) || $pt_view != 1)
+                                <tr>
+                                    <td><strong>Total Blastcyst</strong></td>
+                                    <td colspan="3">{{!empty($ivfReportData->ovum->total_blastcyst) ? $ivfReportData->ovum->total_blastcyst : '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Blastcyst Rate:</strong></td>
+                                    <td colspan="3">{{!empty($ivfReportData->ovum->blastcyst_rate) ? $ivfReportData->ovum->blastcyst_rate : '-'}}</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+        {{-- </div> --}}
+        @php
+            $erImageArray = ['good','medium','poor','gv','m1'];
+            $baseUrl = asset('assets/images');
+            // echo $baseUrl;
+        @endphp
+        <div class="row mb-2">
+            @foreach($erImageArray as $erImage)
+                @if(getimagesize($baseUrl.'/'.$erImage.'.jpg'))
+                    <div class="col-md-2 col-sm-2 text-center">
+                        {{-- <div class="input-group"> --}}
+                            <span class="mt-5 er_image_name"><strong>{{ucwords($erImage)}}</strong></span>
+                            <br>
+                            <img src="{{asset('assets/images/'.$erImage.'.jpg')}}" class="er_image">
+                            
+                            
+                            <br>
+                            <span>{{isset($ivfReportData->er->$erImage) && !empty($ivfReportData->er->$erImage) ? $ivfReportData->er->$erImage : null}}</span>
+                        {{-- </div> --}}
                     </div>
                 @endif
-                <div>
-                    <span>Hysteroscopy:</span>
-                    <span>{{!empty($ivfReportData->ovum->hysteroscopy_status) ? ucfirst($ivfReportData->ovum->hysteroscopy_status) : '-'}}</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-6" style="border-left: 1px solid">
-                <div><strong>Semen Report:</strong>
-                <span>{{!empty($ivfReportData->ovum->semenreport) ? $ivfReportData->ovum->semenreport : '-'}}</span>
-                </div>
-
-                <div>
-                    <span>Count:</span>
-                    <span>{{!empty($ivfReportData->ovum->count) ? $ivfReportData->ovum->count : '-'}}</span>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <span>Total Motility:</span>
-                        <span>{{!empty($ivfReportData->ovum->motility) ? $ivfReportData->ovum->motility : '-'}}</span>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <span>Active:</span>
-                        <span>{{!empty($ivfReportData->ovum->active) ? $ivfReportData->ovum->active : '-'}}</span>
-                    </div>
-                </div>
-
-                <div>
-                    <span>Sperm Morphology (ICSI):</span>
-                    <span>{{!empty($ivfReportData->ovum->sperm) ? $ivfReportData->ovum->sperm : '-'}}</span>
-                </div>
-
-                <div class="row" style="padding: 20px;">
-                    <div class="col-md-12 col-sm-12">
-                        <span><strong>Oocyte Quality:</strong></span>
-                        <span>{{!empty($ivfReportData->ovum->quality) ? $ivfReportData->ovum->quality : '-'}}</span>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <span class="mt-2"><strong>Total Blastcyst:</strong></span>
-                        <span>{{!empty($ivfReportData->ovum->total_blastcyst) ? $ivfReportData->ovum->total_blastcyst : '-'}}</span></br>
-                    </div>
-                    @if(!isset($pt_view) || $pt_view != 1)
-                    <div class="col-md-12 col-sm-12">
-                        <span><strong>Blastcyst Rate:</strong></span>
-                        <span>{{!empty($ivfReportData->ovum->blastcyst_rate) ? $ivfReportData->ovum->blastcyst_rate : '-'}}</span>
-                    </div>
+            @endforeach
+        </div>
+        <div class="row" style="padding: 20px 0">
+                <div class="col-md-12">
+                    <span class="candor-color"><strong>Remark:<strong></span>
+                    @if(isset($pt_view) && $pt_view == 1)
+                    <span>{{isset($ivfReportData->pt_remark) && !empty($ivfReportData->pt_remark) ? $ivfReportData->pt_remark : '-'}}</span>
+                    @else
+                    <span>{{!empty($ivfReportData->remark) ? $ivfReportData->remark : '-'}}</span>
                     @endif
                 </div>
-            </div>   
-        </div>
-
-        <div class="row" style="padding: 20px 0">
-            <div class="col-md-12">
-                <span><strong>Remark:<strong></span>
-                @if(isset($pt_view) && $pt_view == 1)
-                <span>{{isset($ivfReportData->pt_remark) && !empty($ivfReportData->pt_remark) ? $ivfReportData->pt_remark : '-'}}</span>
-                @else
-                <span>{{!empty($ivfReportData->remark) ? $ivfReportData->remark : '-'}}</span>
-                @endif
-            </div>
         </div>
 
         <div class="row doctor-info">
-            <div class="col-md-4 col-sm-4">
-                <div class='drname'>{{$ivfReport->getPatients->getHospitalDoctor['name'] }}</div>
-                <div class='degree'>{{$ivfReport->getPatients->getHospitalDoctor['degree'] }}</div>
-                <div class='proffesion'>{{$ivfReport->getPatients->getHospitalDoctor['designation'] }}</div>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <div class='drname'>Dr. juhi Dhameliya</div>
-                <div class='degree'></div>
-                <div class='proffesion'>embryologist</div>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <div class='drname'>{{config('app.embroyologist_doctor')}}</div>
-                <div class='degree'>({{config('app.embroyologist_degree')}})</div>
-                <div class='proffesion'>embryologist</div>
-            </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class='drname'>{{$ivfReport->getPatients->getHospitalDoctor['name'] }}</div>
+                    <div class='degree'>{{$ivfReport->getPatients->getHospitalDoctor['degree'] }}</div>
+                    <div class='proffesion'>{{$ivfReport->getPatients->getHospitalDoctor['designation'] }}</div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class='drname'>Dr. juhi Dhameliya</div>
+                    <div class='degree'></div>
+                    <div class='proffesion'>embryologist</div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class='drname'>{{config('app.embroyologist_doctor')}}</div>
+                    <div class='degree'>({{config('app.embroyologist_degree')}})</div>
+                    <div class='proffesion'>embryologist</div>
+                </div>
         </div>
 
     </div>

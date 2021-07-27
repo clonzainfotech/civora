@@ -861,8 +861,9 @@
                                                         }
                                                     }
                                                 }
+                                                $ho_term_details = isset($row->ho_term_details) && !empty($row->ho_term_details) ? ' - '.$row->ho_term_details : '';
                                             @endphp
-                                            {{$hoValue}}
+                                            {{$hoValue.$ho_term_details}}
                                         </th>
                                     </tr>
                                 @endforeach

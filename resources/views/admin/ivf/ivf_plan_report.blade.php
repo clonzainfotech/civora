@@ -67,7 +67,7 @@ foreach($ivf as $ivf)
         {
             if(!empty($value->antagonist))
             {
-                $antagonist[] = $value->antagonist;
+                $antagonist[] = ucwords($value->antagonist);
             }
            
             if(!empty($value->hmg_brand_name))

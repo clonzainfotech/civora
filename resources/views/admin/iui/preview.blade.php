@@ -202,12 +202,14 @@
                         @if($patientsInfo)
                             <tr>
                                 <th>
-                                    <span class="iui-label" style="padding-bottom: 30px;">Name : </span>{{ ucwords(strtolower($iui->getPatientsInfo->name)) . ' / ' . $patientsInfo->age.' years' }}
+                                    <span class="iui-label" style="padding-bottom: 30px;">Name : </span>{{ ucwords(strtolower(isset($iui->getPatientsInfoData) ? $iui->getPatientsInfoData->name : $iui->getPatientsInfo->name)) . ' / ' . $patientsInfo->age.' years' }}
                                 </th>
                                 <td>
                                 <th style="padding-bottom: 30px;text-align: right"><span class="iui-label">Visit Date:  </span>{{Carbon\Carbon::parse($iui->created_at)->format('d/m/Y')}}
-                                    @if($iui->getPatientsInfo->weight)
-                                    <br>Weight: {{$iui->getPatientsInfo->weight.' kg'}}
+                                    @if(isset($iui->getPatientsInfoData))
+                                    <br>Weight: {{$iui->getPatientsInfoData->weight.' kg'}}
+                                    @else
+                                        <br>Weight: {{$iui->getPatientsInfo->weight.' kg'}}
                                     @endif
                                 </th>
                             </tr>

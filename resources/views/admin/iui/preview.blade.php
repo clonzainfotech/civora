@@ -2269,10 +2269,16 @@
                                                 
                                                 foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)
                                                 {
-                                                    if(!empty($value) && $is_inj == 1)
+                                                    if(isset($menses_Day[$keyValue]))
                                                     {
-                                                        echo '<span class="iui-label"> INJ '.$inj_name.' - '.date('d/m/Y - l',strtotime($valueData->date)).' - '.$menses_Day[$keyValue].'rd day' . '</span><br />';
+                                                        $inducingDisplayDate = \Carbon\Carbon::parse($lmp->date)->addDays($menses_Day[$keyValue])->format('d/m/Y');
+                                                       
+                                                        if(!empty($value) && $is_inj == 1 && ($valueData->date == $inducingDisplayDate))
+                                                        {
+                                                            echo '<span class="iui-label"> INJ '.$inj_name.' - '.date('d/m/Y - l',strtotime($valueData->date)).' - '.$menses_Day[$keyValue].'rd day' . '</span><br />';
+                                                        }
                                                     }
+                                                    
                                                 }
                                             }
                                             @endphp

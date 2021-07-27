@@ -35,6 +35,7 @@ class AppointmentController extends ApiController
             $patientData = $this->PatientToken->where('token', $token)->first();
             if(!empty($patientData)){
                 $patientId = $patientData->patients_id;
+                $patients = $this->OpdPatients->find($patientId);
                 // $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                 //                         ->where('patients_id', $patientId)
                 //                         ->get();
@@ -82,6 +83,8 @@ class AppointmentController extends ApiController
                             $value->profile_picture = $lastAppointment['getPatientsDetails']['profile_picture'];
                             unset($value->is_done,$value->yearKey,$value->categoryDetails,$value->getPatientsDetails,$value->appontment_request_id,$value->is_book,$value->arrival_time,$value->created_by);
                         }
+                        $value->profile_picture = $patients->profile_picture;
+                        $value->reason = $value->remark;
                         
                     }
                     // $appointmentData[][$key] = $aData;

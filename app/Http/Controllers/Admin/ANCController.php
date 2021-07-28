@@ -723,7 +723,7 @@ class ANCController extends AdminController
             if(!$request->anc_history_id && !$request->anc_id){
                 $seenBy = getSeenByDoctor($ancData->seen_by);
                 $patient = $this->OpdPatients->find($patientsId);
-                // $this->SmsManager::sendReferenceDoctor('Advise ANC',$seenBy->name,date('d M Y',strtotime($followupDate)),$patientsId);
+                $this->SmsManager::sendReferenceDoctor('Advise ANC',$seenBy->name,date('d M Y',strtotime($followupDate)),$patientsId);
             }
             $investigationReport = $this->allInvestigationReport();
             $ancAutoRemark = $this->getAutoRemark($patientsId,$current_anc_id);

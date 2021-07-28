@@ -973,7 +973,7 @@ class IUIController extends AdminController
                 $seenBy = getSeenByDoctor($seenBy);
                 $patient = $this->OpdPatients->find($patientsId);
                 $fDate = $fDate ? date('d M Y',strtotime($fDate)) : null;
-                // $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$fDate,$patientsId);
+                $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$fDate,$patientsId);
             }
 
             if($request->isprint == 1 || $request->isprint == 2 || $request->isprint == 6){

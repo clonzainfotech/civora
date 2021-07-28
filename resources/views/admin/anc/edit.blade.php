@@ -4360,12 +4360,12 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     </div>
                     <div class="col-sm-2">
                         <div class="{{'radio is-conceived investigation-report'}}">
-                            {{Form::radio("investigation[other_report_type]",'yes',!empty($patientsInvestigation->other_report_type) && $patientsInvestigation->other_report_type == 'yes' ? true : false,['id'=>'other_report_type_yes','class'=>'other-report-type'])}}
+                            {{Form::radio("investigation[other_report_type]",'yes',(!empty($ancHistoryId) || !empty($ancId)) && !empty($patientsInvestigation->other_report_type) && $patientsInvestigation->other_report_type == 'yes' ? true : false,['id'=>'other_report_type_yes','class'=>'other-report-type'])}}
                             <label for="other_report_type_yes">
                                 Yes
                             </label>
 
-                            {{Form::radio("investigation[other_report_type]",'no',!empty($patientsInvestigation->other_report_type) && $patientsInvestigation->other_report_type == 'no' ? true : false,['id'=>'other_report_type_no','class'=>'other-report-type'])}}
+                            {{Form::radio("investigation[other_report_type]",'no',(!empty($ancHistoryId) || !empty($ancId)) && !empty($patientsInvestigation->other_report_type) && $patientsInvestigation->other_report_type == 'no' ? true : false,['id'=>'other_report_type_no','class'=>'other-report-type'])}}
                             <label for="other_report_type_no">
                                 No
                             </label>

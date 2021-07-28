@@ -25,6 +25,9 @@
                     <h5>Pick Up</h5>
                 </div>
             </div>
+            @php
+                $cycleNumber = 0;
+            @endphp
                 @foreach($pickupCycle as $key=>$row)
                     @php
                         $cycleNoKey = array_search('1',$dataForSkipPlans);
@@ -32,28 +35,31 @@
                         $class = null;
                         if($lastPlan == 1 && $lastCycleNo == $row){
                             $class = 'current-cycle';
+                            $cycleNumber++;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
                         if(!empty($cycleNo)){
                             $cycleNo = (int)$cycleNo[1];
+                            $cycleNumber++;
                         }
                         if($cycleNo == $row){
                             unset($dataForSkipPlans[$cycleNoKey]);
                             $class = 'skip-cycle';
+                            $cycleNumber--;
                         }
                         // for display skip reason
-                        $cycleNoKey1 = array_search('1',$dataForSkipReason);
-                        $cycleNo1 = explode('_',$cycleNoKey1);
-                        $cycleNo1 = array_filter($cycleNo1);
-                        if(!empty($cycleNo1)){
+                        // $cycleNoKey1 = array_search('1',$dataForSkipReason);
+                        // $cycleNo1 = explode('_',$cycleNoKey1);
+                        // $cycleNo1 = array_filter($cycleNo1);
+                        // if(!empty($cycleNo1)){
                             
-                            $cycleNo1 = (int)$cycleNo1[1];
-                        }
-                        if($cycleNo1 == $row){
-                            print_r($dataForSkipReason[$cycleNoKey1]);
-                            // $class = 'skip-cycle';
-                        }
+                        //     $cycleNo1 = (int)$cycleNo1[1];
+                        // }
+                        // if($cycleNo1 == $row){
+                        //     print_r($dataForSkipReason[$cycleNoKey1]);
+                        //     // $class = 'skip-cycle';
+                        // }
                     @endphp 
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['1_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['1_'.$row] : ''}}</span>
@@ -62,7 +68,7 @@
                                 <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(1).'/'.encrypt($row))}}">
                                     <div class="test">
                                         <div class="pt-1 pb-1">
-                                            <span>Cycle {{$row}}</span>
+                                            <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -140,21 +146,27 @@
                     <h5>FET-OD</h5>
                 </div>
             </div>
+            @php
+                $cycleNumber = 0;
+            @endphp
                 @foreach($fetOdCycle as $key=>$row)
                     @php
                         $cycleNoKey = array_search('3',$dataForSkipPlans);
                         $class = null;
                         if($lastPlan == 3 && $lastCycleNo == $row){
                             $class = 'current-cycle';
+                            $cycleNumber++;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
                         if(!empty($cycleNo)){
                             $cycleNo = (int)$cycleNo[1];
+                            $cycleNumber++;
                         }
                         if($cycleNo == $row){
                             unset($dataForSkipPlans[$cycleNoKey]);
                             $class = 'skip-cycle';
+                            $cycleNumber--;
                         }
                         // for display skip reason
                         
@@ -166,7 +178,7 @@
                                 <div class="test">
                                     <div class="pt-1 pb-1">
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(3).'/'.encrypt($row))}}">
-                                            <span>Cycle {{$row}}</span>    
+                                            <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>    
                                         </a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="3" data-pid="{{$patientsId}}">View File</a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
@@ -187,21 +199,27 @@
                     <h5>FET-ED</h5>
                 </div>
             </div>
+            @php
+                $cycleNumber = 0;
+            @endphp
                 @foreach($fetEdCycle as $key=>$row)
                     @php
                         $cycleNoKey = array_search('4',$dataForSkipPlans);
                         $class = null;
                         if($lastPlan == 4 && $lastCycleNo == $row){
                             $class = 'current-cycle';
+                            $cycleNumber++;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
                         if(!empty($cycleNo)){
                             $cycleNo = (int)$cycleNo[1];
+                            $cycleNumber++;
                         }
                         if($cycleNo == $row){
                             unset($dataForSkipPlans[$cycleNoKey]);
                             $class = 'skip-cycle';
+                            $cycleNumber--;
                         }
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
@@ -211,7 +229,7 @@
                                 <div class="test">
                                     <div class="pt-1 pb-1">
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(4).'/'.encrypt($row))}}">
-                                            <span>Cycle {{$row}}</span>    
+                                            <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>    
                                         </a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>

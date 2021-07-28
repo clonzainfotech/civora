@@ -62,7 +62,7 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::get('ourdoctor','UserController@ourDoctor');
       
         Route::get('about-us','UserController@aboutUs');
-        // Route::post('get_patient_report','UserController@get_patient_report');
+        Route::get('get_patient_report','PatientController@get_patient_report');
 
         // Route::get('notification','NotificationController@index' );
 

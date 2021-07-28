@@ -4571,7 +4571,13 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 </div>
                                 <div class="col-md-10 pl-15">
                                     <div class="mb-2">R :- {{!empty($iuiSecondVisitData->oe->ovary->right->afcs) ? $iuiSecondVisitData->oe->ovary->right->afcs : null}} / RF :- {{!empty($iuiSecondVisitData->oe->ovary->right->residual_follicale) ? $iuiSecondVisitData->oe->ovary->right->residual_follicale : null}}</div>
-                                    <div>L :- {{!empty($iuiSecondVisitData->oe->ovary->left->afcs) ? $iuiSecondVisitData->oe->ovary->left->afcs : null}} / RF :- {{!empty($iuiSecondVisitData->oe->ovary->left->residual_follicale) ? $iuiSecondVisitData->oe->ovary->left->residual_follicale : null}}</div>
+                                    @if(!empty($iuiSecondVisitData->oe->ovary->right->details))
+                                        <div class="mb-2">Right Detail :- {{implode(',',$iuiSecondVisitData->oe->ovary->right->details)}}</div>
+                                    @endif
+                                    <div class="mb-2">L :- {{!empty($iuiSecondVisitData->oe->ovary->left->afcs) ? $iuiSecondVisitData->oe->ovary->left->afcs : null}} / RF :- {{!empty($iuiSecondVisitData->oe->ovary->left->residual_follicale) ? $iuiSecondVisitData->oe->ovary->left->residual_follicale : null}}</div>
+                                    @if(!empty($iuiSecondVisitData->oe->ovary->left->details))
+                                        <div class="mb-2">Left Detail :- {{implode(',',$iuiSecondVisitData->oe->ovary->left->details)}}</div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -3052,9 +3052,19 @@
                         <div class="col-md-3 visit-lable">
                         OVARIES:- {{!empty($iuiFirstVisit->ovary->right) ? $iuiFirstVisit->ovary->right : null}}
                         </div>
-                        <div class="col-md-9 pl-10">
+                        {{-- <div class="col-md-9 pl-10">
                             <div class="mb-2">R :- {{!empty($iuiSecondVisit->oe->ovary->right->afcs) ? $iuiSecondVisit->oe->ovary->right->afcs : null}} / RF:- {{!empty($iuiSecondVisit->oe->ovary->right->residual_follicale) ? $iuiSecondVisit->oe->ovary->right->residual_follicale : null}}</div>
                             <div>L :- {{!empty($iuiSecondVisit->oe->ovary->left->afcs) ? $iuiSecondVisit->oe->ovary->left->afcs : null}} / RF:- {{!empty($iuiSecondVisit->oe->ovary->left->residual_follicale) ? $iuiSecondVisit->oe->ovary->left->residual_follicale : null}}</div>
+                        </div> --}}
+                        <div class="col-md-9 pl-10">
+                            <div class="mb-2">R :- {{!empty($iuiSecondVisit->oe->ovary->right->afcs) ? $iuiSecondVisit->oe->ovary->right->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->right->residual_follicale) ? $iuiSecondVisit->oe->ovary->right->residual_follicale : null}}</div>
+                            @if(!empty($iuiSecondVisit->oe->ovary->right->details))
+                                <div class="mb-2">Right Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->right->details)}}</div>
+                            @endif
+                            <div class="mb-2">L :- {{!empty($iuiSecondVisit->oe->ovary->left->afcs) ? $iuiSecondVisit->oe->ovary->left->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->left->residual_follicale) ? $iuiSecondVisit->oe->ovary->left->residual_follicale : null}}</div>
+                            @if(!empty($iuiSecondVisit->oe->ovary->left->details))
+                                <div class="mb-2">Left Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->left->details)}}</div>
+                            @endif
                         </div>
                     </div>
                 </div>

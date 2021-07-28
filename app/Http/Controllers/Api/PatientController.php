@@ -148,6 +148,193 @@ class PatientController extends ApiController
         $code = preg_replace('/[^A-Za-z0-9\-]/', 'R', $code);
         return ['code'=>$code];
     }
+    /**
+    * Return patient All Report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function get_patient_report(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   $patients = $user->id;
+                $ANCReports = [];
+                $IVFReports = [];
+                $IUIReports = [];
+                $data = [];
+                $ancAllVisit = $this->ANC->where('patients_id',$patients)->get();
+                $ancAllHistoryVisit = $this->AncHistory->where('patients_id',$patients)->get();
+                if($ancAllVisit)
+                {
+                    foreach($ancAllVisit as $ancVisit)
+                    {
+                        $reportDate = Carbon::parse($ancVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationReport = !empty($ancVisit->investigation) ? json_decode($ancVisit->investigation,true) : '';
+                        $usgReport = !empty($ancVisit->usg) ? json_decode($ancVisit->usg,true) : '';
+                        if(!empty($investigationReport['investigation_early_scan_type']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Early Scan','url' => $investigationReport['investigation_early_scan_type']['images']);
+                        }
+                        if(!empty($investigationReport['growth_report']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Growth Report','url' => $investigationReport['growth_report']['images']);
+                        }
+                        if(!empty($investigationReport['other_report_data']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Other Report','url' => $investigationReport['other_report_data']['images']);
+                        }
+                        if(!empty($investigationReport['anc']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'ANC Report','url' => $investigationReport['anc']['images']);
+                        }
+                        if(!empty($usgReport['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'USG Report','url' => $usgReport['images']);
+                        }
+                    }
+                }
+                if($ancAllHistoryVisit)
+                {
+                    foreach($ancAllHistoryVisit as $ancHistoryVisit)
+                    {
+                        $reportDate = Carbon::parse($ancHistoryVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationHistoryReport = !empty($ancHistoryVisit->investigation) ? json_decode($ancHistoryVisit->investigation,true) : '';
+                        $usgHistoryReport = !empty($ancHistoryVisit->usg) ? json_decode($ancHistoryVisit->usg,true) : '';
+                        if(!empty($investigationHistoryReport['investigation_early_scan_type']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Early Scan','url' => $investigationHistoryReport['investigation_early_scan_type']['images']);
+                        }
+                        if(!empty($investigationHistoryReport['growth_report']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Growth Report','url' => $investigationHistoryReport['growth_report']['images']);
+                        }
+                        if(!empty($investigationHistoryReport['other_report_data']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Other Report','url' => $investigationHistoryReport['other_report_data']['images']);
+                        }
+                        if(!empty($investigationHistoryReport['anc']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'ANC Report','url' => $investigationHistoryReport['anc']['images']);
+                        }
+                        if(!empty($usgHistoryReport['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'USG Report','url' => $usgHistoryReport['images']);
+                        }
+                    }
+                }
+                $ivfAllVisit = $this->IVF->where('patients_id', $patients)->get();
+                $ivfAllHistoryVisit = $this->IvfHistory->where('patients_id',$patients)->get();
+                if($ivfAllVisit)
+                {
+                    foreach($ivfAllVisit as $ivfVisit)
+                    {
+                        $reportDate = Carbon::parse($ivfVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationReport = !empty($ivfVisit->investigation) ? json_decode($ivfVisit->investigation,true) : '';
+                        if(!empty($investigationReport['hystroscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Hystroscopy','url' => $investigationReport['hystroscopy']['images']);
+                        }
+                        if(!empty($investigationReport['laproscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Laproscopy','url' => $investigationReport['laproscopy']['images']);
+                        }
+                        if(!empty($investigationReport['hcg']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Hcg','url' => $investigationReport['hcg']['images']);
+                        }
+                        if(!empty($investigationReport['blood_report']['image']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Blood Report','url' => $investigationReport['blood_report']['image']);
+                        }
+                    }
+                }
+                if($ivfAllHistoryVisit)
+                {
+                    foreach($ivfAllHistoryVisit as $ivfHistoryVisit)
+                    {
+                        $reportDate = Carbon::parse($ivfHistoryVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationHistoryReport = !empty($ivfHistoryVisit->investigation) ? json_decode($ivfHistoryVisit->investigation,true) : '';
+                        $investigationHistoryData = !empty($ivfHistoryVisit->description) ? json_decode($ivfHistoryVisit->description,true) : '';
+                        if(!empty($investigationHistoryReport['hystroscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Hystroscopy','url' => $investigationHistoryReport['hystroscopy']['images']);
+                        }
+                        if(!empty($investigationHistoryReport['laproscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Laproscopy','url' => $investigationHistoryReport['laproscopy']['images']);
+                        }
+                        if(!empty($investigationHistoryData['usg']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'USG Report','url' => $investigationHistoryData['usg']['images']);
+                        }
+                        if(!empty($investigationHistoryData['blood_report']['image']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IVF',"report_type" => 'Blood Report','url' => $investigationHistoryData['blood_report']['image']);
+                        }
+                    
+                    }
+                }
+                $iuiAllVisit = $this->IUI->where('patients_id', $patients)->get();
+                $iuiAllHistoryVisit = $this->IuiHistory->where('patients_id',$patients)->get();
+                if($iuiAllVisit)
+                {
+                    foreach($iuiAllVisit as $iuiVisit)
+                    {
+                        $reportDate = Carbon::parse($iuiVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationReport = !empty($iuiVisit->investigation) ? json_decode($iuiVisit->investigation,true) : '';
+                        if(!empty($investigationReport['hystroscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'Hystroscopy','url' => $investigationReport['hystroscopy']['images']);
+                        }
+                        if(!empty($investigationReport['laproscopy']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'Laproscopy','url' => $investigationReport['laproscopy']['images']);
+                        }
+                        if(!empty($investigationReport['hcg']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'HCG Report','url' => $investigationReport['hcg']['images']);
+                        }
+                        if(!empty($investigationReport['blood_report']['image']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'Blood Report','url' => $investigationReport['blood_report']['image']);
+                        }
+                    }
+                }
+                if($iuiAllHistoryVisit)
+                {
+                    foreach($iuiAllHistoryVisit as $iuiHistoryVisit)
+                    {
+                        $reportDate = Carbon::parse($iuiHistoryVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationHistoryData = !empty($iuiHistoryVisit->description) ? json_decode($iuiHistoryVisit->description,true) : '';
+                        if(!empty($investigationHistoryData['blood_report']['image']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'Blood Report','url' => $investigationHistoryData['blood_report']['image']);
+                        }
+                        if(!empty($investigationHistoryData['usg']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'IUI',"report_type" => 'USG Report','url' => $investigationHistoryData['usg']['images']);
+                        }
+                    }
+                }
+                usort($data, array( $this, 'cmp' ));//dort array in desc date wise
+                return $this->sendResponse('get User Report Successfully',$data);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
 
+    }
+    public function cmp($a, $b) {
+        if (strtotime($a['date']) == strtotime($b['date'])) return 0;
+        return (strtotime($a['date']) > strtotime($b['date'])) ?-1:1;
+    }
     
 }

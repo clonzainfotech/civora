@@ -83,6 +83,13 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::post('editPatientMemory','PatientController@editPatientMemory');
         Route::post('deletePatientMemory','PatientController@deletePatientMemory');
         Route::get('getPatientMemory','PatientController@getPatientMemory');
+
+        //patient's weight list
+        
+        Route::post('addPatientWeight','PatientController@addPatientWeight');
+        Route::post('editPatientWeight','PatientController@editPatientWeight');
+        Route::post('deletePatientWeight','PatientController@deletePatientWeight');
+        Route::get('getPatientWeight','PatientController@getPatientWeight');
     });
 
 });

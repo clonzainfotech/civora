@@ -76,6 +76,7 @@ use App\Models\BankDetail;
 use App\Models\PatientToken;
 use App\Models\HospitalCharge;
 use App\Models\PatientMemory;
+use App\Models\PatientWeight;
 
 
 class BaseController extends Controller
@@ -153,7 +154,7 @@ class BaseController extends Controller
         $this->PatientToken = new PatientToken;
         $this->HospitalCharge = new HospitalCharge;
         $this->PatientMemory = new PatientMemory;
-        
+        $this->PatientWeight = new PatientWeight;
     }
 
     // remove image form our server

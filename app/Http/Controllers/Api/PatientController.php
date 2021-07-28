@@ -453,11 +453,7 @@ class PatientController extends ApiController
             if ($user && !empty($user->code)) 
             {   
                 $patient_memory = $this->PatientMemory->where('patients_id',$user->id)->get();
-                // if($patient_memory)
-                // {
-                //     $patient_memory->delete();
-                // }
-                return $this->sendResponse('Delete Memory Successfully',$patient_memory);
+                return $this->sendResponse('Get Memory Successfully',$patient_memory);
             } 
             else 
             {
@@ -470,6 +466,126 @@ class PatientController extends ApiController
     public function cmp($a, $b) {
         if (strtotime($a['date']) == strtotime($b['date'])) return 0;
         return (strtotime($a['date']) > strtotime($b['date'])) ?-1:1;
+    }
+    public function addPatientWeight(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        $rule = [
+            'week' => 'required',
+            'date' => 'required',
+            'weight' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(),$rule);
+        if($validator->fails()){
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_memory = $this->PatientWeight;
+                $patient_memory->patients_id = $get_token->patients_id;
+                $patient_memory->week = $request->week;
+                $patient_memory->date = Carbon::parse($request->date)->format('Y-m-d H:i:s');
+                $patient_memory->weight = $request->weight;
+                $patient_memory->save();
+                return $this->sendResponse('Add Weight Successfully',$patient_memory);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+    public function editPatientWeight(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        $rule = [
+            'week' => 'required',
+            'date' => 'required',
+            'weight' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(),$rule);
+        if($validator->fails()){
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_memory = $this->PatientWeight->find($request->id);
+                $patient_memory->week = $request->week;
+                $patient_memory->date = Carbon::parse($request->date)->format('Y-m-d H:i:s');
+                $patient_memory->weight = $request->weight;
+                $patient_memory->save();
+                return $this->sendResponse('Update Weight Successfully',$patient_memory);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+    public function deletePatientWeight(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        $rule = [
+            'id' => 'required',
+        ];
+        $validator = Validator::make($request->all(),$rule);
+        if($validator->fails()){
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_memory = $this->PatientWeight->find($request->id);
+                if($patient_memory)
+                {
+                    $patient_memory->delete();
+                }
+                return $this->sendResponse('Delete weight Successfully');
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+    public function getPatientWeight(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_memory = $this->PatientWeight->where('patients_id',$user->id)->get();
+                return $this->sendResponse('Get Weight List Successfully',$patient_memory);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
     }
     
 }

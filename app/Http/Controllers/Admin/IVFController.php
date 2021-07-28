@@ -602,6 +602,15 @@ class IVFController extends AdminController
                     if(!empty($data['skip_cycle']) && $data['skip_cycle'] == 'yes'){
                         $isSkip = true;
                     }
+                    $skipCycle = $this->IvfHistory->wherePatientsId($patientsId)->wherePlan(!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->where('cycle_status',2)->orderBy('id','DESC')->first();
+                    if($skipCycle)
+                    {
+                        $skipCycleData = json_decode($skipCycle->description);
+                        if(!empty($skipCycleData->skip_cycle) && $skipCycleData->skip_cycle == 'yes'){
+                            $display_cycle = $skipCycle->cycle_no;
+                        }
+                    }
+                    
                     $report = [];
                     // tranfer report upload
                     if(!empty($data['transfer']['report'])){
@@ -772,10 +781,12 @@ class IVFController extends AdminController
                     $ivfHistory->trigger_time = $triggerTime;
                     $ivfHistory->visit = $request->visit;
                     $ivfHistory->cycle_no = $request->cycle_no;
+                    $ivfHistory->display_cycle = isset($display_cycle) ? $display_cycle : $request->cycle_no;
                     $ivfHistory->plan = $request->plan_type;
                     $ivfHistory->patients_id = $patientsId;
                     $ivfHistory->seen_by = $request->seen_by;
                     $ivfHistory->created_by = Auth::user()->id;
+                    // dd($ivfHistory);
                     $ivfHistory->save();
                     $ivf = $ivfHistory;
                     $ivfId = $ivfHistory->id;

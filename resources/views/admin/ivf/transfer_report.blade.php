@@ -129,8 +129,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4">
-                                <span>Embryos Transferred Report : </span>
+                            <td>Embryos Transferred Report</td>
+                            <td colspan="3">
                                 @if(!empty($transferReport->embryos_transferred_image))
                                 <img src="{{url($transferReport->embryos_transferred_image)}}" height="100" width="100">
                                 @endif

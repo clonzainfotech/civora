@@ -90,21 +90,28 @@
                     <h5>FET</h5>
                 </div>
             </div>
+            @php
+                $cycleNumber = 0;
+            @endphp
                 @foreach($fetCycle as $key=>$row)
                     @php
-                       $cycleNoKey = array_search('2',$dataForSkipPlans);
+                        $cycleNoKey = array_search('2',$dataForSkipPlans);
                         $class = null;
                         if($lastPlan == 2 && $lastCycleNo == $row){
                             $class = 'current-cycle';
+                            $cycleNumber++;
+                            
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
                         if(!empty($cycleNo)){
                             $cycleNo = (int)$cycleNo[1];
+                            $cycleNumber++;
                         }
                         if($cycleNo == $row){
                             unset($dataForSkipPlans[$cycleNoKey]);
                             $class = 'skip-cycle';
+                            $cycleNumber--;
                         }
                         
                     @endphp
@@ -115,7 +122,7 @@
                                 <div class="test">
                                     <div class="pt-1 pb-1">
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(2).'/'.encrypt($row))}}">
-                                            <span>Cycle {{$row}}</span>
+                                            <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>
                                         </a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="2" data-pid="{{$patientsId}}">View File</a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>

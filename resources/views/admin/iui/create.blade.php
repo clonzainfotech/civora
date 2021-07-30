@@ -106,7 +106,7 @@
                                             <div class="col-md-3">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">weight : &nbsp;</span>
-                                                    {{Form::number("weight",$iuiPatients->weight,['class'=>'form-control weight','id'=>'weight'])}}
+                                                    {{Form::text("weight",$iuiPatients->weight,['class'=>'form-control weight','id'=>'weight'])}}
                                                 </div>
                                                 <span class="form-error-msg weight-msg" id="error_weight">
                                                     {{$errors->first('weight')}}

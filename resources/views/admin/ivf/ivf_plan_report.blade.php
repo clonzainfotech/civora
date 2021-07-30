@@ -179,7 +179,7 @@ foreach($ivf as $ivf)
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-addon">Age : &nbsp;</span>
-                                    {{Form::number("data[donor][age]",!empty($ivfReportData->donor->age) ? $ivfReportData->donor->age : null,['class'=>'form-control  donor-age'])}}
+                                    {{Form::number("data[donor][age]",!empty($ivfReportData->donor->age) ? $ivfReportData->donor->age.' Year' : null,['class'=>'form-control  donor-age'])}}
                                 </div>
                             </div>
                         </div>

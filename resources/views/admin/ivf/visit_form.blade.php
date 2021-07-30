@@ -1702,7 +1702,7 @@
             <div class="col-md-6">
                 <label>Remark:</label>
                 <div class="form-group">
-                    {{Form::textarea('data[remark]',!empty($ivfData->remark) ? $ivfData->remark : null, ['class' => 'form-control no-resize remark call-response','placeholder' => 'Remark','rows' => '3'])}}
+                    {{Form::textarea('data[remark]',!empty($ivfData->remark) ? $ivfData->remark : null, ['class' => 'form-control no-resize call-response','placeholder' => 'Remark','rows' => '3'])}}
                 </div>
             </div>
 

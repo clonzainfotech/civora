@@ -397,6 +397,10 @@ class AppointmentController extends ApiController
                                 {
                                     $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_trasnfer=1');
                                 }
+                                else
+                                {
+                                    $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1');
+                                }
                             }
                             else {
                                 $madicineData = null;

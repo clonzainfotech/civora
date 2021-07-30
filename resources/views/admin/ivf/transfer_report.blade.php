@@ -74,8 +74,8 @@
                             </th>
                             <th>
                             <th class="pb-1 float-right ivf-label">
-                                <span class="pb-1 ivf-label">Age :</span> {{ !empty($transferReport->getPatient['age']) ? $transferReport->getPatient['age'] : '-' }}<br>
-                                <span class="pb-1 ivf-label">Weight :</span> {{ !empty($transferReport->getPatient['weight']) ?$transferReport->getPatient['weight'] : '-' }}
+                                <span class="pb-1 ivf-label">Age :</span> {{ !empty($transferReport->getPatient['age']) ? $transferReport->getPatient['age'].' Year' : '-' }}<br>
+                                <span class="pb-1 ivf-label">Weight :</span> {{ !empty($transferReport->getPatient['weight']) ?$transferReport->getPatient['weight'].' Kg' : '-' }}
                             </th>
                         </tr>
                     </tbody>

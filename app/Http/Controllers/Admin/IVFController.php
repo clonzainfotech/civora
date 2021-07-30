@@ -897,10 +897,14 @@ class IVFController extends AdminController
                 $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
             }
             $isIvfHistory =  '1';
+            $ivfCycleData = null;
+            $isTableView = '0';
             $historyData = null;
             $doseData = null;
             $transferDate = null;
             $remark = null;
+            $ivfSecondVisitData = null;
+            $ohData = null;
             $currentdate =Carbon::now()->format('d-m-y');
             Session::flash('msg','Record has been successfully added.');
             // send SMS
@@ -950,6 +954,24 @@ class IVFController extends AdminController
                 if(!empty($request->visit)){
                     $historyData = json_decode($ivf->description);
                     $isIvfHistory = '2';
+                    $isTableView = '1';
+                    $ivfCycleData = $this->IvfHistory->wherePatientsId($patientsId)->whereCycleNo($request->cycle_no)->wherePlan(!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->get();
+                    $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->where('cycle_no',$request->cycle_no)->where('visit',2)->first();
+                        $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
+                        $ivfFirst = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
+                        $lmpDate = null;
+                        $uterusData = null;
+                        if($ivfFirst){
+                            $lmpDate = $ivfFirst->lmp_date;
+                            $oeData = json_decode($ivfFirst->o_e);
+                            $ohData = json_decode($ivfFirst->o_h);
+                            if(!empty($oeData->uterus->details)){
+                                $uterusData = $oeData->uterus->details;
+                            }
+
+                        }
+                    // dd($patientsId);
+                    
                     $doseData = $this->Dose->pluck('name','name');
                 }
                 if($request->isprint == 2){
@@ -968,7 +990,7 @@ class IVFController extends AdminController
                 return response()->json([
                     'status' => 1,
                     'id' => $ivfId,
-                    'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
+                    'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf','ivfCycleData', 'historyData', 'isIvfHistory','isTableView','doseData','remark','transferDate','currentdate','lastAppointmentData','ivfSecondVisitData','ohData'))->render()
                 ]);
             }
             if($request->is_ivf_report_print){
@@ -2353,6 +2375,9 @@ class IVFController extends AdminController
                 // ]);
             }else{
                 $pt_view = 1;
+                $ohData = null;
+                $isTableView = '0';
+                $ivfCycleData = null;
                 $patientId = decrypt($request->patient_id);
                 $historyDate = $request->date;
                 $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
@@ -2384,12 +2409,30 @@ class IVFController extends AdminController
                     $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                     $ivfData = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     $isIvfHistory = '1';
+                    $ivfSecondVisitData = null;
+                    
                     if(!$ivfData || $request->is_history == 1){
                         $ivfData = $this->IvfHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                         $ivf = $ivfData;
                         $historyData = json_decode($ivf->description);
                         $doseData = $this->Dose->pluck('name','name');
                         $isIvfHistory = '2';
+                        $isTableView = '1';
+                        $ivfCycleData = $this->IvfHistory->wherePatientsId($patientId)->whereCycleNo($ivfData->cycle_no)->wherePlan($ivfData->plan)->get();
+                        $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$ivfData->plan)->where('cycle_no',$ivfData->cycle_no)->where('visit',2)->first();
+                            $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
+                            $ivfFirst = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
+                            $lmpDate = null;
+                            $uterusData = null;
+                            if($ivfFirst){
+                                $lmpDate = $ivfFirst->lmp_date;
+                                $oeData = json_decode($ivfFirst->o_e);
+                                $ohData = json_decode($ivfFirst->o_h);
+                                if(!empty($oeData->uterus->details)){
+                                    $uterusData = $oeData->uterus->details;
+                                }
+
+                            }
                     }
                     if(!$ivfData){
                         return 'no record available';
@@ -2397,7 +2440,7 @@ class IVFController extends AdminController
                     $ivf = $ivfData;
                     $printPreview = 1;
                     
-                    return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view'));
+                    return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData'));
                 }
                 
             }

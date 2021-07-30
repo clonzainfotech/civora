@@ -244,6 +244,7 @@
                         </div>
                     </div>
                     <br>
+                    @if($isForm)
                     <div class="row">
                         <div class="col-md-1">
                             <label class="vertical-form-label pr-0">
@@ -257,6 +258,7 @@
                             <span class="seen-by-error text-danger mb-2"></span>
                         </div>
                     </div>
+                    @endif
                     <div class="row">
                         <div class="col-md-12">
                             <table class='unik-table table m-b-0 table-responsive'>
@@ -431,36 +433,37 @@
                                         $prevAppointmentDate = !empty($lastCycleData->follow_up) ? \Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y') : null;
                                         $currentDateDiff = \Carbon\Carbon::parse($lastCycleData->lmp->date)->diffInDays(\Carbon\Carbon::parse($prevAppointmentDate));
                                     @endphp
-                                    @if($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up))
-                                    @php
-                                        $left_class_name = 'td-left-overy-'.$prevAppointmentDate.'-text';
-                                        $right_class_name = 'td-right-overy-'.$prevAppointmentDate.'-text';
-                                    @endphp
-                                    <tr>
-                                        <td>{{\Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y')}}</td>
-                                        <td>{{$currentDateDiff + 1}}</td>
-                                        <td>{{!empty($lastS_day) ? 's'.($lastS_day+1) : ''}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <input class="{{$right_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][right][details]" type="text">
-                                            <i class="material-icons td-right-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-right-overy-'.$prevAppointmentDate}}'>keyboard</i>
-                                        </td>
-                                        <td>
-                                            <input class="{{$left_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][left][details]" type="text">
-                                                <i class="material-icons td-left-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-left-overy-'.$prevAppointmentDate}}'>keyboard</i>
-                                        </td>
-                                        <td>{{Form::text("data[et_details]",'',['class'=>'form-control  border-none bg-transparent','placeholder'=>'Enter ET Details'])}}</td>
-                                        <td>{{Form::textarea("data[remark]",'',['class'=>'form-control no-resize remark  border-none bg-transparent','placeholder'=>'Remark','rows'=>'2'])}}</td>
-                                        <td></td>
-                                    </tr>
+                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up)) || $isForm == true)
+                                        @php
+                                            $left_class_name = 'td-left-overy-'.$prevAppointmentDate.'-text';
+                                            $right_class_name = 'td-right-overy-'.$prevAppointmentDate.'-text';
+                                        @endphp
+                                        <tr>
+                                            <td>{{\Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y')}}</td>
+                                            <td>{{$currentDateDiff + 1}}</td>
+                                            <td>{{!empty($lastS_day) ? 's'.($lastS_day+1) : ''}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <input class="{{$right_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][right][details]" type="text">
+                                                <i class="material-icons td-right-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-right-overy-'.$prevAppointmentDate}}'>keyboard</i>
+                                            </td>
+                                            <td>
+                                                <input class="{{$left_class_name.' border-none bg-transparent form-control'}}" name="data[ovary][ovary_type][left][details]" type="text">
+                                                    <i class="material-icons td-left-overy-{{$prevAppointmentDate}} overy-popup" data-class='{{'td-left-overy-'.$prevAppointmentDate}}'>keyboard</i>
+                                            </td>
+                                            <td>{{Form::text("data[et_details]",'',['class'=>'form-control  border-none bg-transparent','placeholder'=>'Enter ET Details'])}}</td>
+                                            <td>{{Form::textarea("data[remark]",'',['class'=>'form-control no-resize remark  border-none bg-transparent','placeholder'=>'Remark','rows'=>'2'])}}</td>
+                                            <td></td>
+                                        </tr>
                                     @endif
                                     </tbody>
+                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up)) || $isForm == true)
                                     <tfoot>
                                         <tr>
                                             <td colspan="15">
@@ -770,7 +773,7 @@
                                                         <div class="col-md-3 trigger d-none">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">Trigger Date: &nbsp;</span>
-                                                                {{Form::text("data[trigger_date]", \Carbon\Carbon::now()->format('D d M Y'), ['class'=>'form-control history-lmd-date'])}}
+                                                                {{Form::text("data[trigger_date]",'', ['class'=>'form-control history-lmd-date'])}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1215,9 +1218,94 @@
                                             </td>
                                         </tr>
                                     </tfoot>
+                                    @endif
                             </table>
-                            <br>
-                            <table class="table table-bordered table-responsive">
+                        </div>
+                        <div class="col-md-12">
+                        @if($isForm != true)
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6 float-right">
+                            <table class='table table-responsive'>
+                                <tbody>
+                                <tr>
+                                    @if(!empty($triggerHistoryData))
+                                    <td >
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="font-bold border-none">Trigger : </td>
+                                                    <td class="border-none">{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date & Time : </td>
+                                                    <td>
+                                                        @if($triggerHistoryData)
+                                                            {{$triggerHistory ? (\Carbon\Carbon::parse($triggerHistory->trigger_date)->format('D d M Y')) : ''}} {{!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null)}}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-bold">Ovum Pick Up:</td>
+                                                    <td>
+                                                        @if($triggerHistoryData)
+                                                            @php
+                                                                $nowDate = \Carbon\Carbon::parse($triggerHistory->trigger_date)->format('Y-m-d');
+                                                                $nowTime = \Carbon\Carbon::parse(!empty($triggerHistoryData->trigger->hcg->time) ? $triggerHistoryData->trigger->hcg->time : (!empty($triggerHistoryData->trigger->decapeptyl->time) ? $triggerHistoryData->trigger->decapeptyl->time : null))->format('H:i:s');
+                                                                $triggerDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                                                                $triggerDate = \Carbon\Carbon::parse($triggerDateTime)->format('D d M Y');
+                                                            @endphp
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date & Time</td>
+                                                    <td>
+                                                        @if($triggerHistoryData)
+                                                            {{$triggerDate.' '.\Carbon\Carbon::parse($triggerDateTime)->format('h:i a')}}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-bold">Hystroscopy : </td>
+                                                    <td>
+                                                        @if(!empty($duringPickupStatus))
+                                                            {{$duringPickupStatus}}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    @endif
+                                    <td class="border-left">
+                                    
+                                        <table class="">
+                                            <tbody>
+                                            <tr>
+                                                <td class="border-none">Total HMG dose:</td>
+                                                <td class="font-bold border-none">{{$hmgDose}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Anta dose:</td>
+                                                <td class="font-bold">{{$antaDose}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total FSH dose:</td>
+                                                <td class="font-bold">{{$fshDose}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        @endif
+                        </div>
+                        <div class="col-md-12">
+                            <h5>Medicine:</h5>
+                            <table class="unik-table table">
                                 <thead class="pick_up_table_thead">
                                     <tr>
                                         <th class="text-secondary"> Date</th>
@@ -1300,7 +1388,7 @@
                                     @endif
                                 @endforeach
                                 </tbody>
-                                @if($cycle[count($cycle)-1]['visit'] != 4 && $prevAppointmentDate && $cycle[count($cycle)-1]['cycle_status'] != 2)
+                                @if(($cycle[count($cycle)-1]['visit'] != 4 && $prevAppointmentDate && $cycle[count($cycle)-1]['cycle_status'] != 2) || $isForm == true)
                                     <tfoot>
                                         <td colspan="8">
                                             <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
@@ -1405,17 +1493,19 @@
                             </table>
                         </div>
                     </div>
-                    {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
-                    {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
-                    {{Form::button('submit',['class'=>'btn btn-primary submit'])}}
-                    {{Form::hidden('ivf_transfer_report_id', '' , ['id' => 'ivf_transfer_report_id'])}}
-                    <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
-                    <button type="submit" class="btn btn-primary submit transfer-report d-none" value="5">Transfer Report Preview</button>
-                    <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
-                    <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
-                    <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
-                    <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
-                    {{Form::close()}}
+                    @if($isForm)
+                        {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
+                        {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
+                        {{Form::button('submit',['class'=>'btn btn-primary submit'])}}
+                        {{Form::hidden('ivf_transfer_report_id', '' , ['id' => 'ivf_transfer_report_id'])}}
+                        <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
+                        <button type="submit" class="btn btn-primary submit transfer-report d-none" value="5">Transfer Report Preview</button>
+                        <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
+                        <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
+                        <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                        <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
+                        {{Form::close()}}
+                    @endif
                 </div>
             </div>
         
@@ -1507,17 +1597,19 @@
                                     {{-- <div class="col-md-12">
                                         <a class="btn btn-primary btn-icon btn-icon-mini btn-round add-row" data-id="5" data-day="0"><i class="material-icons">add</i></a>
                                     </div> --}}
-                                    <div class="col-md-1">
-                                        <label class="vertical-form-label pr-0">
-                                            Seen By :
-                                        </label>
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <div class="form-group">
-                                            {{Form::select('seen_by',$hospitalDoctor,'',['class'=>'form-control select-padding-0 seen-by','placeholder'=>'Select Doctor'])}}
+                                    @if($isForm)
+                                        <div class="col-md-1">
+                                            <label class="vertical-form-label pr-0">
+                                                Seen By :
+                                            </label>
                                         </div>
-                                        <span class="seen-by-error text-danger mb-2"></span>
-                                    </div>
+                                        <div class="col-md-3 ">
+                                            <div class="form-group">
+                                                {{Form::select('seen_by',$hospitalDoctor,'',['class'=>'form-control select-padding-0 seen-by','placeholder'=>'Select Doctor'])}}
+                                            </div>
+                                            <span class="seen-by-error text-danger mb-2"></span>
+                                        </div>
+                                    @endif
                                     <div class="col-md-12">
                                         <table class="table follicular-table frozen-table table-bordered table-responsive">
                                             <thead>
@@ -1617,9 +1709,9 @@
                                                                     
                                                             </td>
                                                             <td class="text-center">
-                                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
-                                                                    <i class="zmdi zmdi-delete material-icons"></i>
-                                                                </a>
+                                                                    <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
+                                                                        <i class="zmdi zmdi-delete material-icons"></i>
+                                                                    </a>
                                                                     @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
                                                                     <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
                                                                     @endif
@@ -1631,7 +1723,7 @@
                                                                 </td>
                                                         </tr>
                                                     @endif
-                                                    @if(isset($historyData->progesterone_date) &&(!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
+                                                    @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone_date)))
                                                     <tr>
                                                         <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
                                                         <td></td>
@@ -2357,16 +2449,18 @@
                                     {{-- @endif --}}
                                 </div>
                             </div>
-                            {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
-                            {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
-                            {{Form::button('submit',['class'=>'btn btn-primary submit'])}}
-                            {{Form::hidden('ivf_transfer_report_id', '' , ['id' => 'ivf_transfer_report_id'])}}
-                            <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
-                            <button type="submit" class="btn btn-primary submit transfer-report d-none" value="5">Transfer Report Preview</button>
-                            <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
-                            <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
-                            <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
-                            <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
+                            @if($isForm)
+                                {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
+                                {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
+                                {{Form::button('submit',['class'=>'btn btn-primary submit'])}}
+                                {{Form::hidden('ivf_transfer_report_id', '' , ['id' => 'ivf_transfer_report_id'])}}
+                                <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
+                                <button type="submit" class="btn btn-primary submit transfer-report d-none" value="5">Transfer Report Preview</button>
+                                <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
+                                <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
+                                <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                                <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
+                            @endif
                         {{Form::close()}}
                         </div>
                     </div>

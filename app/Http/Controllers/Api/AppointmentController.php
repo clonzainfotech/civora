@@ -385,21 +385,24 @@ class AppointmentController extends ApiController
                             {
                                 $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_pickup=1');
                             }
-                            $ivfHistory = $this->IvfHistory->where('patients_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->first();
-                            if(!empty($ivfHistory)) {
-                                $madicineData = null;
-                                $reportsArr = null;
-                                $reportsData[] = $reportsArr;
-                                $historyData = json_decode($ivfHistory->description);
-                                $collectionData = !empty($historyData->collection) ? $historyData->collection : [];
-                                //Transfer Report
-                                if (in_array('transfer',$collectionData))
+                            $ivfAllHistory = $this->IvfHistory->where('patients_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->get();
+                            if(!empty($ivfAllHistory)) {
+                                foreach($ivfAllHistory as $ivfHistory)
                                 {
-                                    $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_trasnfer=1');
-                                }
-                                else
-                                {
-                                    $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1');
+                                    $madicineData = null;
+                                    $reportsArr = null;
+                                    $reportsData[] = $reportsArr;
+                                    $historyData = json_decode($ivfHistory->description);
+                                    $collectionData = !empty($historyData->collection) ? $historyData->collection : [];
+                                    //Transfer Report
+                                    if (in_array('transfer',$collectionData))
+                                    {
+                                        $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&is_trasnfer=1');
+                                    }
+                                    else
+                                    {
+                                        $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&cycle_no='.encrypt($ivfHistory->cycle_no));
+                                    }
                                 }
                             }
                             else {

@@ -244,7 +244,7 @@
                         </div>
                     </div>
                     <br>
-                    @if($isForm)
+                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                     <div class="row">
                         <div class="col-md-1">
                             <label class="vertical-form-label pr-0">
@@ -286,6 +286,7 @@
                                         @php
                                             $i++;
                                             $datarow = $row;
+                                            $skipValue = 0;
                                                 $historyData = json_decode($row->description);
                                                 if($row->cycle_status == 2){
                                                     $visit = $row->visit + 1;
@@ -305,6 +306,10 @@
                                                 $bloodReport[] = $data->blood->report;
                                             }
                                             $duringPickupStatus = !empty($data->during_pickup) ? ucfirst($data->during_pickup) : null;
+                                            if((!empty($historyData->plan) || !empty($historyData->follow_up)) && !empty($historyData->skip_reason))
+                                            {
+                                                $skipValue = 1;
+                                            }
                                         @endphp
                                         {{-- <div> --}}
                                             @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
@@ -433,7 +438,7 @@
                                         $prevAppointmentDate = !empty($lastCycleData->follow_up) ? \Carbon\Carbon::parse($lastCycleData->follow_up)->format('d-m-Y') : null;
                                         $currentDateDiff = \Carbon\Carbon::parse($lastCycleData->lmp->date)->diffInDays(\Carbon\Carbon::parse($prevAppointmentDate));
                                     @endphp
-                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up)) || $isForm == true)
+                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                                         @php
                                             $left_class_name = 'td-left-overy-'.$prevAppointmentDate.'-text';
                                             $right_class_name = 'td-right-overy-'.$prevAppointmentDate.'-text';
@@ -463,7 +468,7 @@
                                         </tr>
                                     @endif
                                     </tbody>
-                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2 && !empty($lastCycleData->follow_up)) || $isForm == true)
+                                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                                     <tfoot>
                                         <tr>
                                             <td colspan="15">
@@ -1303,6 +1308,32 @@
                         
                         @endif
                         </div>
+                        @if($skipValue == 1) {{-- skip cycle --}}
+                            @php
+                                    $visitDate = \Carbon\Carbon::parse($cycle[count($cycle)-1]['created_at'])->format('d-m-Y');
+                                    $diff = \Carbon\Carbon::parse(!empty($historyLmddateDate) ? $historyLmddateDate : $cycle[count($cycle)-1]['created_at'])->diffInDays(\Carbon\Carbon::parse($visitDate));
+                                    $diff = $diff + 1;
+                            @endphp
+                            <div class="col-md-12">
+                                <h5 class=""><u>Skip Cycle:</u></h5>
+                                <table class="table follicular-table frozen-table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Follow UP</th>
+                                            <th>Transfer Plan</th>
+                                            <th>Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{$visitDate}}</td>
+                                            <td>{{$planData[$lastCycleData->plan]}}</td>
+                                            <td>{{$lastCycleData->skip_reason}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                         <div class="col-md-12">
                             <h5>Medicine:</h5>
                             <table class="unik-table table">
@@ -1388,7 +1419,8 @@
                                     @endif
                                 @endforeach
                                 </tbody>
-                                @if(($cycle[count($cycle)-1]['visit'] != 4 && $prevAppointmentDate && $cycle[count($cycle)-1]['cycle_status'] != 2) || $isForm == true)
+                                
+                                @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                                     <tfoot>
                                         <td colspan="8">
                                             <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
@@ -1493,7 +1525,7 @@
                             </table>
                         </div>
                     </div>
-                    @if($isForm)
+                    @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                         {{Form::hidden('ivf_report',!empty($ivfReport) ? $ivfReport : null,['class'=>'ivf-report-status'])}}
                         {{Form::hidden('ivf_history_id', '' , ['id' => 'ivf_history_id'])}}
                         {{Form::button('submit',['class'=>'btn btn-primary submit'])}}

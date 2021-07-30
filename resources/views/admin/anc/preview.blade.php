@@ -40,6 +40,7 @@
     $treatment = !empty($ancData->treatment) ? json_decode($ancData->treatment) : null;
     $remark=!empty($previousAnc->o_e) ? json_decode($previousAnc->o_e) : null;
     $blood=!empty($previousAnc->investigation) ? json_decode($previousAnc->investigation) : null;
+    
     $contraceptionData = ['barrier_method'=>'Barrier Method','cu_t'=>'Cu - T','tl_done'=>'TL Done ','occipill'=>'Occipill','other_contraception'=>'Other'];
     $utsizearray = ["Normal Size","Just Bulky","6 Weeks","6-8 Weeks","8 Weeks","8-10 Weeks","10-12 Weeks"];
     $utsizearray1 = ["12 Weeks","Uterus Just Palpable","14 Weeks","16 Weeks","18 Weeks","20 Weeks","22 Weeks","24 Weeks","26 Weeks","28 Weeks","30 Weeks","32 Weeks","34 Weeks","36 Weeks","Full Term"];
@@ -786,6 +787,10 @@
                 @php
                     $noValueData = [];
                     $secondNoValueData = [];
+                    $ancFirst_mh_date = isset($ancFirstVisitData) ? json_decode($ancFirstVisitData->m_h) : null;
+                    $ancFirstlmdDate = !empty($ancFirst_mh_date->last_menstrual_date) ? \Carbon\Carbon::parse($ancFirst_mh_date->last_menstrual_date)->format('d/m/Y'): null;
+                    $ancFirsteddDate = !empty($ancFirst_mh_date->edd) ? \Carbon\Carbon::parse($ancFirst_mh_date->edd)->format('D d M Y') : null;
+                    $ancFirstusgEddDate = !empty($ancFirst_mh_date->usg_edd) ? \Carbon\Carbon::parse($ancFirst_mh_date->usg_edd)->format('D d M Y'): null;
                 @endphp
                 @if($patientsObstratics)
                     <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table '.$class}}">
@@ -1334,6 +1339,7 @@
                                 </tr>
                             @endif
                             @php
+                                
                                 $lmddate = !empty($mh->last_menstrual_date) ? \Carbon\Carbon::parse($mh->last_menstrual_date)->format('d/m/Y') : null;
                                 $date = !empty($mh->edd) ? \Carbon\Carbon::parse($mh->edd)->format('D d M Y') : null;
                                 $usgDate = !empty($mh->usg_edd) ? \Carbon\Carbon::parse($mh->usg_edd)->format('D d M Y') : null;
@@ -1363,7 +1369,31 @@
                         </tbody>
                     </table>
                 @endif
-
+                @if($ancFirst_mh_date)
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                        @if($ancFirstlmdDate)
+                        <tr>
+                            <th>
+                                <span class="anc-label lmd-lable">Last Menstrual Date : </span>{{$ancFirstlmdDate}}
+                            </th>
+                        </tr>
+                        @endif
+                        @if($ancFirsteddDate)
+                        <tr>
+                            <th>
+                                <span class="anc-label lmd-lable">Expected Date of Delivery : </span> {{$ancFirsteddDate}}
+                            </th>
+                        </tr>
+                        @if($ancFirstusgEddDate)
+                        <tr>
+                            <th>
+                                <span class="anc-label lmd-lable">Corrected USG EDD :</span> {{$ancFirstusgEddDate}}
+                            </th>
+                        </tr>
+                            @endif
+                        @endif
+                    </table>
+                @endif
                 @php
                     $pHistoryStatus = false;
                     $pastHistoryStatus = false;

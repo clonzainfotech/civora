@@ -156,7 +156,7 @@
     }
     .font-bold
     {
-        font-weight : 700px;
+        font-weight : 700;
     }
     
     @page { margin-top : 200px; margin-left : 100px;}
@@ -2611,12 +2611,21 @@
                         </tbody>
                     </table>
                 @endif
+                @if(isset($patients_remark) && !empty($patients_remark))
+                
+                    <!-- <div class="row"> -->
+                    <br><span class="iui-label">Remark : </span>{{$patients_remark}}
+                    <!-- </div> -->
+                    @else
+                    <br><span class="iui-label">Remark : </span>{{!empty($description->remark) ? $description->remark : ''}}
+                @endif
+                <br>
                 @if($visit == 2 || $visit == 3 || $visit == 4)
                 <?php
                     unset($treatment->medicinedata);
                 ?>
                     @if(!empty($treatment) && count((array)$treatment) > 0)
-                    <br>
+                    
                         <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
                             <tbody>
                                 <tr>
@@ -2712,10 +2721,11 @@
                             </tbody>
                         </table>
                     @endif
+                    
                     @if($visit == 2 || $visit == 4)
                     <br>
                         <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
-                            <tbody>
+                            <tbody><br>
                                 <tr>
                                     <th>
                                         {{-- <span class="iui-label">Follow Up: </span> --}}
@@ -2732,11 +2742,7 @@
                         </table>
                     @endif
                 @endif
-                @if(isset($patients_remark) && !empty($patients_remark))
-                <!-- <div class="row"> -->
-                <span class="font-bold">Remark : </span>{{$patients_remark}}
-                <!-- </div> -->
-                @endif
+                
             </div>
 
         @else

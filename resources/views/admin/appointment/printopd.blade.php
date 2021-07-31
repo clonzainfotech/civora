@@ -22,10 +22,12 @@
     .opd-receipt-th{
         height: 35px;
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 800;
     }
     .ttc{
         text-transform: capitalize;
+        font-weight: 500 !important;
+        font-size: 16px !important;
     }
     .opd-left{
         text-align: left;

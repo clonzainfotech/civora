@@ -150,10 +150,36 @@ $menu = "";
 
     });
     function callPatient(name, cat) {
-        $.ajax({
-            url:"{{url('patient_notification')}}",
-            data:{name:name,cat:cat},
+        swal({
+                title: "OPD Area",
+                text: "Enter OPD",
+                type: "input",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes',
+                animation: "slide-from-top",
+                closeOnConfirm: false,
+                html: true,
+            },
+            function(title){
+                if (title === false)
+                {
+                    return false;
+                }
+                if (title === "") {
+                    swal.showInputError("Please enter holiday name!");
+                    return false
+                }
+                else
+                {
+                    // console.log(title);
+                    swal("Thank You!", "", "success");
+                    $.ajax({
+                        url:"{{url('patient_notification')}}",
+                        data:{name:name,cat:cat,title:title},
+                    });
+                }
         });
+        
     }
 </script>
 @stack('after-scripts')
@@ -169,7 +195,8 @@ $menu = "";
     <script type="text/javascript">
         var main_url = window.location.href;
         let anc_url_name = main_url.split('/').pop();
-        var stopNotification = <?php echo json_encode($stopNotification) ?>;
+        var stopNotification = '{{json_encode($stopNotification)}}';
+        console.log(stopNotification);
         var check_url = stopNotification.includes(anc_url_name);
         if (!check_url) {
             var pusher = new Pusher('{{env("MIX_PUSHER_APP_KEY")}}', {
@@ -190,7 +217,7 @@ $menu = "";
             }
             swal({
                     title: "<span class='callpatient-name'>"+data.name+"<span>",
-                    text: "<h6 class = 'callpatient-category'>"+data.user+" CALLING FOR "+data.category + "</h6>",
+                    text: "<h6 class = 'callpatient-category'>"+data.user+" CALLING FOR "+data.category + "</h6><br><h6>Area : "+data.opd_area+"</h6>",
                     type: "warning",
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: 'Yes',

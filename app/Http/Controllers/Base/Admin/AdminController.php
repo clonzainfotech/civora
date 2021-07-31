@@ -429,10 +429,12 @@ class AdminController extends BaseController
     {
         $name = $request->name;
         $cat = $request->cat;
+        $title = $request->title;
         $remove_notification = $this->patientNotification->truncate();
         $patientnotify = $this->patientNotification;
         $patientnotify->name = $name ;
         $patientnotify->category = $cat;
+        $patientnotify->opd_area = $title;
         $patientnotify->save();
 
         $options = array(
@@ -449,6 +451,7 @@ class AdminController extends BaseController
         $data = [
             'name' => $patientnotify->name,
             'category' => $patientnotify->category,
+            'opd_area' => $patientnotify->opd_area,
             'id' => $patientnotify->id,
             'user' => $user
         ] ;

@@ -164,7 +164,7 @@ class AppointmentController extends ApiController
                     $medicineTime = ['1'=>'Morning','2'=>'Afternoon','3'=>'Evening','4'=>'Night'];
                     $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
 
-                    if(in_array($categoryId, [5, 6])) {
+                    if(in_array($categoryId, [5, 6,10,13])) {
                         $anc = $this->ANC->where('patients_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->where('patients_id',$pId)->first();
                         $dose = ["1"=>"OD","2"=>"BD","3"=>"TDS","4"=>"ADS"];
                         $madicine_status = ["1"=>"After Meal","2"=>"Empty Stomach","3"=>"Instead of menstruation space"];

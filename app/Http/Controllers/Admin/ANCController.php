@@ -1667,30 +1667,43 @@ class ANCController extends AdminController
             if($investigationDetails && isset($investigationDetails['12'])  && (substr (strtolower($investigationDetails['12']), -3) == '-ve' || strtolower($investigationDetails['12']) == 'negative' || strpos(strtolower($investigationDetails['12']), 'negative') !== false))
             {
                 $ancAutoRemark['blood_group'] = $investigationDetails['12'];
+                $ancAutoRemark['blood_group_date'] = $ancFirstVisit->created_at;
             }
             if($investigationDetails && isset($investigationDetails['8']) && (substr (strtolower($investigationDetails['8']), -3) == '+ve' || strtolower($investigationDetails['8']) == 'positive' || strpos(strtolower($investigationDetails['8']), 'positive') !== false))
             {
                 $ancAutoRemark['hbsag'] = $investigationDetails['8'];
+                $ancAutoRemark['hbsag_date'] = $ancFirstVisit->created_at;
+
             }
             if($investigationDetails && isset($investigationDetails['10']) && (substr (strtolower($investigationDetails['10']), -3) == '+ve' || strtolower($investigationDetails['10']) == 'positive' || strpos(strtolower($investigationDetails['10']), 'positive') !== false))
             {
                 $ancAutoRemark['hiv'] = $investigationDetails['10'];
+                $ancAutoRemark['hiv_date'] = $ancFirstVisit->created_at;
+
             }
             if(!empty($auroRemarkInv->anc_hiv) && strtolower($auroRemarkInv->anc_hiv) == 'positive')
             {
                 $ancAutoRemark['hiv'] = $auroRemarkInv->anc_hiv;
+                $ancAutoRemark['hiv_date'] = $ancFirstVisit->created_at;
+
             }
             if(!empty($auroRemarkInv->anc_hbsag) && strtolower($auroRemarkInv->anc_hbsag) == 'positive')
             {
                 $ancAutoRemark['hbsag'] = $auroRemarkInv->anc_hbsag;
+                $ancAutoRemark['hbsag_date'] = $ancFirstVisit->created_at;
+
             }
             if(!empty($auroRemarkInv->anc_vdrl) && strtolower($auroRemarkInv->anc_vdrl) == 'positive')
             {
                 $ancAutoRemark['vdrl'] = $auroRemarkInv->anc_vdrl;
+                $ancAutoRemark['vdrl_date'] = $ancFirstVisit->created_at;
+
             }
             if (!empty($historyAncOe->late_data) && !empty($historyAncOe->late_data->late_concept) && $historyAncOe->late_data->late_concept == 'Yes' && !empty(($historyAncOe->late_data->late_concept_week)))
             {
                 $ancAutoRemark['late_concept'] = 'Yes';
+                $ancAutoRemark['late_concept_date'] = $ancFirstVisit->created_at;
+
             }
             $cesarean = 0;
             foreach($historyPatientObs as $key => $value)
@@ -1803,6 +1816,97 @@ class ANCController extends AdminController
             $no++;
         }
         return $ancArray;
+    }
+    public function getAncHoverDetail(Request $request)
+    {
+        $patients_id = decrypt($request->patients_id);
+        $appoitmentDate = \Carbon\Carbon::parse($request->appoitmentDate)->format('Y-m-d');
+        $anc = $this->AncHistory->where('patients_id',$patients_id)
+                ->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'<',$appoitmentDate)
+                ->orderBy('id','desc')
+                ->first();
+        // dd($anc->id);
+        $lmp = '';
+        $preg_week = '';
+        $eddDate = '';
+        $remark = '';
+        $current_anc_id = null;
+        $ancFirst = $this->ANC->where('patients_id',$patients_id)->orderBy('created_at','desc')->first();
+        $mhData = !empty($ancFirst->m_h) ? json_decode($ancFirst->m_h) : null;
+        $lmp = !empty($mhData->last_menstrual_date) ? $mhData->last_menstrual_date : null;
+        $eddDate = !empty($mhData->edd) ? $mhData->edd : null;
+        $current_anc_id = $ancFirst->id;
+        if(!$anc)
+        {
+            $ancFirstH_o = !empty($ancFirst->h_o) ? json_decode($ancFirst->h_o) : null;
+            $ancFirstO_e = !empty($ancFirst->o_e) ? json_decode($ancFirst->o_e) : null;
+            $preg_week = !empty($ancFirstH_o->ho_details) ? $ancFirstH_o->ho_details : '';
+            $remark = !empty($ancFirstO_e->remark) ? $ancFirstO_e->remark : null;
+            $ancCreatedDate = $ancFirst->created_at;
+        }
+        if($anc)
+        {
+            $h_o = !empty($anc->h_o) ? json_decode($anc->h_o) : null;
+            $o_e = !empty($anc->o_e) ? json_decode($anc->o_e) : null;
+            $preg_week = !empty($h_o->ho_details) ? $h_o->ho_details : '';
+            $remark = !empty($o_e->remark) ? $o_e->remark : null;
+            $ancCreatedDate = $anc->created_at;
+        }
+        $ancAutoRemark = $this->getAutoRemark($patients_id,$current_anc_id);
+        $html = '';
+        
+        if($ancAutoRemark && !empty($ancAutoRemark['blood_group']) &&  (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['blood_group_date'])))
+        {
+            $html =  $html . ' Blood Group : '.$ancAutoRemark['blood_group'];
+        }
+        
+        if($ancAutoRemark && !empty($ancAutoRemark['hbsag']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['hbsag_date'])))
+        {
+            $html = $html.' HBSAG : '.$ancAutoRemark['hbsag'];
+        }
+        
+        if($ancAutoRemark && !empty($ancAutoRemark['hiv']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['hiv_date'])))
+        {
+            $html = $html.' HIV : '.$ancAutoRemark['hiv'];
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['vdrl']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['vdrl_date'])))
+        {
+            $html = $html.' VDRL : '.$ancAutoRemark['vdrl'];
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['late_concept']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['late_concept_date'])))
+        {
+            $html = $html.' Late Conception : Yes';
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['cesarean']))
+        {
+            $html = $html.' Previous : '.$ancAutoRemark['cesarean']. ' - LSCS';
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['position']) && ($ancAutoRemark['position'] == 'breech' || $ancAutoRemark['position'] == 'transverse' || $ancAutoRemark['position'] == 'oblique'))
+        {
+            if(empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['position_date']))
+            {
+                $html = $html.' Position : '.$ancAutoRemark['position'];
+            }
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['liquor']) && ($ancAutoRemark['liquor'] == 'oligo' || $ancAutoRemark['liquor'] == 'poly') && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['liquor_date'])))
+        {
+            $html = $html.' Liquor : '.$ancAutoRemark['liquor'];
+        }
+        if($ancAutoRemark && !empty($ancAutoRemark['placenta']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['placenta_date'])))
+        {
+            $html = $html.' Placenta : '.$ancAutoRemark['placenta'];
+        }
+        $data = '<p><span class="font-bold candor-color">LMP Date : </span>'.\Carbon\Carbon::parse($lmp)->format('d M Y').'</p>
+                            <p><span class="font-bold candor-color">EDD Date : </span>'.\Carbon\Carbon::parse($eddDate)->format('d M Y').'</p>
+                            <p><span class="font-bold candor-color">Preg. Week : </span>'.$preg_week.'</p>
+                            <p><span class="font-bold candor-color">Remark : </span>'.$html.'</p>
+                            <p><span class="font-bold candor-color">Last Remark : </span>'.$remark.'</p>
+                            <p><span class="font-bold candor-color">Ref. By : </span>'.$anc->created_at.'</p>';
+        return response()->json([
+            'status'=>1,
+            'data' => $data
+        ]);                   
+        // return['preg_week'=>$preg_week, 'lmp'=>$lmp, 'eddDate'=>$eddDate, 'remark' => $remark,'autoRemark'=>$html];
     }
     
 }

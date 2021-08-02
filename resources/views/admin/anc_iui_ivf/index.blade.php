@@ -292,5 +292,41 @@
 
             });
         }
+        // $(document).ready(function () {
+            $(document).on('click','.appoitment_content',function(){
+                // $('appointment_dropdown_content').css('display','none');
+                $('.appointment_dropdown_content').slideUp('medium');
+                var patient_id = $(this).data('ptid');
+                var appoitmentDate = $(this).data('date');
+                var appendClass = $(this).data('class');
+                if($(this).hasClass('dropdown-open'))
+                {
+                    $('.'+appendClass).slideUp('medium');
+                    $(this).removeClass('dropdown-open');
+                }
+                else{
+                    $(this).addClass('dropdown-open');
+                    $.ajax({
+                    url: "{{URL::to('get-anc-hoverDetail')}}?patients_id="+patient_id+"&appoitmentDate="+appoitmentDate,
+                    dataType: 'json',
+                    }).done(function(data) {
+                        $('.'+appendClass).html(data.data);
+                        
+                        // $(data.data).insertAfter($(this));
+                        // function () {
+                        $('.'+appendClass).slideDown('medium');
+                        // }, 
+                        // function () {
+                        //     $('ul.file_menu').slideUp('medium');
+                        // }
+                        
+                    }).fail(function() {
+
+                    })
+                }
+                
+                });
+           
+        // });
     </script>
 @stop

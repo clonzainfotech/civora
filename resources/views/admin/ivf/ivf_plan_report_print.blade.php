@@ -76,7 +76,7 @@ body {margin-top :250px;}
             </div>
             <div class="col-md-2 col-sm-2">
                 <span><strong>Age:</strong></span>
-                <span>{{!empty($ivfReport->getPatients['age']) ? $ivfReport->getPatients['age'] : '-'}}</span><br>
+                <span>{{!empty($ivfReport->getPatients['age']) ? $ivfReport->getPatients['age'].' Year' : '-'}}</span><br>
             </div>
         </div>
         <div class="row">
@@ -105,7 +105,7 @@ body {margin-top :250px;}
             </div>
             <div class="col-md-2 col-sm-2">
                 <span><strong>Weight:</strong></span>
-                <span>{{!empty($ivfReport->getPatients['weight']) ? $ivfReport->getPatients['weight'] : '-'}}</span><br>
+                <span>{{!empty($ivfReport->getPatients['weight']) ? $ivfReport->getPatients['weight'].' KG' : '-'}}</span><br>
             </div>
 
         </div>
@@ -243,14 +243,14 @@ body {margin-top :250px;}
                                 <td colspan="3">{{!empty($ivfReportData->ovum->quality) ? $ivfReportData->ovum->quality : '-'}}</td>
                             </tr>
                             @if(!isset($pt_view) || $pt_view != 1)
-                                <tr>
+                                {{-- <tr>
                                     <td><strong>Total Blastcyst</strong></td>
                                     <td colspan="3">{{!empty($ivfReportData->ovum->total_blastcyst) ? $ivfReportData->ovum->total_blastcyst : '-'}}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Blastcyst Rate:</strong></td>
                                     <td colspan="3">{{!empty($ivfReportData->ovum->blastcyst_rate) ? $ivfReportData->ovum->blastcyst_rate : '-'}}</td>
-                                </tr>
+                                </tr> --}}
                             @endif
                         </tbody>
                     </table>

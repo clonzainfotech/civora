@@ -498,7 +498,8 @@ class HomeController extends AdminController
                 $ancCreatedDate = $ancHistory->created_at;
             }
             // dd($preg_week);
-            $ancAutoRemark = $this->getAutoRemark($patients_id,$current_anc_id);
+            $ancAutoRemark = app('App\Http\Controllers\Admin\ANCController')->getAutoRemark($patients_id,$current_anc_id);;
+            
             $html = '';
             
             if($ancAutoRemark && !empty($ancAutoRemark['blood_group']) &&  (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['blood_group_date'])))

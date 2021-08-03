@@ -40,6 +40,7 @@
     $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
     $old_dose = ["1"=>"OD","2"=>"BD","3"=>"TDS","4"=>"ADS","5"=>'Weekly / 1','6'=>'Weekly / 2','7'=>'Stat','8'=>'SOS'];
     $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
+    $typeOfData = [1=>'Primary',2=>'Secondary'];
 @endphp
 <style type="text/css">
     .module-report-table {
@@ -2795,9 +2796,9 @@
             </div>
         @endif
     @else
-    @if(!isset($printPreview))
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
-    @endif
+        @if(!isset($printPreview))
+            <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
+        @endif
         @if($isTableView == '1' && $plan == 1)
             <div class="row mb-5 do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>FROZEN EMBRYO TRANSFER STUDY</b></u></h4></div>

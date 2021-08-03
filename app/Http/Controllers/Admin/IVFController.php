@@ -91,6 +91,7 @@ class IVFController extends AdminController
             }
             return view('admin.ivf.index', compact('patients'));
         }catch(Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }
@@ -981,9 +982,11 @@ class IVFController extends AdminController
                         $transferDate = Carbon::parse($fDate)->format('d-m-Y');
                     }
                     $isIvfHistory = '3';
+                    $isTableView = '0';
                     $remark = $request->remark;
                 }
                 if($request->isprint == 3){
+                    $isTableView = '0';
                     $isIvfHistory = '4';
                 }
                 $investigationReport = $this->allInvestigationReport();

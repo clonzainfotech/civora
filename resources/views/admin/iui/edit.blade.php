@@ -2624,7 +2624,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        {{Form::textarea("h_factor[remark]",!empty($husbandFactor->remark) ? $husbandFactor->remark : null,['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'5'])}}
+                                        {{Form::textarea("h_factor[remark]",!empty($husbandFactor->remark) ? $husbandFactor->remark : null,['class'=>'form-control remark','placeholder'=>'Remark','rows'=>'5'])}}
                                     </div>
                                 </div>
                             </div>

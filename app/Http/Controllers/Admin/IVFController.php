@@ -1390,9 +1390,13 @@ class IVFController extends AdminController
                         $protocolTable = !empty($lastProtocolData->protocol) ? $lastProtocolData->protocol : [];
                         $countProtocolTable = count((array)$protocolTable);
                         if($countProtocolTable > 0){
-                            $protocolData = (array)$lastProtocolData->protocol;
-                            $sDay = $protocolData[$countProtocolTable]->s_day;
-                            $pDate = $protocolData[$countProtocolTable]->date;
+                            if(isset($protocolData[$countProtocolTable]))
+                            {
+                                $protocolData = (array)$lastProtocolData->protocol;
+                                $sDay = $protocolData[$countProtocolTable]->s_day;
+                                $pDate = $protocolData[$countProtocolTable]->date;
+                            }
+                            
                         }
                     }
                     $skipPlan = (int)!empty($lastIvfHistory->plan) ? $lastIvfHistory->plan : null;

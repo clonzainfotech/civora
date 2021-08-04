@@ -3103,7 +3103,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                             </label>
                                         </div>
                                         <div class="col-sm-2 extra-female-data-{{$key}} cervical-data-{{$key}} d-none">
-                                            {{Form::number("oe[utdata][".$key."][cervical_length]",@$value->cervical_length && !empty($value->cervical_length) ? $value->cervical_length:'',['id'=>'cervical_length','class'=>'form-control cervical_length','data-id'=>1])}}
+                                            {{Form::text("oe[utdata][".$key."][cervical_length]",@$value->cervical_length && !empty($value->cervical_length) ? $value->cervical_length:'',['id'=>'cervical_length','class'=>'form-control cervical_length','data-id'=>1])}}
                                         </div>
                                         <div class="col-md-2 pr-0 extra-female-data-{{$key}} expected-data-{{$key}} d-none">
                                             <label class="vertical-form-label pr-0 green-lable">

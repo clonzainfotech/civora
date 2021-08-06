@@ -60,6 +60,8 @@ $water_mark = isset($systemSetting->water_mark) && !empty($systemSetting->water_
         .is-done{
             background-color: <?php echo $after_visits ?> !important;
         }
+
+    
     </style>
     <title>@yield('title') {{ !empty($title) ? ' - ' . $title : null }}</title>
     <meta name="description" content="@yield('meta_description', config('app.name'))">
@@ -81,6 +83,8 @@ $water_mark = isset($systemSetting->water_mark) && !empty($systemSetting->water_
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{asset('assets/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{URL::to('public/css/bootstrap-notifications.min.css')}}">
+    
 
 </head>
 <?php
@@ -143,6 +147,7 @@ $menu = "";
 <script src="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.js"></script>
 <link href="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.css" rel="stylesheet"/>
 <link href="https://code.jquery.com/ui/1.12.1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet"/>
+{{-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> --}}
 
 <script type="text/javascript">
     // $(document).on('click','.notify-patient',function(){
@@ -243,7 +248,53 @@ $menu = "";
 
             });
         }
+        // <script type="text/javascript">
+    displayNotification();
+    $(document).on('click','.patient-category-notification',function(){
+        displayNotification();
+    });
+    function displayNotification()
+    {
+            $.ajax({
+                    url: "{{url('get-category-notification')}}",
+                    dataType: 'json',
+                }).done(function(data) {
+                    console.log(data.data.length);
+                    // var existingNotifications = notifications.html();
+                    var newNotificationHtml = '';
+                    for(var i=0; i< data.data.length; i++)
+                    {
+                        newNotificationHtml += '<li class="category-notification notification active">'+
+                        '<div class="media mb-1">'+
+                        '<div class="media-left"><div class="media-object">'+
+                        ''+
+                        '</div></div>'+
+                        '<div class="media-body">'+
+                        '<strong class="notification-title">'+data.data[i].patient_name+'</strong><br>'+
+                        '<p class="notification-desc">'+data.data[i].date+' - '+data.data[i].message+'</p>'+
+                        '</div></div></li>';
+                        // notificationsCount += 1;
+                    }
+                    if(data.data.length == 0)
+                    {
+                        $('a.mark-all').addClass('d-none');
+                        newNotificationHtml +=
+                        newNotificationHtml += '<li class="category-notification notification active">'+
+                        '<div class="media mb-1">'+
+                        '<div class="media-left"><div class="media-object">'+
+                        ''+
+                        '</div></div>'+
+                        '<div class="media-body">'+
+                        '<p class="notification-desc">No record Available</p>'+
+                        '</div></div></li>';
+                    }
+                    // $(newNotificationHtml).insertAfter($('ul.notification-menu li.notification-head'));
+                    $('.notification-menu').html(newNotificationHtml);
+                    $('.notification-count').text(data.data.length);
+                }).fail({
 
+                });
+    }
     </script>
 @endif
 </body>

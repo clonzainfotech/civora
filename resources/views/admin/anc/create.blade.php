@@ -3247,11 +3247,8 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                                     $terminationtype = [
                                                         ''=>"Select Reason",
                                                         'Delivery'=>"Delivery",
-                                                        'Dilation and Curettage'=>"Dilation and Curettage",
-                                                        'Threatened Abotion'=>"Threatened Abotion",
                                                         'Obseravation'=>"Obseravation",
-                                                        'Ectopic Pregency'=>"Ectopic Pregency",
-                                                        'Fever'=>"Fever"];
+                                                        'Operation'=>"Operation"];
                                                     ?>
                                                     {{Form::select("usg[termination_type]",$terminationtype,(@$usg->termination_type) && !empty($usg->termination_type) ? $terminationtype[$usg->termination_type]: null,['class'=>'form-control'])}}
                                                 </div>

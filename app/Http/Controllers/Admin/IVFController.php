@@ -848,6 +848,7 @@ class IVFController extends AdminController
                                 $appointmentData['isAnc'] = $isAnc;
                                 $appointmentData['time'] = $appointmentTime;
                                 $appointmentData['is_procedure'] = $isProcudure;
+                                $appointmentData['remark'] = isset($request->data['collection']) && in_array('transfer', $request->data['collection']) ? 'IVF Result' : null;
                                 $nextAppointment = $this->nextAppointmentData($appointmentData);
                             }
                     }
@@ -940,7 +941,31 @@ class IVFController extends AdminController
                     $triggerDate = !empty($request['data']['trigger_date'])  ? date('d M Y',strtotime($request['data']['trigger_date'])) : null;
                     if($triggerDate){
                         $followDate = $triggerDate;
+                        $nowDate = \Carbon\Carbon::parse($triggerDate)->format('Y-m-d');
+                        $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
+                        $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                        $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                        $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                        
+                        $pickUpDate = Carbon::parse($pickUpDateTime)->format('Y-m-d');
+                        $categoryPatientData['patients_id'] = $patientsId;
+                        $categoryPatientData['date'] = $pickUpDateTime;
+                        $categoryPatientData['reminder_date'] = Carbon::parse($pickUpDate)->subDays(1)->format('Y-m-d');
+                        $categoryPatientData['message'] = "Coming for PickUp";
+                        $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
+                        $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
                     }
+                    if(!empty($request->data['progesterone']['type']))
+                    {
+                        // $day = $request->data['progesterone']['type'] == 'day_3' ? '3' : '5';
+                        $categoryPatientData['patients_id'] = $patientsId;
+                        $categoryPatientData['date'] = Carbon::parse($followDate)->format('Y-m-d H:i:s');
+                        $categoryPatientData['reminder_date'] = Carbon::parse($followDate)->subDays(1)->format('Y-m-d');
+                        $categoryPatientData['message'] = "Coming for Transfer";
+                        $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
+                        $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+                    }
+                    
                     if($ivfStatus == 1){
                         $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$followDate,$patientsId);
                     }

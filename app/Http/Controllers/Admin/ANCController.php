@@ -81,7 +81,7 @@ class ANCController extends AdminController
                             $type = 'usg->anomalies_miles';
                             break;
                         case '4':
-                            $type = 'usg->growth_scan';;
+                            $type = 'usg->growth_scan';
                             break;
                         default:
                             break;
@@ -671,6 +671,15 @@ class ANCController extends AdminController
                         $nextAppointment = $this->nextAppointmentData($appointmentData);
                     }
                 // }
+            }
+            if(!empty($followupDate))
+            {
+                $categoryPatientData['patients_id'] = $patientsId;
+                $categoryPatientData['date'] = Carbon::parse($followupDate)->format('Y-m-d H:i:s');
+                $categoryPatientData['reminder_date'] = Carbon::parse($followupDate)->subDays(1)->format('Y-m-d');
+                $categoryPatientData['message'] = "Admission for Delivery";
+                $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 6;
+                $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
             }
             $howMuchNumber = !empty($request['oe']['how_much']['number']) ? $request['oe']['how_much']['number'] : null;
             if(!empty($howMuchNumber)){

@@ -77,6 +77,7 @@ use App\Models\PatientToken;
 use App\Models\HospitalCharge;
 use App\Models\PatientMemory;
 use App\Models\PatientWeight;
+use App\Models\CategoryNotification;
 
 
 class BaseController extends Controller
@@ -155,6 +156,7 @@ class BaseController extends Controller
         $this->HospitalCharge = new HospitalCharge;
         $this->PatientMemory = new PatientMemory;
         $this->PatientWeight = new PatientWeight;
+        $this->CategoryNotification = new CategoryNotification;
     }
 
     // remove image form our server

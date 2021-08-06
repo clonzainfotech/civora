@@ -968,6 +968,22 @@ class IUIController extends AdminController
             if(!$request->iui_history_id && !$request->iui_id)
             {
                 $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+                if($request->data['hcg']['type'] == 'yes' && !empty($request->data['hcg']['time']) && $request->data['hcg']['iui']['status'] == 'yes')
+                {
+                    $categoryPatientData = [];
+                    $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
+                    $cDate = date('Y-m-d').' '.$request->data['hcg']['time'];
+                    $new_time = date($cDate, strtotime('+1 hours'));
+                    $iuiDtaeAndTime = Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i:s');
+                    $iuiDtae = Carbon::parse($cDate)->format('Y-m-d');
+                    $categoryPatientData['patients_id'] = $patientsId;
+                    $categoryPatientData['date'] = $iuiDtaeAndTime;
+                    $categoryPatientData['reminder_date'] = Carbon::parse($iuiDtae)->subDays(1)->format('Y-m-d');
+                    $categoryPatientData['message'] = "Coming for IUI";
+                    $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
+                    $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+
+                }
             }
             if(!$request->iui_history_id && !$request->iui_id && $msg){
                 $seenBy = getSeenByDoctor($seenBy);

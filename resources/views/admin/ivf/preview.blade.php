@@ -1,6 +1,6 @@
 
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
-
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
 @php
 // echo $printPreview;
     $patientsInfo = !empty($ivf->patients_info) ? json_decode($ivf->patients_info) : null;
@@ -1008,277 +1008,280 @@
                         </tbody>
                     </table>
                 @endif
-                @if($husbandFactor && !empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->habbit) || !empty($husbandFactor->sperm_count) || !empty($husbandFactor->personal_history_date) || !empty($husbandFactor->remark))
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
-                        <tbody>
-                            <tr>
-                                <td colspan="9">
-                                    <div class="panel-title header-print-title">Husband Factor</div>
-                                </td>
-                            </tr>
-                            @if(!empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->age) || !empty($husbandFactor->habbit))
+                <div class="col-md-6">
+                    @if($husbandFactor && !empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->habbit) || !empty($husbandFactor->sperm_count) || !empty($husbandFactor->personal_history_date) || !empty($husbandFactor->remark))
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <tbody>
                                 <tr>
-                                    @if(!empty($husbandFactor->occupation))
-                                        <th>
-                                            <span class="ivf-label">Occupation:  </span>
-                                            {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
-                                            <br>
-                                            @if(!empty($husbandFactor->age))
-                                                <span class="ivf-label">Age:  </span>
-                                                {{ !empty($husbandFactor->age) ? $husbandFactor->age : '-' }}
-                                            @endif
-                                            <br>
-                                            @if(!empty($husbandFactor->habbit))
-                                                <span class="ivf-label"> Habbit:  </span>
-                                                {{ !empty($husbandFactor->habbit) ? $husbandFactor->habbit : '-' }}
-                                            @endif
-                                        </th>
-                                    @endif
-                                    @if(!empty($husbandFactor->seman_analysis))
-                                        <th>
-                                            <span class="ivf-label">Semen Analysis:  </span>
-                                            @if (!empty($husbandFactor->seman_analysis))
-                                                @if ($husbandFactor->seman_analysis == 1)
-                                                    WNL
-                                                @elseif ($husbandFactor->seman_analysis == 2)
-                                                    Oligospermia
-                                                @elseif ($husbandFactor->seman_analysis == 3)
-                                                    Azoospermic
+                                    <td colspan="9">
+                                        <div class="panel-title header-print-title">Husband Factor</div>
+                                    </td>
+                                </tr>
+                                @if(!empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->age) || !empty($husbandFactor->habbit))
+                                    <tr>
+                                        @if(!empty($husbandFactor->occupation))
+                                            <th>
+                                                <span class="ivf-label">Occupation:  </span>
+                                                {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
+                                                <br>
+                                                @if(!empty($husbandFactor->age))
+                                                    <span class="ivf-label">Age:  </span>
+                                                    {{ !empty($husbandFactor->age) ? $husbandFactor->age : '-' }}
                                                 @endif
-                                            @endif
-                                            @if(!empty($husbandFactor->sperm_count))
                                                 <br>
-                                                <span class="ivf-label"> Sperm Count:  </span>
-                                                {{ !empty($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '-' }}
-                                            @endif
-                                            @if(!empty($husbandFactor->motility))
-                                                <br>
-                                                <span class="ivf-label"> Motility:  </span>
-                                                {{ !empty($husbandFactor->motility) ? $husbandFactor->motility : '-' }}
-                                            @endif
+                                                @if(!empty($husbandFactor->habbit))
+                                                    <span class="ivf-label"> Habbit:  </span>
+                                                    {{ !empty($husbandFactor->habbit) ? $husbandFactor->habbit : '-' }}
+                                                @endif
                                             </th>
-                                    @endif
-
-                                </tr>
-                            @endif
-                            @if(!empty($husbandFactor->amount_in_ml) ||!empty($husbandFactor->personal_history_date))
-                                <tr>
-                                    @if(!empty($husbandFactor->amount_in_ml))
-                                        <th>
-                                            <span class="ivf-label">Amount in ML:  </span>
-                                            {{ !empty($husbandFactor->amount_in_ml) ? $husbandFactor->amount_in_ml : '-' }}
-                                        </th>
-                                    @endif
-
-                                    @if(!empty($husbandFactor->personal_history_date))
-                                        <th>
-                                            <span class="ivf-label"> Date:  </span>
-                                            {{ !empty($husbandFactor->personal_history_date) ? $husbandFactor->personal_history_date : '-' }}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($husbandFactor->seman_analysis == 2 && (!empty($husbandFactor->medicine) || !empty($husbandFactor->duration) || !empty($husbandFactor->sperm_report)))
-                                <tr>
-                                    @if( !empty($husbandFactor->medicine) )
-                                        <th>
-                                            <span class="ivf-label">Medicine:  </span>
-                                            {{ !empty($husbandFactor->medicine) ? $husbandFactor->medicine : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($husbandFactor->duration))
-                                        <th>
-                                            <span class="ivf-label">  Duration:  </span>
-                                            {{ !empty($husbandFactor->duration) ? $husbandFactor->duration : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($husbandFactor->sperm_report))
-                                        <th>
-                                            <span class="ivf-label">Sperm Report:  </span>
-                                            {{ !empty($husbandFactor->sperm_report) ? $husbandFactor->sperm_report : '-' }}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            <tr>
-                                <th>
-                                    <span class="ivf-label">Husband Factor Remark : </span>
-                                    {{ !empty($husbandFactor->remark) ? $husbandFactor->remark : '-' }}
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                @endif
-                @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
-                        <tbody>
-                            @if(!empty($patientDetailedHO->personal_history_history_type))
-                                @php
-                                    $patientDetailedHO->personal_history_history_type = is_array($patientDetailedHO->personal_history_history_type) ? $patientDetailedHO->personal_history_history_type : (array)$patientDetailedHO->personal_history_history_type;
-                                @endphp
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Personal History :</span>
-                                        {{implode(',',$patientDetailedHO->personal_history_history_type)}}
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($patientDetailedHO->personal_history_date))
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Date :</span>
-                                        {{\Carbon\Carbon::parse($patientDetailedHO->personal_history_date)->format('D d M Y')}}
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($patientDetailedHO->family_history))
-                                @php
-                                    $patientDetailedHO->family_history = is_array($patientDetailedHO->family_history) ? $patientDetailedHO->family_history : (array)$patientDetailedHO->family_history;
-                                @endphp
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Family History :</span>
-                                        {{implode(',',$patientDetailedHO->family_history)}}
-                                    </th>
-                                </tr>
-                            @endif
-                            @php
-                                // $personal_past_history_type = ['nad'=>'NAD','tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'];
-                            @endphp
-
-                            @if(!empty($patientDetailedHO->past_history_type))
-                                @php
-                                    $patientDetailedHO->past_history_type = is_array($patientDetailedHO->past_history_type) ? $patientDetailedHO->past_history_type : (array)$patientDetailedHO->past_history_type;
-                                @endphp
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Past History :</span>
-                                        {{implode(',',$patientDetailedHO->past_history_type)}}
-                                    </th>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                @endif
-
-                @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
-                        <tbody>
-                            <tr>
-                                <td colspan="9">
-                                    <div class="panel-title header-print-title">O/E</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                @if(!empty($oe->le->temp) || !empty($oe->le->bp) || !empty($oe->le->pulse))
-                                    <th class=" w-100">
-                                        Vitals
-                                        @if(!empty($oe->le->temp))
-                                            <br>
-                                            <span class="ivf-label">&nbsp;Temp :</span>
-                                            {{$oe->le->temp}}
                                         @endif
-                                        @if(!empty($oe->le->pulse))
-                                            <br>
-                                            <span class="ivf-label">&nbsp;Pulse :</span>
-                                            {{$oe->le->pulse ? $oe->le->pulse : '80'}} / Min
+                                        @if(!empty($husbandFactor->seman_analysis))
+                                            <th>
+                                                <span class="ivf-label">Semen Analysis:  </span>
+                                                @if (!empty($husbandFactor->seman_analysis))
+                                                    @if ($husbandFactor->seman_analysis == 1)
+                                                        WNL
+                                                    @elseif ($husbandFactor->seman_analysis == 2)
+                                                        Oligospermia
+                                                    @elseif ($husbandFactor->seman_analysis == 3)
+                                                        Azoospermic
+                                                    @endif
+                                                @endif
+                                                @if(!empty($husbandFactor->sperm_count))
+                                                    <br>
+                                                    <span class="ivf-label"> Sperm Count:  </span>
+                                                    {{ !empty($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '-' }}
+                                                @endif
+                                                @if(!empty($husbandFactor->motility))
+                                                    <br>
+                                                    <span class="ivf-label"> Motility:  </span>
+                                                    {{ !empty($husbandFactor->motility) ? $husbandFactor->motility : '-' }}
+                                                @endif
+                                                </th>
                                         @endif
-                                        @if(!empty($oe->le->bp))
-                                            <br>
-                                            <span class="ivf-label">B.P :</span>
-                                            {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
-                                        @endif
-                                    </th>
+
+                                    </tr>
                                 @endif
-                            </tr>
-                            @if($oe->p_s->type == 'yes')
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">P / S:</span>
-                                        {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
-                                        @if ($oe->p_s->type == 'yes')
-                                            {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
+                                @if(!empty($husbandFactor->amount_in_ml) ||!empty($husbandFactor->personal_history_date))
+                                    <tr>
+                                        @if(!empty($husbandFactor->amount_in_ml))
+                                            <th>
+                                                <span class="ivf-label">Amount in ML:  </span>
+                                                {{ !empty($husbandFactor->amount_in_ml) ? $husbandFactor->amount_in_ml : '-' }}
+                                            </th>
                                         @endif
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($oe->cervix->details))
+
+                                        @if(!empty($husbandFactor->personal_history_date))
+                                            <th>
+                                                <span class="ivf-label"> Date:  </span>
+                                                {{ !empty($husbandFactor->personal_history_date) ? $husbandFactor->personal_history_date : '-' }}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($husbandFactor->seman_analysis == 2 && (!empty($husbandFactor->medicine) || !empty($husbandFactor->duration) || !empty($husbandFactor->sperm_report)))
+                                    <tr>
+                                        @if( !empty($husbandFactor->medicine) )
+                                            <th>
+                                                <span class="ivf-label">Medicine:  </span>
+                                                {{ !empty($husbandFactor->medicine) ? $husbandFactor->medicine : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($husbandFactor->duration))
+                                            <th>
+                                                <span class="ivf-label">  Duration:  </span>
+                                                {{ !empty($husbandFactor->duration) ? $husbandFactor->duration : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($husbandFactor->sperm_report))
+                                            <th>
+                                                <span class="ivf-label">Sperm Report:  </span>
+                                                {{ !empty($husbandFactor->sperm_report) ? $husbandFactor->sperm_report : '-' }}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
                                 <tr>
                                     <th>
-                                        <span class="ivf-label">Cervix:  </span>
-                                        {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
+                                        <span class="ivf-label">Husband Factor Remark : </span>
+                                        {{ !empty($husbandFactor->remark) ? $husbandFactor->remark : '-' }}
                                     </th>
                                 </tr>
-                            @endif
-                            @if($oe->tvs->type == 'yes')
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Transvaginal Ultrasonography:</span>
-                                    </th>
-                                </tr>
-                            @endif
-                            @if ($oe->tvs->type == 'yes')
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Uterus:  </span>
-                                        {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if ($oe->uterus->type == '2')
+                            </tbody>
+                        </table>
+                    @endif
+                    @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
+                        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                            <tbody>
+                                @if(!empty($patientDetailedHO->personal_history_history_type))
+                                    @php
+                                        $patientDetailedHO->personal_history_history_type = is_array($patientDetailedHO->personal_history_history_type) ? $patientDetailedHO->personal_history_history_type : (array)$patientDetailedHO->personal_history_history_type;
+                                    @endphp
+                                    <tr>
                                         <th>
-                                            <span class="ivf-label">Abnormal Details:  </span>
-                                            {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
+                                            <span class="ivf-label">Personal History :</span>
+                                            {{implode(',',$patientDetailedHO->personal_history_history_type)}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($patientDetailedHO->personal_history_date))
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Date :</span>
+                                            {{\Carbon\Carbon::parse($patientDetailedHO->personal_history_date)->format('D d M Y')}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($patientDetailedHO->family_history))
+                                    @php
+                                        $patientDetailedHO->family_history = is_array($patientDetailedHO->family_history) ? $patientDetailedHO->family_history : (array)$patientDetailedHO->family_history;
+                                    @endphp
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Family History :</span>
+                                            {{implode(',',$patientDetailedHO->family_history)}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @php
+                                    // $personal_past_history_type = ['nad'=>'NAD','tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'];
+                                @endphp
+
+                                @if(!empty($patientDetailedHO->past_history_type))
+                                    @php
+                                        $patientDetailedHO->past_history_type = is_array($patientDetailedHO->past_history_type) ? $patientDetailedHO->past_history_type : (array)$patientDetailedHO->past_history_type;
+                                    @endphp
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Past History :</span>
+                                            {{implode(',',$patientDetailedHO->past_history_type)}}
+                                        </th>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+                <div class="col-md-6">
+                    @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="panel-title header-print-title">O/E</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if(!empty($oe->le->temp) || !empty($oe->le->bp) || !empty($oe->le->pulse))
+                                        <th class=" w-100">
+                                            Vitals
+                                            @if(!empty($oe->le->temp))
+                                                <br>
+                                                <span class="ivf-label">&nbsp;Temp :</span>
+                                                {{$oe->le->temp}}
+                                            @endif
+                                            @if(!empty($oe->le->pulse))
+                                                <br>
+                                                <span class="ivf-label">&nbsp;Pulse :</span>
+                                                {{$oe->le->pulse ? $oe->le->pulse : '80'}} / Min
+                                            @endif
+                                            @if(!empty($oe->le->bp))
+                                                <br>
+                                                <span class="ivf-label">B.P :</span>
+                                                {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
+                                            @endif
                                         </th>
                                     @endif
                                 </tr>
-                            @endif
-                            @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                                @if($oe->p_s->type == 'yes')
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">P / S:</span>
+                                            {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
+                                            @if ($oe->p_s->type == 'yes')
+                                                {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($oe->cervix->details))
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Cervix:  </span>
+                                            {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if($oe->tvs->type == 'yes')
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Transvaginal Ultrasonography:</span>
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if ($oe->tvs->type == 'yes')
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Uterus:  </span>
+                                            {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if ($oe->uterus->type == '2')
+                                            <th>
+                                                <span class="ivf-label">Abnormal Details:  </span>
+                                                {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Endometrial Thickness:  </span>
+                                            {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
                                 <tr>
                                     <th>
-                                        <span class="ivf-label">Endometrial Thickness:  </span>
-                                        {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
+                                        @if (!empty($oe->ovary->right->updated_details))
+                                        <span class="ivf-label">Right Ovary</span>
+                                            @foreach ($oe->ovary->right->updated_details as $key => $value)
+                                                @php
+                                                    echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                @endphp
+                                            @endforeach
+                                        @endif
+                                        @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                            <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                            {{$oe->ovary->right->afcs}}
+                                        @endif
                                     </th>
                                 </tr>
-                            @endif
-                            @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
-                            <tr>
-                                <th>
-                                    @if (!empty($oe->ovary->right->updated_details))
-                                    <span class="ivf-label">Right Ovary</span>
-                                        @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                            @php
-                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                            @endphp
-                                        @endforeach
-                                    @endif
-                                    @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                        <span class="ivf-label">Follicle numbers per ovaryy</span>
-                                        {{$oe->ovary->right->afcs}}
-                                    @endif
-                                </th>
-                            </tr>
-                            @endif
-                            @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
-                            <tr>
-                                <th>
-                                    
-                                    @if(!empty($oe->ovary->left->updated_details))
-                                    <span class="ivf-label">Left Ovary</span>
-                                        @foreach($oe->ovary->left->updated_details as $key => $value)
-                                            @php
-                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                            @endphp
-                                        @endforeach
-                                    @endif
-                                    @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                        <span class="ivf-label">Follicle numbers per ovaryy</span>
-                                        {{$oe->ovary->left->afcs}}
-                                    @endif
-                                </th>
-                            </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                @endif
+                                @endif
+                                @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
+                                <tr>
+                                    <th>
+                                        
+                                        @if(!empty($oe->ovary->left->updated_details))
+                                        <span class="ivf-label">Left Ovary</span>
+                                            @foreach($oe->ovary->left->updated_details as $key => $value)
+                                                @php
+                                                    echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                @endphp
+                                            @endforeach
+                                        @endif
+                                        @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                            <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                            {{$oe->ovary->left->afcs}}
+                                        @endif
+                                    </th>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
                 {{-- $pt_view is set bcz don't want to display in patients application --}}
                 @if($planManagement && (!isset($pt_view) || $pt_view != 1) && (isset($planManagement->plan_of_management_data) || (isset($planManagement->plan) && !empty($planManagement->plan))))
                     <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">

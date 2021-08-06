@@ -473,5 +473,43 @@ class AdminController extends BaseController
             return $arr[0];
         }
         return '';
-      }
+    }
+    /**
+     *Add Category notification.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeCategoryNotification($data)
+    {
+        $categoryNotification = $this->CategoryNotification;
+        $categoryNotification->patients_id = $data['patients_id'];
+        $categoryNotification->date = $data['date'];
+        $categoryNotification->reminder_date = $data['reminder_date'];
+        $categoryNotification->message = $data['message'];
+        $categoryNotification->category_id = $data['category_id'];
+        // dd($categoryNotification);
+        $categoryNotification->save();
+    }
+    /**
+     *Return Category notification.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get_category_notification(Request $request)
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        $auth_id = Auth::user()->id;
+        $data = $this->CategoryNotification->with('getPatients')->whereDate('date','=',$now)->where('read_by','not like', '%'.Auth::user()->id.'%')->orWhere('read_by',null);
+        $data = collect($data->get())
+                    ->map(function ($query) {
+                        $query->patient_name = ucWords($query->getPatients['name']);
+                        $query->date = Carbon::parse($query->date)->format('d M Y h:i a');
+                        return $query;
+                    });
+        return response()->json([
+            'status'=>1,
+            'data' => $data
+        ]);
+    }
+
 }

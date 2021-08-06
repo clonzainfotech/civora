@@ -51,6 +51,7 @@ Route::get('get-complaint-wise-medicine','Base\Admin\AdminController@getComplain
 //patient notification
 Route::get('patient_notification','Base\Admin\AdminController@patient_notification');
 Route::get('remove_notification','Base\Admin\AdminController@remove_notification');
+Route::get('get-category-notification','Base\Admin\AdminController@get_category_notification');
 
  // report status
 Route::get('report/{type}/{patientsId}','Base\Admin\AdminController@patientReport')->middleware('login');
@@ -415,6 +416,10 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::post('charge/store','HospitalChargeController@store');
     Route::get('charge/delete/{id}','HospitalChargeController@chargeDelete');
     Route::get('charge/getHospitalCharge/{id}','HospitalChargeController@getHospitalCharge');
+    //notification
+
+    Route::get('notification','CategoryNotificationController@index');
+    Route::get('notification-all-read','CategoryNotificationController@notificationAllRead');
 
     Route::get('print-preview','SystemSettingController@printpreview');
     

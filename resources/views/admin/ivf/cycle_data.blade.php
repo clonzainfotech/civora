@@ -5289,11 +5289,15 @@
                         $('.progesterone_date_div').removeClass('d-none');
                     // }
                     var now = new Date($('.last-appointment-date').val());
-                    var progesteroneDate = new Date($('.progesterone_date').val());
-                    if(progesteroneDate != null)
-                    {
-                        now = new Date($('.progesterone_date').val());
+                    if($('.progesterone_date').length)
+                    {   
+                        var progesteroneDate = new Date($('.progesterone_date').val());
+                        if(progesteroneDate != null)
+                        {
+                            now = new Date($('.progesterone_date').val());
+                        }
                     }
+                    
                     now.setDate(now.getDate()+days);
                     now = moment(now).format('ddd DD MMM YYYY');
                     $('.tranfer-follow-date').val(now);

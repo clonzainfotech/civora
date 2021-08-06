@@ -57,6 +57,12 @@
     $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
     $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
     $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
+    $terminationtype = ['Delivery'=>"Delivery",
+        'Dilation and Curettage'=>"Dilation and Curettage",
+        'Threatened Abotion'=>"Threatened Abotion",
+        'Obseravation'=>"Obseravation",
+        'Ectopic Pregency'=>"Ectopic Pregency",
+        'Fever'=>"Fever"];
 @endphp
 
 <style type="text/css">
@@ -108,7 +114,7 @@
     {
         border:none !important;
     }
-    @page { margin-top : 200px; margin-left : 100px;}
+    @page { margin-top :100px; margin-left : 100px;}
     
 </style>
 @if(isset($printPreview) && $printPreview != 0)
@@ -2120,12 +2126,7 @@
                             <tr>
                                 <th>
                                     <?php
-                                    $terminationtype = ['Delivery'=>"Delivery",
-                                        'Dilation and Curettage'=>"Dilation and Curettage",
-                                        'Threatened Abotion'=>"Threatened Abotion",
-                                        'Obseravation'=>"Obseravation",
-                                        'Ectopic Pregency'=>"Ectopic Pregency",
-                                        'Fever'=>"Fever"];
+                                    
                                         if(isset($terminationtype[$usg->termination_type]))
                                         {
                                             echo 'Admission for '.$terminationtype[$usg->termination_type].!empty($usg->termination_detail) ? ' - '.$usg->termination_detail : '';

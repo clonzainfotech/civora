@@ -48,11 +48,8 @@
     $terminationtype = [
         ''=>"Select Reason",
         'Delivery'=>"Delivery",
-        'Dilation and Curettage'=>"Dilation and Curettage",
-        'Threatened Abotion'=>"Threatened Abotion",
         'Obseravation'=>"Obseravation",
-        'Ectopic Pregency'=>"Ectopic Pregency",
-        'Fever'=>"Fever"];
+        'Operation'=>"Operation"];
     $selectAttr = (!empty($ancId) || !empty($ancHistoryId)) ? 'disabled' : '-';
 
     $childStatusType = 'd-none';

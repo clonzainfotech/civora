@@ -114,7 +114,7 @@
     {
         border:none !important;
     }
-    @page { margin-top :100px; margin-left : 100px;}
+    @page { margin-top :20px; margin-left : 100px;}
     
 </style>
 @if(isset($printPreview) && $printPreview != 0)

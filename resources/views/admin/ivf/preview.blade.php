@@ -89,7 +89,6 @@
     .p-main-title{
         font-size: 20px;
     }
-    @page { margin-top:100px;margin-left : 100px;}
     .transfer-print{
         margin-top: 0px !important;
     }
@@ -145,7 +144,7 @@
     {
         font-size: 22px !important;
     } */
-    @page { margin-top : 200px; margin-left : 100px;}
+    @page { margin-top : 20px; margin-left : 100px;}
 </style>
 @if(isset($printPreview) && $printPreview != 0)
 
@@ -2857,8 +2856,11 @@
                         $sp2Data = [];
                         $slhData = [];
                         $bloodReport = [];
+                        $collectionData = [];
                         $i=0;
                         $cycle_no = count($ivfCycleData);
+                        $lastHistory = $ivfCycleData[count($ivfCycleData)-1];
+                        $lastHistoryData = !empty($lastHistory->description) ? json_decode($lastHistory->description) : null;
                     ?>
                     <table class="module-report-table study-report-table mb-2">
                         <thead>
@@ -2904,7 +2906,13 @@
                                     if(!empty($data->blood->report)){
                                         $bloodReport[] = $data->blood->report;
                                     }
+                                    $skipValue = 0;
                                     $duringPickupStatus = !empty($data->during_pickup) ? ucfirst($data->during_pickup) : null;
+                                    $collectionData = !empty($historyData->collection) ? $historyData->collection : [];
+                                    if((!empty($historyData->plan) || !empty($historyData->follow_up)) && !empty($historyData->skip_reason))
+                                    {
+                                        $skipValue = 1;
+                                    }
                                 @endphp
                                 {{-- <div> --}}
                                     @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
@@ -3047,6 +3055,161 @@
                                         {{-- @endif --}}
                                     @endif
                                 {{-- </div> --}}
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @if (in_array('trigger',$collectionData))
+                    <div class="col-md-12">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            @php
+                                $nowDate = \Carbon\Carbon::parse($historyData->trigger_date)->format('Y-m-d');
+                                $nowTime = \Carbon\Carbon::parse(!empty($historyData->trigger->hcg->time) ? $historyData->trigger->hcg->time : (!empty($historyData->trigger->decapeptyl->time) ? $historyData->trigger->decapeptyl->time : null))->format('H:i:s');
+                                $triggerDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                                $triggerDate = \Carbon\Carbon::parse($triggerDateTime)->format('D d M Y');
+                            @endphp
+                            
+                            <span>Trigger date :- &nbsp;&nbsp; {{(\Carbon\Carbon::parse($historyData->trigger_date)->format('D d M Y'))}}</span><br>
+                            <span>Time :- &nbsp;&nbsp;  {{!empty($historyData->trigger->hcg->time) ? $historyData->trigger->hcg->time : (!empty($historyData->trigger->decapeptyl->time) ? $historyData->trigger->decapeptyl->time : null)}}</span><br>
+                            <span>Pickup date :- &nbsp;&nbsp; {{$triggerDate}}</span><br>
+                            <span>Time  :- &nbsp;&nbsp;{{\Carbon\Carbon::parse($triggerDateTime)->format('h:i a')}}</span><br>
+                            @if(!empty($historyData->trigger->hcg->status))
+                                        <span>Injection Name :- &nbsp;&nbsp; HCG</span>
+                                            @if(!empty($historyData->trigger->hcg->dose))
+                                                <span>Dose :- &nbsp;&nbsp;  {{$historyData->trigger->hcg->dose}}</span>
+                                            @endif
+                                            @if(!empty($historyData->trigger->hcg->brand))
+                                                <span>Brand :- &nbsp;&nbsp;  {{$historyData->trigger->hcg->brand}}</span>
+                                            @endif
+                            @endif
+                            
+                            @if(!empty($historyData->trigger->decapeptyl->status))
+                                        <span>Injection Name:- &nbsp;&nbsp; Decapeptyl</span>
+                                            @if(!empty($historyData->trigger->decapeptyl->dose))
+                                                <span>Dose :- &nbsp;&nbsp;{{$historyData->trigger->decapeptyl->dose}}</span>
+                                            @endif
+                                            @if(!empty($historyData->trigger->decapeptyl->brand))
+                                                <span>Brand :- &nbsp;&nbsp;{{$historyData->trigger->decapeptyl->brand}}</span>
+                                            @endif
+                            @endif 
+                        </div> 
+                    </div>
+                @endif
+                @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
+                    <div class="col-md-12 mt-3">
+                        <span class="visit-lable">Transfer Plan :- </span> 
+                        <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
+                    </div>
+                @endif
+                @if($skipValue == 1) {{-- skip cycle --}}
+                    @php
+                            $visitDate = \Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y');
+                            $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $datarow->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
+                            $diff = $diff + 1;
+                    @endphp
+                    <div class="col-md-12 mt-3">
+                        <h5 class="">Skip Cycle:</h5>
+                        <table class="module-report-table study-report-table mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Follow UP</th>
+                                    <th>Transfer Plan</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{$visitDate}}</td>
+                                    <td>{{$planData[$lastHistoryData->plan]}}</td>
+                                    <td>{{$lastHistoryData->skip_reason}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+                <div class="col-md-12 mt-3">
+                    <h3 class="text-left"><u>Medicine:</u></h3>
+                    <table class="module-report-table study-report-table">
+                        <thead>
+                            <tr>
+                                <th style="font-weight: bold !important;"> Date</th>
+                                <th style="font-weight: bold !important;"> Medicine</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($ivfCycleData as $row)
+                                @php
+                                    $data = json_decode($row->description);
+                                    $visitDate = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y');
+                                    $historyTreatmentView = null;
+                                    if(!empty($data->medicinedata)){
+                                        $historyTreatmentView = !empty($data->medicinedata) ? $data->medicinedata : null;
+                                    }
+                                @endphp
+                                @if(!empty($historyTreatmentView))
+                                <tr>
+                                    <td>{{$visitDate}}</td>
+                                    <td style="text-align: justify!important">
+                                        
+                                        @if($historyTreatmentView)
+                                            @php
+                                                
+                                                unset($historyTreatmentView->medicinedata);
+                                            @endphp
+                                            @foreach($historyTreatmentView as $key=>$row)
+                                            @php
+                                            
+                                                $firstCharacter = substr($row->medicine, 0, 3);
+                                                $notinject = "";
+                                                if($firstCharacter=="inj" || $firstCharacter=="INJ") {
+                                                    $notinject = "is-inj";
+                                                } 
+                                            @endphp
+                                            <div class="mb-1">
+                                                <span class="visit-lable"> Medicine : &nbsp</span>
+                                                    {{ $row->medicine }}
+                                                    @if($notinject != "is-inj")
+                                                        | @switch($row->medicine_status)
+                                                                @case('1')
+                                                                    જમ્યા પછી
+                                                                    @break
+                                                                @case('2')
+                                                                    જમ્યા પહેલાં
+                                                                    @break
+                                                                @case('3')
+                                                                    માસિકની જગ્યાએ મુકવી
+                                                                @break
+                                                        @endswitch
+                                                    @endif
+                                                @if(!empty($row->dose))
+                                                    @if (array_key_exists($row->dose, $old_dose))
+                                                        | {{ $old_dose[$row->dose] }}
+                                                    @endif
+                                                @endif
+                                                @if (!empty($row->no)) | Days : {{ $row->no }} @endif
+                                                @if($notinject != "is-inj")
+                                                @php
+                                                    $qty = (!empty($row->quantity)) ? $row->quantity : 0;
+                                                    $qty_2 = (!empty($row->quantity_2)) ? $row->quantity_2 : 0;
+                                                    $qty_3 = (!empty($row->quantity_3)) ? $row->quantity_3 : 0;
+                                                    $qty_4 = (!empty($row->quantity_4)) ? $row->quantity_4 : 0;
+                                                @endphp | Quantity : {{$qty.'-'.$qty_2.'-'.$qty_3.'-'.$qty_4}}
+                                                @endif
+                                                @if($notinject == "is-inj")
+                                                    @if (!empty($row->medicine_time))
+                                                    |
+                                                            {{-- @foreach ($row->medicine_time as $time) --}}
+                                                                {{$medicine_time[$row->medicine_time]}}
+                                                            {{-- @endforeach --}}
+                                                    @endif
+                                                @endif
+                                            </div>
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

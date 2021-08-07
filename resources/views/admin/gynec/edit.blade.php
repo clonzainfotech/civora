@@ -1531,12 +1531,14 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 <div class="row edit_oe_ovary_right_details">
                                     @if (isset($oe->ovary->right->updated_details))
                                         @foreach ($oe->ovary->right->updated_details as $key => $value)
+                                        @if(isset($oe->ovary->right->details[$key]))
                                             <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->right->details[$key]) . '_right' }}">
                                                 {{Form::text('oe[ovary][right][updated_details][]', !empty($value) ? $value : null, [
                                                     'class' => 'form-control edited_oe_ovary_right_details',
                                                     'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->right->details[$key])
                                                 ])}}
                                             </div>
+                                            @endif
                                         @endforeach
                                     @endif
                                 </div>
@@ -1577,12 +1579,14 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 <div class="row edit_oe_ovary_left_details">
                                     @if (isset($oe->ovary->left->updated_details))
                                         @foreach ($oe->ovary->left->updated_details as $key => $value)
-                                            <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key]) . '_left' }}">
-                                                {{Form::text('oe[ovary][left][updated_details][]', !empty($value) ? $value : null, [
-                                                    'class' => 'form-control edited_oe_ovary_left_details',
-                                                    'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key])
-                                                ])}}
-                                            </div>
+                                            @if(isset($oe->ovary->left->details[$key]))
+                                                <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key]) . '_left' }}">
+                                                    {{Form::text('oe[ovary][left][updated_details][]', !empty($value) ? $value : null, [
+                                                        'class' => 'form-control edited_oe_ovary_left_details',
+                                                        'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key])
+                                                    ])}}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     @endif
                                 </div>

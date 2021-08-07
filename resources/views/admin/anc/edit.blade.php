@@ -2485,7 +2485,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     <span class="col-md-1 p-2">MMHG</span>
                 </div>
 
-                @if(!empty($oe->utdata))
+                @if(!empty($oe->utdata) || empty($oe->utdata))
                     <div class="row female-type-data fefal-reduction-1 d-none">
                         <div class="col-md-12 col-sm-12">
                             <div class="radio is-conceived">

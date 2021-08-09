@@ -1,6 +1,6 @@
 
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" > --}}
 @php
 // echo $printPreview;
     $patientsInfo = !empty($ivf->patients_info) ? json_decode($ivf->patients_info) : null;

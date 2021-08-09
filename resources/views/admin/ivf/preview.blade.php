@@ -38,7 +38,7 @@
     $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
     $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
     $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
-    $old_dose = ["1"=>"OD","2"=>"BD","3"=>"TDS","4"=>"ADS","5"=>'Weekly / 1','6'=>'Weekly / 2','7'=>'Stat','8'=>'SOS'];
+    $old_dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
     $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
     $typeOfData = [1=>'Primary',2=>'Secondary'];
 @endphp
@@ -2447,9 +2447,7 @@
                     @if($historyTreatmentView)
                     <table class="module-report-table">
                         <thead>
-                            @php
-                                $old_dose = ["1"=>"OD","2"=>"BD","3"=>"TDS","4"=>"ADS","5"=>'Weekly / 1','6'=>'Weekly / 2','7'=>'Stat','8'=>'SOS'];
-                            @endphp
+                            
                             <tr>
                                 <th>
                                     Treatment (Medicine)

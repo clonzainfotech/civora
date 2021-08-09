@@ -503,7 +503,7 @@ class AdminController extends BaseController
         $data = collect($data->get())
                     ->map(function ($query) use($auth_id){
                         $read_by = !empty($query->read_by) ? explode(',',$query->read_by) : [];
-                        if(empty($query->read_by) || in_array($auth_id,$read_by))
+                        if(empty($query->read_by) || !in_array($auth_id,$read_by))
                         {
                             $query->patient_name = ucWords($query->getPatients['name']);
                             $query->date = Carbon::parse($query->date)->format('d M Y h:i a');

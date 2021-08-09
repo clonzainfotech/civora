@@ -64,7 +64,7 @@ class CategoryNotificationController extends AdminController
         {
             $notification = $this->CategoryNotification->find($categoryNotification->id);
             
-            $json_string = !empty($categoryNotification->read_by) ? $categoryNotification->read_by.','.$user_id : $user_id ;
+            $json_string = !empty($notification->read_by) ? $notification->read_by.','.$user_id : $user_id ;
             $array_uniq = array_unique(explode(',',$json_string));
             $notification->read_by = implode(',',$array_uniq);
             $notification->save();

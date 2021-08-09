@@ -502,7 +502,7 @@ class AdminController extends BaseController
         $data = $this->CategoryNotification->with('getPatients')->whereDate('date','=',$now);
         $data = collect($data->get())
                     ->map(function ($query) use($auth_id){
-                        $read_by = empty($query->read_by) ? explode(',',$query->read_by) : [];
+                        $read_by = !empty($query->read_by) ? explode(',',$query->read_by) : [];
                         if(empty($query->read_by) || in_array($auth_id,$read_by))
                         {
                             $query->patient_name = ucWords($query->getPatients['name']);

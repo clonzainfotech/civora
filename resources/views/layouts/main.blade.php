@@ -248,13 +248,15 @@ $menu = "";
 
             });
         }
-        // <script type="text/javascript">
-    displayNotification();
-    $(document).on('click','.patient-category-notification',function(){
+        </script>
+    @endif
+        <script type="text/javascript">
         displayNotification();
-    });
-    function displayNotification()
-    {
+        $(document).on('click','.patient-category-notification',function(){
+            displayNotification();
+        });
+        function displayNotification()
+        {
             $.ajax({
                     url: "{{url('get-category-notification')}}",
                     dataType: 'json',
@@ -297,8 +299,8 @@ $menu = "";
                 }).fail({
 
                 });
-    }
+        }
     </script>
-@endif
+
 </body>
 </html>

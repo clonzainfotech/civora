@@ -5139,6 +5139,88 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                                 </div>
                                                 
                                             </div>
+                                            <div class="row child-no-box d-none iui-patient-report">
+                                                <div class="col-md-2 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        IUI Report :
+                                                    </label>
+                                                    {{Form::hidden("is_iui_report",'yes',['class'=>'form-control'])}}
+                                                </div>
+                                                <div class="col-md-4 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Reason: &nbsp;</span>
+                                                        {{Form::text("iui_report[reason]",'',[
+                                                            'class'=>'form-control'
+                                                        ])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Volume :</span>
+                                                        {{Form::text("iui_report[volume_pre]", '', ['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[volume_post]", '', ['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Sperm Count/ml :</span>
+                                                        {{Form::text("iui_report[sperm_count_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[sperm_count_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Total Count(mill) :</span>
+                                                        {{Form::text("iui_report[total_count_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[total_count_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Total Motility(%) :</span>
+                                                        {{Form::text("iui_report[total_motility_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[total_motility_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Actively Motile(%) :</span>
+                                                        {{Form::text("iui_report[actively_motile_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[actively_motile_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Sluggishly Motile(%) :</span>
+                                                        {{Form::text("iui_report[sluggishly_motile_pre]",'', ['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[sluggishly_motile_post]",'', ['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Non-Motile(%) :</span>
+                                                        {{Form::text("iui_report[non_motile_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[non_motile_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Normal Morphology :</span>
+                                                        {{Form::text("iui_report[normal_morphology_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[normal_morphology_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 iui-report-data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Pus Cells / hpf :</span>
+                                                        {{Form::text("iui_report[pus_cells_pre]",'',['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                                                        {{Form::text("iui_report[pus_cells_post]",'',['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
                                             <div class="row child-no-box">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
@@ -5532,6 +5614,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     <button type="submit" class="btn btn-primary final-iui submit" value="6">Follicular Study Report</button>
                     <button type="button" class="btn btn-primary follicular-print d-none" value="7">Follicular Study Print</button>
                 @endif
+                <button type="submit" class="btn btn-primary iui-report submit d-none" value="8">IUI Report</button>
                 <button type="submit" class="btn btn-primary iui-print submit d-none" value="2">IUI Print</button>
                 <button type="button" class="btn btn-primary iui-deposit-print d-none" value="3">IUI Bill</button>
                 <a href="{{URL::to('iui')}}" class="btn btn-default">Cancel</a>

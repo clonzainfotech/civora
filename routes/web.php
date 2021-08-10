@@ -162,7 +162,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::post('iui','IUIController@store');
     Route::get('iui-result','IUIController@iuiResult');
     Route::get('iui-report/{patientId}/{cycle}','IUIController@iuiReport');
-    Route::post('iui-report/{patientId}/{cycle}','IUIController@iuiReportStore');
+    Route::post('iui_report_update','IUIController@iuiReportStore');
     Route::post('iui/history/delete','IUIController@iuiHistoryDelete');
     // Route::get('iui-final-print/{patientId}/{cycle}','IUIController@iuiFinalPrint');
     Route::get('get-iui-report/{id}','IUIController@getIuiHistoryReport');

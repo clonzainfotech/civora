@@ -1016,7 +1016,14 @@ class IUIController extends AdminController
                 $fDate = $fDate ? date('d M Y',strtotime($fDate)) : null;
                 $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$fDate,$patientsId);
             }
-
+            if(isset($request->is_iui_report) && $request->is_iui_report == 'yes')
+            {
+                $iuiReport = $this->IUIReport;
+                $iuiReport->patients_id = $patientsId;
+                $iuiReport->cycle_no = $request->cycle_no;
+                $iuiReport->description = json_encode($request->iui_report);
+                $iuiReport->save();
+            }
             if($request->isprint == 1 || $request->isprint == 2 || $request->isprint == 6){
                 if($request->isprint == 2){
                     $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
@@ -1061,7 +1068,13 @@ class IUIController extends AdminController
                     'data' => View::make('admin.iui.preview', compact('investigationReport','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData'))->render()
                 ]);
             }
-
+            if(isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->isprint == 8)
+            {
+                return response()->json([
+                    'status' => 8,
+                    'data' => View::make('admin.iui.iuireportprint', compact('iuiReport'))->render()
+                ]);
+            }
             if(isset($request->is_iui_deposit_print) && $request->is_iui_deposit_print == 4){
                 $currentDeposit = $this->IndoorDeposit->wherePatientIdAndChargeType($patientsId, 1)->orderBy('id', 'DESC')->value('total');
                 $iuiBill = $this->IuiBill;
@@ -1496,10 +1509,12 @@ class IUIController extends AdminController
                 }
                 return $data;
             }
+            $iuiReport = null;
             $iuifourthVisit = $this->IuiHistory->wherePatientsIdAndVisit($id, 4)->whereCycleNo($cycleNo)->where('cycle_status',2)->orderBy('id', 'DESC')->first();
             $iuiFirstVisitData = $this->IUI->wherePatientsId($id)->orderBy('id','DESC')->first();
+            $iuiReport = $this->IUIReport->wherePatientsId($id)->whereCycleNo($cycleNo)->orderBy('id','DESC')->first();
             $cycleData = $this->IUI->wherePatientsId($id)->orderBy('cycle_no','asc')->pluck('cycle_no','cycle_no')->toArray();
-            $view = view('admin.iui.history',compact('medicines','patientsId','hospitalTime','date','iuiCycleNo','iuiCurrentCycleNo','iui','iuiFirstVisitData','cycleData','referenceDoctor'));
+            $view = view('admin.iui.history',compact('medicines','patientsId','hospitalTime','date','iuiCycleNo','iuiCurrentCycleNo','iui','iuiFirstVisitData','cycleData','referenceDoctor','iuiReport'));
            //display old iui visit when patients is tranfer from iui to ANC or IVf
             if(($iuifourthVisit)){
                 $ivfTransfer = $this->IVF->wherePatientsId($id)->where('created_at','>=',$iuifourthVisit->created_at)->first();
@@ -1683,61 +1698,32 @@ class IUIController extends AdminController
     }
 
     // store the IUI report to cycle wise if exist the report then update data otherwise new entry add
-    public function iuiReportStore(Request $request, $patientId,$cycleNo) {
+    public function iuiReportStore(Request $request) {
         try{
-            $iuiReport = $this->IUIReport;
-            $iuiReportData = $iuiReport->where('patients_id', decrypt($patientId))->first();
-
-            if(!empty($iuiReportData)){
-                $iuiReport= $iuiReport->find($iuiReportData->id);
-                $iuiReport->donor_name = $request->donorname;
-                $iuiReport->donor_age = $request->donorage;
-                $iuiReport->indication =$request->indication;
-                $data = $request->data;
-
-                if(!empty($request->data['ovum']['erphoto'])) {
-                    $imagePath = 'public/upload/iui/er';
-                    $iuiReportData = Json_decode($iuiReport->description);
-                    // $this->removeImage($iuiReportData->ovum->erphoto);
-                    $image = $request->data['ovum']['erphoto'];
-                    $imageName = $this->uploadImage($image, $imagePath);
-                    $data['ovum']['erphoto'] = $imagePath .'/'. $imageName;
-                }
-
-                $iuiReport->description = json_encode($data);
-                $iuiReport->remark =$request->remark;
-            }
-            else {
-                $iuiReport->patients_id = decrypt($patientId);
-                $iuiReport->donor_name = $request->donorname;
-                $iuiReport->donor_age = $request->donorage;
-                $iuiReport->cycle_no = decrypt($cycleNo);
-                $iuiReport->indication =$request->indication;
-                $data = $request->data;
-                if(!empty($request->data['ovum']['erphoto'])){
-                    $imagePath = 'public/upload/iui/er';
-                    $picture = $request->data['ovum']['erphoto'];
-                    $imageName = $this->uploadImage($picture, $imagePath);
-                    $data['ovum']['erphoto'] = $imagePath.'/'.$imageName;
-                }
-                $iuiReport->description = json_encode($data);
-                $iuiReport->remark = $request->remark;
-            }
-
-            //   dd($iuiReport);
-              $iuiReport->save();
-
-            if($request->isprint){
+            // $iuiReport = $this->IUIReport;
+            $patientId = decrypt($request->iui_report_patient_id);
+            $cycle_no = decrypt($request->iui_report_cycle_no);
+            $iuiReport = $this->IUIReport->where('patients_id',$patientId)->where('cycle_no',$cycle_no)->first();
+            $iuiReport->description = json_encode($request->iui_report);
+            $iuiReport->save();
+            if($request->isprint == 2){
                 return response()->json([
-                    'status' => 1,
+                    'status' => 2,
                     'data' => View::make('admin.iui.iuireportprint', compact('iuiReport'))->render()
                 ]);
             }
-
-            }catch(Exception $e){
-                abort(500);
-                return ['status'=>'false'];
+            else
+            {
+                return response()->json([
+                    'status' => 1,
+                    'data' => 0
+                ]);
             }
+        }catch(Exception $e){
+            abort(500);
+            log::Debug($e);
+            return ['status'=>'false'];
+        }
     }
 
     // get images for investigation tab
@@ -2218,7 +2204,6 @@ class IUIController extends AdminController
                 }
                 $iui = $iuiData;
                 $printPreview = 1;
-                // dd($iui);
                 return view('admin.iui.preview', compact('patient_view','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','printPreview','patients_remark'));
             }
         }catch(Exception $e){

@@ -78,6 +78,7 @@ use App\Models\HospitalCharge;
 use App\Models\PatientMemory;
 use App\Models\PatientWeight;
 use App\Models\CategoryNotification;
+use App\Models\IUIReport;
 
 
 class BaseController extends Controller
@@ -157,6 +158,7 @@ class BaseController extends Controller
         $this->PatientMemory = new PatientMemory;
         $this->PatientWeight = new PatientWeight;
         $this->CategoryNotification = new CategoryNotification;
+        $this->IUIReport = new IUIReport;
     }
 
     // remove image form our server

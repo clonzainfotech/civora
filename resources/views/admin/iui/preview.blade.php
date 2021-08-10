@@ -3090,7 +3090,7 @@
                                 <td>
                                     {{isset($vascularity_of_endo[$row->vascularity_of_endo]) ? $vascularity_of_endo[$row->vascularity_of_endo] : null}}
                                 </td>
-                                <td class="editStudyReport">{{isset($patient_view) && $patient_view == 1 ? $data->pt_remark : $data->remark}}</td>
+                                <td class="editStudyReport">{{isset($patient_view) && isset($data->pt_remark) && $patient_view == 1 ? $data->pt_remark : $data->remark}}</td>
                             </tr>
                             @if(!empty($dateAndInjectionData))
                                 @foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)

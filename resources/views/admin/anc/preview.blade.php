@@ -177,7 +177,7 @@
         </div>
     @else
     <style>
-        @page { margin-top : 200px; margin-bottom : 80px;}
+        @page { margin-top : 200px; margin-left : 100px;}
     </style>
         <div class="{{'panel panel-primary print-panle-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
             <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">

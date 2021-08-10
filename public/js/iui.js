@@ -527,6 +527,10 @@ $(document).ready(function () {
             var date = moment(newDate).format('dddd DD MMMM YYYY');
             $('.follow-up-date').val(date);
             $('.iui-deposit-print').removeClass('d-none');
+            $('.iui-patient-report').removeClass('d-none');
+            $('.iui-report-data').removeClass('d-none');
+            $('button.iui-report').removeClass('d-none');
+
             isOvalution = true;
         }
         complaintWiseMedicines(covalue,2,mType,'',false,false,isOvalution);

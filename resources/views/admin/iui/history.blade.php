@@ -187,7 +187,9 @@
         }
     </style>
 @stop
-
+@php
+    $iuiReportData = !empty($iuiReport) ? json_decode($iuiReport->description) : null;
+@endphp
 @section('content')
     <div class="row clearfix">
         <div class="col-md-12 p-0">
@@ -202,6 +204,9 @@
                     <div class="col-md-6 text-right">
                         <a href="{{URL::to('get-all-report/'.encrypt($iui->getPatientsInfo->id).'?status=iui')}}" class="btn btn-primary mr-1">View Reports</a>
                         <a class="btn btn-primary view-file-edit ml-2">View File & Edit</a>
+                        @if(!empty($iuiReport))
+                        <a class="btn btn-primary view-iui-report ml-2" data-toggle="modal" data-target="#iui-report-modal">IUI Report</a>
+                        @endif
                     </div>
                 </div>
                 
@@ -392,7 +397,108 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade ivf" id="iui-report-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ivf-transfer-report-model">
+            <!-- header -->
+            <div class="modal-header">
+                <h4 class="title" id="defaultModalLabel">IUI Report</h4>
+            </div>
+            <!-- body -->
+            {{Form::open([
+                'class'=>'form-inline',
+                'id'=>'iui-report-update'
+            ])}}
+            {{Form::hidden('iui_report_patient_id', !empty($iuiReport) ? encrypt($iuiReport->patients_id) : null,['id'=>'iui_report_id'])}}
+            {{Form::hidden('iui_report_cycle_no', !empty($iuiReport) ? encrypt($iuiReport->cycle_no) : null,['id'=>'iui_report_cycle_id'])}}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Reason: &nbsp;</span>
+                            {{Form::text("iui_report[reason]",!empty($iuiReportData) && !empty($iuiReportData->reason) ?$iuiReportData->reason : null ,[
+                                'class'=>'form-control'
+                            ])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Volume: &nbsp;</span>
+                            {{Form::text("iui_report[volume_pre]", !empty($iuiReportData) && !empty($iuiReportData->volume_pre) ?$iuiReportData->volume_pre : null, ['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[volume_post]", !empty($iuiReportData) && !empty($iuiReportData->volume_post) ?$iuiReportData->volume_post : null, ['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Sperm Count/ml: &nbsp;</span>
+                            {{Form::text("iui_report[sperm_count_pre]",!empty($iuiReportData) && !empty($iuiReportData->sperm_count_pre) ?$iuiReportData->sperm_count_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[sperm_count_post]",!empty($iuiReportData) && !empty($iuiReportData->sperm_count_post) ?$iuiReportData->sperm_count_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Total Count(mill) : &nbsp;</span>
+                            {{Form::text("iui_report[total_count_pre]",!empty($iuiReportData) && !empty($iuiReportData->total_count_pre) ?$iuiReportData->total_count_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[total_count_post]",!empty($iuiReportData) && !empty($iuiReportData->total_count_post) ?$iuiReportData->total_count_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Total Motility(%) : &nbsp;</span>
+                            {{Form::text("iui_report[total_motility_pre]",!empty($iuiReportData) && !empty($iuiReportData->total_motility_pre) ?$iuiReportData->total_motility_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[total_motility_post]",!empty($iuiReportData) && !empty($iuiReportData->total_motility_post) ?$iuiReportData->total_motility_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Actively Motile(%) : &nbsp;</span>
+                            {{Form::text("iui_report[actively_motile_pre]",!empty($iuiReportData) && !empty($iuiReportData->actively_motile_pre) ?$iuiReportData->actively_motile_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[actively_motile_post]",!empty($iuiReportData) && !empty($iuiReportData->actively_motile_post) ?$iuiReportData->actively_motile_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Sluggishly Motile(%) : &nbsp;</span>
+                            {{Form::text("iui_report[sluggishly_motile_pre]",!empty($iuiReportData) && !empty($iuiReportData->sluggishly_motile_pre) ?$iuiReportData->sluggishly_motile_pre : null, ['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[sluggishly_motile_post]",!empty($iuiReportData) && !empty($iuiReportData->sluggishly_motile_post) ?$iuiReportData->sluggishly_motile_post : null, ['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Non-Motile(%) : &nbsp;</span>
+                            {{Form::text("iui_report[non_motile_pre]",!empty($iuiReportData) && !empty($iuiReportData->non_motile_pre) ?$iuiReportData->non_motile_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[non_motile_post]",!empty($iuiReportData) && !empty($iuiReportData->non_motile_post) ?$iuiReportData->non_motile_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12 iui-report-data ">
+                        <div class="input-group">
+                            <span class="input-group-addon">Normal Morphology: &nbsp;</span>
+                            {{Form::text("iui_report[normal_morphology_pre]",!empty($iuiReportData) && !empty($iuiReportData->normal_morphology_pre) ?$iuiReportData->normal_morphology_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[normal_morphology_post]",!empty($iuiReportData) && !empty($iuiReportData->normal_morphology_post) ?$iuiReportData->normal_morphology_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 iui-report-data">
+                        <div class="input-group">
+                            <span class="input-group-addon">Pus Cells / hpf: &nbsp;</span>
+                            {{Form::text("iui_report[pus_cells_pre]",!empty($iuiReportData) && !empty($iuiReportData->pus_cells_pre) ? $iuiReportData->pus_cells_pre : null,['class'=>'form-control','placeholder'=>'Pre Wash'])}}
+                            {{Form::text("iui_report[pus_cells_post]",!empty($iuiReportData) && !empty($iuiReportData->pus_cells_post) ? $iuiReportData->pus_cells_post : null,['class'=>'form-control','placeholder'=>'Post Wash'])}}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- footer -->
+            <div class="modal-footer d-inline-block">
+                <button type="submit" class="btn btn-primary waves-effect update-iui-report"  value="1">Save</button>
+                <button type="submit" class="btn btn-primary waves-effect update-iui-report" value="2">Save & Preview</button>
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+            </div>
+            {{Form::close()}}
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="next-appointment-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -866,6 +972,9 @@
                 if(this.value==6){
                     iui.append('isprint', 6);
                 }
+                if(this.value==8){
+                    iui.append('isprint', 8);
+                }
                 if(this.value==4){
                     var iuiDepositPrint = new FormData($("#iui-form")[0]);
                     iui.append('is_iui_deposit_print', 4);
@@ -1110,7 +1219,7 @@
                         w.window.print();
                     }, 300);
                     // window.location.href = url;
-                } else if (data.status == 5) {
+                } else if (data.status == 5 || data.status == 8) {
                     w = window.open(window.location.href, "_blank");
                     w.document.open();
                     w.document.write(data.data);
@@ -1598,5 +1707,47 @@
                 location.reload(true);
             });
         }
+        var iuiReportPrint = 0;
+        $(document).on('click','.update-iui-report',function(){
+            iuiReportPrint = $(this).val();
+        })
+        $(document).on('submit',' #iui-report-update',function(e){
+                e.preventDefault();
+                
+                var iuiReport = new FormData($("#iui-report-update")[0]);
+                    iuiReport.append('isprint',iuiReportPrint);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{URL::to('iui_report_update')}}",
+                    type:'POST',
+                    dataType:'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data:iuiReport,
+                }).done(function(data) {
+                    console.log(data);
+                    if (data.status == 2){
+                        w = window.open(window.location.href, "_blank");
+                        w.document.open();
+                        w.document.write(data.data);
+                        w.document.close();
+                        w.window.print();
+                    } else if (data.status == 1) {
+                        $('#iui-report-modal').modal('hide');
+                    }else{
+                        swal({
+                            title: 'Oops!',
+                            text: data.message,
+                            type: 'error'
+                        }, function() {
+                            window.location.reload();
+                        });
+                    }
+                    
+                })
+            });
 </script>
 @stop

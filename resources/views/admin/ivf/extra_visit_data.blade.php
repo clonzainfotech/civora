@@ -1,8 +1,8 @@
     @php
-        $lmp = !empty($iuiHistoryData) ? json_decode($iuiHistoryData->lmp) : null;
-        $co = !empty($iuiHistoryData) ? json_decode($iuiHistoryData->co) : null;
-        $oe = !empty($iuiHistoryData) ? json_decode($iuiHistoryData->oe) : null;
-        $treatment = !empty($iuiHistoryData) ? json_decode($iuiHistoryData->treatment) : null;
+        $lmp = !empty($ivfHistoryData) ? json_decode($ivfHistoryData->lmp) : null;
+        $co = !empty($ivfHistoryData) ? json_decode($ivfHistoryData->co) : null;
+        $oe = !empty($ivfHistoryData) ? json_decode($ivfHistoryData->oe) : null;
+        $treatment = !empty($ivfHistoryData) ? json_decode($ivfHistoryData->treatment) : null;
         $medicineKey = [];
         if(!empty($treatment)){
             $medicineKey = (array)$treatment;
@@ -13,9 +13,13 @@
             }
         }
         $mData = $medicineKey;
+        $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
+$medicine_status = ['' => 'Select Medicine Status','1'=>'જમ્યા પછી','2'=>'જમ્યા પહેલાં','3'=>'માસિકની જગ્યાએ મુકવી'];
+$medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
+$dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
     @endphp
         <!--1 C/O -->
-        {{Form::hidden('iui_extra_visit_id',!empty($iuiHistoryData) ? encrypt($iuiHistoryData->id) : null)}}
+        {{Form::hidden('ivf_extra_visit_id',!empty($ivfHistoryData) ? encrypt($ivfHistoryData->id) : null)}}
         <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingThree_1">
             <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse"
@@ -352,8 +356,7 @@
                             <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
                         </div>
                     </div>
-                    <div class="medicine-data">
-                        @if(!empty($treatment))
+                    @if(!empty($treatment))
                         @foreach($treatment as $key=>$row)
                         {{-- @if(isset($medicines[$row->medicine])) --}}
                             <?php
@@ -420,13 +423,14 @@
                             {{-- @endif --}}
                         @endforeach
                     @endif
-                    </div>
+                            <div class="medicine-data"></div>
+
                     {{Form::hidden('old_medicine_data',!empty($medicineKey) ? implode(',',$medicineKey) : null,['class'=>'old-medicine-data'])}}
                 </div>
             </div>
         </div>
         <br>
-        @if(empty($iuiHistoryData))
+        @if(empty($ivfHistoryData))
             <div class="row">
                 <div class="col-md-3">
                     <div class="input-group">

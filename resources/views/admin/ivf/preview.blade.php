@@ -2,6 +2,8 @@
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
 {{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" > --}}
 @php
+if(!isset($isExtraVisit) || $isExtraVisit == 0)
+{
 // echo $printPreview;
     $patientsInfo = !empty($ivf->patients_info) ? json_decode($ivf->patients_info) : null;
     $ho = !empty($ivf->h_o) ? json_decode($ivf->h_o) : null;
@@ -34,6 +36,7 @@
     $dataa = !empty($historyData->collected) ? $historyData->collected : [];
     $plan=$ivf->plan;
     $cycle=$ivf->cycle_no;
+}
     $contraceptionData = ['barrier_method'=>'Barrier Method','cu_t'=>'Cu - T','tl_done'=>'TL Done ','occipill'=>'Occipill','other_contraception'=>'Other'];
     $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
     $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
@@ -151,7 +154,7 @@
     @section('content')
 @endif    
 <div class="main-print-ivf-div">
-    @if(!isset($isTableView) || $isTableView == 0)
+    @if((!isset($isTableView) || $isTableView == 0) && (!isset($isExtraVisit) || $isExtraVisit == 0))
         @if ($isIvfHistory == '1')
         <style>
             @page { margin-top : 200px; margin-bottom : 80px;}
@@ -2805,7 +2808,7 @@
                 </table>
             </div>
         @endif
-    @else
+    @elseif(isset($isTableView) && $isTableView == '1')
         <style>
             @page { margin-top : 200px; margin-bottom : 80px;}
         </style>
@@ -2842,7 +2845,7 @@
                 </div>
                     <div class="mb-2">
                         <span class="visit-lable">UTERUS :- </span> 
-                        <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->ut_type) && $ivfSecondVisitData->oe->ut->ut_type == 1 ? 'Normal' : !empty($ivfSecondVisitData->oe->ut->details) ? $ivfSecondVisitData->oe->ut->details : ''}}</span>
+                        <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
                     </div>
                     <div class="mb-2">
                         <div class="row">
@@ -3260,7 +3263,7 @@
                 <div class="col-md-5 col-sm-5 follicular_div_2">
                     <div class="mb-2">
                         <span class="visit-lable">UTERUS :- </span> 
-                        <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->ut_type) && $ivfSecondVisitData->oe->ut->ut_type == 1 ? 'Normal' : !empty($ivfSecondVisitData->oe->ut->details) ? $ivfSecondVisitData->oe->ut->details : ''}}</span>
+                        <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
                     </div>
                     <div class="mb-2">
                         <div class="row">
@@ -3363,6 +3366,16 @@
                                         {{!empty($historyData->remark) ? $historyData->remark : ''}}
                                     </td>
                                 </tr>
+                                @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
+                                <tr>
+                                    <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{'Progesterone start'}}</td>
+                                </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -3514,7 +3527,278 @@
             </div>
         @endif
 
+    @else
+        @php
+        $co = !empty($ivfExtraVisit->co) ? json_decode($ivfExtraVisit->co) : null;
+        $lmp = !empty($ivfExtraVisit->lmp) ? json_decode($ivfExtraVisit->lmp): null;
+        $oe = !empty($ivfExtraVisit->oe) ? json_decode($ivfExtraVisit->oe) : null;
+        $treatment = !empty($ivfExtraVisit->treatment) ? json_decode($ivfExtraVisit->treatment) : null;
+        
+        @endphp
+        <div class="{{'panel panel-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
+            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <tbody>
+                    <tr>
+                        <th class="pb-1">
+                            <span class="iui-label" style="">Name : </span>{{ ucwords(strtolower($ivfPatients->name)) . ' / ' . $ivfPatients->age. ' years' }}
+                        </th>
+                        <th style=""><span class="iui-label">Visit Date:  </span>{{Carbon\Carbon::parse($ivfExtraVisit->created_at)->format('d/m/Y')}}
+                            @if($ivfPatients->weight)
+                                <br>Weight: {{$ivfPatients->weight.' kg'}}
+                            @endif
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <tbody>
+                    @if(!empty($co) && !empty($co->co_type) || !empty($co->since))
+                        <tr>
+                            <th>
+                                <span class="ivf-label">C/O :</span>
+                                {{ (isset($co->co_type) && is_array($co->co_type)) ? implode(', ', $co->co_type) : 'None' }}
+                                @if(!empty($co->since))
+                                    <span class="ivf-label">Since </span>
+                                    {{ !empty($co->since) ? $co->since : '-' }}
+                                @endif
+                            </th>
+                        </tr>
+                    @endif
+                    @if(!empty($lmp->date))
+                        <tr>
+                            <th>
+                                <br>
+                                <span class="ivf-label"> LMP Date: </span>
+                                {{ !empty($lmp->date) ? \Carbon\Carbon::parse($lmp->date)->format('d/m/Y') : '-' }}
+                            </th>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+            @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+              
+                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                    <tbody>
+                        <tr>
+                            <br>  
+                            <td colspan="9">
+                                <div class="panel-title header-print-title">O/E</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            @if(!empty($oe->le->temp) || !empty($oe->le->bp) || !empty($oe->le->pulse))
+                                <th class=" w-100">
+                                    Vitals
+                                    @if(!empty($oe->le->temp))
+                                        <br>
+                                        <span class="ivf-label">Temp : </span>
+                                        {{$oe->le->temp}}
+                                    @endif
+                                    @if(!empty($oe->le->pulse))
+                                        <br>
+                                        <span class="ivf-label">Pulse : </span>
+                                        {{$oe->le->pulse ? $oe->le->pulse : '80'}} / Min
+                                    @endif
+                                    @if(!empty($oe->le->bp))
+                                        <br>
+                                        <span class="ivf-label">B.P :</span>
+                                        {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
+                                    @endif
+                                </th>
+                            @endif
+                        </tr>
+                        @if($oe->p_s->type == 'yes')
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">P / S:</span>
+                                    {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
+                                    @if ($oe->p_s->type == 'yes')
+                                        {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
+                                    @endif
+                                </th>
+                            </tr>
+                        @endif
+                        @if(!empty($oe->cervix->details))
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">Cervix:  </span>
+                                    {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
+                                </th>
+                            </tr>
+                        @endif
+                        @if($oe->tvs->type == 'yes')
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">Transvaginal Ultrasonography:</span>
+                                </th>
+                            </tr>
+                        @endif
+                        @if ($oe->tvs->type == 'yes')
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">Uterus:  </span>
+                                    {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
+                                </th>
+                                @if ($oe->uterus->type == '2')
+                                    <th>
+                                        <span class="ivf-label">Abnormal Details:  </span>
+                                        {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
+                                    </th>
+                                @endif
+                            </tr>
+                        @endif
+                        @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">Endometrial Thickness:  </span>
+                                    {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
+                                </th>
+                            </tr>
+                        @endif
+                        @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
+                        <tr>
+                            <th>
+                                @if (!empty($oe->ovary->right->updated_details))
+                                <span class="ivf-label">Right Ovary</span>
+                                    @foreach ($oe->ovary->right->updated_details as $key => $value)
+                                        @php
+                                            echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                        @endphp
+                                    @endforeach
+                                @endif
+                                @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                    <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                    {{$oe->ovary->right->afcs}}
+                                @endif
+                            </th>
+                        </tr>
+                        @endif
+                        @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
+                        <tr>
+                            <th>
+                                @if(!empty($oe->ovary->left->updated_details))
+                                <span class="ivf-label">Left Ovary</span>
+                                    @foreach($oe->ovary->left->updated_details as $key => $value)
+                                        @php
+                                            echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                        @endphp
+                                    @endforeach
+                                @endif
+                                @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                    <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                    {{$oe->ovary->left->afcs}}
+                                @endif
+                            </th>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            @endif
+            @if(!empty($treatment))
+            @php
+                unset($treatment->medicinedata);
+            @endphp
+                @if(count((array)$treatment) > 0)
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                        <tbody>
+                            <tr>
+                                <br>
+                                <td colspan="9">
+                                    <div class="panel-title header-print-title">Treatment</div>
+                                </td>
+                            </tr>
+                            @if(!empty($treatment))
+                                <table class="medicine-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Dose</th>
+                                            <th>Timing</th>
+                                            <th>Freq.</th>
+                                            <th>Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($treatment as $key=>$row)
+                                        <tr>
+                                            <?php
+                                                $medicine_status = '';
+                                                $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
+                                                $firstCharacter = strtoupper(substr($mId, 0, 3));
+                                                if($firstCharacter == "INJ"){
+                                                    if(!empty($row->medicine_time))
+                                                    {
+                                                        switch($row->medicine_time){
+                                                            case '1':
+                                                                $medicine_status = 'IV';
+                                                                break;
+                                                            case '2':
+                                                                $medicine_status = 'IM';
+                                                                break;
+                                                            case '3':
+                                                                $medicine_status = 'SC';
+                                                                break;
+                                                            case '4':
+                                                                $medicine_status = 'Oral';
+                                                                break;
+                                                            case '5':
+                                                                $medicine_status = 'P/V';
+                                                                break;
+                                                            case '6':
+                                                                $medicine_status = 'P/A';
+                                                                break;
+                                                        }
+                                                    }
+                                                    $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
+                                                    if($mData==$medicine_status) {
+                                                        $medicine_status = "-";
+                                                    }
+                                                }else{
+                                                    $mData = [0,0,0,0];
+
+                                                    if(@$row->quantity>0) {
+                                                        $mData[0] = $row->quantity;
+                                                    }
+                                                    if(@$row->quantity_2>0) {
+                                                        $mData[1] = $row->quantity_2;
+                                                    }
+                                                    if(@$row->quantity_3>0) {
+                                                        $mData[2] = $row->quantity_3;
+                                                    }
+                                                    if(@$row->quantity_4>0) {
+                                                        $mData[3] = $row->quantity_4;
+                                                    }
+                                                    $mData = implode('-',$mData);
+                                                    switch($row->medicine_status){
+                                                        case '1':
+                                                            $medicine_status = 'જમ્યા પછી';
+                                                            break;
+                                                        case '2':
+                                                            $medicine_status = 'જમ્યા પહેલાં';
+                                                            break;
+                                                        case '3':
+                                                            $medicine_status = 'માસિકની જગ્યાએ મુકવી';
+                                                            break;
+                                                    }
+                                                }
+                                            ?>
+                                            <td>{{$row->medicine}}</td>
+                                            <td>{{$mData}}</td>
+                                            <td>{{$medicine_status}}</td>
+                                            <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
+                                            <td>{{$row->no.' days'}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                        </tbody>
+                    </table>
+                @endif
+            @endif
+        </div>
     @endif
+
 </div>
 @if(isset($printPreview) && $printPreview != 0)
 

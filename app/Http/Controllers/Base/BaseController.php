@@ -79,6 +79,8 @@ use App\Models\PatientMemory;
 use App\Models\PatientWeight;
 use App\Models\CategoryNotification;
 use App\Models\IUIReport;
+use App\Models\IvfExtraVisit;
+
 
 
 class BaseController extends Controller
@@ -159,6 +161,8 @@ class BaseController extends Controller
         $this->PatientWeight = new PatientWeight;
         $this->CategoryNotification = new CategoryNotification;
         $this->IUIReport = new IUIReport;
+        $this->IvfExtraVisit = new IvfExtraVisit;
+
     }
 
     // remove image form our server

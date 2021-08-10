@@ -158,6 +158,9 @@
                                     <button class="btn btn-primary fet-btn pull-right fet-report">FET Report</button>
                                 </a>
                             @endif --}}
+                            @if($visit == 2 || $isTransfer == true)
+                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
+                            @endif
                             <a href="#" class="mb-1">
                                 <button class="btn btn-primary pull-right view-file-edit">View File & Edit</button>
                             </a>
@@ -167,7 +170,6 @@
                             <a href="{{URL::to('get-all-report/'.encrypt($patient_id).'?status=ivf')}}" class="mb-1 ml-1">
                                 <button class="btn btn-primary pull-right">View Reports</button>
                             </a>
-
                         </div>
                     </div>
                 </div>

@@ -208,6 +208,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::post(' ivf-store-payment_newui','IVFController@ivfPaymentStoreNewUi');
     Route::get('ivf-remaining-payment','ReportController@ivfRemainigPayment');
     Route::get('ivf-payment-report/remaining_payment','ReportController@remaining_payment');
+    Route::get('ivf/extra-visit/{patientsId}','IVFController@extraVisit');
+    Route::post('ivf/store-extra-visit','IVFController@storeExtraVisit');
 
     Route::resource('expense-manager','ExpenseManagerController');
     Route::post('expense-manager','ExpenseManagerController@store');

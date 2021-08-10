@@ -1967,6 +1967,7 @@ class IUIController extends AdminController
     public function storeExtraVisit(Request $request){
         try{
             $patientId = decrypt($request->patient_id);
+            $iuiPatients = $this->OpdPatients->find($patientId);
             if(!empty($request->oe['ovary']['right']['details']) || !empty($request->oe['ovary']['left']['details'])){
                 $rightData = !empty($request->oe['ovary']['right']['details']) ? $request->oe['ovary']['right']['details'] : [];
                 $leftData = !empty($request->oe['ovary']['left']['details']) ? $request->oe['ovary']['left']['details'] : [];
@@ -2018,9 +2019,24 @@ class IUIController extends AdminController
                     $nextAppointment = $this->nextAppointmentData($appointmentData);
                 }
             }
-            Session::flash('msg','Record has been successfully added.');
-            return ['status'=>1,'id'=>$iuiExtraVisit->id];
-        }catch(Exception $e){
+            $isExtraVisit = 1;
+            if($request->isprint == 1)
+            {
+                return [
+                    'status'=>2,
+                    'id'=>$iuiExtraVisit->id,
+                    'preview' => View::make('admin.iui.preview',compact('iuiExtraVisit','iuiPatients','isExtraVisit'))->render()
+                ];
+
+            }
+            else{
+                Session::flash('msg','Record has been successfully added.');
+                return ['status'=>1,'id'=>$iuiExtraVisit->id];
+            }
+            
+        }catch(Exception $e)
+        {
+            log::Debug($e);
             abort(500);
         }
     }

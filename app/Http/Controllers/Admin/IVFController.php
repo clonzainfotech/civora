@@ -2523,6 +2523,7 @@ class IVFController extends AdminController
                     $investigationReport = $this->allInvestigationReport();
                     $historyDate = $request->date;
                     $patientId = decrypt($request->patient_id);
+                    
                     $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                     $ivfData = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     $isIvfHistory = '1';
@@ -2652,6 +2653,114 @@ class IVFController extends AdminController
             // dd($e);
             Log::debug($e);
             return ['status'=>2];
+        }
+    }
+
+    // fetch data to extra visit of IUI
+    public function extraVisit(Request $request,$id){
+        try{
+            $pId = decrypt($id);
+            $ivfPatients = $this->OpdPatients->find($pId);
+            $complaints = $this->Complaint->pluck('name','name');
+            $leftOvaryData = $this->OvaryDetail->where('type',1)->pluck('name','name');
+            $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
+            $medicines = $this->Medicine->pluck('name','name');
+            $ivfHistoryDate = $this->IvfExtraVisit->where('patient_id',$pId)->pluck('created_at','created_at')->toArray();
+            if($request->ajax()){
+                $ivfHistoryData = null;
+                $date = $request->date;
+                $status = 0;
+                if($date){
+                    $ivfHistoryData = $this->IvfExtraVisit->where('created_at',$date)->first();
+                    if($ivfHistoryData){
+                        $status = 1;
+                    }
+                }
+                $data['status'] = 1;
+                $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
+                return $data;
+            }
+            return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines'));
+        }catch(Exception $e){
+            log::Debug($e);
+            abort(500);
+        }
+    }
+
+    // all extra visit store in this function
+    public function storeExtraVisit(Request $request){
+        try{
+            $patientId = decrypt($request->patient_id);
+            $ivfPatients = $this->OpdPatients->find($patientId);
+            if(!empty($request->oe['ovary']['right']['details']) || !empty($request->oe['ovary']['left']['details'])){
+                $rightData = !empty($request->oe['ovary']['right']['details']) ? $request->oe['ovary']['right']['details'] : [];
+                $leftData = !empty($request->oe['ovary']['left']['details']) ? $request->oe['ovary']['left']['details'] : [];
+            }
+            if(!empty($leftData)){
+                $data = array_unique($leftData);
+                addOvaryAbnormalData($data,1);
+            }
+            if(!empty($rightData)){
+                $data = array_unique($rightData);
+                addOvaryAbnormalData($data,2);
+            }
+            $this->complaintStore($request->co);
+            // if(!empty($request->treatment['medicinedata'])){
+            //     $this->medicineData($request->treatment['medicinedata']);
+            //     $this->treatmentData($request->treatment);
+            // }
+            $ivfExtraVisit = $this->IvfExtraVisit;
+            if($request->ivf_extra_visit_id){
+                $ivfExtraVisit = $this->IvfExtraVisit->find(decrypt($request->ivf_extra_visit_id));
+            }
+            $ivfExtraVisit->patient_id = $patientId;
+            $ivfExtraVisit->co = json_encode($request->co);
+            $ivfExtraVisit->lmp = json_encode($request->lmp);
+            $ivfExtraVisit->oe = json_encode($request->oe);
+            $ivfExtraVisit->treatment = json_encode($request->treatment);
+            $ivfExtraVisit->save();
+
+            $now = Carbon::now()->format('Y-m-d');
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
+            $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
+            $appointmentTime = null;
+            $followDate = date('Y-m-d',strtotime($followupDate));
+            $fDate = !empty($followDate) ? Carbon::parse($followDate)->format('Y-m-d') : null;
+            if($fDate){
+                $requestData = new \Illuminate\Http\Request();
+                $requestData->replace(['date' => $fDate,'status'=>true]);
+                $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($requestData);
+                if(!empty($nextAppontment['time']) || $nextAppontment['time'] == 0){
+                    $hospitalTime = $this->appointmentTime('09:00', '23:55', '5 mins');
+                    $appointmentTime = $nextAppontment['time'] || $nextAppontment['time'] == 0 ? $hospitalTime[$nextAppontment['time']] : null;
+                    $followDate = !empty($nextAppontment['date']) ? $nextAppontment['date'] : $followDate;
+                }
+                $appointment = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
+                if($appointment){
+                    $appointmentData['appointmentId'] = encrypt($appointment->id);
+                    $appointmentData['date'] = $followDate;
+                    $appointmentData['time'] = $appointmentTime;
+                    $nextAppointment = $this->nextAppointmentData($appointmentData);
+                }
+            }
+            $isExtraVisit = 1;
+            if($request->isprint == 1)
+            {
+                return [
+                    'status'=>2,
+                    'id'=>$ivfExtraVisit->id,
+                'preview' => View::make('admin.ivf.preview',compact('ivfExtraVisit','ivfPatients','isExtraVisit'))->render()
+                ];
+
+            }
+            else{
+                Session::flash('msg','Record has been successfully added.');
+                return ['status'=>1,'id'=>$ivfExtraVisit->id];
+            }
+            
+        }catch(Exception $e){
+            log::Debug($e);
+            abort(500);
         }
     }
 }

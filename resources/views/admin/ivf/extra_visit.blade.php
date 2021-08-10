@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('parentPageTitle', 'IUI Appointment')
-@section('title', 'Add IUI Appointment')
+@section('parentPageTitle', 'IVF Appointment')
+@section('title', 'Add IVF Appointment')
 
 @section('page-style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
@@ -60,7 +60,7 @@
         <div class="col-md-12 p-0">
             <div class="card patients-list">
                 <div class="header">
-                    <h2><strong class="text-secondary">{{ucwords($iuiPatients->name)}}</strong></h2>
+                    <h2><strong class="text-secondary">{{ucwords($ivfPatients->name)}}</strong></h2>
                 </div>
             </div>
         </div>
@@ -69,10 +69,10 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>IUI Appointment</strong></h2>
-                    <ul class="header-dropdown col-md-7">
+                    <h2><strong>IVF Appointment</strong></h2>
+                    <ul class="header-dropdown col-md-6 text-right">
                         <li class="w-50">
-                            {{Form::select("date",$iuiHistoryDate,'',['class'=>'form-control select-padding-0 iui-date','placeholder'=>'Select Date'])}}
+                            {{Form::select("date",$ivfHistoryDate,'',['class'=>'form-control select-padding-0 ivf-date','placeholder'=>'Select Date'])}}
                         </li>
                     </ul>
                 </div>
@@ -90,15 +90,15 @@
                         @endif
                         <h3>Today : {{\Carbon\Carbon::now()->format('d M Y')}}</h3>
                         <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                            {{Form::open(['class'=>'form extra-iui-form','files'=>'true'])}}
-                                <div class="iui-extra-data">
+                            {{Form::open(['class'=>'form extra-ivf-form','files'=>'true'])}}
+                                <div class="ivf-extra-data">
                                     {{-- appned form data --}}
                                 </div>
-                                {{Form::hidden('patient_id',encrypt($iuiPatients->id),['class'=>'patient-id'])}}
+                                {{Form::hidden('patient_id',encrypt($ivfPatients->id),['class'=>'patient-id'])}}
                                 <div class="col-sm-12">
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
-                                    <a href="{{URL::to('iui')}}" class="btn btn-default">Cancel</a>
+                                    <a href="{{URL::to('ivf')}}" class="btn btn-default">Cancel</a>
                                 </div>
                             {{Form::close()}}    
                         </div>
@@ -111,7 +111,7 @@
     </div>
 @stop
 @section('page-script')
-    <script src="{{asset('public/js/iui.js')}}"></script>
+    <script src="{{asset('public/js/ivf.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
     $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
@@ -121,31 +121,31 @@
         var patientsId = $('.patients-id').val();
         
         $(document).ready(function(){
-            getIuiData();
+            getIvfData();
             $('.complain-multi .show-tick').addClass('d-none');
             
             $(document).on('click','.submit',function(e){
                 e.preventDefault();
                 $(this).attr('disabled',true);
-                var iuiFormData = new FormData($(".extra-iui-form")[0]);
+                var ivfFormData = new FormData($(".extra-ivf-form")[0]);
                 if(this.value==1){
-                    iuiFormData.append('isprint', 1);
+                    ivfFormData.append('isprint', 1);
                 }
-                extraIuiFormData(iuiFormData);
+                extraIvfFormData(ivfFormData);
             });
 
 
-            $(document).on('change','select.iui-date',function(){
+            $(document).on('change','select.ivf-date',function(){
                 var date = $(this).val();
-                $('.iui-extra-data').html('');
-                getIuiData('date='+date);
+                $('.ivf-extra-data').html('');
+                getIvfData('date='+date);
             });
 
         });
         
-        function extraIuiFormData(data){
+        function extraIvfFormData(data){
             $.ajax({
-                url:'{{URL::to("iui/store-extra-visit")}}',
+                url:'{{URL::to("ivf/store-extra-visit")}}',
                 type:'POST',
                 enctype: 'multipart/form-data',
                 dataType:'json',
@@ -155,7 +155,7 @@
                 processData: false,
             }).done(function(data){
                 if(data.status == '1'){
-                    window.location.href = "{{URL::to('iui')}}";
+                    window.location.href = "{{URL::to('ivf')}}";
                 }
                 else if(data.status == '2')
                 {
@@ -171,15 +171,15 @@
             });
         }
 
-        function getIuiData(qstring){
+        function getIvfData(qstring){
             var pId = $('.patient-id').val();
             $.ajax({
-                url: "{{URL::to('iui/extra-visit')}}"+'/'+pId+'?'+qstring,
+                url: "{{URL::to('ivf/extra-visit')}}"+'/'+pId+'?'+qstring,
                 dataType: 'json',
                 type:'GET',
             }).done(function(data){
                 if(data.status == 1){
-                    $('.iui-extra-data').html(data.extra_visit_data);
+                    $('.ivf-extra-data').html(data.extra_visit_data);
                     $(function () { 
                         //Datetimepicker plugin
                         $('.datetimepicker').bootstrapMaterialDatePicker({

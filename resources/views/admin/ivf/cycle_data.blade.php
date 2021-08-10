@@ -1640,7 +1640,7 @@
                                     <div class="col-md-6 follicular_div_2">
                                         <div class="mb-2">
                                             <span class="visit-lable">UTERUS :- </span> 
-                                            <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
+                                            <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
                                         </div>
                                         <div class="mb-2">
                                             <div class="row">

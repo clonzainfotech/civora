@@ -3627,6 +3627,9 @@
                 </table>
             @endif
         @endif
+        @if(isset($oe->follow_up) && !empty($oe->follow_up))
+                    <h3 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h3>
+        @endif
     </div>
 @endif
 @if(isset($printPreview) && $printPreview != 0)

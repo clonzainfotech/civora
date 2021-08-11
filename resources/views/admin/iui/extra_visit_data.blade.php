@@ -435,6 +435,11 @@
                     </div>
                 </div>
             </div>
+        @else
+            {{Form::hidden("oe[follow_up]", isset($oe->follow_up) && !empty($oe->follow_up) ? $oe->follow_up : \Carbon\Carbon::now()->format('D d M Y'),[
+                                'class'=>'form-control next-date'
+                            ])}}
+        @endif
         @endif
         <br>
         <br>

@@ -439,6 +439,10 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
                     </div>
                 </div>
             </div>
+        @else
+        {{Form::hidden("oe[follow_up]", isset($oe->follow_up) && !empty($oe->follow_up) ? $oe->follow_up : \Carbon\Carbon::now()->format('D d M Y'),[
+                                'class'=>'form-control next-date'
+                            ])}}
         @endif
         <br>
         <br>

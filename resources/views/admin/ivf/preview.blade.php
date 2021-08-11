@@ -3393,19 +3393,23 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             $diff = $diff + 1;
                     @endphp
                     <div class="col-md-12 mt-3">
-                        <h5 class="">Skip Cycle:</h5>
+                        <h3 class="text-left"><u>Medicine:</u></h3>
                         <table class="module-report-table study-report-table mt-3">
                             <thead>
                                 <tr>
                                     <th>Follow UP</th>
+                                    @if((!isset($pt_view) || $pt_view != 1))
                                     <th>Transfer Plan</th>
+                                    @endif
                                     <th>Reason</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>{{$visitDate}}</td>
-                                    <td>{{$planData[$lastHistoryData->plan]}}</td>
+                                    @if((!isset($pt_view) || $pt_view != 1))
+                                        <td>{{$planData[$lastHistoryData->plan]}}</td>
+                                    @endif
                                     <td>{{$lastHistoryData->skip_reason}}</td>
                                 </tr>
                             </tbody>
@@ -3797,6 +3801,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
             @endif
         </div>
+        @if(isset($oe->follow_up) && !empty($oe->follow_up))
+                    <h3 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h3>
+        @endif
     @endif
 
 </div>

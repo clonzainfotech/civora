@@ -2427,43 +2427,6 @@ class IVFController extends AdminController
                     }
                 }
                 
-                // if($ivfHistory){
-                //     $isIvfHistory = '2';
-                //     if($type){
-                //         $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo);
-                //         if($type == 2){
-                //             $visitNo = $visitNo + 1;
-                //         }else{
-                //             $visitNo = $visitNo - 1;
-                //             if($visitNo == 1){
-                //                 $isIvfHistory = '1';
-                //             }
-                //         }
-                //         $ivfHistory = $ivfHistory->where('visit',$visitNo)->first();
-                //     }
-                // }
-                // if($visitNo == 1 && $request->visit == 'null'){
-                //     $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('id','asc')->first();
-                // }
-                // if($isIvfHistory != '1' && $ivfHistory){
-                //     $ivf = $ivfHistory;
-                //     $historyData = json_decode($ivf->description);
-                //     $doseData = $this->Dose->pluck('name','name');
-                // }
-                // $ivfType = 1;
-                // if($request->is_print == 1){
-                //     $ivfType = 2;
-                //     if($request->visit == 'null'){
-                //         $ivf = $ivfData;
-                //         $isIvfHistory = '1';
-                //     }else{
-                //         $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('visit',$request->visit)->where('cycle_no',$cycleNo)->first();
-                //         $ivf = $ivfHistory;
-                //         $historyData = json_decode($ivf->description);
-                //         $doseData = $this->Dose->pluck('name','name');
-                //         $isIvfHistory = '2';
-                //     }
-                // }
                 $planData = ['1'=>'Self','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
                 
                 return response()->json([
@@ -2479,17 +2442,7 @@ class IVFController extends AdminController
                     'visitNumber'=>$visitNumber,
                     'data' => $viewAllVisit
                 ]);
-                // dd($printPreview);
-                // return response()->json([
-                //     'ivf_type' => $ivfType,
-                //     'cycle'=>$ivf->cycle_no,
-                //     'visit'=>$ivf->visit,
-                //     'date'=>Carbon::parse($ivf->created_at)->format('Y-m-d H:i:s'),
-                //     'status' => 1,
-                //     'id' => $ivfId,
-                //     'enc_ivf_id' => $encIvfId,
-                //     'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render()
-                // ]);
+                
             }else{
                 $pt_view = 1;
                 $ohData = null;
@@ -2523,13 +2476,13 @@ class IVFController extends AdminController
                     $investigationReport = $this->allInvestigationReport();
                     $historyDate = $request->date;
                     $patientId = decrypt($request->patient_id);
-                    
+                    $ivfPatients = $this->OpdPatients->find($patientId);
                     $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                     $ivfData = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     $isIvfHistory = '1';
                     $ivfSecondVisitData = null;
                     
-                    if(!$ivfData || $request->is_history == 1){
+                    if((!$ivfData || $request->is_history == 1) && (!isset($request->is_extraVisit) || $request->is_extraVisit == 0)){
                         $cycle_no = decrypt($request->cycle_no);
                         $ivfData = $this->IvfHistory->where('patients_id',$patientId)->where('cycle_no',$cycle_no)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                         $ivf = $ivfData;
@@ -2553,13 +2506,20 @@ class IVFController extends AdminController
 
                             }
                     }
-                    if(!$ivfData){
+                    $isExtraVisit = 0;
+                    $ivfExtraVisit = null;
+                    if($request->is_extraVisit == 1)
+                    {
+                        $isExtraVisit = 1;
+                        $ivfExtraVisit = $this->IvfExtraVisit->where('patient_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
+                    }
+                    if(!$ivfData && !$ivfExtraVisit){
                         return 'no record available';
                     }
                     $ivf = $ivfData;
                     $printPreview = 1;
                     
-                    return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData'));
+                    return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData','ivfPatients','ivfExtraVisit','isExtraVisit'));
                 }
                 
             }
@@ -2724,9 +2684,10 @@ class IVFController extends AdminController
             $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
             $appointmentTime = null;
-            $followDate = date('Y-m-d',strtotime($followupDate));
+            $followDate = !empty($followupDate) ? date('Y-m-d',strtotime($followupDate)) : null;
             $fDate = !empty($followDate) ? Carbon::parse($followDate)->format('Y-m-d') : null;
-            if($fDate){
+            if($fDate)
+            {
                 $requestData = new \Illuminate\Http\Request();
                 $requestData->replace(['date' => $fDate,'status'=>true]);
                 $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($requestData);

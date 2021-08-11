@@ -997,9 +997,11 @@ class IUIController extends AdminController
                 {
                     $categoryPatientData = [];
                     $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
-                    $cDate = date('Y-m-d').' '.$request->data['hcg']['time'];
-                    $new_time = date($cDate, strtotime('+1 hours'));
-                    $iuiDtaeAndTime = Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i:s');
+                    // $cDate = date('Y-m-d').' '.$request->data['hcg']['time'];
+                    // $new_time = date($cDate, strtotime('+1 hours'));
+                    // $iuiDtaeAndTime = Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i:s');
+                    $cDate = \Carbon\Carbon::parse(!empty($request->data['hcg_date']) ? $request->data['hcg_date'] : null)->format('Y-m-d') .' '.$request->data['hcg']['time'];
+                    $iuiDtaeAndTime = \Carbon\Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i');
                     $iuiDtae = Carbon::parse($cDate)->format('Y-m-d');
                     $categoryPatientData['patients_id'] = $patientsId;
                     $categoryPatientData['date'] = $iuiDtaeAndTime;
@@ -1007,7 +1009,6 @@ class IUIController extends AdminController
                     $categoryPatientData['message'] = "Coming for IUI";
                     $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
                     $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
-
                 }
             }
             if(!$request->iui_history_id && !$request->iui_id && $msg){
@@ -2000,9 +2001,10 @@ class IUIController extends AdminController
             $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
             $appointmentTime = null;
-            $followDate = date('Y-m-d',strtotime($followupDate));
+            $followDate = !empty($followupDate) ? date('Y-m-d',strtotime($followupDate)) : null;
             $fDate = !empty($followDate) ? Carbon::parse($followDate)->format('Y-m-d') : null;
             if($fDate){
+                
                 $requestData = new \Illuminate\Http\Request();
                 $requestData->replace(['date' => $fDate,'status'=>true]);
                 $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($requestData);
@@ -2171,7 +2173,9 @@ class IUIController extends AdminController
                 // this code is use for api to generet report
                 $investigationReport = $this->allInvestigationReport();
                 $historyDate = $request->date;
+                $patients_remark = null;
                 $patientId = decrypt($request->patient_id);
+                $iuiPatients = $this->OpdPatients->find($patientId);
                 $lastAppointmentData = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
                 $iuiData = $this->IUI->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                 $iuiFirstVisit = $this->IUI->wherePatientsId($patientId)->first();
@@ -2215,12 +2219,19 @@ class IUIController extends AdminController
                         $iuiData->study_report = true;
                     }
                 }
-                if(!$iuiData){
+                $isExtraVisit = 0;
+                $iuiExtraVisit = null;
+                if($request->is_extraVisit == 1)
+                {
+                    $isExtraVisit = 1;
+                    $iuiExtraVisit = $this->IuiExtraVisit->where('patient_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
+                }
+                if(!$iuiData && empty($iuiExtraVisit)){
                     return 'no record available';
                 }
                 $iui = $iuiData;
                 $printPreview = 1;
-                return view('admin.iui.preview', compact('patient_view','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','printPreview','patients_remark'));
+                return view('admin.iui.preview', compact('patient_view','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','printPreview','patients_remark','isExtraVisit','iuiExtraVisit','iuiPatients'));
             }
         }catch(Exception $e){
             log::Debug($e);

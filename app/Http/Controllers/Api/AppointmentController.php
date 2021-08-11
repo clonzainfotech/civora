@@ -296,8 +296,8 @@ class AppointmentController extends ApiController
                                 }
                             }
                             $reportsArr = null;
-                            if(!empty($anc->o_e)) {
-                                $reportsArr = json_decode($anc->o_e, true);
+                            if(!empty($iui->o_e)) {
+                                $reportsArr = json_decode($iui->o_e, true);
                             }
                             $reportsData[] = $reportsArr;
                         }
@@ -335,11 +335,16 @@ class AppointmentController extends ApiController
                                     }
                                 }
                                 $reportsArr = null;
-                                if(!empty($anc->o_e)) {
-                                    $reportsArr = json_decode($anc->o_e, true);
+                                if(!empty($iui->o_e)) {
+                                    $reportsArr = json_decode($iui->o_e, true);
                                 }
                                 $reportsData[] = $reportsArr;
                                 $url[] = url('get-iui-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1');
+                            }
+                            $iuiExtraVisit = $this->IuiExtraVisit->where('patient_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->first();
+                            if(!empty($iuiExtraVisit))
+                            {
+                                $url[] = url('get-iui-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_extraVisit=1');
                             }
                             else {
                                 // $url = [];
@@ -402,6 +407,12 @@ class AppointmentController extends ApiController
                                         $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_history=1&cycle_no='.encrypt($ivfHistory->cycle_no));
                                     }
                                 }
+                            }
+                            
+                            $ivfExtraVisit = $this->IvfExtraVisit->where('patient_id',$appointment->patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$aptCreatedDate)->first();
+                            if(!empty($ivfExtraVisit))
+                            {
+                                $url[] = url('get-ivf-report?date='.$aptCreatedDate.'&patient_id='.encrypt($appointment->patients_id).'&is_extraVisit=1');
                             }
                             else {
                                 $madicineData = null;

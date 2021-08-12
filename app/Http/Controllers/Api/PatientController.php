@@ -85,9 +85,10 @@ class PatientController extends ApiController
             $user = OpdPatients::where('id', $get_token->patients_id)->first();
             if ($user && !empty($user->code)) {         
                 $rule = [
-                    'surname' => 'required',
-                    'firstname' => 'required',
-                    'lastname' => 'required',
+                    // 'surname' => 'required',
+                    // 'firstname' => 'required',
+                    // 'lastname' => 'required',
+                    'fullname' => 'required',
                     'dob' => 'required',
                     // 'dob' =>'nullable|before:' . date('Y-m-d'),
                     'gender' => 'required|in:1,2',
@@ -98,10 +99,10 @@ class PatientController extends ApiController
                             return $this->sendError($validator->errors()->first(), 422);
                     }
 
-                $surname = $request->surname;
-                $firstname = $request->firstname;
-                $lastname = $request->lastname;
-                $name = strtoupper($firstname." ".$lastname." ".$surname);
+                // $surname = $request->surname;
+                // $firstname = $request->firstname;
+                // $lastname = $request->lastname;
+                $name = strtoupper($fullname);
                 $dob = $request->dob ? Carbon::parse($request->dob)->format('Y-m-d') : null;
                 $gender = $request->gender;
                 // $age = (date('Y') - date('Y',strtotime($dob)));

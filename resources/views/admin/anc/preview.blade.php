@@ -165,7 +165,7 @@
                             }
                         @endphp
                     @endif
-                    @if(!empty($usg->termination_detail))
+                    @if(!empty($usg->termination_detail) || isset($tremination_term))
                         <span class="admission-detail"><strong>Admission Detail : </strong></span><span> {{$usg->termination_detail.(isset($tremination_term) ? ' - '.$tremination_term : '')}}</span>
                     @endif
                 </div>

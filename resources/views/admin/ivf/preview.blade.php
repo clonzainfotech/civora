@@ -2,6 +2,8 @@
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
 {{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" > --}}
 @php
+    use App\Models\IvfExtraVisit;
+
 if(!isset($isExtraVisit) || $isExtraVisit == 0)
 {
 // echo $printPreview;
@@ -2928,6 +2930,33 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         $skipValue = 1;
                                     }
                                 @endphp
+                                @if($row->visit == 2)
+                                @php
+                                    $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                @endphp
+                                @if(!empty($ivfExtraVisit))
+                                        @foreach($ivfExtraVisit as $ivfExtra)
+                                        <tr >
+                                            <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                            @if(!isset($pt_view) || $pt_view != 1)
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endif
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{'Extra Visit'}}</td>
+                                        </tr>
+                                        @endforeach
+                                @endif
+                            @endif
                                 {{-- <div> --}}
                                     @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
                                         @php
@@ -3060,7 +3089,8 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                             <br>
                                                             S.P2 : {{implode(',',$sp2Data)}}
                                                             @endif
-                                                            {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                                            {{(!isset($pt_view) || $pt_view != 1) ? $historyData->remark : (isset($historyData->pt_remark) ? $historyData->pt_remark : '')}}
+                                                            {{-- {{!empty($historyData->remark) ? $historyData->remark : ''}} --}}
 
                                                     </td>
                                                 </tr>
@@ -3334,6 +3364,23 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         $skipValue = 1;
                                     }
                                 @endphp
+                                @if($row->visit == 2)
+                                    @php
+                                        $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                    @endphp
+                                    @if(!empty($ivfExtraVisit))
+                                            @foreach($ivfExtraVisit as $ivfExtra)
+                                            <tr >
+                                                <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{'Extra Visit'}}</td>
+                                            </tr>
+                                            @endforeach
+                                    @endif
+                                @endif
                                 <tr>
                                     <td>{{$visitDate}}</td>
                                     <td>{{$diff}}</td>
@@ -3363,18 +3410,35 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         @endif
                                     </td>
                                     <td class="">
-                                        {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                        {{(!isset($pt_view) || $pt_view != 1) ? $historyData->remark : (isset($historyData->pt_remark) ? $historyData->pt_remark : '')}}
                                     </td>
                                 </tr>
                                 @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
-                                <tr>
-                                    <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{'Progesterone start'}}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{'Progesterone start'}}</td>
+                                    </tr>
+                                @endif
+                                @if(isset($historyData->is_transfer) && $historyData->is_transfer == 'yes')
+                                    @php
+                                        $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
+                                    @endphp
+                                    @if(!empty($ivfExtraVisit))
+                                            @foreach($ivfExtraVisit as $ivfExtra)
+                                            <tr >
+                                                <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{'Extra Visit'}}</td>
+                                            </tr>
+                                            @endforeach
+                                    @endif
                                 @endif
                             @endforeach
                         </tbody>
@@ -3539,19 +3603,28 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
         $treatment = !empty($ivfExtraVisit->treatment) ? json_decode($ivfExtraVisit->treatment) : null;
         
         @endphp
+        <style>
+         @page { margin-top : 200px; margin-bottom : 80px;}
+         </style>
         <div class="{{'panel panel-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
             <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
                 <tbody>
-                    <tr>
-                        <th class="pb-1">
-                            <span class="iui-label" style="">Name : </span>{{ ucwords(strtolower($ivfPatients->name)) . ' / ' . $ivfPatients->age. ' years' }}
-                        </th>
-                        <th style=""><span class="iui-label">Visit Date:  </span>{{Carbon\Carbon::parse($ivfExtraVisit->created_at)->format('d/m/Y')}}
-                            @if($ivfPatients->weight)
-                                <br>Weight: {{$ivfPatients->weight.' kg'}}
-                            @endif
-                        </th>
-                    </tr>
+                        <tr>
+                            <th>
+                                <span class="ivf-label">Name : </span>{{ ucwords(strtolower($ivfPatients->name))}}
+                                    @php
+                                        $gender = ($ivfPatients->gender == 2) ? 'F' : 'M';
+                                    @endphp
+                                    <br><span class="ivf-label">Age : </span>{{ $ivfPatients->age. ' years | '.$gender }}
+                            </th>
+                            <th class="float-right">
+                                <span class="ivf-label">Visit Date:  </span>{{Carbon\Carbon::parse($ivfExtraVisit->created_at)->format('d/m/Y')}}
+                                @if($ivfPatients->weight)
+                                    <br><span class="ivf-label">Weight: </span>{{$ivfPatients->weight.' kg'}}
+                                @endif
+                            </th>
+                        </tr>
+                        
                 </tbody>
             </table>
             <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
@@ -3663,15 +3736,15 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <tr>
                             <th>
                                 @if (!empty($oe->ovary->right->updated_details))
-                                <span class="ivf-label">Right Ovary</span>
+                                <span class="ivf-label">Right Ovary : </span>
                                     @foreach ($oe->ovary->right->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
                                         @endphp
                                     @endforeach
                                 @endif
-                                @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                    <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                @if(!empty($oe->ovary->right->afcs))
+                                    <span class="ivf-label">Follicle numbers per ovary : </span>
                                     {{$oe->ovary->right->afcs}}
                                 @endif
                             </th>
@@ -3681,20 +3754,29 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <tr>
                             <th>
                                 @if(!empty($oe->ovary->left->updated_details))
-                                <span class="ivf-label">Left Ovary</span>
+                                <span class="ivf-label">Left Ovary : </span>
                                     @foreach($oe->ovary->left->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
                                         @endphp
                                     @endforeach
                                 @endif
-                                @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                    <span class="ivf-label">Follicle numbers per ovaryy</span>
+                                @if(!empty($oe->ovary->left->afcs))
+                                    <span class="ivf-label">Follicle numbers per ovary : </span>
                                     {{$oe->ovary->left->afcs}}
                                 @endif
                             </th>
                         </tr>
                         @endif
+                        <tr>
+                            <th>
+                            @if((isset($pt_view) && $pt_view == 1))
+                                <span class="font-bold">Remark : {{isset($oe->pt_remark) && !empty($oe->pt_remark) ? $oe->pt_remark : ''}}</span>
+                            @else
+                                <span class="font-bold">Remark : {{isset($oe->remark) && !empty($oe->remark) ? $oe->remark : ''}}</span>
+                            @endif
+                            </th>
+                        </tr>
                     </tbody>
                 </table>
             @endif
@@ -3801,6 +3883,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
             @endif
         </div>
+        
         @if(isset($oe->follow_up) && !empty($oe->follow_up))
                     <h3 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h3>
         @endif

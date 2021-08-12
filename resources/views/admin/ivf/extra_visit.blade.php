@@ -95,6 +95,7 @@
                                     {{-- appned form data --}}
                                 </div>
                                 {{Form::hidden('patient_id',encrypt($ivfPatients->id),['class'=>'patient-id'])}}
+                                {{Form::hidden('cycle_no',encrypt($cycle_no),['class'=>'cycle-no'])}}
                                 <div class="col-sm-12">
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
@@ -111,7 +112,7 @@
     </div>
 @stop
 @section('page-script')
-    <script src="{{asset('public/js/ivf.js')}}"></script>
+    <script src="{{asset('public/js/iui.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
     $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
@@ -125,9 +126,16 @@
             $('.complain-multi .show-tick').addClass('d-none');
             
             $(document).on('click','.submit',function(e){
+                $('.follow-error').text('');
                 e.preventDefault();
-                $(this).attr('disabled',true);
+                
+                if($('.next-date').val() == '')
+                {
+                    $('.follow-error').text('Please enter FollowUp Date');
+                    return false;
+                }
                 var ivfFormData = new FormData($(".extra-ivf-form")[0]);
+                $('.submit').attr('disabled',true);
                 if(this.value==1){
                     ivfFormData.append('isprint', 1);
                 }
@@ -173,8 +181,9 @@
 
         function getIvfData(qstring){
             var pId = $('.patient-id').val();
+            var cycle_no = $('.cycle-no').val();
             $.ajax({
-                url: "{{URL::to('ivf/extra-visit')}}"+'/'+pId+'?'+qstring,
+                url: "{{URL::to('ivf/extra-visit')}}"+'/'+pId+'/'+cycle_no+'?'+qstring,
                 dataType: 'json',
                 type:'GET',
             }).done(function(data){

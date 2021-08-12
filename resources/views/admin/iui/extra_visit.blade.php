@@ -127,6 +127,11 @@
             
             $(document).on('click','.submit',function(e){
                 e.preventDefault();
+                if($('.next-date').val() == '')
+                {
+                    $('.follow-error').text('Please enter FollowUp Date');
+                    return false;
+                }
                 $('.submit').attr('disabled',true);
                 var iuiFormData = new FormData($(".extra-iui-form")[0]);
                 if(this.value==1){

@@ -2,6 +2,7 @@
 
 @php
     use App\Models\IuiHistory;
+    use App\Models\IuiExtraVisit;
     if(!isset($isExtraVisit) || $isExtraVisit == 0)
 {
     $patientsInfo = !empty($iui->patients_info) ? json_decode($iui->patients_info) : null;
@@ -3017,6 +3018,25 @@
                                         @endif
                                     @endforeach
                                 @endif
+                                @if($row->visit == 2)
+                                    @php
+                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','DESC')->get();
+                                    @endphp
+                                    @if(!empty($iuiExtraVisit))
+                                            @foreach($iuiExtraVisit as $iuiExtra)
+                                            <tr >
+                                                <td>{{\Carbon\Carbon::parse($iuiExtra->created_at)->format('d-m-Y')}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{'Extra Visit'}}</td>
+                                            </tr>
+                                            @endforeach
+                                    @endif
+                                @endif
                                 <tr >
                                     <td>{{$createdAt}}</td>
                                     <td>{{$diff}}</td>
@@ -3139,6 +3159,25 @@
                                             </tr>
                                         @endif
                                     @endforeach
+                                @endif
+                                @if(!empty($data->ovalution) && $data->ovalution == 'yes')
+                                    @php
+                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','DESC')->get();
+                                    @endphp
+                                    @if(!empty($iuiExtraVisit))
+                                            @foreach($iuiExtraVisit as $iuiExtra)
+                                            <tr >
+                                                <td>{{\Carbon\Carbon::parse($iuiExtra->created_at)->format('d-m-Y')}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{'Extra Visit'}}</td>
+                                            </tr>
+                                            @endforeach
+                                    @endif
                                 @endif
                             @endif
                             @endforeach
@@ -3628,10 +3667,10 @@
             @endif
         @endif
         @if(isset($patients_remark) && !empty($patients_remark))
-                        <span class="font-bold">Remark : {{$patients_remark}}</span>
-                    @else
-                    <span class="font-bold">Remark : {{isset($oe->remark) && !empty($oe->remark) ? $oe->remark : ''}}</span>
-                    @endif
+            <span class="font-bold">Remark : {{$patients_remark}}</span>
+        @else
+            <span class="font-bold">Remark : {{isset($oe->remark) && !empty($oe->remark) ? $oe->remark : ''}}</span>
+        @endif
         @if(isset($oe->follow_up) && !empty($oe->follow_up))
         <br>
                     <h4 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>

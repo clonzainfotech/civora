@@ -4766,7 +4766,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                         @endif
                                         @if($row->visit == 2)
                                             @php
-                                                $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','DESC')->get();
+                                                $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
                                             @endphp
                                             @if(!empty($iuiExtraVisit))
                                                     @foreach($iuiExtraVisit as $iuiExtra)
@@ -4783,6 +4783,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                             <a href="{{URL::to('iui/extra-visit/'.encrypt($iui->patients_id).'/'.encrypt($cycleNo))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
                                                                 <i class="zmdi zmdi-edit material-icons"></i>
                                                             </a>
+                                                        </td>
                                                     </tr>
                                                     @endforeach
                                             @endif
@@ -4873,7 +4874,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                     <i class="zmdi zmdi-camera material-icons"></i>
                                                 </a>
                                                 @endif
-                                        </td>
+                                            </td>
                                         </tr>
                                         @if(!empty($dateAndInjectionData))
                                             @foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)
@@ -4925,6 +4926,29 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                     </tr>
                                                 @endif
                                             @endforeach
+                                        @endif
+                                        @if(!empty($data->ovalution) && $data->ovalution == 'yes')
+                                            @php
+                                                $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
+                                            @endphp
+                                            @if(!empty($iuiExtraVisit))
+                                                    @foreach($iuiExtraVisit as $iuiExtra)
+                                                    <tr >
+                                                        <td>{{\Carbon\Carbon::parse($iuiExtra->created_at)->format('d-m-Y')}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{{'Extra Visit'}}</td>
+                                                        <td>
+                                                            <a href="{{URL::to('iui/extra-visit/'.encrypt($iui->patients_id).'/'.encrypt($cycleNo))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                <i class="zmdi zmdi-edit material-icons"></i>
+                                                            </a>
+                                                    </tr>
+                                                    @endforeach
+                                            @endif
                                         @endif
                                     @endif
                                 @endforeach

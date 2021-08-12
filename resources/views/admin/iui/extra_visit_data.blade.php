@@ -449,6 +449,7 @@
                         <span class="input-group-addon">Follow Up: &nbsp;</span>
                         {{Form::text("oe[follow_up]",'',['class'=>'form-control datetimepicker next-date'])}}
                     </div>
+                    <span class="form-error-msg follow-error"></span>
                 </div>
             </div>
         @else

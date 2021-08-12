@@ -2171,7 +2171,7 @@ class IUIController extends AdminController
                         $firstVisit = $this->IUI->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->first();
                         if($firstVisit)
                         {
-                            $iuiExtra = $this->IuiExtraVisit->where('patient_id',$patientId)->where('cycle_no',$value)->where('created_at','>',$iuiData->created_at)->get();
+                            $iuiExtra = $this->IuiExtraVisit->where('patient_id',$patientId)->where('cycle_no',$value)->where('created_at','>',$firstVisit->created_at)->get();
                             if(!empty($iuiExtra))
                             {
                                 foreach($iuiExtra as $iuiExtraVisit)
@@ -2179,7 +2179,6 @@ class IUIController extends AdminController
                                     $isExtraVisit = 1; 
                                     $isTable_view = false;
                                     $iui->study_report = false;
-                                    $extraVisitDisplay = true; 
                                     $viewAllVisit[] =  View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','iuiExtraVisit','iuiPatients','isExtraVisit'))->render();
                                     $dateValue[] = $iuiExtraVisit->created_at;
                                     $table_view[] = $isTable_view;
@@ -2209,7 +2208,6 @@ class IUIController extends AdminController
                                     $isExtraVisit = 1; 
                                     $isTable_view = false;
                                     $iui->study_report = false;
-                                    $extraVisitDisplay = true; 
                                     $viewAllVisit[] =  View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','iuiExtraVisit','iuiPatients','isExtraVisit'))->render();
                                     $dateValue[] = $iuiExtraVisit->created_at;
                                     $table_view[] = $isTable_view;

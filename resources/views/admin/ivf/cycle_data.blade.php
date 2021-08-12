@@ -129,6 +129,8 @@
     </style>
 @stop
 @php
+    use App\Models\IvfExtraVisit;
+
     $abArray = ['1'=>"Normal",'2'=>"Abnormal"];
     $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
     $investigationArray = ["1"=>'wife','2'=>'hub'];
@@ -159,7 +161,7 @@
                                 </a>
                             @endif --}}
                             @if($visit == 2 || $isTransfer == true)
-                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
+                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
                             @endif
                             <a href="#" class="mb-1">
                                 <button class="btn btn-primary pull-right view-file-edit">View File & Edit</button>
@@ -313,6 +315,36 @@
                                                 $skipValue = 1;
                                             }
                                         @endphp
+                                        @if($row->visit == 2)
+                                            @php
+                                                $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                            @endphp
+                                            @if(!empty($ivfExtraVisit))
+                                                    @foreach($ivfExtraVisit as $ivfExtra)
+                                                    <tr >
+                                                        <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{{'Extra Visit'}}</td>
+                                                        <td>
+                                                            <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                <i class="zmdi zmdi-edit material-icons"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                            @endif
+                                        @endif
                                         {{-- <div> --}}
                                             @if($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no')
                                                 @php
@@ -1750,6 +1782,28 @@
                                                             $skipValue = 1;
                                                         }
                                                     @endphp
+                                                    @if($row->visit == 2)
+                                                        @php
+                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                                        @endphp
+                                                        @if(!empty($ivfExtraVisit))
+                                                                @foreach($ivfExtraVisit as $ivfExtra)
+                                                                <tr >
+                                                                    <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>{{'Extra Visit'}}</td>
+                                                                    <td>
+                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                            <i class="zmdi zmdi-edit material-icons"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                        @endif
+                                                    @endif
                                                     @if($resultValue == 0)
                                                         <tr>
                                                             <td>{{$visitDate}}</td>
@@ -1784,32 +1838,53 @@
                                                                     
                                                             </td>
                                                             <td class="text-center">
-                                                                    <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
-                                                                        <i class="zmdi zmdi-delete material-icons"></i>
-                                                                    </a>
-                                                                    @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no'))
-                                                                    <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
-                                                                    @endif
-                                                                    @if((isset($historyData->hsa_report->images) && !empty($historyData->hsa_report->images)) || (isset($historyData->blood_report->image) && !empty($historyData->blood_report->image)) || (isset($historyData->usg->images) && !empty($historyData->usg->images)) || (isset($investigationData->hystroscopy->images) && !empty($investigationData->hystroscopy->images)) || (isset($investigationData->laproscopy->images) && !empty($investigationData->laproscopy->images)))
-                                                                    <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini report-btn" data-id="{{ encrypt($row->id) }}" data-date="{{\Carbon\Carbon::parse($row->created_at)->format('d M Y')}}">
-                                                                        <i class="zmdi zmdi-camera material-icons"></i>
-                                                                    </a>
-                                                                    @endif
-                                                                </td>
+                                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
+                                                                    <i class="zmdi zmdi-delete material-icons"></i>
+                                                                </a>
+                                                                @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no') && !in_array('transfer',$collectionData))
+                                                                <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
+                                                                @endif
+                                                                @if((isset($historyData->hsa_report->images) && !empty($historyData->hsa_report->images)) || (isset($historyData->blood_report->image) && !empty($historyData->blood_report->image)) || (isset($historyData->usg->images) && !empty($historyData->usg->images)) || (isset($investigationData->hystroscopy->images) && !empty($investigationData->hystroscopy->images)) || (isset($investigationData->laproscopy->images) && !empty($investigationData->laproscopy->images)))
+                                                                <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini report-btn" data-id="{{ encrypt($row->id) }}" data-date="{{\Carbon\Carbon::parse($row->created_at)->format('d M Y')}}">
+                                                                    <i class="zmdi zmdi-camera material-icons"></i>
+                                                                </a>
+                                                                @endif
+                                                            </td>
                                                         </tr>
                                                     @endif
                                                     @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
-                                                    <tr>
-                                                        <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>{{'Progesterone start'}}</td>
-                                                        <td></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{'Progesterone start'}}</td>
+                                                            <td></td>
+                                                        </tr>
                                                     @endif
-                                                    
+                                                    @if(isset($historyData->is_transfer) && $historyData->is_transfer == 'yes')
+                                                        @php
+                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
+                                                        @endphp
+                                                        @if(!empty($ivfExtraVisit))
+                                                                @foreach($ivfExtraVisit as $ivfExtra)
+                                                                <tr >
+                                                                    <td>{{\Carbon\Carbon::parse($ivfExtra->created_at)->format('d-m-Y')}}</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>{{'Extra Visit'}}</td>
+                                                                    <td>
+                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                            <i class="zmdi zmdi-edit material-icons"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                        @endif
+                                                    @endif
                                                 @endforeach
                                             
                                                 @if(!empty($lastHistoryData) && $resultValue == 0 && $skipValue == 0 && $isForm == true)
@@ -5029,9 +5104,10 @@
 
             $(document).on('click','.print-btn',function(e){
                 e.preventDefault();
+                var extraVisit = $(this).data('extravisit');
                 // ivfVisit = $('.next-appointment-details').data('visit');
                 var visitDate = $(this).data('date');
-                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visitDate='+visitDate+'&is_print=1';
+                ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visitDate='+visitDate+'&is_print=1&extraVisit='+extraVisit;
                 // ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visit='+ivfVisit+'&is_print=1';
                 getIvfHistoryData(ivfString);
             });
@@ -5972,8 +6048,15 @@
                             var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
                             var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
                         }
-                        
-                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-4 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-4"><h5>Visit :'+data.visitNumber[i]+'</h5></div><div class="col-md-4 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'">Print</a></div></div>';
+
+                        if(data.extraVisit[i] == 1)
+                        {
+                            buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extravisit="1">Print</a></div></div>';
+                        }
+                        else{
+                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="0">Print</a></div></div>';
+
+                        }
 
                         ivfPreview = buttonHtml + data.data[i];
                         $('.ivf-details-data').html(ivfPreview);

@@ -186,9 +186,9 @@ class HormonController extends AdminController
             $hormon->save();
             if($ivfPaymentData && $request->htype == 2){
                 $checkTotalAmount = $this->IvfPayment->wherePatientsId($hormon->patient_id)->whereCycleNo($ivfPaymentData->cycle_no)->sum('payment');
-
+                $totalDeposite = $this->IndoorDeposit->wherePatientId($hormon->patient_id)->whereCycleNo($ivfPaymentData->cycle_no)->where('case_type','Credit')->sum('amount');
                 // print_r($checkTotalAmount);die();
-                $totalAmount = $checkTotalAmount + $request->hcharge;
+                $totalAmount = $totalDeposite + $request->hcharge + $ivfPaymentData->discount + $request->discount;
                 $isCompleted = 0;
                 if($ivfPaymentData->package <= $totalAmount){
                     $isCompleted = 1;

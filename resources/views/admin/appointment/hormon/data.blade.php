@@ -11,7 +11,7 @@
             <th>Amount</th>
             <th>Total</th>
             <th>package</th>
-            <th>Total Disc.</th>
+            {{-- <th>Total Disc.</th> --}}
             <th>Left Amount</th>
             <th>Category</th>
             <th>Reference Doctor Name</th>
@@ -45,8 +45,8 @@
                 <td>{{$row->injection}}</td>
                 <td>{{$row->amount}}</td>
                 <td><div class={{'amount-'.$key}}>{{$row->total}}</div></td>
-                <td><div>{{$row->package}}</div></td>
-                <td><div>{{$row->getTotalDiscount()}}</div></td>
+                <td><div>{{$row->package - $row->getTotalDiscount()}}</div></td>
+                {{-- <td><div>{{$row->getTotalDiscount()}}</div></td> --}}
                 @php
                     $totalDiscount = $row->getTotalDiscount();
                     $lessamount = $row->package - $row->total - $totalDiscount;

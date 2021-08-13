@@ -1754,27 +1754,28 @@ class IVFController extends AdminController
         // {
             $ivfDepositData = $this->IndoorDeposit->where('patient_id',$patientsId)->whereCycleNo($no_cycle)->first();
             $ivfDeposit = $this->IndoorDeposit;
-            if($ivfDepositData){
-                $ivfDeposit = $ivfDepositData;
-            }
-            //Add Indoor deposits
-            $ivfDeposit->patient_id = $patientsId;
-            $ivfDeposit->admin_id = Auth::user()->id;
-            $ivfDeposit->amount = $request->payment;
-            $ivfDeposit->total = $request->payment;
-            $ivfDeposit->discount = $request->discount;
-            $ivfDeposit->package = $request->package;
-            $ivfDeposit->charge_type = 2;
-            $ivfDeposit->case_type = 'Credit';
-            // if ($request->no_cycle == '') {
-            //     $ivfDeposit->cycle_no = 1;
-            // }
-            // else{   
-                $ivfDeposit->cycle_no = $no_cycle;
-            // } 
-            if($request->payment > 0)
+            if(!$ivfDepositData)
             {
-                $ivfDeposit->save(); 
+                // $ivfDeposit = $ivfDepositData;
+            //Add Indoor deposits
+                $ivfDeposit->patient_id = $patientsId;
+                $ivfDeposit->admin_id = Auth::user()->id;
+                $ivfDeposit->amount = $request->payment;
+                $ivfDeposit->total = $request->payment;
+                $ivfDeposit->discount = $request->discount;
+                $ivfDeposit->package = $request->package;
+                $ivfDeposit->charge_type = 2;
+                $ivfDeposit->case_type = 'Credit';
+                // if ($request->no_cycle == '') {
+                //     $ivfDeposit->cycle_no = 1;
+                // }
+                // else{   
+                    $ivfDeposit->cycle_no = $no_cycle;
+                // } 
+                if($request->payment > 0)
+                {
+                    $ivfDeposit->save(); 
+                }
             }
         // }
         

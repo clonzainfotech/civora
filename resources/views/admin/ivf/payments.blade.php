@@ -941,7 +941,7 @@
             var extra_charge = $('#extra_charge').val();
             var discount = $('#discount').val();
             var sum_extracharge = Number(sum) + Number(extra_charge);
-            var total = (sum_extracharge - payment - discount);
+            var total = (sum_extracharge - discount);
             $('#net_amount').text(total);
         }
 
@@ -951,7 +951,7 @@
             var extra_charge = $('#extra_charge').val();
             var discount = $('#discount').val();
             var sum_extracharge = Number(sum) + Number(extra_charge);
-            var total = (sum_extracharge - payment - discount);
+            var total = (sum_extracharge - discount);
             $('#net_amount').text(total);
             // $('#total').val(total);
 
@@ -1533,6 +1533,8 @@
                     var cycle_no = $('select.multiple_no_cycle').val();
                     paymentData = paymentData + '&multiple_cycle='+cycle_no;
                 }
+                var cycle_no = $('select.payment-method').val();
+                    paymentData = paymentData + '&payment_type='+cycle_no;
                 if(this.value == 1) {
                     paymentData = paymentData + '&isprint=1';
                 }

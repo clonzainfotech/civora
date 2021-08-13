@@ -31,4 +31,18 @@ class IndoorDeposit extends BaseModel
     public function getReferenceDoctors(){
         return $this->belongsTo('App\Models\ReferenceDoctor','reference_doctor_id');
     }
+    public function getTotalDiscount()
+    {
+        $discount = self::where([
+            // ['id', '>=', $this->id],
+            'patient_id' => $this->patient_id,
+            'cycle_no' => $this->cycle_no,
+            'charge_type' => $this->charge_type,
+        ])
+        ->sum('discount');
+        if ($discount) {
+            return $discount;
+        }
+        return $discount;
+    }
 }

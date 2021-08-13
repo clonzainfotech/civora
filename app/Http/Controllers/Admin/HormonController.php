@@ -69,6 +69,7 @@ class HormonController extends AdminController
             }
             return view('admin.appointment.hormon.index',compact('category','referenceDoctor', 'patients'));
         }catch(Exception $e){
+            log::debug($e);
             abort(500);
         }
     }
@@ -156,6 +157,7 @@ class HormonController extends AdminController
             $hormon->total = ($lastTotal == null) ? $hormon->amount : ($lastTotal + $hormon->amount);
             $hormon->case_type = 'Credit';
             $hormon->payment_type = $request->payment_type;
+            $hormon->discount = $request->discount;
             $hormon->charge_type = $request->htype;
             $opdPatient = $this->OpdPatients->find($request->hname);
             $hormon->injection = null;
@@ -191,7 +193,9 @@ class HormonController extends AdminController
                 if($ivfPaymentData->package <= $totalAmount){
                     $isCompleted = 1;
                 }
-                
+                $ivfPaymentData->is_completed = $isCompleted;
+                $ivfPaymentData->discount = $ivfPaymentData->discount + $request->discount;
+                $ivfPaymentData->save();
             }
             $hormon->valuinword = $this->getWordOfNumber($hormon->amount);
             $depositeWord = $hormon->valuinword;

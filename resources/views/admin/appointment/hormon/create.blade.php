@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="row hormon-row mt-18">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <span class="input-group-addon unik-lbl-spn">Charge : &nbsp;</span>
                                     {{Form::text('hcharge','',[
@@ -78,7 +78,20 @@
                                     {{$errors->first('hcharge')}}
                                 </span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4 ivf-data">
+                                <div class="input-group">
+                                    <span class="input-group-addon unik-lbl-spn">Discount : &nbsp;</span>
+                                    {{Form::number('discount','',[
+                                        'class'=>'form-control discount',
+                                        'placeholder'=>'Charge',
+                                        'maxlength' => 6,
+                                        'onpaste' => 'return false',
+                                        'min' => 1,
+                                        'id'=>'discount'
+                                    ])}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <span class="input-group-addon unik-lbl-spn">Date:</span>
                                     {{Form::text('date',\Carbon\Carbon::now()->format('l d M Y'),[

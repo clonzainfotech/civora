@@ -1690,7 +1690,6 @@ class IVFController extends AdminController
        }else{
             $ivfPayment->donor_charge = null;
        }
-
         $ivfPayment->patients_id = $patientsId;
         $ivfPayment->patient_name = $request->p_name;
         $ivfPayment->husband_name = $request->h_name;
@@ -1751,30 +1750,34 @@ class IVFController extends AdminController
         $ivfPayment->remark = $request->remark;
         $ivfPayment->visit = 1;
         $ivfPayment->save();  
-
-        $ivfDepositData = $this->IndoorDeposit->where('patient_id',$patientsId)->whereCycleNo($no_cycle)->first();
-        $ivfDeposit = $this->IndoorDeposit;
-        if($ivfDepositData){
-            $ivfDeposit = $ivfDepositData;
-        }
-        //Add Indoor deposits
-        $ivfDeposit->patient_id = $patientsId;
-        $ivfDeposit->admin_id = Auth::user()->id;
-        $ivfDeposit->amount = $request->payment;
-        $ivfDeposit->total = $request->payment;
-        $ivfDeposit->package = $request->package;
-        $ivfDeposit->charge_type = 2;
-        $ivfDeposit->case_type = 'Credit';
-        if ($request->no_cycle == '') {
-            $ivfDeposit->cycle_no = 1;
-        }
-        else{   
-            $ivfDeposit->cycle_no = $request->no_cycle;
-        } 
-        if($request->payment > 0)
-        {
-            $ivfDeposit->save(); 
-        }
+        // if(!$ivfPaymentData)
+        // {
+            $ivfDepositData = $this->IndoorDeposit->where('patient_id',$patientsId)->whereCycleNo($no_cycle)->first();
+            $ivfDeposit = $this->IndoorDeposit;
+            if($ivfDepositData){
+                $ivfDeposit = $ivfDepositData;
+            }
+            //Add Indoor deposits
+            $ivfDeposit->patient_id = $patientsId;
+            $ivfDeposit->admin_id = Auth::user()->id;
+            $ivfDeposit->amount = $request->payment;
+            $ivfDeposit->total = $request->payment;
+            $ivfDeposit->discount = $request->discount;
+            $ivfDeposit->package = $request->package;
+            $ivfDeposit->charge_type = 2;
+            $ivfDeposit->case_type = 'Credit';
+            // if ($request->no_cycle == '') {
+            //     $ivfDeposit->cycle_no = 1;
+            // }
+            // else{   
+                $ivfDeposit->cycle_no = $no_cycle;
+            // } 
+            if($request->payment > 0)
+            {
+                $ivfDeposit->save(); 
+            }
+        // }
+        
 
         if($request->isprint){
             return response()->json([

@@ -4,10 +4,10 @@
             <th>Sr.No</th>
             <th>Date</th>
             <th>Time</th>
+            <th>Arrival Time</th>
             <th>Code</th>
             <th>Name</th>
             <th>Seen By</th>
-            <th>Arrival Time</th>
             <th>Category</th>
             <th>Mobile Number</th>
             <th>Remark</th>
@@ -123,6 +123,7 @@
                 <td> {{ ((($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration) . '.' }}</td>
                 <td>{{\Carbon\Carbon::parse($row->date)->format('d-m-Y')}}</td>
                 <td>{{\Carbon\Carbon::parse($row->time)->format('h:i a')}}</td>
+                <td>{{$row->arrival_time}}</td>
                 <td>{{$row->getPatientsDetails['code']}}</td>
                 <td class="patient_dropdown">{{ucwords(strtolower($row->getPatientsDetails['name']))}}&nbsp;
                     @if(in_array($row->categoryDetails['id'],[1,2,3,4,5,6]))
@@ -132,7 +133,6 @@
                     @endif
                 </td>
                 <td>{{$row->getSeenBy['name']}}</td>
-                <td>{{$row->arrival_time}}</td>
                 <td>{{$row->categoryDetails['name']}}</td>
                 <td>{{$row->getPatientsDetails['mobile_number']}}</td>
                <!--  <td>

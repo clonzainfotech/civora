@@ -1044,14 +1044,14 @@ class IUIController extends AdminController
                 $fDate = $fDate ? date('d M Y',strtotime($fDate)) : null;
                 $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$fDate,$patientsId);
             }
-            if(isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->data['hcg']['iui']['status'] == 'yes')
-            {
-                $iuiReport = $this->IUIReport;
-                $iuiReport->patients_id = $patientsId;
-                $iuiReport->cycle_no = $request->cycle_no;
-                $iuiReport->description = json_encode($request->iui_report);
-                $iuiReport->save();
-            }
+            // if(!$request->iui_history_id && !$request->iui_id && isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->data['hcg']['iui']['status'] == 'yes')
+            // {
+            //     $iuiReport = $this->IUIReport;
+            //     $iuiReport->patients_id = $patientsId;
+            //     $iuiReport->cycle_no = $request->cycle_no;
+            //     $iuiReport->description = json_encode($request->iui_report);
+            //     $iuiReport->save();
+            // }
             if($request->isprint == 1 || $request->isprint == 2 || $request->isprint == 6){
                 if($request->isprint == 2){
                     $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
@@ -1537,11 +1537,13 @@ class IUIController extends AdminController
                 return $data;
             }
             $iuiReport = null;
+            $iuiReportStatus = null;
             $iuifourthVisit = $this->IuiHistory->wherePatientsIdAndVisit($id, 4)->whereCycleNo($cycleNo)->where('cycle_status',2)->orderBy('id', 'DESC')->first();
             $iuiFirstVisitData = $this->IUI->wherePatientsId($id)->orderBy('id','DESC')->first();
             $iuiReport = $this->IUIReport->wherePatientsId($id)->whereCycleNo($cycleNo)->orderBy('id','DESC')->first();
+            $iuiReportStatus = $this->IuiHistory->wherePatientsId($id)->whereCycleNo($cycleNo)->where('description->hcg->iui->status','yes')->first();
             $cycleData = $this->IUI->wherePatientsId($id)->orderBy('cycle_no','asc')->pluck('cycle_no','cycle_no')->toArray();
-            $view = view('admin.iui.history',compact('medicines','patientsId','hospitalTime','date','iuiCycleNo','iuiCurrentCycleNo','iui','iuiFirstVisitData','cycleData','referenceDoctor','iuiReport'));
+            $view = view('admin.iui.history',compact('medicines','patientsId','hospitalTime','date','iuiCycleNo','iuiCurrentCycleNo','iui','iuiFirstVisitData','cycleData','referenceDoctor','iuiReport','iuiReportStatus'));
            //display old iui visit when patients is tranfer from iui to ANC or IVf
             if(($iuifourthVisit)){
                 $ivfTransfer = $this->IVF->wherePatientsId($id)->where('created_at','>=',$iuifourthVisit->created_at)->first();
@@ -1731,8 +1733,35 @@ class IUIController extends AdminController
             $patientId = decrypt($request->iui_report_patient_id);
             $cycle_no = decrypt($request->iui_report_cycle_no);
             $iuiReport = $this->IUIReport->where('patients_id',$patientId)->where('cycle_no',$cycle_no)->first();
+            if(!$iuiReport)
+            {
+                $iuiReport = $this->IUIReport;
+            }
+            $iuiReport->patients_id = $patientId;
+            $iuiReport->cycle_no = $cycle_no;
             $iuiReport->description = json_encode($request->iui_report);
             $iuiReport->save();
+            $appointmentTime = null;
+            $followDate = !empty($request->iui_report['follow_up']) ? date('Y-m-d',strtotime($request->iui_report['follow_up'])) : null;
+            $fDate = !empty($followDate) ? Carbon::parse($followDate)->format('Y-m-d') : null;
+            if($fDate)
+            {
+                $requestData = new \Illuminate\Http\Request();
+                $requestData->replace(['date' => $fDate,'status'=>true]);
+                $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($requestData);
+                if(!empty($nextAppontment['time']) || $nextAppontment['time'] == 0){
+                    $hospitalTime = $this->appointmentTime('09:00', '23:55', '5 mins');
+                    $appointmentTime = $nextAppontment['time'] || $nextAppontment['time'] == 0 ? $hospitalTime[$nextAppontment['time']] : null;
+                    $followDate = !empty($nextAppontment['date']) ? $nextAppontment['date'] : $followDate;
+                }
+                $appointment = $this->Appointment->where('patients_id',$patientId)->orderBy('id','DESC')->first();
+                if($appointment){
+                    $appointmentData['appointmentId'] = encrypt($appointment->id);
+                    $appointmentData['date'] = $followDate;
+                    $appointmentData['time'] = $appointmentTime;
+                    $nextAppointment = $this->nextAppointmentData($appointmentData);
+                }
+            }
             if($request->isprint == 2){
                 return response()->json([
                     'status' => 2,

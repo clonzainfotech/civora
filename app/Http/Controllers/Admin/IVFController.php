@@ -812,6 +812,7 @@ class IVFController extends AdminController
                     }
                     
                     $ivfHistory->description = json_encode($data);
+                    // dd($ivfHistory->description);
                     $ivfHistory->investigation = isset($request->investigation) ? json_encode($investigationData) : null;
                     $ivfHistory->trigger_date = !empty($request->data['trigger_date']) ? Carbon::parse($request->data['trigger_date'])->format('Y-m-d') : null;
                     $ivfHistory->trigger_time = $triggerTime;
@@ -1527,7 +1528,7 @@ class IVFController extends AdminController
                 if(isset($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' && $checkIsTransferData->is_upt == 'yes' && ($cData != $cNumber))
                 {
                     // dd($pStatus);
-                    $checkIsTransfer = !empty($checkIsTransferData->plan) ? 1 : 0;
+                    // $checkIsTransfer = !empty($checkIsTransferData->plan) ? 1 : 0;
                 }
 
             }

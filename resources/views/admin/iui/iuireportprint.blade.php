@@ -78,7 +78,7 @@
                             </th>
                             <th>
                             <th class="pb-1 float-right ivf-label">
-                                <span class="pb-1 ivf-label">Date :</span> <span class="pb-1 font-bold ivf-label">{{\Carbon\Carbon::parse($iuiReport->created_at)->format('d-m-Y')}}</span><br>
+                                <span class="pb-1 ivf-label">Date :</span> <span class="pb-1 font-bold ivf-label">{{\Carbon\Carbon::parse($iuiReport->updated_at)->format('d-m-Y')}}</span><br>
                                 <span class="pb-1 ivf-label">Reason :</span> <span class="pb-1 font-bold ivf-label"> {{!empty($iuireportData->reason) ? $iuireportData->reason : '-'}}</span>
                             </th>
                         </tr>
@@ -141,47 +141,6 @@
                         </tr>
                     </tbody>
                 </table>
-                {{-- <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th colspan="4" class="text-center">Embryo Transfer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Pick up  Date</td>
-                            <td>{{ !empty($transferReport->pickup_date) ? Carbon\Carbon::parse($transferReport->pickup_date)->format('D d-M-Y') : '-' }}</td>
-                            <td>Simulation Protocol</td>
-                            <td>{{ !empty($transferReport->simulation_protocol) ? $transferReport->simulation_protocol : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Total OCC</td>
-                            <td>{{ !empty($transferReport->total_occ) ? $transferReport->total_occ : '-' }}</td>
-                            <td>Mll</td>
-                            <td>{{ !empty($transferReport->mll) ? $transferReport->mll : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Ml</td>
-                            <td>{{ !empty($transferReport->ml) ? $transferReport->ml : '-' }}</td>
-                            <td>GV</td>
-                            <td>{{ !empty($transferReport->gv) ? $transferReport->gv : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Oocyte Quality</td>
-                            <td>{{ !empty($transferReport->oocycle_quality) ? $transferReport->oocycle_quality : '-' }}</td>
-                            <td>Sperm Quality</td>
-                            <td>{{ !empty($transferReport->sperm_quality) ? $transferReport->sperm_quality : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Fertilization Procedure</td>
-                            <td colspan="3">{{ !empty($transferReport->fertilization_procedure) ? $transferReport->fertilization_procedure : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Remark</td>
-                            <td colspan="3">{{ !empty($transferReport->remark) ? $transferReport->remark : '-' }}</td>
-                        </tr>
-                    </tbody>
-                </table> --}}
                 
                 <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
                     <tbody>
@@ -189,8 +148,11 @@
                             $todayDate = Carbon\Carbon::Now();
                         @endphp
                         <tr>
+                            <th><span class="pb-1 ivf-label"><strong>Remark : </strong>{{!empty($iuireportData->remark) ? $iuireportData->remark : '-'}} </span></th>
+                        </tr>
+                        <tr>
                             <th>
-                                {{-- <span class="pb-1 ivf-label">Follow Up Date : {{Carbon\Carbon::parse(!empty($transferReport->created_at) ? $transferReport->created_at : $todayDate)->addDays(14)->format('D d-M-Y')}}</span><br> --}}
+                                <span class="pb-1 ivf-label">Follow Up Date : {{Carbon\Carbon::parse(!empty($iuireportData->follow_up) ? $iuireportData->follow_up : null)->format('D d M Y')}}</span><br>
                                 <span class="pb-1 ivf-label">Best Of Luck</span>
                             </th>
                             <th>

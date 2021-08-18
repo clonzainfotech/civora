@@ -124,7 +124,7 @@
                 <td class="line-height">{{\Carbon\Carbon::parse($row->date)->format('d-m-Y')}}<br>{{\Carbon\Carbon::parse($row->time)->format('h:i a')}}</td>
                 <td>{{$row->arrival_time}}</td>
                 <td class="patient_dropdown ">{{ucwords(strtolower($row->getPatientsDetails['name']))}}&nbsp;
-                    @if(in_array($row->categoryDetails['id'],[1,2,3,4,5,6]))
+                    @if(in_array($row->categoryDetails['id'],[1,2,3,4,5,6,10,13]))
                         <i class="material-icons candor-color pencil-icon appoitment_content" data-category="{{$row->categoryDetails['id']}}" data-ptid="{{encrypt($row->getPatientsDetails['id'])}}" data-date="{{\Carbon\Carbon::parse($row->date)->format('d-m-Y')}}" data-class="{{'appointment_dropdown_content_'.$uniqId}}">visibility</i>
                         <div class="{{'appointment_dropdown_content appointment_dropdown_content_'.$uniqId}}">
                         </div>

@@ -29,11 +29,11 @@
                         <i class="zmdi zmdi-edit material-icons"></i>
                     </button>
                 </a>
-                <a href="#" class="a-color">
+                {{-- <a href="#" class="a-color">
                     <button class="btn btn-icon btn-neutral candor-color btn-icon-mini injection-delete" data-id="{{encrypt($row->id)}}">
                         <i class="zmdi zmdi-delete material-icons"></i>
                     </button>
-                </a>
+                </a> --}}
                 
             </td>
         </tr>

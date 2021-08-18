@@ -54,7 +54,7 @@ class InjectionChargeController extends AdminController
     {
         try
         {
-            $injection = !empty($request->injId) ? $this->InjectionCharge->where('name',$request->inj_name)->where('id','!=',decrypt($request->injId))->first() : $this->InjectionCharge->where('name',$request->inj_name)->first();
+            $injection = !empty($request->injId) ? $this->InjectionCharge->where('name',$request->inj_name)->where('type',$request->type)->where('id','!=',decrypt($request->injId))->first() : $this->InjectionCharge->where('name',$request->inj_name)->where('type',$request->type)->first();
             if(!empty($injection))
             {
                 $data['status'] = 2;

@@ -718,7 +718,7 @@ class ANCController extends AdminController
             }
             $isGsac = false;
             $placenta = $this->getPlacenta()['placenta'];
-            $ancFirstVisitData = $this->ANC->where('patients_id',$patientsId)->first();
+            $ancFirstVisitData = $this->ANC->where('patients_id',$patientsId)->where('id',$current_anc_id)->first();
             $upt = !empty($ancFirstVisitData->patients_obstratics) ? json_decode($ancFirstVisitData->patients_obstratics, true) : null;
             $oe = !empty($ancFirstVisitData->o_e) ? json_decode($ancFirstVisitData->o_e, true) : null;
             $personal_history_type = $this->AncHoHistory->where('type',1)->pluck('name','name')->toArray();
@@ -1028,7 +1028,7 @@ class ANCController extends AdminController
                 }else{
                     $ancHistoryId = !empty($ancHistory->id) ? $ancHistory->id : null;
                     $ancData = $ancHistory;
-                    $ancFirstVisitData = $this->ANC->where('patients_id',$patients)->where('id',$ancHistory->anc_id)->first();
+                    $ancFirstVisitData = $this->ANC->where('patients_id',$patients)->first();
                     $upt = json_decode($ancFirstVisitData->patients_obstratics, true);
                     $oe = json_decode($ancFirstVisitData->o_e, true);
                     $historyOE = !empty($ancData->o_e) ? json_decode($ancData->o_e, true) : null;

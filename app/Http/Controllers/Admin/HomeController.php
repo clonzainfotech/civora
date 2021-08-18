@@ -120,17 +120,19 @@ class HomeController extends AdminController
             ->get();
         $newPatientData = $this->OpdPatients->paginate(100);
 
-        $appointmentData = collect($this->Appointment
-            ->where('date', $todayDate)
-            ->withCount([
-                'getPatientsDetails' => function ($query) use ($todayDate) {
-                    $query->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), $todayDate);
-                }
-            ])
-            ->get());
-
-        $totalPatients = $appointmentData->sum('get_patients_details_count');
-        $totalAppointments = count($appointmentData);
+        // $appointmentData = collect($this->Appointment
+        //     ->where('date', $todayDate)
+        //     ->withCount([
+        //         'getPatientsDetails' => function ($query) use ($todayDate) {
+        //             $query->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), $todayDate);
+        //         }
+        //     ])
+        //     ->get());
+        $appontmentCount = $this->Appointment->whereDate('date',$todayDate)->where('usg_status',0)->count();
+        // $totalPatients = $appointmentData->sum('get_patients_details_count');
+        $totalPatients = $this->OpdPatients->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), $todayDate)->count();
+        // $totalAppointments = count($appointmentData);
+        $totalAppointments = $appontmentCount;
         $totalOpds = $this->AppointmentCharges->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), $todayDate)->count();
 
         // chart data for income

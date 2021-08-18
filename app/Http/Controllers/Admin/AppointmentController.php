@@ -748,6 +748,7 @@ class AppointmentController extends AdminController
                     if(!empty($anc)) {
                         $anc_oe_data = json_decode($anc->o_e);
                         $anc_oe_data->follow_up = Carbon::parse($newFollowUpDate)->format('D d M Y');
+                        $anc_oe_data->new_follow_up = Carbon::parse($newFollowUpDate)->format('Y-m-d');
                         
                         $anc->o_e = json_encode($anc_oe_data);
                         $anc->save();
@@ -759,6 +760,8 @@ class AppointmentController extends AdminController
                         {
                             $anc_oe_data = json_decode($ancHistory->o_e);
                             $anc_oe_data->follow_up = Carbon::parse($newFollowUpDate)->format('D d M Y');
+                            $anc_oe_data->new_follow_up = Carbon::parse($newFollowUpDate)->format('Y-m-d');
+
                             
                             $ancHistory->o_e = json_encode($anc_oe_data);
                             $ancHistory->save();

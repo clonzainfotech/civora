@@ -105,7 +105,7 @@ class InjectionController extends AdminController
     // Injection delete using this function via injection id
     public function delete($id){
         try{
-            $injection = $this->Injection->find($id);
+            $injection = $this->Injection->find(decrypt($id));
             $injection->delete();
             return 'true';
         }catch(Exception $e){

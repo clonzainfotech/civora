@@ -125,14 +125,7 @@
                                 </div>
                                 <span class="form-error-msg quantity-error w-100"></span>
                             </div>
-                            <div class="form-group col-md-12">
-                                {{Form::select('type',[''=>'Select Type','1'=>'Hormon', '2'=>'IVF', '3'=>'IUI'],'',[
-                                    'class'=>'form-control type', 
-                                    'id' => 'type',
-                                    'data-errorclass' =>'type-error'
-                                ])}}
-                                <span class="form-error-msg type-error w-100"></span>
-                            </div>
+                            
                         </div>
                         <!-- footer -->
                         <div class="modal-footer mt-3 time-footer">

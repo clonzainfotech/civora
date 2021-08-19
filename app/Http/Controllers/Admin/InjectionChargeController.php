@@ -54,7 +54,7 @@ class InjectionChargeController extends AdminController
     {
         try
         {
-            $injection = !empty($request->injId) ? $this->InjectionCharge->where('name',$request->inj_name)->where('type',$request->type)->where('id','!=',decrypt($request->injId))->first() : $this->InjectionCharge->where('name',$request->inj_name)->where('type',$request->type)->first();
+            $injection = !empty($request->injId) ? $this->InjectionCharge->where('name',$request->inj_name)->where('id','!=',decrypt($request->injId))->first() : $this->InjectionCharge->where('name',$request->inj_name)->first();
             if(!empty($injection))
             {
                 $data['status'] = 2;
@@ -67,7 +67,7 @@ class InjectionChargeController extends AdminController
                 $injection->net_price = $request->net_amount;
                 $injection->mrp = $request->mrp;
                 $injection->quantity = $request->quantity;
-                $injection->type = $request->type;
+                $injection->type = 1;
                 $injection->save();
                 $data['status'] = 1;
             }
@@ -78,7 +78,7 @@ class InjectionChargeController extends AdminController
                 $injection->net_price = $request->net_amount;
                 $injection->mrp = $request->mrp;
                 $injection->quantity = $request->quantity;
-                $injection->type = $request->type;
+                $injection->type = 1;
                 $injection->save();
                 $data['status'] = 1;
             }

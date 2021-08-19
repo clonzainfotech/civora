@@ -199,13 +199,6 @@
                 getInjectionData(qstring);
             });
 
-            $(document).on('dblclick', '#injection-table tbody tr', function(event) {
-                var caExpenseId = $(this).data('id');
-                if(typeof(caExpenseId) !== 'undefined'){
-                    var url = 'injection/'+caExpenseId+'/edit';
-                    window.location.href = url;
-                }
-            });
 
             $(document).on('click', '.print-injection', function () {
                 qstring = 'page='+page+'&search='+search+'&plan='+plan+'&isprint=1';

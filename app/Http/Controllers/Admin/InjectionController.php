@@ -220,7 +220,7 @@ class InjectionController extends AdminController
     {
         try{
             if($request->ajax()) {
-                $planList = $this->Injection->groupBy('type');
+                $planList = $this->Injection->whereNotNull('name')->groupBy('type');
                 // search text
                 $search = $request->search;
                 if($search){

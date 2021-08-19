@@ -183,7 +183,7 @@
             });
 
             $(document).on('click','.injection-delete',function(){
-                caExpenseId = $(this).data('id');
+                injId = $(this).data('id');
                 showConfirmMessage();
             });
             $(document).on('change','select.select_plan',function(){
@@ -333,19 +333,21 @@
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             }, function () {
-                removeCaExpense();
+                removeInjection();
                 $('.showSweetAlert').hide();
-                location.reload();
+                // location.reload();
                 // swal("Deleted!", "Your category has been deleted.", "success");
             });
         }
         // remove category
-        function removeCaExpense(){
+        function removeInjection(){
             $.ajax({
-                url: "{{URL::to('ca-expense/delete')}}"+'/'+caExpenseId,
+                url: "{{URL::to('injection/delete')}}"+'/'+injId,
                 dataType: 'json',
             }).done(function(data) {
                 getInjectionData(qstring);
+                location.reload();
+
             }).fail(function() {
 
             });

@@ -6209,11 +6209,6 @@
                     var buttonHtml = '';
                     var previewData = '';
                     
-                    // if(typeof data.date != 'undefined'){
-                    //     var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
-                    //     var date = moment(new Date(data.date)).format('DD MMMM YYYY');
-                    //     $('.ivf-appointment-date').text(date);
-                    // }plan
                     $('.ivf-appointment-plan').html(data.plan);
                     $('.ivf-appointment-cycle-no').html(data.cycle);
                     for(i=0; i<data.data.length;i++)

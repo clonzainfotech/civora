@@ -1458,7 +1458,6 @@ class ANCController extends AdminController
                         $ancHistory = $this->ANC->where('patients_id',$patientId)->where('id',$anc_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$request->appointmentDate)->orderBy('created_at','DESC')->first();
                     }
                     $ancVisitDate = [Carbon::parse($ancHistory->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ancHistory->created_at)->format('Y-m-d H:i:s')];
-                    // dd()
 
                 }
                 else

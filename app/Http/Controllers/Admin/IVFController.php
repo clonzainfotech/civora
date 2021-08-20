@@ -2383,14 +2383,29 @@ class IVFController extends AdminController
                 $cycleNo = $request->cycle_no;
                 $visitNo = $request->visit == 'null' ? 1 : $request->visit;
                 $type = $request->type;
-                $ivfHistoryDate = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('created_at','DESC')->pluck('created_at','created_at')->toArray();
-                $ivfDateData = $this->IVF->where('patients_id',$patientId)->orderBy('created_at','DESC')->first();
-                $ivfDate = [Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')];
-                $ivfVisitDate = array_merge($ivfHistoryDate,$ivfDate);
+                if($request->is_appointmentView && $request->is_appointmentView == 1 && $request->visitDate && !empty($request->visitDate))
+                {
+                    $ivfHistoryDate = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$request->visitDate)->orderBy('created_at','DESC')->first();
+                    if(!$ivfHistoryDate)
+                    {
+
+                        $ivfHistoryDate = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$request->visitDate)->orderBy('created_at','DESC')->first();
+                    }
+
+                    $ivfVisitDate = [Carbon::parse($ivfHistoryDate->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ivfHistoryDate->created_at)->format('Y-m-d H:i:s')];
+                }
+                else
+                {
+                    $ivfHistoryDate = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->orderBy('created_at','DESC')->pluck('created_at','created_at')->toArray();
+                    $ivfDateData = $this->IVF->where('patients_id',$patientId)->orderBy('created_at','DESC')->first();
+                    $ivfDate = [Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ivfDateData->created_at)->format('Y-m-d H:i:s')];
+                    $ivfVisitDate = array_merge($ivfHistoryDate,$ivfDate);
+                }
+                
                 $ivfPatients = $this->OpdPatients->find($patientId);
                 $ivfType = 1;
                 $encIvfId = [];
-                if($request->visitDate && !empty($request->visitDate))
+                if($request->visitDate && !empty($request->visitDate) && (!$request->is_appointmentView || $request->is_appointmentView != 1))
                 {
                     $visitDate = $request->visitDate;
                     if(empty($request->extraVisit))

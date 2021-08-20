@@ -567,7 +567,8 @@
                         <div class="col-md-12">
                             <h5 class="modal-title" id="myModalLabel"></h5>
                         </div>
-                   
+                    </div>
+                    </div>
                     <div class="modal-body">
                         <div class="visit-details-data">
                         </div>
@@ -1345,15 +1346,35 @@
             })
             $(document).on('click','.preview-file',function(e){
                 e.preventDefault();
-                var anc_id = $(this).data('id');
+                var category = $(this).data('category');
                 var patientsId = $(this).data('patient');
                 var appointmentDate = $(this).data('date');
                 $('.preview-file-modal').modal('hide');
-                $('.visit-details-data').html('');
-                $('.preview-file-modal').modal('show');
-                var ancQstring = 'patient_id='+patientsId+'&anc_id='+anc_id+'&is_appointmentView=1'+'&appointmentDate='+appointmentDate;
-                getANCHistoryData(ancQstring);
-                
+                    $('.visit-details-data').html('');
+                    $('.preview-file-modal').modal('show');
+                if(category == 5 || category == 6 || category == 10 || category == 13)
+                {
+                    var anc_id = $(this).data('id');
+                    
+                    var ancQstring = 'patient_id='+patientsId+'&anc_id='+anc_id+'&is_appointmentView=1'+'&appointmentDate='+appointmentDate;
+                    getANCHistoryData(ancQstring);
+                }
+                if(category == 3 || category == 4)
+                {
+                    var cycleNo = $(this).data('cycleno');
+                    var iuiString = 'patient_id='+patientsId+'&history_date='+appointmentDate+'&is_appointmentView=1&cycle_no='+cycleNo;
+                    getIuiHistoryData(iuiString);
+                }
+                if(category == 1 || category == 2)
+                {
+                    var extraVisit = $(this).data('extravisit');
+                    var ivfCycleNo = $(this).data('cycleno');
+                    var ivfPlan = $(this).data('plan');
+                    // ivfVisit = $('.next-appointment-details').data('visit');
+                    var ivfString = 'patient_id='+patientsId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visitDate='+appointmentDate+'&is_appointmentView=1&extraVisit='+extraVisit;
+                    // ivfString = 'patient_id='+ivfPId+'&cycle_no='+ivfCycleNo+'&plan='+ivfPlan+'&visit='+ivfVisit+'&is_print=1';
+                    getIvfHistoryData(ivfString);
+                }
             });
             function getANCHistoryData(ancQstring)
             {
@@ -1363,7 +1384,6 @@
                     dataType:'json'
                 }).done(function(data){
                     if(data.anc_type == 1){
-                        console.log('dsfdf');
                         var ancPreview = $('.visit-details-data').html();
                         var buttonHtml = '';
                         var previewData = '';
@@ -1390,5 +1410,63 @@
 
                 });
             }
+            function getIvfHistoryData(ivfString){
+                $.ajax({
+                    url:'{{URL::to("get-ivf-details")}}?'+ivfString,
+                    type:'GET',
+                    dataType:'json'
+                }).done(function(data){
+                    if(data.ivf_type == 1){
+                        $('.visit-details-data').html('');
+                        var ivfPreview = $('.visit-details-data').html();
+                        var buttonHtml = '';
+                        var previewData = '';
+                        
+                        $('.ivf-appointment-plan').html(data.plan);
+                        $('.ivf-appointment-cycle-no').html(data.cycle);
+                        for(i=0; i<data.data.length;i++)
+                        {
+                            if(typeof data.date[i] != 'undefined'){
+                                var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                                var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                            }
+                            ivfPreview = buttonHtml + data.data[i];
+                            $('.visit-details-data').html(ivfPreview);
+                            ivfPreview = ivfPreview + '<div class="row sepreator"></div>';
+                        }
+                    }
+                }).fail(function(error){
+
+                });
+            }
+            function getIuiHistoryData(iuiString){
+            
+            $.ajax({
+                url:'{{URL::to("get-iui-details")}}?'+iuiString,
+                type:'GET',
+                dataType:'json'
+            }).done(function(data){
+                if(data.iui_type == 1){
+                    
+                    var buttonHtml = '';
+                    var previewData = '';
+                    $('.visit-details-data').empty();
+                    var iuiPreview = $('.visit-details-data').html();
+                    for(i=0; i<data.data.length;i++)
+                    {
+                        if(typeof data.date[i] != 'undefined')
+                        {
+                            var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
+                            var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
+                        }
+                        iuiPreview = buttonHtml + data.data[i];
+                        $('.visit-details-data').html(iuiPreview);
+                        iuiPreview = iuiPreview + '<div class="row sepreator"></div>';
+                    }
+                }
+            }).fail(function(error){
+
+            });
+        }
     </script>
 @stop

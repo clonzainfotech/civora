@@ -1389,17 +1389,21 @@ class AppointmentController extends AdminController
                     $report = !empty($investigationData) ? implode(', ',$investigationData) : '';
                     $report .= !empty($investigation) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? ', '.$investigation->investigation_extra : '';
                     $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
-                        <button class="btn btn-primary preview-file" data-date="'.$appoitmentDate.'" data-id="'.encrypt($ancId).'" data-patient = "'.$request->patients_id.'">Visit</button>';
+                        <button class="btn btn-primary preview-file" data-category="'.$request->category.'" data-date="'.$appoitmentDate.'" data-id="'.encrypt($ancId).'" data-patient = "'.$request->patients_id.'">Visit</button>';
             }
             if($request->category && in_array($request->category,[1,2]))
             {
                 $report = '';
-                
+                $ivfId = null;
+                $plan = '';
+                $cycle_no = '';
                 $currentHistory = $this->IvfHistory->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->orderBy('id','desc')->first();
                 if($currentHistory)
                 {
                     $ivfData = !empty($currentHistory) ? json_decode($currentHistory->description) : null;
                     $report .= !empty($ivfData) && isset($ivfData->investigation_extra) && !empty($ivfData->investigation_extra) ? ', '.$ivfData->investigation_extra : '';
+                    $plan = $currentHistory->plan;
+                    $cycle_no = $currentHistory->cycle_no;
                 }
                 $ivfFirst = $this->IVF->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->first();
                 if(!$ivfFirst)
@@ -1407,6 +1411,8 @@ class AppointmentController extends AdminController
                     $investigation = !empty($ivfFirst) ? json_decode($ivfFirst->investigation) : null;
                     $report .= !empty($investigation) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? ', '.$investigation->investigation_extra : '';
                 }
+                $isExtraVisit = $this->IvfExtraVisit->where('patient_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->orderBy('id','desc')->first();
+                $extraVisit = !empty($isExtraVisit) ? '1' : '';
                 $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
                         <p><span class="font-bold candor-color">Package: </span>'.(!empty($package) ? $package->package : '-').'</p>
@@ -1414,20 +1420,23 @@ class AppointmentController extends AdminController
                         <p><span class="font-bold candor-color">Package Remark: </span>'.(!empty($package) ? $package->remark : '-').'</p>
                         <p><span class="font-bold candor-color">Payment : </span></p>';
                 $data .= $payment;   
-                $data .= '<button class="btn btn-primary preview-file">Visit</button>';
+                $data .= '<button class="btn btn-primary preview-file" data-plan="'.$plan.'" data-cycleno="'.$cycle_no.'" data-extravisit="'.$extraVisit.'" data-category="'.$request->category.'" data-date="'.$appoitmentDate.'" data-id="" data-patient = "'.$request->patients_id.'">Visit</button>';
             }
             if($request->category && in_array($request->category,[3,4]))
             {
                 $report = '';
+                $cycle_no = '';
                 $currentHistory = $this->IuiHistory->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->first();
                 if($currentHistory)
                 {
+                    $cycle_no = $currentHistory->cycle_no;
                     $ivfData = !empty($currentHistory) ? json_decode($currentHistory->description) : null;
                     $report .= !empty($ivfData) && isset($ivfData->investigation_extra) && !empty($ivfData->investigation_extra) ? ', '.$ivfData->investigation_extra : '';
                 }
                 $iuiFirst = $this->IUI->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->first();
-                if(!$iuiFirst)
+                if($iuiFirst)
                 {
+                    $cycle_no = $iuiFirst->cycle_no;
                     $investigation = !empty($iuiFirst) ? json_decode($iuiFirst->investigation) : null;
                     $report .= !empty($investigation) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? ', '.$investigation->investigation_extra : '';
                 }
@@ -1436,7 +1445,8 @@ class AppointmentController extends AdminController
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
                         <p><span class="font-bold candor-color">Payment : </span></p>';
                 $data .= $payment;   
-                $data .= '<button class="btn btn-primary preview-file">Visit</button>';
+                $data .= '<button class="btn btn-primary preview-file" data-cycleno="'.$cycle_no.'" data-category="'.$request->category.'" data-date="'.$appoitmentDate.'" data-id="" data-patient = "'.$request->patients_id.'">Visit</button>';
+
             }
             return response()->json([
                 'status'=>1,

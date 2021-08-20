@@ -2133,17 +2133,31 @@ class IUIController extends AdminController
                 if($request->cycle_no && !empty($request->cycle_no))
                 {
                     $iuiVisitDate = [];
-                    $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->pluck('cycle_no','created_at')->toArray();
-                    $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->first();
-                    $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$cycle];
-                    
-                    $iuiVisitDate = array_merge($iuiHistoryDate,$iuiDate);
-                    $iuiFirstVisit = $iuiDateData;
-                    $iuiHistoryData = collect($this->IuiHistory->wherePatientsId($patientId)->whereCycleNo($cycle)->get());
-                    $iuiSecondVisit = $iuiHistoryData->where('visit',2)->first();
-                    if($iuiSecondVisit){
-                        $iuiSecondVisit = json_decode($iuiSecondVisit->description);
+                    if($request->is_appointmentView && $request->is_appointmentView == 1)
+                    {
+                        $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$historyDate)->first();
+                        if(!$iuiHistoryDate)
+                        {
+                            $iuiHistoryDate = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$historyDate)->where('cycle_no',$cycle)->first();
+                        }
+                        $iuiVisitDate = [Carbon::parse($iuiHistoryDate->created_at)->format('Y-m-d H:i:s')=>$cycle];
                     }
+                    else
+                    {
+                        $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->pluck('cycle_no','created_at')->toArray();
+                        $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$cycle)->first();
+                        $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$cycle];
+                        
+                        $iuiVisitDate = array_merge($iuiHistoryDate,$iuiDate);
+                        $iuiFirstVisit = $iuiDateData;
+                        
+                    }
+                        $iuiHistoryData = collect($this->IuiHistory->wherePatientsId($patientId)->whereCycleNo($cycle)->get());
+                        $iuiSecondVisit = $iuiHistoryData->where('visit',2)->first();
+                        if($iuiSecondVisit){
+                            $iuiSecondVisit = json_decode($iuiSecondVisit->description);
+                        }
+                    
                 }
                 //all IUI cycle wise
                 else
@@ -2162,7 +2176,7 @@ class IUIController extends AdminController
                     }
                 }
                 
-                if($historyDate)
+                if($historyDate && (!$request->is_appointmentView || $request->is_appointmentView != 1))
                 {
                     $iuiType = 2;
                     $iuiData = $this->IUI->where('patients_id',$patientId)->where('created_at','=',$historyDate)->first();

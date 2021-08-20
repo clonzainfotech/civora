@@ -1329,4 +1329,73 @@ class AppointmentController extends AdminController
     public function storeReferenceDoctorPro($data){
 
     }
+    /**
+    * Return PopUp detailof patient as category wise
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getAppointmentPopUpDetail(Request $request)
+    {
+        try
+        {
+
+            $patients_id = decrypt($request->patients_id);
+            $appoitmentDate = \Carbon\Carbon::parse($request->appoitmentDate)->format('Y-m-d');
+            $opdPatient = $this->OpdPatients->find($patients_id);
+            $data = '';
+            if($request->category && in_array($request->category,[5,6,10,13]))
+            {
+                $report = '';
+                $investigationReport = $this->allInvestigationReport();
+                $investigationData = [];
+                $investigationValueDetails = [];
+                $investigationReport = $investigationReport['reportData'];
+                $ancHistory = $this->AncHistory->where('patients_id','=',$patients_id)
+                    ->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'<',$appoitmentDate)
+                    ->orderBy('id','desc')
+                    ->first();
+                    if(!$ancHistory)
+                    {
+                        $ancHistory = $this->ANC->where('patients_id',$patients_id)->orderBy('created_at','desc')->first();
+                    }
+                    if($ancHistory)
+                    {
+                        $investigation = !empty($ancHistory->investigation) ? json_decode($ancHistory->investigation) : null;
+                        $data = $investigation->investigation_data;
+                        $investigationValueData = (array)$investigation->investigation_details;
+                        foreach($data as $key => $value){
+                            if(!empty($investigationValueData[$value])){
+                                $investigationValueDetails[$investigationReport[$value]] = $investigationValueData[$value];
+                            }else{
+                                $investigationData[] = $investigationReport[$value];
+                            }
+                        }
+                    }
+                    $report = !empty($investigationData) ? implode(', ',$investigationData) : '';
+                    $report .= !empty($investigation) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? ', '.$investigation->investigation_extra : '';
+                    $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
+                        <button class="btn btn-primary">Visit</button>';
+            }
+            if($request->category && in_array($request->category,[1,2]))
+            {
+                $currentHistory = $this->IvfHistory->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'<',$appoitmentDate)->orderBy('id','desc')->first();
+                if(!$currentHistory)
+                {
+                    $ivf = $this->IVF->where('patients_id',$patients_id)->orderBy('id','desc')->first();
+                }
+                $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
+                $data = '<p><span class="font-bold candor-color">Package: </span>'.(!empty($package) ? $package->package : '-').'</p>
+                        <p><span class="font-bold candor-color">Package Remark: </span>'.(!empty($package) ? $package->condition : '-').'</p>
+                <button class="btn btn-primary">Visit</button>';
+            }
+            return response()->json([
+                'status'=>1,
+                'data' => $data
+            ]);  
+        }
+        catch(Exception $e)
+        {
+            log::Debug($e);
+        }
+    }
 }

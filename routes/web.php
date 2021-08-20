@@ -95,6 +95,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('appointment-update-remark','AppointmentController@updateRemark');
     Route::get('update-appointment-time','AppointmentController@updateTime');
     Route::get('update-appointment-date-time','AppointmentController@updateAppointmentDateAndTime');
+    Route::get('get-appointment-popup-Detail','AppointmentController@getAppointmentPopUpDetail');
 
     //Donor
     Route::get('donor','DonorController@index');

@@ -1043,6 +1043,10 @@ class IVFController extends AdminController
                     
                     $doseData = $this->Dose->pluck('name','name');
                 }
+                if($request->visit == 2)
+                {
+                    $isTableView = 0;
+                }
                 if($request->isprint == 2){
                     $day = $request->data['progesterone']['type'] == 'day_3' ? '3' : '5';
                     $transferDate = Carbon::parse(!empty($request->data['progesterone_date']) ? $request->data['progesterone_date'] : $lastAppointmentData->date)->addDays($day)->format('d-m-Y');

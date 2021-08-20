@@ -447,6 +447,8 @@
                                                                                 S.P2 : {{implode(',',$sp2Data)}}
                                                                                 @endif
                                                                                 {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                                                                {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
+
                                                                             @endif
                                                                            
                                                                         </td>
@@ -1089,6 +1091,16 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    Other Report : &nbsp;
+                                                                </span>
+                                                                {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                         <a class="btn btn-primary btn-icon btn-icon-mini btn-round add-row d-none" data-id="5" data-day="0"><i class="material-icons">add</i></a>
                                                         {{-- table append for protocol --}}
                                                         <div class="protocol-table"></div>
@@ -1300,6 +1312,16 @@
                                                         {{-- end result --}}
                                                     </div>
                                                     <br>
+                                                    <div class="row">
+                                                        <div class="col-sm-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    Other Report : &nbsp;
+                                                                </span>
+                                                                {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-md-1">
                                                             <label class="vertical-form-label pr-0">
@@ -1955,6 +1977,8 @@
                                                             </td>
                                                             <td class="">
                                                                 {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                        {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
+
                                                                     
                                                             </td>
                                                             <td class="text-center">
@@ -2190,6 +2214,16 @@
                                                                         {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
                                                                         <div class="hsa-images"></div>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        Other Report : &nbsp;
+                                                                    </span>
+                                                                    {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2500,6 +2534,16 @@
                                                                         {{Form::text("data[transfer][follow_up]",\Carbon\Carbon::now()->addDays(7)->format('D d M Y'),['class'=>'form-control tf-date datetimepicker'])}}
                                                                     </div>
                                                                     {{Form::hidden('data[follow_up]',\Carbon\Carbon::now()->addDays(7)->format('D d M Y'),['class'=>'t-follow-date'])}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-5">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">
+                                                                            Other Report : &nbsp;
+                                                                        </span>
+                                                                        {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <br>
@@ -4327,11 +4371,22 @@
                                                                 </div>
                                                                 
                                                             </div>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
+                                        <div class="row">
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        Other Report : &nbsp;
+                                                    </span>
+                                                    {{Form::text("investigation[investigation_extra]",null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 @else
                                     

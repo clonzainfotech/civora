@@ -1549,12 +1549,31 @@
                     </div>
                     <br>
                 @endforeach
-               
-            @endif
-        {{-- @endif --}}
-        {{-- end pre operative data --}}
-        
-        
+                @php
+                $investigation = !empty($ivf->investigation) ? json_decode($ivf->investigation) : null;
+                @endphp
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Other Report : &nbsp;
+                            </span>
+                            {{Form::text("investigation[investigation_extra]",(!empty($investigation)) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? $investigation->investigation_extra : null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                </div>
+            @else
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            Other Report : &nbsp;
+                        </span>
+                        {{Form::text("data[investigation_extra]",(!empty($investigation)) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? $investigation->investigation_extra : null,['class'=>'form-control'])}}
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="pt-3 pb-3 pl-2"> Treatment </div>
         <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
             <div class="panel-body" id="parent">
@@ -1819,6 +1838,16 @@
             {{-- end result --}}
         </div>
         <br>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        Other Report : &nbsp;
+                    </span>
+                    {{Form::text("data[investigation_extra]",isset($ivfData->investigation_extra) && !empty($ivfData->investigation_extra) ? $ivfData->investigation_extra : null,['class'=>'form-control'])}}
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-1">
                 <label class="vertical-form-label pr-0">

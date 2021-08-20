@@ -3043,6 +3043,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                                         S.P2 : {{implode(',',$sp2Data)}}
                                                                         @endif
                                                                         {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                                                        {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
                                                                     @endif
 
                                                                 </td>
@@ -3437,6 +3438,8 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     </td>
                                     <td class="">
                                         {{(!isset($pt_view) || $pt_view != 1) ? $historyData->remark : (isset($historyData->pt_remark) ? $historyData->pt_remark : '')}}
+                                        {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
+
                                     </td>
                                 </tr>
                                 @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))

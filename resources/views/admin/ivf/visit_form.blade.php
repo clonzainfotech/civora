@@ -891,10 +891,11 @@
                     </div>
                 </div>
             </div>
-            @if($ivf->plan != 1 && in_array('transfer',$collectionData))
+            @if(in_array('transfer',$collectionData))
                 {{Form::hidden('data[collection][]','transfer')}}
                 {{Form::hidden('data[transfer][payment]',!empty($ivfData->transfer->payment) ? $ivfData->transfer->payment : null)}}
                 {{Form::hidden('data[transfer][method]',!empty($ivfData->transfer->method) ? $ivfData->transfer->method : null)}}
+                {{Form::hidden('data[is_transfer]','yes',['class'=>'is-transfer'])}}
             @endif
         @endif
         <div class="row mt-1">

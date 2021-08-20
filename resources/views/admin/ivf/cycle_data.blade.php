@@ -1946,7 +1946,7 @@
                                                                 @endforeach
                                                         @endif
                                                     @endif
-                                                    @if($resultValue == 0)
+                                                    {{-- @if($resultValue == 0) --}}
                                                         <tr>
                                                             <td>{{$visitDate}}</td>
                                                             <td>{{$diff}}</td>
@@ -1977,15 +1977,13 @@
                                                             </td>
                                                             <td class="">
                                                                 {{!empty($historyData->remark) ? $historyData->remark : ''}}
-                                        {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
-
-                                                                    
+                                                                {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
                                                             </td>
                                                             <td class="text-center">
                                                                 <a href="#" class="btn btn-icon btn-neutral candor-color btn-icon-mini delete-visit-data" data-id="{{ encrypt($row->id) }}">
                                                                     <i class="zmdi zmdi-delete material-icons"></i>
                                                                 </a>
-                                                                @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no' || $historyData->is_transfer_print == 'no') && !in_array('transfer',$collectionData))
+                                                                @if(isset($historyData->is_transfer) && ($historyData->is_transfer == 'no') && !in_array('transfer',$collectionData))
                                                                 <a class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-visit-data" data-id="{{encrypt($row->id)}}"><i class="zmdi zmdi-edit material-icons"></i></a>
                                                                 @endif
                                                                 @if((isset($historyData->hsa_report->images) && !empty($historyData->hsa_report->images)) || (isset($historyData->blood_report->image) && !empty($historyData->blood_report->image)) || (isset($historyData->usg->images) && !empty($historyData->usg->images)) || (isset($investigationData->hystroscopy->images) && !empty($investigationData->hystroscopy->images)) || (isset($investigationData->laproscopy->images) && !empty($investigationData->laproscopy->images)))
@@ -1995,7 +1993,7 @@
                                                                 @endif
                                                             </td>
                                                         </tr>
-                                                    @endif
+                                                    {{-- @endif --}}
                                                     @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
                                                         <tr>
                                                             <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>

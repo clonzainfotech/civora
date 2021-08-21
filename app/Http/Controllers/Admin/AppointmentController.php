@@ -1347,10 +1347,15 @@ class AppointmentController extends AdminController
             $pMethod = ['1'=>'Swipe','2'=>'Cash','3'=>'Cheque','4'=>'UPI','5'=>'NEFT'];
             $charge = ['1'=>'Hormon','2'=>'IVF','3'=>'IUI'];
             $opdCollecions = $this->IndoorDeposit->where('patient_id',$patients_id)->get();
+            $TotalAmount = 0;
             foreach($opdCollecions as $opdCollecion)
             {
                 $payment_date = \Carbon\Carbon::parse($opdCollecion->created_at)->format('d-m-Y');
-                $payment .= '<p>'.$payment_date.' | '.$opdCollecion->amount.' &#x20b9; | '.(!empty($opdCollecion->injection) ? $opdCollecion->injection : '').' | '.(isset($charge[$opdCollecion->charge_type]) ? $charge[$opdCollecion->charge_type] : '-') .' | '.(isset($pMethod[$opdCollecion->payment_type]) ? $pMethod[$opdCollecion->payment_type] : '-').'</p>';
+                if($opdCollecion->charge_type)
+                {
+                    $TotalAmount += $opdCollecion->amount;
+                }
+                $payment .= '<p>'.$payment_date.' | '.$opdCollecion->amount.' &#x20b9; | '.(!empty($opdCollecion->injection) ? $opdCollecion->injection : '').' | '.(isset($charge[$opdCollecion->charge_type]) ? $charge[$opdCollecion->charge_type] : '-') .' | '.(isset($pMethod[$opdCollecion->payment_type]) ? $pMethod[$opdCollecion->payment_type] : '-').' | '.(!empty($opdCollecion->remark) ? 'Remark : '.$opdCollecion->remark : '').'</p>';
             }
             if($request->category && in_array($request->category,[5,6,10,13]))
             {
@@ -1416,6 +1421,7 @@ class AppointmentController extends AdminController
                 $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
                         <p><span class="font-bold candor-color">Package: </span>'.(!empty($package) ? $package->package : '-').'</p>
+                        <p><span class="font-bold candor-color">Due Amount: </span>'.(!empty($TotalAmount) ? $TotalAmount : '-').'</p>
                         <p><span class="font-bold candor-color">Package Condition: </span>'.(!empty($package) ? $package->condition : '-').'</p>
                         <p><span class="font-bold candor-color">Package Remark: </span>'.(!empty($package) ? $package->remark : '-').'</p>
                         <p><span class="font-bold candor-color">Payment : </span></p>';

@@ -7,7 +7,7 @@
 
 @php
     $data = !empty($html_page->description) ? $html_page->description : '';
+    echo htmlspecialchars_decode(stripslashes($data));
 @endphp
-    {{htmlspecialchars_decode(stripslashes($data))}}
 </body>
 </html>

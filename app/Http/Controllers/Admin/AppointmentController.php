@@ -1350,7 +1350,7 @@ class AppointmentController extends AdminController
             foreach($opdCollecions as $opdCollecion)
             {
                 $payment_date = \Carbon\Carbon::parse($opdCollecion->created_at)->format('d-m-Y');
-                $payment .= '<p>'.$payment_date.' | '.$opdCollecion->amount.' &#x20b9; | '.(isset($charge[$opdCollecion->charge_type]) ? $charge[$opdCollecion->charge_type] : '-') .' | '.(isset($pMethod[$opdCollecion->payment_type]) ? $pMethod[$opdCollecion->payment_type] : '-').'</p>';
+                $payment .= '<p>'.$payment_date.' | '.$opdCollecion->amount.' &#x20b9; | '.(!empty($opdCollecion->injection) ? $opdCollecion->injection : '').' | '.(isset($charge[$opdCollecion->charge_type]) ? $charge[$opdCollecion->charge_type] : '-') .' | '.(isset($pMethod[$opdCollecion->payment_type]) ? $pMethod[$opdCollecion->payment_type] : '-').'</p>';
             }
             if($request->category && in_array($request->category,[5,6,10,13]))
             {

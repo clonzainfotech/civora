@@ -161,7 +161,7 @@
                                 </a>
                             @endif --}}
                             @if($visit == 2 || $isTransfer == true)
-                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
+                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
                             @endif
                             <a href="#" class="mb-1">
                                 <button class="btn btn-primary pull-right view-file-edit">View File & Edit</button>
@@ -333,7 +333,7 @@
                                         @endphp
                                         @if($row->visit == 2)
                                             @php
-                                                $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                                $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($cycleNumber)->where('plan',$pStatus)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
                                             @endphp
                                             @if(!empty($ivfExtraVisit))
                                                     @foreach($ivfExtraVisit as $ivfExtra)
@@ -353,7 +353,7 @@
                                                         <td></td>
                                                         <td>{{'Extra Visit'}}</td>
                                                         <td>
-                                                            <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                            <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
                                                                 <i class="zmdi zmdi-edit material-icons"></i>
                                                             </a>
                                                         </td>
@@ -577,6 +577,27 @@
                                                     
                                                     {{Form::hidden("data[lmp][lmp_date_diff]",$historyLmdDiff,['class'=>'form-control history-lmd-date-diff','maxlength'=>3,'placeholder'=>'Date Diff'])}}
                                                     {{Form::hidden('appointment_date',$lastAppointment->date,['class'=>'last-appointment-date'])}}
+                                                    <div class="row">
+                                                        <div class="col-md-1 text-right">
+                                                            <label class="vertical-form-label">
+                                                                Weight :
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-3 ">
+                                                            <div class="form-group">
+                                                                {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                                            </div>
+                                                            <span class="weight-by-error text-danger mb-2"></span>
+                                                        </div>
+                                                        <div class="col-sm-5">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    Other Report : &nbsp;
+                                                                </span>
+                                                                {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="row mt-3 mb-3">
                                                         <div class="col-md-1 pr-0">
                                                             <label class="vertical-form-label pr-0">
@@ -1096,16 +1117,6 @@
                                                                     {{-- {{Form::file('data[blood][image]',['class'=>'form-control report-file'])}} --}}
                                                                     <div class="usg-images"></div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-5">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">
-                                                                    Other Report : &nbsp;
-                                                                </span>
-                                                                {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1866,6 +1877,7 @@
                                             </div>
                                             <span class="seen-by-error text-danger mb-2"></span>
                                         </div>
+                                        
                                     @endif
                                     <div class="col-md-12">
                                         <table class="table follicular-table frozen-table table-bordered table-responsive">
@@ -1934,7 +1946,7 @@
                                                     @endphp
                                                     @if($row->visit == 2)
                                                         @php
-                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($cycleNumber)->where('plan',$pStatus)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
                                                         @endphp
                                                         @if(!empty($ivfExtraVisit))
                                                                 @foreach($ivfExtraVisit as $ivfExtra)
@@ -1946,7 +1958,7 @@
                                                                     <td></td>
                                                                     <td>{{'Extra Visit'}}</td>
                                                                     <td>
-                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
                                                                             <i class="zmdi zmdi-edit material-icons"></i>
                                                                         </a>
                                                                     </td>
@@ -2015,7 +2027,7 @@
                                                     @endif
                                                     @if(isset($historyData->is_transfer) && $historyData->is_transfer == 'yes')
                                                         @php
-                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
+                                                            $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($cycleNumber)->where('plan',$pStatus)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
                                                         @endphp
                                                         @if(!empty($ivfExtraVisit))
                                                                 @foreach($ivfExtraVisit as $ivfExtra)
@@ -2027,7 +2039,7 @@
                                                                     <td></td>
                                                                     <td>{{'Extra Visit'}}</td>
                                                                     <td>
-                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
+                                                                        <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="btn btn-icon btn-neutral candor-color btn-icon-mini edit-iui-data" data-id="{{encrypt($row->id)}}">
                                                                             <i class="zmdi zmdi-edit material-icons"></i>
                                                                         </a>
                                                                     </td>
@@ -2080,7 +2092,27 @@
                                                         {{Form::hidden('appointment_date',$lastAppointment->date,['class'=>'last-appointment-date'])}}
                                                         {{Form::hidden("data[lmp][date]",!empty($historyLmddateDate) ? \Carbon\Carbon::parse($historyLmddateDate)->format('D d M Y') : null ,['class'=>'form-control history-lmd-date','autocomplete'=>'off'])}}
                                                         {{Form::hidden("data[lmp][lmp_date_diff]",$historyLmdDiff,['class'=>'form-control history-lmd-date-diff','maxlength'=>3,'placeholder'=>'Date Diff'])}}
-                                            
+                                                        <div class="row">
+                                                            <div class="col-md-1 text-right">
+                                                                <label class="vertical-form-label">
+                                                                    Weight :
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-3 ">
+                                                                <div class="form-group">
+                                                                    {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                                                </div>
+                                                                <span class="weight-by-error text-danger mb-2"></span>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        Other Report : &nbsp;
+                                                                    </span>
+                                                                    {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                             
                                                         <div class="row mt-1">
                                                             @if(($pStatus == 3))
@@ -2223,16 +2255,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-5">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon">
-                                                                        Other Report : &nbsp;
-                                                                    </span>
-                                                                    {{Form::text("data[investigation_extra]",null,['class'=>'form-control'])}}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        
                                                         @if($pStatus != 1 )
                                                             <div class="row mt-1">
                                                                 <div class="col-md-1">
@@ -2863,6 +2886,13 @@
                                         </div>
                                     </div>
                                     <span class="col-md-1 p-2 history-lmp-date">Day</span>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Weight : &nbsp;</span>
+                                            {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                        </div>
+                                        <span class="weight-by-error text-danger mb-2"></span>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-1">
@@ -5787,6 +5817,7 @@
                 $('.skip-plan-error').text('');
                 $('.skip-reason-error').text('');
                 $('.seen-by-error').text('');
+                $('.weight-by-error').text('');
                 $('.transfer-error').text('');
                 if($('.history-lmd-date').val() == ''){
                     valid = 0;
@@ -5808,6 +5839,13 @@
                 }
                 if($('select.seen-by').val() == ''){
                     $('.seen-by-error').text('Please select doctor');
+                    $('html, body').animate({
+                        scrollTop: ($('.seen-by').offset().top - 150)
+                    }, 1000);
+                    valid = 0;
+                }
+                 if($('.weight').val() == ''){
+                    $('.weight-by-error').text('Please Enter Weight');
                     $('html, body').animate({
                         scrollTop: ($('.seen-by').offset().top - 150)
                     }, 1000);

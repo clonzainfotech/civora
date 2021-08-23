@@ -1145,6 +1145,20 @@ class IVFController extends AdminController
                         $planTransfer = 2;
                     }
                 }
+                if(isset($lastIvfHistory->plan) && !empty($lastIvfHistory->plan) && $ivfHistory->visit == 2)
+                {
+                    // $lastIvfHistory->plan = 2;
+                    // $ivfHistory->description = json_encode($lastIvfHistory);
+                    $transferIvf = $this->IvfHistory->wherePatientsId($id)->wherePlan($lastIvfHistory->plan)->orderBy('id','desc')->first();
+                    $newCycle_no = !empty($transferIvf) ? $transferIvf->cycle_no : 1;
+                    $extraVisit = $this->IvfExtraVisit->wherePatientId($id)->where('plan',$ivfHistory->plan)->where('cycle_no',$ivfHistory->cycle_no)->update(['plan'=>$lastIvfHistory->plan,'cycle_no' => $newCycle_no]);
+                    $ivfHistory->plan = $lastIvfHistory->plan;
+                    $ivfHistory->cycle_no = $newCycle_no;
+                    $ivfHistory->cycle_status = 1;
+                    // dd($ivfHistory);
+                    $ivfHistory->save();
+                    // $planTransfer = $ivfHistory->plan;
+                }
                 if($ivfHistory->cycle_status == 2){
                     $isCycle = true;
                     $planTransfer = (int)!empty($lastIvfHistory->plan) ? $lastIvfHistory->plan : null;
@@ -2752,10 +2766,11 @@ class IVFController extends AdminController
     }
 
     // fetch data to extra visit of IUI
-    public function extraVisit(Request $request,$id,$cycleNo){
+    public function extraVisit(Request $request,$id,$cycleNo,$plan){
         try{
             $pId = decrypt($id);
             $cycle_no = decrypt($cycleNo);
+            $plan = decrypt($plan);
             $ivfPatients = $this->OpdPatients->find($pId);
             $complaints = $this->Complaint->pluck('name','name');
             $leftOvaryData = $this->OvaryDetail->where('type',1)->pluck('name','name');
@@ -2779,7 +2794,6 @@ class IVFController extends AdminController
                                 $bloodReportImagesData[$key]['id'] = $key;
                                 $bloodReportImagesData[$key]['src'] = url($row);
                             }
-                            
                         }
                         $status = 1;
                     }
@@ -2789,7 +2803,7 @@ class IVFController extends AdminController
                 $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('bloodReportImagesArray','ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
                 return $data;
             }
-            return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no'));
+            return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no','plan'));
         }catch(Exception $e){
             log::Debug($e);
             abort(500);
@@ -2801,6 +2815,7 @@ class IVFController extends AdminController
         try{
             $patientId = decrypt($request->patient_id);
             $cycle_no = decrypt($request->cycle_no);
+            $plan = decrypt($request->plan);
             $ivfPatients = $this->OpdPatients->find($patientId);
             if(!empty($request->oe['ovary']['right']['details']) || !empty($request->oe['ovary']['left']['details'])){
                 $rightData = !empty($request->oe['ovary']['right']['details']) ? $request->oe['ovary']['right']['details'] : [];
@@ -2845,6 +2860,7 @@ class IVFController extends AdminController
             // dd($ivfExtraVisitOe);
             $ivfExtraVisit->patient_id = $patientId;
             $ivfExtraVisit->cycle_no = $cycle_no;
+            $ivfExtraVisit->plan = $plan;
             $ivfExtraVisit->co = json_encode($request->co);
             $ivfExtraVisit->lmp = json_encode($request->lmp);
             $ivfExtraVisit->oe = json_encode($ivfExtraVisitOe);

@@ -97,6 +97,7 @@
                                 </div>
                                 {{Form::hidden('patient_id',encrypt($ivfPatients->id),['class'=>'patient-id'])}}
                                 {{Form::hidden('cycle_no',encrypt($cycle_no),['class'=>'cycle-no'])}}
+                                {{Form::hidden('plan',encrypt($plan),['class'=>'plan'])}}
                                 <div class="col-sm-12">
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preview</button>
@@ -175,8 +176,9 @@
         function getIvfData(qstring){
             var pId = $('.patient-id').val();
             var cycle_no = $('.cycle-no').val();
+            var plan = $('.plan').val();
             $.ajax({
-                url: "{{URL::to('ivf/extra-visit')}}"+'/'+pId+'/'+cycle_no+'?'+qstring,
+                url: "{{URL::to('ivf/extra-visit')}}"+'/'+pId+'/'+cycle_no+'/'+plan+'?'+qstring,
                 dataType: 'json',
                 type:'GET',
             }).done(function(data){

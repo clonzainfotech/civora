@@ -3797,15 +3797,8 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </th>
                         </tr>
                         @endif
-                        <tr>
-                            <th>
-                            @if((isset($pt_view) && $pt_view == 1))
-                                <span class="font-bold">Remark : {{isset($oe->pt_remark) && !empty($oe->pt_remark) ? $oe->pt_remark : ''}}</span>
-                            @else
-                                <span class="font-bold">Remark : {{isset($oe->remark) && !empty($oe->remark) ? $oe->remark : ''}}</span>
-                            @endif
-                            </th>
-                        </tr>
+                        
+                        
                     </tbody>
                 </table>
             @endif
@@ -3911,6 +3904,11 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </table>
                 @endif
             @endif
+            @if(isset($oe->investigation_extra) && !empty($oe->investigation_extra))
+                <span class="font-bold">Other Reports : </span>{{$oe->investigation_extra}}
+            @endif
+            <br><span class="font-bold">Remark : </span>{{isset($oe->pt_remark) && !empty($oe->pt_remark) ? $oe->pt_remark : ''}}
+            
         </div>
         
         @if(isset($oe->follow_up) && !empty($oe->follow_up))

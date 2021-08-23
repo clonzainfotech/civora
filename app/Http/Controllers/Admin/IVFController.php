@@ -2155,7 +2155,11 @@ class IVFController extends AdminController
         if($type == 'ivf_history'){
             $ivf = $this->IvfHistory->find($id);
         }
-        $ivfInvestigation = json_decode($ivf->investigation);
+        if($type == 'ivf_extra_visit'){
+            // dd($id);
+            $ivf = $this->IvfExtraVisit->find($id);
+        }
+        $ivfInvestigation = ($type == 'ivf_extra_visit') ? json_decode($ivf->oe) : json_decode($ivf->investigation);
         if($reportType == 'hystroscopy_old'){
             $ivfData = !empty($ivfInvestigation->hystroscopy) ? $ivfInvestigation->hystroscopy : [];
             if(!empty($ivfData)){
@@ -2306,8 +2310,36 @@ class IVFController extends AdminController
             }
             $ivf->description = json_encode($ivfDescription);
         }
-        $ivf->investigation = json_encode($ivfInvestigation);
-        $ivf->save();
+        if($type != 'ivf_extra_visit')
+        {
+            $ivf->investigation = json_encode($ivfInvestigation);
+            $ivf->save();
+        }
+        if($type == 'ivf_extra_visit')
+        {
+            if($reportType == 'extraVisit_blood_report_old')
+            {
+                $ivfData = !empty($ivfInvestigation->blood_report) ? $ivfInvestigation->blood_report : [];
+                if(!empty($ivfData)){
+                    $blood_reportImages = $this->getBloodImagesKey($ivfData,$data)['key'];
+                    // dd($blood_reportImages);
+                    if(!empty($blood_reportImages)){
+                        foreach($blood_reportImages as $row){
+                            $this->removeImage($ivfData->image[$row]);
+                            unset($ivfData->image[$row]);
+                        }
+                        $iuiArray = (array)$ivfData->image;
+                        $iuiArrayData = array_values($iuiArray);
+                        $ivfData->image =  $iuiArrayData;
+                        $ivfInvestigation->blood_report = $ivfData;
+                        $ivf->oe = $ivfInvestigation;
+                    }
+                }
+                // dd($ivf->oe);
+                $ivf->oe = json_encode($ivfInvestigation);
+                $ivf->save();
+            }
+        }
         return ['status'=>true];
     }
 
@@ -2715,6 +2747,9 @@ class IVFController extends AdminController
             $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
             $medicines = $this->Medicine->pluck('name','name');
             $ivfHistoryDate = $this->IvfExtraVisit->where('patient_id',$pId)->pluck('created_at','created_at')->toArray();
+            $bloodReportImages = null;
+            $bloodReportImagesData = [];
+            $bloodReportImagesArray = [];
             if($request->ajax()){
                 $ivfHistoryData = null;
                 $date = $request->date;
@@ -2722,11 +2757,21 @@ class IVFController extends AdminController
                 if($date){
                     $ivfHistoryData = $this->IvfExtraVisit->where('created_at',$date)->first();
                     if($ivfHistoryData){
+                        $oe = json_decode($ivfHistoryData->oe);
+                        $bloodReportImages = !empty($oe->blood_report->image) ? $oe->blood_report->image : null;
+                        if($bloodReportImages){
+                            foreach($bloodReportImages as $key=>$row){
+                                $bloodReportImagesData[$key]['id'] = $key;
+                                $bloodReportImagesData[$key]['src'] = url($row);
+                            }
+                            
+                        }
                         $status = 1;
                     }
                 }
+                $bloodReportImagesArray = json_encode($bloodReportImagesData,true);
                 $data['status'] = 1;
-                $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
+                $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('bloodReportImagesArray','ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
                 return $data;
             }
             return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no'));
@@ -2760,14 +2805,34 @@ class IVFController extends AdminController
             //     $this->treatmentData($request->treatment);
             // }
             $ivfExtraVisit = $this->IvfExtraVisit;
+            $bloodReportOldImages = [];
+            $bloodReport = [];
             if($request->ivf_extra_visit_id){
                 $ivfExtraVisit = $this->IvfExtraVisit->find(decrypt($request->ivf_extra_visit_id));
+                if($ivfExtraVisit)
+                {
+                    $oe = !empty($ivfExtraVisit->oe) ? json_decode($ivfExtraVisit->oe) : null;
+                    $this->getImagesData('extraVisit_blood_report_old','ivf_extra_visit',$ivfExtraVisit->id,$request->extraVisit_blood_report_old ? $request->extraVisit_blood_report_old : [-1]);
+                    $bloodReportOldImages = !empty($oe->blood_report->image) ? (array)$oe->blood_report->image : [];
+                }
             }
+            $ivfExtraVisitOe = $request->oe;
+            if(!empty($request->oe['blood_report']['image'])){
+                foreach($request->oe['blood_report']['image'] as $key=>$row){
+                    $name = $this->uploadImage($row, 'public/upload/ivf/blood/');
+                    $bloodReport[] = 'public/upload/ivf/blood/' . $name;
+                }
+                $ivfExtraVisitOe['blood_report']['image'] = array_merge($bloodReport,$bloodReportOldImages);
+            }
+            else{
+                $ivfExtraVisitOe['blood_report']['image'] = $bloodReportOldImages;
+            }
+            // dd($ivfExtraVisitOe);
             $ivfExtraVisit->patient_id = $patientId;
             $ivfExtraVisit->cycle_no = $cycle_no;
             $ivfExtraVisit->co = json_encode($request->co);
             $ivfExtraVisit->lmp = json_encode($request->lmp);
-            $ivfExtraVisit->oe = json_encode($request->oe);
+            $ivfExtraVisit->oe = json_encode($ivfExtraVisitOe);
             $ivfExtraVisit->treatment = json_encode($request->treatment);
             $ivfExtraVisit->save();
 

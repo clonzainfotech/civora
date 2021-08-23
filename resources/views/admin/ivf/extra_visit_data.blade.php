@@ -431,6 +431,44 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
                 </div>
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        Other Report : &nbsp;
+                    </span>
+                    {{Form::text("oe[investigation_extra]",!empty($oe->investigation_extra) ? $oe->investigation_extra : null,['class'=>'form-control'])}}
+                </div>
+            </div>
+        </div>
+        @php
+            $bloodReportClass = !empty($oe->blood_report) && !empty($oe->blood_report->type) && $oe->blood_report->type == 'yes' ? true : false;
+            $bloodReportClassName = $bloodReportClass ? '' : 'd-none';
+        @endphp
+        <div class="row">
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Blood Report :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("oe[blood_report][type]",'yes',$bloodReportClass,['id'=>'blood_type_yes','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                        <label for="blood_type_yes">
+                                                            Yes
+                                                        </label>
+
+                                                        {{Form::radio("oe[blood_report][type]",'no',!empty($oe->blood_report) && !empty($oe->blood_report->type) && $oe->blood_report->type == 'no' ? true : false,['id'=>'blood_type_no','class'=>'blood-type iui-yes-no-status','data-type'=>'blood-type'])}}
+                                                        <label for="blood_type_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="{{'col-md-8 pr-0 blood-type extra-blood-images '.$bloodReportClassName}}">
+                                                    <div class="blood-images"></div>
+                                                </div>
+                                                
+                                            </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="input-group">
@@ -443,6 +481,7 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
                 </div>
             </div>
         </div>
+        
         <br>
         @if(empty($ivfHistoryData))
             <div class="row">
@@ -455,9 +494,29 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
                 </div>
             </div>
         @else
-        {{Form::hidden("oe[follow_up]", isset($oe->follow_up) && !empty($oe->follow_up) ? $oe->follow_up : \Carbon\Carbon::now()->format('D d M Y'),[
+        {{Form::hidden("oe[follow_up]", isset($oe->follow_up) && !empty($oe->follow_up) ? $oe->follow_up : '',[
                                 'class'=>'form-control next-date'
                             ])}}
         @endif
         <br>
         <br>
+<!-- <script> -->
+<script src="{{URL::to('public/js/image-uploader.js')}}"></script>
+    <script type="text/javascript">
+        var code = '';
+        var patientsId = $('.patients-id').val();
+        var bloodReportImages = @json($bloodReportImagesArray);
+        console.log(bloodReportImages);
+        $(document).ready(function(){
+            $('.extra-blood-images').imageUploader({
+                imagesInputName: 'oe[blood_report][image]',
+            });
+            if(bloodReportImages != 'null') {
+                $('.extra-blood-images').imageUploader({
+                    preloaded: jQuery.parseJSON(bloodReportImages),
+                    imagesInputName: 'oe[blood_report][image]',
+                    preloadedInputName: 'extraVisit_blood_report_old'
+                });
+            }
+        });
+</script>        

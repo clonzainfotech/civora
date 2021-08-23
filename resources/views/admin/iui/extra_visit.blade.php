@@ -4,6 +4,7 @@
 
 @section('page-style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
+    <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet">
     <style>
         .table td, .table th{
             padding: .35rem !important;
@@ -127,11 +128,7 @@
             
             $(document).on('click','.submit',function(e){
                 e.preventDefault();
-                if($('.next-date').val() == '')
-                {
-                    $('.follow-error').text('Please enter FollowUp Date');
-                    return false;
-                }
+                
                 $('.submit').attr('disabled',true);
                 var iuiFormData = new FormData($(".extra-iui-form")[0]);
                 if(this.value==1){

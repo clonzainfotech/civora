@@ -3573,6 +3573,7 @@
                         </th>
                     </tr>
                     @endif
+                    
                 </tbody>
             </table>
         @endif
@@ -3678,11 +3679,13 @@
                 </table>
             @endif
         @endif
-        @if(isset($patients_remark) && !empty($patients_remark))
-            <span class="font-bold">Remark : {{$patients_remark}}</span>
-        @else
-            <span class="font-bold">Remark : {{isset($oe->remark) && !empty($oe->remark) ? $oe->remark : ''}}</span>
+        @if(isset($oe->investigation_extra) && !empty($oe->investigation_extra))
+            <span class="font-bold">Other Reports : </span>{{$oe->investigation_extra}}
         @endif
+        @if(isset($patients_remark) && !empty($patients_remark))
+            <br><span class="font-bold">Remark : {{$patients_remark}}</span>
+        @endif
+            
         @if(isset($oe->follow_up) && !empty($oe->follow_up))
         <br>
                     <h4 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>

@@ -1792,6 +1792,10 @@ class IUIController extends AdminController
         if($type == 'iui_history'){
             $iui = $this->IuiHistory->find($id);
         }
+        if($type == 'iui_extra_visit'){
+            // dd($id);
+            $iui = $this->IuiExtraVisit->find($id);
+        }
         if(!empty($iui->investigation)){
             $iuiInvestigation = json_decode($iui->investigation);
             if($reportType == 'hystroscopy_old'){
@@ -1949,6 +1953,32 @@ class IUIController extends AdminController
             $iui->description = json_encode($iuiDescription);
             $iui->save();
         }
+        if($type == 'iui_extra_visit')
+        {
+            if($reportType == 'extraVisit_blood_report_old')
+            {
+                $iuiInvestigation = !empty($iui->oe) ? json_decode($iui->oe) : null;
+                $iuiData = !empty($iuiInvestigation->blood_report) ? $iuiInvestigation->blood_report : [];
+                if(!empty($iuiData)){
+                    $blood_reportImages = $this->getBloodImagesKey($iuiData,$data)['key'];
+                    // dd($blood_reportImages);
+                    if(!empty($blood_reportImages)){
+                        foreach($blood_reportImages as $row){
+                            $this->removeImage($iuiData->image[$row]);
+                            unset($iuiData->image[$row]);
+                        }
+                        $iuiArray = (array)$iuiData->image;
+                        $iuiArrayData = array_values($iuiArray);
+                        $iuiData->image =  $iuiArrayData;
+                        $iuiInvestigation->blood_report = $iuiData;
+                        $iui->oe = $iuiInvestigation;
+                    }
+                }
+                // dd($ivf->oe);
+                $iui->oe = json_encode($iuiInvestigation);
+                $iui->save();
+            }
+        }
         return ['status'=>true];
     }
     //get images key
@@ -2002,6 +2032,9 @@ class IUIController extends AdminController
             $medicines = $this->Medicine->pluck('name','name');
             $iuiHistoryDate = $this->IuiExtraVisit->where('patient_id',$pId)->pluck('created_at','created_at')->toArray();
             $cycle_no = decrypt($cycleNo);
+            $bloodReportImages = null;
+            $bloodReportImagesData = [];
+            $bloodReportImagesArray = [];
             if($request->ajax()){
                 $iuiHistoryData = null;
                 $date = $request->date;
@@ -2010,11 +2043,21 @@ class IUIController extends AdminController
                 if($date){
                     $iuiHistoryData = $this->IuiExtraVisit->where('created_at',$date)->first();
                     if($iuiHistoryData){
+                        $oe = json_decode($iuiHistoryData->oe);
+                        $bloodReportImages = !empty($oe->blood_report->image) ? $oe->blood_report->image : null;
+                        if($bloodReportImages){
+                            foreach($bloodReportImages as $key=>$row){
+                                $bloodReportImagesData[$key]['id'] = $key;
+                                $bloodReportImagesData[$key]['src'] = url($row);
+                            }
+                            
+                        }
                         $status = 1;
                     }
                 }
+                $bloodReportImagesArray = json_encode($bloodReportImagesData,true);
                 $data['status'] = 1;
-                $data['extra_visit_data'] = View::make('admin.iui.extra_visit_data',compact('iuiHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','iuiPatients'))->render();
+                $data['extra_visit_data'] = View::make('admin.iui.extra_visit_data',compact('bloodReportImagesArray','iuiHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','iuiPatients'))->render();
                 return $data;
             }
             return view('admin.iui.extra_visit',compact('iuiPatients','iuiHistoryDate','medicines','cycle_no'));
@@ -2048,14 +2091,33 @@ class IUIController extends AdminController
             //     $this->treatmentData($request->treatment);
             // }
             $iuiExtraVisit = $this->IuiExtraVisit;
+            $bloodReportOldImages = [];
+            $bloodReport = [];
             if($request->iui_extra_visit_id){
                 $iuiExtraVisit = $this->IuiExtraVisit->find(decrypt($request->iui_extra_visit_id));
+                if($iuiExtraVisit)
+                {
+                    $oe = !empty($iuiExtraVisit->oe) ? json_decode($iuiExtraVisit->oe) : null;
+                    $this->getImagesData('extraVisit_blood_report_old','iui_extra_visit',$iuiExtraVisit->id,$request->extraVisit_blood_report_old ? $request->extraVisit_blood_report_old : [-1]);
+                    $bloodReportOldImages = !empty($oe->blood_report->image) ? (array)$oe->blood_report->image : [];
+                }
+            }
+            $iuiExtraVisitOe = $request->oe;
+            if(!empty($request->oe['blood_report']['image'])){
+                foreach($request->oe['blood_report']['image'] as $key=>$row){
+                    $name = $this->uploadImage($row, 'public/upload/iui/blood/');
+                    $bloodReport[] = 'public/upload/iui/blood/' . $name;
+                }
+                $iuiExtraVisitOe['blood_report']['image'] = array_merge($bloodReport,$bloodReportOldImages);
+            }
+            else{
+                $iuiExtraVisitOe['blood_report']['image'] = $bloodReportOldImages;
             }
             $iuiExtraVisit->patient_id = $patientId;
             $iuiExtraVisit->cycle_no = $cycle_no;
             $iuiExtraVisit->co = json_encode($request->co);
             $iuiExtraVisit->lmp = json_encode($request->lmp);
-            $iuiExtraVisit->oe = json_encode($request->oe);
+            $iuiExtraVisit->oe = json_encode($iuiExtraVisitOe);
             $iuiExtraVisit->treatment = json_encode($request->treatment);
             $iuiExtraVisit->save();
 

@@ -1273,7 +1273,20 @@ class IVFController extends AdminController
                 $skipDescription = json_decode($value->description);
                 return [$value->plan.'_'.$value->cycle_no  => $skipDescription->skip_reason];
             })->all();
-            // dd($dataForSkipPlan);
+            $dataForSameCycle = collect($this->IvfHistory
+                                ->wherePatientsId($id)
+                                ->where('plan', '1')
+                                // ->where('cycle_status', '2')
+                                ->get());
+            $dataSamecycle = $dataForSameCycle->mapWithKeys(function($value){
+                return [$value->plan.'_'.$value->cycle_no  => $value->plan];
+            })->all();
+            $dataForSamecycle_value = $dataForSameCycle->mapWithKeys(function($value){
+                $description = json_decode($value->description);
+                $collection =  isset($description->collection) ? $description->collection : [];
+                return [$value->plan.'_'.$value->cycle_no  => in_array('progesterone',$collection) && isset($description->progesterone->status) && $description->progesterone->status == 'yes' ? true : false];
+            })->all();
+            // dd($dataForSamecycle_value);
             $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             $complaints = $this->Complaint->pluck('name','name');
             $medicines = $this->Medicine->pluck('name','name');
@@ -1311,6 +1324,8 @@ class IVFController extends AdminController
             $data['patientsId'] = $patientsId;
             $data['dataForSkipPlans'] = $dataForSkipPlans;
             $data['dataForSkipReason'] = $dataForSkipReason;
+            $data['dataSamecycle'] = $dataSamecycle;
+            $data['dataForSamecycle_value'] = $dataForSamecycle_value;
             if($request->ajax()){
                 $data['history'] = View::make('admin.ivf.edit',$data)->render();
                 return $data;

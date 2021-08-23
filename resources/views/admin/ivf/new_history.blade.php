@@ -49,21 +49,10 @@
                             $class = 'skip-cycle';
                             $cycleNumber--;
                         }
-                        // for display skip reason
-                        // $cycleNoKey1 = array_search('1',$dataForSkipReason);
-                        // $cycleNo1 = explode('_',$cycleNoKey1);
-                        // $cycleNo1 = array_filter($cycleNo1);
-                        // if(!empty($cycleNo1)){
-                            
-                        //     $cycleNo1 = (int)$cycleNo1[1];
-                        // }
-                        // if($cycleNo1 == $row){
-                        //     print_r($dataForSkipReason[$cycleNoKey1]);
-                        //     // $class = 'skip-cycle';
-                        // }
                     @endphp 
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['1_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['1_'.$row] : ''}}</span>
+                        <span>{{isset($dataForSamecycle_value['1_'.$row]) &&  $dataForSamecycle_value['1_'.$row] == true ? 'Transfer : Same Cycle' : ''}}</span>
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(1).'/'.encrypt($row))}}">
@@ -79,13 +68,6 @@
                                         
                                 
                             </div>
-                            <!-- <div class="col-md-1"></div>
-                            <div class="col-md-3 m-0 p-0">
-                               
-                            </div>
-                            <div class="col-md-5">
-                                
-                            </div> -->
                         </div>
                     </div>
                 @endforeach
@@ -188,9 +170,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-4 text-right">
-                                <a href="{{URL::to('ivf-plan-report/'.encrypt("3").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report" >IVF Report</a>
-                            </div> --}}
+                            
                         </div>
                     </div>
                 @endforeach
@@ -236,9 +216,6 @@
                                         </a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>
-                                        {{-- <a href="{{URL::to('get-all-report/'.$patientsId.'?status=ivf')}}" class="mb-1 ml-1">
-                                            <button class="btn btn-primary btn-sm btn-ivf-report">View Reports</button>
-                                        </a> --}}
                                     </div>
                                 </div>
                             </div>

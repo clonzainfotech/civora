@@ -1418,10 +1418,15 @@ class AppointmentController extends AdminController
                 }
                 $isExtraVisit = $this->IvfExtraVisit->where('patient_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->orderBy('id','desc')->first();
                 $extraVisit = !empty($isExtraVisit) ? '1' : '';
+                if($isExtraVisit)
+                {
+                    $extraOeData = json_decode($isExtraVisit->oe);
+                    $report .= !empty($extraOeData) && isset($extraOeData->investigation_extra) ? $extraOeData->investigation_extra : '';
+                }
                 $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
                         <p><span class="font-bold candor-color">Package: </span>'.(!empty($package) ? $package->package : '-').'</p>
-                        <p><span class="font-bold candor-color">Due Amount: </span>'.(!empty($$package->package) ? ($package->package - $TotalAmount) : '-').'</p>
+                        <p><span class="font-bold candor-color">Due Amount: </span>'.(!empty($package->package) ? ($package->package - $TotalAmount) : '-').'</p>
                         <p><span class="font-bold candor-color">Package Condition: </span>'.(!empty($package) ? $package->condition : '-').'</p>
                         <p><span class="font-bold candor-color">Package Remark: </span>'.(!empty($package) ? $package->remark : '-').'</p>
                         <p><span class="font-bold candor-color">Payment : </span></p>';
@@ -1447,7 +1452,13 @@ class AppointmentController extends AdminController
                     $report .= !empty($investigation) && isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? ', '.$investigation->investigation_extra : '';
                 }
                 $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
-                
+                $isExtraVisit = $this->IuiExtraVisit->where('patient_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->orderBy('id','desc')->first();
+                $extraVisit = !empty($isExtraVisit) ? '1' : '';
+                if($isExtraVisit)
+                {
+                    $extraOeData = json_decode($isExtraVisit->oe);
+                    $report .= !empty($extraOeData) && isset($extraOeData->investigation_extra) ? $extraOeData->investigation_extra : '';
+                }
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
                         <p><span class="font-bold candor-color">Payment : </span></p>';
                 $data .= $payment;   

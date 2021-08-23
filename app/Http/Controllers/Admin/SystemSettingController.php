@@ -339,7 +339,7 @@ class SystemSettingController extends AdminController
             $rule = [
                 'name' => 'required|unique:medicines,name,'.$mId,
                 'complaint' => 'required',
-                'medicine_day' => 'nullable|numeric',
+                'number' => 'nullable|numeric',
                 'medicine_quantity' => 'nullable|numeric',
             ];
 
@@ -354,7 +354,7 @@ class SystemSettingController extends AdminController
             $medicine->name = strtoupper($request->name);
             $medicine->medicine_status = $request->medicine_status;
             $medicine->dose = $request->medicine_dose;
-            $medicine->number = !empty($request->medicine_day) || $request->medicine_day != null  ? $request->medicine_day : 'N-A'; //Next Appointment
+            $medicine->number = !empty($request->number) || $request->number != null  ? $request->number : 'N-A'; //Next Appointment
             $medicine->quantity = $request->medicine_quantity;
             $medicine->medicine_time = !empty($request->medicine_time) ? $request->medicine_time : null;
             $medicine->save();
@@ -422,7 +422,7 @@ class SystemSettingController extends AdminController
         $medicine->name = strtoupper($request->name);
         $medicine->medicine_status = $request->status;
         $medicine->dose = $request->dose;
-        $medicine->number = !empty($request->medicine_day) || $request->medicine_day != null  ? $request->medicine_day : 'N-A'; //Next Appointment
+        $medicine->number = !empty($request->number) || $request->number != null  ? $request->number : 'N-A'; //Next Appointment
         // dd($medicine->number);
         $medicine->quantity = $request->quantity;
         $medicine->quantity_2 = $request->quantity_2;

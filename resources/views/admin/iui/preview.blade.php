@@ -2050,13 +2050,17 @@
                                         </th>
                                     @endif --}}
                                 </tr>
-                                @if($visit == 4)
                                 <tr>
                                     <th>
                                         <span class="iui-label">Age:</span> {{$patientsInfo->age}}
                                     </th>
+                                    <th>
+                                        <span class="iui-label">Weight:</span> {{isset($description->weight) && !empty($description->weight) ? $description->weight.' kg' : $patientsInfo->age.' kg'}}
+                                    </th>
                                 </tr>
-                                @endif
+                                {{-- @if($visit == 4)
+                                
+                                @endif --}}
                             </tbody>
                         </table>
                     @endif
@@ -2851,6 +2855,7 @@
                 if(!empty($iuiSecondVisit->plan->agenet)){
                     $agentData = $iuiSecondVisit->plan->agenet;
                 }
+                $lastHistoryData = json_decode($iuiHistoryData[count($iuiHistoryData)-1]['description']);
             @endphp
             <div class="row mb-5 do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>TRANSVAGINAL FOLLICULAR STUDY</b></u></h4></div>
@@ -2862,8 +2867,8 @@
                         <span class="visit-lable-value">{{ucwords(strtolower($iuiFirstVisit->getPatientsInfo['name']))}}</span>
                     </div>
                     <div class="mb-2">
-                            <span class="visit-lable">AGE :- </span> 
-                            <span class="visit-lable-value">{{$iuiFirstVisit->getPatientsInfo['age']}}</span>
+                            <span class="visit-lable">AGE / Weight :- </span> 
+                            <span class="visit-lable-value">{{$iuiFirstVisit->getPatientsInfo['age'].' year'.' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : '')}}</span>
                     </div>
                     <div class="mb-2">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
@@ -2911,6 +2916,10 @@
                                 @endif
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="visit-lable">Weight :- </span> 
+                        <span class="visit-lable-value"></span>
                     </div>
                     <div class="mb-2">
                         <span class="visit-lable">CYCLE NO :- </span> 

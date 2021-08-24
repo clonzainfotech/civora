@@ -3448,6 +3448,16 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 {{Form::hidden('data[lmp][lmp_date_diff]',$lmdDiff,['class'=>'lmd-date-diff-val'])}}
                                 {{Form::hidden('visit',2,['class'=>'visit-value'])}}
                                 {{Form::hidden('iui_history_id',$iuiHistoryId, ['id' => 'iui_history_id'])}}
+                                <div class="">
+                                    <label class="vertical-form-label">
+                                        Weight :
+                                    </label>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="form-group">
+                                        {{Form::text('data[weight]',isset($historyData->weight) && !empty($historyData->weight) ? $historyData->weight : null,['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                    </div>
+                                </div>
                                 {{-- {{ Form::hidden('iui_id', null, ['id' => 'iui_id']) }} --}}
                             </div>
                         </div>
@@ -4360,9 +4370,9 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                 </div>
                 <br>
                 <br>
+                <div class="row">
                 @if(!$iuiHistoryId)
-                
-                    <div class="col-md-1">
+                    <div class="">
                         <label class="vertical-form-label pr-0">
                             Inducing Date :
                         </label>
@@ -4397,7 +4407,19 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </div>
                     </div>
                     {{Form::hidden('data[last_appointment_date]',!empty($historyData->last_appointment_date) ? $historyData->last_appointment_date : null)}}
+                    
                 @endif
+                    <div class="">
+                        <label class="vertical-form-label">
+                            Weight :
+                        </label>
+                    </div>
+                    <div class="col-md-3 ">
+                        <div class="form-group">
+                            {{Form::text('data[weight]',isset($historyData->weight) && !empty($historyData->weight) ? $historyData->weight : null,['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                        </div>
+                    </div>
+                </div>
                 @php
                     $vitlasClass = !empty($historyData->le->vitals_status) && $historyData->le->vitals_status == 'yes' ? '' : 'd-none';
                 @endphp
@@ -4931,6 +4953,16 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 <div class="col-md-4 child-naturally">
                                     <div class="form-group">
                                         {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],!empty($historyData->ho_type) ? $historyData->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','placeholder'=>'Select Follow Up case of'])}}
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <label class="vertical-form-label">
+                                        Weight :
+                                    </label>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="form-group">
+                                        {{Form::text('data[weight]',isset($historyData->weight) && !empty($historyData->weight) ? $historyData->weight : null,['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
                                     </div>
                                 </div>
                             </div>

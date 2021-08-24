@@ -3417,6 +3417,17 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 {{Form::hidden('visit',2,['class'=>'visit-value'])}}
                                 {{Form::hidden('iui_history_id',$iuiHistoryId, ['id' => 'iui_history_id'])}}
                                 {{-- {{ Form::hidden('iui_id', null, ['id' => 'iui_id']) }} --}}
+                                <div class="col-md-1 text-right">
+                                    <label class="vertical-form-label">
+                                        Weight :
+                                    </label>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="form-group">
+                                        {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                    </div>
+                                    <span class="weight-by-error text-danger mb-2"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4141,6 +4152,16 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 <div class="col-md-4 child-naturally">
                                     <div class="form-group">
                                         {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],$follow_up_case,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','placeholder'=>'Select Follow Up case of'])}}
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <label class="vertical-form-label">
+                                        Weight :
+                                    </label>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="form-group">
+                                        {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
                                     </div>
                                 </div>
                             </div>
@@ -5207,7 +5228,16 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                         </label>
                                                     </div>
                                                 </div>
-                                                
+                                                <div class="">
+                                                    <label class="vertical-form-label">
+                                                        Weight :
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-3 ">
+                                                    <div class="form-group">
+                                                        {{Form::text('data[weight]','',['class'=>'form-control weight','placeholder'=>'Enter Weight'])}}
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row child-no-box">
                                                 <div class="col-md-1 pr-0">
@@ -5365,7 +5395,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                             </div>
                                             <div class="row child-no-box">
                                                 {{-- <div class="row"> --}}
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-4">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 Other Report : &nbsp;
@@ -5373,6 +5403,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                             {{Form::text("data[investigation_extra]",isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? $historyData->investigation_extra : null,['class'=>'form-control'])}}
                                                         </div>
                                                     </div>
+                                                    
                                                 {{-- </div> --}}
                                                 <div class="col-md-1">
                                                     <label class="vertical-form-label pr-0">

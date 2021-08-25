@@ -1321,6 +1321,7 @@ function childData(childNo){
             "<div class='col-md-4 child-naturally'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[child][child_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type p-ho-type" data-id="child-when-where-'+i+'">'+
+            '<option value="">Select Child status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+
@@ -1404,6 +1405,7 @@ function mtpData(mtpNo){
             "<div class='col-md-4 mtp-naturally'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[mtp][mtp_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type p-ho-type" data-id="mtp-when-where-'+i+'">'+
+            '<option value="">Select Child status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+
@@ -1485,6 +1487,7 @@ function secondMtpData(secondMtpNo){
             "<div class='col-md-4 second-mtp-naturally second-marriage-life-data'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[second_marriage][mtp][mtp_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="second-mtp-when-where-'+i+'">'+
+            '<option value="">Select Child status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+
@@ -1561,6 +1564,7 @@ function abortionData(abortionNo){
             "<div class='col-md-4 abortion-naturally'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[abortion][abortion_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type p-ho-type" data-id="abortion-when-where-'+i+'">'+
+            '<option value="">Select Child status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+
@@ -1637,6 +1641,7 @@ function secondAbortionData(secondAbortionNo){
             "<div class='col-md-4 second-abortion-naturally second-marriage-life-data'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[second_marriage][abortion][abortion_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="second-abortion-when-where-'+i+'">'+
+            '<option value="">Select Child Status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+
@@ -1718,6 +1723,7 @@ function secondChildData(childNo){
             "<div class='col-md-4 second-child-naturally second-marriage-life-data'>"+
             "<div class='form-group'>"+
             '<select name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_type]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="second-child-when-where-'+i+'">'+
+            '<option value="">Select Child Status</option>'+
             '<option value="1">Naturally</option>'+
             '<option value="2">Medicine</option>'+
             '<option value="3">IUI</option>'+

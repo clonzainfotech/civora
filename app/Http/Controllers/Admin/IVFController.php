@@ -810,12 +810,80 @@ class IVFController extends AdminController
                     }else{
                         $data['hsa_report']['images'] = $hsaReportOldImages;
                     }
-                    
+
+                    if($request->ivf_visit_id)
+                    {
+                        $category_Id = !empty($request->category) ? $request->category : 2;
+                        $editIvf = $this->IvfHistory->find($request->ivf_visit_id); 
+                        $notifyDate = $iuiDtae = Carbon::parse($editIvf->created_at)->format('Y-m-d');
+                        $editIvfData = !empty($editIvf) ? json_decode($editIvf->description) : null;
+                        $notify = $this->CategoryNotification->where('patients_id',$patientsId)->where('category_id',$category_Id)->whereDate('created_at',$notifyDate)->first();
+                        //Update pickUp Notification
+                        if(!empty($editIvfData) && !empty($notify) && !empty($editIvfData->trigger_date) && !empty($request['data']['trigger_date']))
+                        {
+                            $nowDate = \Carbon\Carbon::parse($editIvfData->trigger_date)->format('Y-m-d');
+                            $hcgTime = !empty($editIvfData->trigger->hcg->time) ? Carbon::parse($editIvfData->trigger->hcg->time) : null;
+                            $decapeptylTime = !empty($editIvfData->trigger->decapeptyl->time) ? Carbon::parse($editIvfData->trigger->decapeptyl->time) : null;
+                            $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                            $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                            if($notify->date == $pickUpDateTime)
+                            {
+                                $nowDate = \Carbon\Carbon::parse($request['data']['trigger_date'])->format('Y-m-d');
+                                $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
+                                $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                                $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                                $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                                $notify->date = $pickUpDateTime;
+                                $notify->reminder_date = Carbon::parse($pickUpDateTime)->subDays(1)->format('Y-m-d');
+                                $notify->save();
+                            }
+                        }
+                        if(!empty($editIvfData) && !empty($editIvfData->trigger_date) && !empty($notify) && (empty($request->data['collection']) || !in_array('trigger',$request->data['collection'])))
+                        {
+                            $notify->delete();
+                        }
+                        if(!empty($editIvfData) && empty($notify) && !empty($request['data']['trigger_date']) && !empty($request->data['collection']) && in_array('trigger',$request->data['collection']))
+                        {
+                            $nowDate = \Carbon\Carbon::parse($request['data']['trigger_date'])->format('Y-m-d');
+                            $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
+                            $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                            $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                            $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
+                            
+                            $pickUpDate = Carbon::parse($pickUpDateTime)->format('Y-m-d');
+                            $categoryPatientData['patients_id'] = $patientsId;
+                            $categoryPatientData['date'] = $pickUpDateTime;
+                            $categoryPatientData['reminder_date'] = Carbon::parse($pickUpDate)->subDays(1)->format('Y-m-d');
+                            $categoryPatientData['message'] = "Coming for PickUp";
+                            $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
+                            $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+                        }
+                        //Update transfer Notification
+                        $notify = $this->CategoryNotification->where('patients_id',$patientsId)->where('category_id',$category_Id)->whereDate('date',\Carbon\Carbon::parse($editIvfData->follow_up)->format('Y-m-d'))->first();
+
+                        if(!empty($editIvfData) && !empty($notify) && !empty($editIvfData->progesterone->type) && !empty($request->data['progesterone']['type']))
+                        {
+                            if($notify->date == \Carbon\Carbon::parse($editIvfData->follow_up)->format('Y-m-d H:i:s'))
+                            {
+                                $notify->date = \Carbon\Carbon::parse($request->data['follow_up'])->format('Y-m-d H:i:s');
+                                $notify->reminder_date = Carbon::parse($request->data['follow_up'])->subDays(1)->format('Y-m-d');
+                                $notify->save();
+                            }
+                        }
+                        if(!empty($editIvfData) && empty($notify) && !empty($request->data['progesterone']['type']))
+                        {
+                            $categoryPatientData['patients_id'] = $patientsId;
+                            $categoryPatientData['date'] = Carbon::parse($request->data['follow_up'])->format('Y-m-d H:i:s');
+                            $categoryPatientData['reminder_date'] = Carbon::parse($request->data['follow_up'])->subDays(1)->format('Y-m-d');
+                            $categoryPatientData['message'] = "Coming for Transfer";
+                            $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
+                            $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+                        }
+                    }
                     $ivfHistory->description = json_encode($data);
-                    // dd($ivfHistory->description);
                     $ivfHistory->investigation = isset($request->investigation) ? json_encode($investigationData) : null;
-                    $ivfHistory->trigger_date = !empty($request->data['trigger_date']) ? Carbon::parse($request->data['trigger_date'])->format('Y-m-d') : null;
-                    $ivfHistory->trigger_time = $triggerTime;
+                    $ivfHistory->trigger_date = !empty($request->data['collection']) && in_array('trigger',$request->data['collection']) && !empty($request->data['trigger_date']) ? Carbon::parse($request->data['trigger_date'])->format('Y-m-d') : null;
+                    $ivfHistory->trigger_time = !empty($request->data['collection']) && in_array('trigger',$request->data['collection']) ? $triggerTime : null;
                     $ivfHistory->visit = $request->visit;
                     $ivfHistory->cycle_no = $request->cycle_no;
                     $ivfHistory->display_cycle = isset($display_cycle) ? $display_cycle : $request->cycle_no;
@@ -823,7 +891,6 @@ class IVFController extends AdminController
                     $ivfHistory->patients_id = $patientsId;
                     $ivfHistory->seen_by = $request->seen_by;
                     $ivfHistory->created_by = Auth::user()->id;
-                    // dd($ivfHistory);
                     $ivfHistory->save();
                     $ivf = $ivfHistory;
                     $ivfId = $ivfHistory->id;
@@ -876,8 +943,6 @@ class IVFController extends AdminController
                                 }
                             }
                             $appointment = $this->Appointment->where('patients_id',$patientsId)->orderBy('id','DESC')->first();
-                            // $checkAppointment = $this->Appointment->wherePatientsId($patientsId)->whereDate('date',$followDate)->orderBy('id','DESC')->first();
-                            // if(!$checkAppointment && !$isSkip){
                             if($appointment){
                                 $appointmentData['appointmentId'] = encrypt($appointment->id);
                                 $appointmentData['date'] = $followDate;

@@ -1016,6 +1016,37 @@ class IUIController extends AdminController
             $iui->created_at = !empty($iui->created_at) ? $iui->created_at : Carbon::now()->format('Y-m-d H:i:s');
             $iui->created_by = Auth::user()->id;
             // dd($iui);
+            if($request->iui_history_id)
+            {
+                $editIvf = $this->IuiHistory->find($request->iui_history_id);
+                $editIvfData = !empty($editIvf) ? json_decode($editIvf->description) : null;
+                $checkIui = !empty($editIvfData) && !empty($editIvfData->hcg->type) && $editIvfData->hcg->type == 'yes' && $editIvfData->hcg->iui->status == 'yes' ? true : false;
+                $notifyDate = $iuiDtae = Carbon::parse($editIvf->created_at)->format('Y-m-d');
+                $category_Id = !empty($request->category) ? $request->category : 4;
+                if($checkIui)
+                {
+                    $notify = $this->CategoryNotification->where('patients_id',$patientsId)->where('category_id',$category_Id)->whereDate('created_at',$notifyDate)->first();
+                    if(!empty($editIvfData) && !empty($editIvfData->hcg_date))
+                    {
+                        $cDate = \Carbon\Carbon::parse(!empty($editIvfData->hcg_date) ? $editIvfData->hcg_date : null)->format('Y-m-d') .' '.$editIvfData->hcg->time;
+                        $iuiDtaeAndTime = \Carbon\Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i');
+                        $iuiDtae = Carbon::parse($iuiDtaeAndTime)->format('Y-m-d');
+                        if(Carbon::parse($notify->date)->format('Y-m-d H:i') == $iuiDtaeAndTime)
+                        {
+                            $cDate = \Carbon\Carbon::parse(!empty($request->data['hcg_date']) ? $request->data['hcg_date'] : null)->format('Y-m-d') .' '.$request->data['hcg']['time'];
+                            $iuiDtaeAndTime = \Carbon\Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i');
+                            $iuiDtae = Carbon::parse($cDate)->format('Y-m-d');
+                            $notify->date = $iuiDtaeAndTime;
+                            $notify->reminder_date = Carbon::parse($iuiDtaeAndTime)->subDays(1)->format('Y-m-d');
+                            $notify->save();
+                        }
+                        if($request->data['hcg']['iui']['status'] == 'no')
+                        {
+                            $notify->delete();
+                        }
+                    }
+                }
+            }
             $iui->save();
             $now = Carbon::now()->format('Y-m-d');
             if(!$request->iui_history_id && !$request->iui_id)
@@ -1025,34 +1056,24 @@ class IUIController extends AdminController
                 {
                     $categoryPatientData = [];
                     $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
-                    // $cDate = date('Y-m-d').' '.$request->data['hcg']['time'];
-                    // $new_time = date($cDate, strtotime('+1 hours'));
-                    // $iuiDtaeAndTime = Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i:s');
                     $cDate = \Carbon\Carbon::parse(!empty($request->data['hcg_date']) ? $request->data['hcg_date'] : null)->format('Y-m-d') .' '.$request->data['hcg']['time'];
                     $iuiDtaeAndTime = \Carbon\Carbon::parse($cDate)->addHours(35)->format('Y-m-d H:i');
                     $iuiDtae = Carbon::parse($cDate)->format('Y-m-d');
                     $categoryPatientData['patients_id'] = $patientsId;
                     $categoryPatientData['date'] = $iuiDtaeAndTime;
-                    $categoryPatientData['reminder_date'] = Carbon::parse($iuiDtae)->subDays(1)->format('Y-m-d');
+                    $categoryPatientData['reminder_date'] = Carbon::parse($iuiDtaeAndTime)->subDays(1)->format('Y-m-d');
                     $categoryPatientData['message'] = "Coming for IUI";
                     $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
                     $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
                 }
             }
+            
             if(!$request->iui_history_id && !$request->iui_id && $msg){
                 $seenBy = getSeenByDoctor($seenBy);
                 $patient = $this->OpdPatients->find($patientsId);
                 $fDate = $fDate ? date('d M Y',strtotime($fDate)) : null;
                 $this->SmsManager::sendReferenceDoctor($msg,$seenBy->name,$fDate,$patientsId);
             }
-            // if(!$request->iui_history_id && !$request->iui_id && isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->data['hcg']['iui']['status'] == 'yes')
-            // {
-            //     $iuiReport = $this->IUIReport;
-            //     $iuiReport->patients_id = $patientsId;
-            //     $iuiReport->cycle_no = $request->cycle_no;
-            //     $iuiReport->description = json_encode($request->iui_report);
-            //     $iuiReport->save();
-            // }
             if($request->isprint == 1 || $request->isprint == 2 || $request->isprint == 6){
                 if($request->isprint == 2){
                     $iui->hcg_time = $this->getTimeStatus(Carbon::parse($request->data['hcg']['time'])->format('g:i a'))['timeStatus'];
@@ -2503,6 +2524,7 @@ class IUIController extends AdminController
                 $iuiData->plan->follow_up = $newDate;
             }
             $iuiData->new_follow_up = $newDate;
+            $iuiData->follow_up = $newDate;
             $iui->description = json_encode($iuiData);
             $iui->save();
             return ['status'=>true];

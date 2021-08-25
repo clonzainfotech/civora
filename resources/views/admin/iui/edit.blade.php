@@ -4667,17 +4667,19 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-1 div-seen-by">
-                        <label class="vertical-form-label pr-0">
-                            Seen By:
-                        </label>
-                    </div>
-                    <div class="col-md-3 div-seen-by">
-                        <div class="form-group">
-                            {{Form::select('seen_by_3',$hospitalDoctor,'',['class'=>'form-control select-padding-0 seen-by-3','placeholder'=>'Select Doctor'])}}
+                    @if($iuiHistoryData[count($iuiHistoryData)-1]['cycle_status'] != 2)
+                        <div class="col-md-1 div-seen-by">
+                            <label class="vertical-form-label pr-0">
+                                Seen By:
+                            </label>
                         </div>
-                        <span class="seen-by-error-3 text-danger mb-2"></span>
-                    </div>
+                        <div class="col-md-3 div-seen-by">
+                            <div class="form-group">
+                                {{Form::select('seen_by_3',$hospitalDoctor,'',['class'=>'form-control select-padding-0 seen-by-3','placeholder'=>'Select Doctor'])}}
+                            </div>
+                            <span class="seen-by-error-3 text-danger mb-2"></span>
+                        </div>
+                    @endif
                     <div class="col-md-12">
                         <table class="table follicular-table table-bordered table-responsive">
                             <thead>
@@ -5090,7 +5092,17 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            {{!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date) ? 'YES ': ''}}
+                                                            {{!empty($iui_decription->hcg->type) && $iui_decription->hcg->type == 'yes' && !empty($iui_decription->hcg_date) ? 'YES /': ''}}
+                                                            @php
+                                                            $hcgInjectionData = [];
+                                                                if(!empty($iui_decription->hcg->injection->data)){
+                                                                    $hcgInjection = [1=>'IUI HCG 5000',2=>'IUI HCG 10000',3=>'INJ 2 DECA',4=>'INJ 1 DECA',5=>'INJ Pitocin'] ;
+                                                                    array_filter($iui_decription->hcg->injection->data,function($value) use($hcgInjection,&$hcgInjectionData){
+                                                                        $hcgInjectionData[$value]=$hcgInjection[$value];
+                                                                    });
+                                                                }
+                                                            @endphp
+                                                            {{implode(',',$hcgInjectionData)}}
                                                         </td>
                                                         <td></td>
                                                         <td>{{!empty($iui_decription->no_follicle) ? $iui_decription->no_follicle : ''}}</td>
@@ -5635,19 +5647,21 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
             </div> {{--end follicular-print--}}
             
             @endif
-            <div class="col-sm-12 div-btn">
-                {{Form::submit('Submit',['class'=>'btn btn-primary submit'])}}
-                @if($visitNo == 2 || $visitNo == 4)
-                    <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>
-                @endif
-                @if($visitNo == 3)
-                    <button type="submit" class="btn btn-primary final-iui submit" value="6">Follicular Study Report</button>
-                    <button type="button" class="btn btn-primary follicular-print d-none" value="7">Follicular Study Print</button>
-                @endif
-                <button type="submit" class="btn btn-primary iui-print submit d-none" value="2">IUI Print</button>
-                <button type="button" class="btn btn-primary iui-deposit-print d-none" value="3">IUI Bill</button>
-                <a href="{{URL::to('iui')}}" class="btn btn-default">Cancel</a>
-            </div>
+            @if(($visitNo == 2 || $visitNo == 4 ) || ($visitNo == 3 && $iuiHistoryData[count($iuiHistoryData)-1]['cycle_status'] != 2))
+                <div class="col-sm-12 div-btn">
+                    {{Form::submit('Submit',['class'=>'btn btn-primary submit'])}}
+                    @if($visitNo == 2 || $visitNo == 4)
+                        <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>
+                    @endif
+                    @if($visitNo == 3)
+                        <button type="submit" class="btn btn-primary final-iui submit" value="6">Follicular Study Report</button>
+                        <button type="button" class="btn btn-primary follicular-print d-none" value="7">Follicular Study Print</button>
+                    @endif
+                    <button type="submit" class="btn btn-primary iui-print submit d-none" value="2">IUI Print</button>
+                    <button type="button" class="btn btn-primary iui-deposit-print d-none" value="3">IUI Bill</button>
+                    <a href="{{URL::to('iui')}}" class="btn btn-default">Cancel</a>
+                </div>
+            @endif
         {{Form::close()}}
     </div>
     <script type="text/javascript">

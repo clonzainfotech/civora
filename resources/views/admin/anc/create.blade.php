@@ -1531,7 +1531,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                             <div class="row yalk-sac-1 female-type-data-1 gsac-data-1">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
-                                                        Yalk Sac :
+                                                        Yolk Sac :
                                                     </label>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -1554,7 +1554,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        {{Form::text("oe[utdata][1][yalk_sac_size]",'',['class'=>'form-control','placeholder'=>'Yalk Sac Size'])}}
+                                                        {{Form::text("oe[utdata][1][yalk_sac_size]",'',['class'=>'form-control','placeholder'=>'Yolk Sac Size'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1 pr-0 gsac-data-1 fefal-pole-data-1 d-none">

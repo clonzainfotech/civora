@@ -359,7 +359,7 @@
                         @else
                             <tr>
                                 <th>
-                                    Yalk Sac :
+                                    Yolk Sac :
                                 </th>
                                 <td>
                                     {{  !empty($value->yalk_sac) ? $value->yalk_sac : null}}

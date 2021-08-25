@@ -220,6 +220,7 @@
             $triggerHistoryData = $triggerHistory ? json_decode($triggerHistory->description) : null;
             $hcgTrigger = !empty($triggerHistoryData->trigger->hcg->status) ? $triggerHistoryData->trigger->hcg->status : null;
             $dualTrigger = !empty($triggerHistoryData->trigger->decapeptyl->status) ? $triggerHistoryData->trigger->decapeptyl->status : null;
+            $ovutring_Trigger = isset($triggerHistoryData->trigger->ovutring) && !empty($triggerHistoryData->trigger->ovutring->status) ? $triggerHistoryData->trigger->ovutring->status : null;
             $i=0;
             $cycle_no = count($cycle);
            
@@ -1045,6 +1046,38 @@
                                                         <div class="row mt-1">
                                                             <div class="col-md-2">
                                                                 <div class="checkbox">
+                                                                    {{Form::checkbox('data[trigger][ovutring][status]','ovutring','',['id'=>'ovutring'])}}
+                                                                    <label for="ovutring">
+                                                                        Ovutring
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ovutringtrigger d-none">
+                                                                <div class="row ml-3">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Time : &nbsp;</span>
+                                                                                {{Form::text("data[trigger][ovutring][time]",'',['class'=>'form-control timepicker time','placeholsder'=>'Brand'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Dose : &nbsp;</span>
+                                                                        {{Form::text("data[trigger][ovutring][dose]",'10000',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Brand : &nbsp;</span>
+                                                                        {{Form::text("data[trigger][ovutring][brand]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2">
+                                                                <div class="checkbox">
                                                                     {{Form::checkbox('data[trigger][dualtrigger][stauts]','dualtrigger','',['id'=>'dualtrigger'])}}
                                                                     <label for="dualtrigger">
                                                                         Dule Trigger
@@ -1210,7 +1243,7 @@
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="font-bold">Trigger : </td>
-                                                                                        <td style="" >{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger}}</td>
+                                                                                        <td style="" >{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger.(!empty($ovutring_Trigger) ? ' + '.$ovutring_Trigger : '')}}</td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td>Date & Time : </td>
@@ -1458,7 +1491,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="font-bold border-none">Trigger : </td>
-                                                        <td class="border-none">{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger}}</td>
+                                                        <td class="border-none">{{$hcgTrigger.(!empty($hcgTrigger) ? '+' : '').$dualTrigger .(!empty($ovutring_Trigger) ? ' + '.$ovutring_Trigger : '')}}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Date & Time : </td>
@@ -3477,7 +3510,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if(!empty($historyData->trigger->hcg->status) || !empty($historyData->trigger->decapeptyl->status) || !empty($historyData->trigger->dualtrigger->stauts) )
+                                    @if(!empty($historyData->trigger->hcg->status) || !empty($historyData->trigger->decapeptyl->status) || !empty($historyData->trigger->dualtrigger->stauts) || ( isset($historyData->trigger->ovutring) && !empty($historyData->trigger->ovutring->stauts)))
                                         @php
                                             $trigger='trigger';
                                             $hcg = !empty($historyData->trigger->hcg->status) ? $historyData->trigger->hcg->status : null;
@@ -3490,6 +3523,11 @@
                                             $decapeptyl_time = !empty($historyData->trigger->decapeptyl->time) ? $historyData->trigger->decapeptyl->time : null;
                                             $decapeptyl_dose = !empty($historyData->trigger->decapeptyl->dose) ? $historyData->trigger->decapeptyl->dose : null;
                                             $decapeptyl_brand = !empty($historyData->trigger->decapeptyl->brand) ? $historyData->trigger->decapeptyl->brand : null;
+
+                                            $ovutring = !empty($historyData->trigger->ovutring->status) ? $historyData->trigger->ovutring->status : null;
+                                            $ovutring_time = !empty($historyData->trigger->ovutring->time) ? $historyData->trigger->ovutring->time : null;
+                                            $ovutring_dose = !empty($historyData->trigger->ovutring->dose) ? $historyData->trigger->ovutring->dose : null;
+                                            $ovutring_brand = !empty($historyData->trigger->ovutring->brand) ? $historyData->trigger->ovutring->brand : null;
                                         @endphp
                                         @php
                                             $dule = !empty($historyData->trigger->dualtrigger->stauts) ? $historyData->trigger->dualtrigger->stauts : null;
@@ -3503,6 +3541,10 @@
                                         {{Form::hidden("data[trigger][decapeptyl][time]",$decapeptyl_time)}}
                                         {{Form::hidden("data[trigger][decapeptyl][dose]",$decapeptyl_dose)}}
                                         {{Form::hidden("data[trigger][decapeptyl][brand]",$decapeptyl_brand)}}
+                                        {{Form::hidden("data[trigger][ovutring][status]",$ovutring)}}
+                                        {{Form::hidden("data[trigger][ovutring][time]",$ovutring_time)}}
+                                        {{Form::hidden("data[trigger][ovutring][dose]",$ovutring_dose)}}
+                                        {{Form::hidden("data[trigger][ovutring][brand]",$ovutring_brand)}}
                                         {{Form::hidden("data[trigger][dualtrigger][stauts]",$dule)}}
                                         {{Form::hidden("data[trigger][update_status]",'yes')}}
                                     @else
@@ -3585,6 +3627,38 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">Brand : &nbsp;</span>
                                                             {{Form::text("data[trigger][decapeptyl][brand]",'',['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                                <div class="col-md-2">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('data[trigger][ovutring][status]','ovutring','',['id'=>'ovutring'])}}
+                                                        <label for="ovutring">
+                                                            Ovutring
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="ovutringtrigger d-none">
+                                                    <div class="row ml-3">
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">Time : &nbsp;</span>
+                                                                    {{Form::text("data[trigger][ovutring][time]",'',['class'=>'form-control timepicker time','placeholsder'=>'Brand'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">Dose : &nbsp;</span>
+                                                            {{Form::text("data[trigger][ovutring][dose]",'10000',['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">Brand : &nbsp;</span>
+                                                            {{Form::text("data[trigger][ovutring][brand]",'',['class'=>'form-control'])}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -5624,11 +5698,11 @@
                 }
             });
 
-            $(document).on('change','#decapeptyl',function(){
+            $(document).on('change','#ovutring',function(){
                 if($(this).is(":checked")) {
-                    $(".decapeptyltrigger").removeClass("d-none");
+                    $(".ovutringtrigger").removeClass("d-none");
                 }else{
-                    $(".decapeptyltrigger").addClass("d-none");
+                    $(".ovutringtrigger").addClass("d-none");
                 }
             });
 

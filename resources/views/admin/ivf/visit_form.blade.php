@@ -776,6 +776,7 @@
                 @php
                     $hcgStatus = !empty($ivfData->trigger->hcg->status ) && $ivfData->trigger->hcg->status == 'hcg' ? '' : 'd-none';
                     $decapeptylStatus = !empty($ivfData->trigger->decapeptyl->status) && $ivfData->trigger->decapeptyl->status == 'decapeptyl' ? '' : 'd-none';
+                    $ovutringStatus = !empty($ivfData->trigger->ovutring->status) && $ivfData->trigger->ovutring->status == 'ovutring' ? '' : 'd-none';
                 @endphp
                 @if($ivf->plan == 1)
                     {{Form::hidden("data[trigger][update_status]",'no')}}
@@ -855,6 +856,38 @@
                                         <div class="input-group">
                                             <span class="input-group-addon">Brand : &nbsp;</span>
                                             {{Form::text("data[trigger][decapeptyl][brand]",!empty($ivfData->trigger->decapeptyl->brand) ? $ivfData->trigger->decapeptyl->brand : null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-2">
+                                <div class="checkbox">
+                                    {{Form::checkbox('data[trigger][ovutring][status]','ovutring',!empty($ovutringStatus) ? false : true,['id'=>'ovutring'])}}
+                                    <label for="ovutring">
+                                        Ovutring
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="{{'ovutringtrigger '.$ovutringStatus}}">
+                                <div class="row ml-3">
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Time : &nbsp;</span>
+                                                {{Form::text("data[trigger][ovutring][time]",isset($ivfData->trigger->ovutring) && !empty($ivfData->trigger->ovutring->time) ? $ivfData->trigger->ovutring->time : null,['class'=>'form-control timepicker time','placeholsder'=>'Brand'])}}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Dose : &nbsp;</span>
+                                            {{Form::text("data[trigger][ovutring][dose]",isset($ivfData->trigger->ovutring) && !empty($ivfData->trigger->ovutring->dose) ? $ivfData->trigger->ovutring->dose : null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Brand : &nbsp;</span>
+                                            {{Form::text("data[trigger][ovutring][brand]",isset($ivfData->trigger->ovutring) && !empty($ivfData->trigger->ovutring->brand) ? $ivfData->trigger->ovutring->brand : null,['class'=>'form-control'])}}
                                         </div>
                                     </div>
                                 </div>

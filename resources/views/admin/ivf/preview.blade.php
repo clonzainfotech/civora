@@ -3142,6 +3142,15 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             @if(!empty($historyData->trigger->decapeptyl->brand))
                                                 <span>Brand :- &nbsp;&nbsp;{{$historyData->trigger->decapeptyl->brand}}</span>
                                             @endif
+                            @endif
+                            @if(isset($historyData->trigger->ovutring) && !empty($historyData->trigger->ovutring->status))
+                                        <span>Injection Name:- &nbsp;&nbsp; Ovutring</span>
+                                            @if(!empty($historyData->trigger->ovutring->dose))
+                                                <span>Dose :- &nbsp;&nbsp;{{$historyData->trigger->ovutring->dose}}</span>
+                                            @endif
+                                            @if(!empty($historyData->trigger->ovutring->brand))
+                                                <span>Brand :- &nbsp;&nbsp;{{$historyData->trigger->ovutring->brand}}</span>
+                                            @endif
                             @endif 
                         </div> 
                     </div>

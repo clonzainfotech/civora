@@ -185,7 +185,7 @@ $water_mark = isset($systemSetting->water_mark) && !empty($systemSetting->water_
             </div>
       </div>
     </div>
-    <div class="container" style="padding: 20px;">
+    <div class="container" style="padding: 17px;">
         <div class="copyright">
               <p>{{$footer_2}}</p>
                 @if(!empty($hospitalAddress) && count($hospitalAddress) > 0	)

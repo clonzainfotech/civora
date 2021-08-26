@@ -58,7 +58,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label><strong>Description :</strong></label>
-                                    <textarea class="ckeditor form-control" name="description">{{!empty($html_page) && !empty($html_page->description) ? $html_page->description : ''}}</textarea>
+                                    <textarea class="form-control" id="description" name="description">{{!empty($html_page) && !empty($html_page->description) ? $html_page->description : ''}}</textarea>
                                 </div>
                                 <span class="form-error-msg">
                                     {{$errors->first('description')}}
@@ -79,8 +79,12 @@
 <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 <script type="text/javascript">
  $(document).ready(function() {
-       $('.ckeditor').ckeditor();
-    });
+        CKEDITOR.replace('description', {
+            filebrowserUploadUrl: "{{URL::to('html-page/uploadImage', ['_token' => csrf_token() ])}}",
+            filebrowserUploadMethod: 'form'
+        });
+});
+    
     $(document).ready(function(){
         $(".html-pagea-form").submit(function() { $(".html-page-save").attr("disabled", true); });
     });

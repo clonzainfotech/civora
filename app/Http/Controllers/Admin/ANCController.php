@@ -1202,7 +1202,7 @@ class ANCController extends AdminController
                 foreach($ivfHistory as $ivf)
                 {
                     $ivfData = json_decode($ivf->description);
-                    $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail'  && !empty($ivfData->transfer->upt_type) && $ivfData->transfer->upt_type == 'positive' ?  true : false;
+                    $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail' ?  true : false;
                 }
             }
             if($request->ajax()){

@@ -2806,6 +2806,17 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             @endif
                         </tr>
                     @endif
+                    @if(isset($historyData->trigger->ovutring) && !empty($historyData->trigger->ovutring->status))
+                        <tr>
+                            <td>Injection Name:- &nbsp;&nbsp; Ovutring</td>
+                            @if(!empty($historyData->trigger->ovutring->dose))
+                                <td>Dose :- &nbsp;&nbsp;{{$historyData->trigger->ovutring->dose}}</td>
+                            @endif
+                            @if(!empty($historyData->trigger->ovutring->brand))
+                                <td>Brand :- &nbsp;&nbsp;{{$historyData->trigger->ovutring->brand}}</td>
+                            @endif
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>

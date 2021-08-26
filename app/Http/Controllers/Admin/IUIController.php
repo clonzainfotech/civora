@@ -477,7 +477,7 @@ class IUIController extends AdminController
                     $iuiFirstVisitData->created_at = Carbon::now()->addSeconds(120)->format('Y-m-d H:i:s');
                     $iuiFirstVisitData->save();
                 }
-                if(!empty($request->data['result']) && $request->data['result'] == 'consive' && (isset($request->data['upt_type']) && $request->data['upt_type'] == 'positive')){
+                if(!empty($request->data['result']) && $request->data['result'] == 'consive'){
                     $ancData = $this->ANC;
                     $autoRemark = [];
                     
@@ -999,7 +999,7 @@ class IUIController extends AdminController
             }
             
             if($request->visit == 4){
-                if(isset($request->data['upt_type']) && $request->data['upt_type'] == 'weak_positive')
+                if(isset($request->data['upt_type']) && $request->data['upt_type'] == 'weak_positive' && $request->data['result'] == 'fail')
                 {
                     $iui->cycle_status = 1;
                 }

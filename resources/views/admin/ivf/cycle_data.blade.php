@@ -451,7 +451,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td>{{$j == 1 && !empty($data->et_details) ? $data->et_details : '-'}}
-                                                                            @if ($j == 1)
+                                                                            @if ($j == 1 && in_array('transfer',$collectionData))
                                                                             <br>
                                                                                     <a href="javascript:void(0);" id="ivf_transfer_report_update" data-patient-id={{ encrypt($datarow->patients_id)}} data-cycle-no={{ encrypt($datarow->cycle_no)}} data-plan={{ encrypt($datarow->plan)}} data-visit={{ encrypt($datarow->visit)}}>
                                                                                         IVF Transfer Report
@@ -504,7 +504,7 @@
                                                                     $lastS_day = $row->s_day;
                                                                 @endphp
                                                             @endforeach
-                                                            @if(!empty($historyData->progesterone->status) && $historyData->progesterone->status == 'yes' && !empty($historyData->progesterone->type) && && (in_array('progesterone',$collectionData)))
+                                                            @if(!empty($historyData->progesterone->status) && $historyData->progesterone->status == 'yes' && !empty($historyData->progesterone->type) && (in_array('progesterone',$collectionData)))
                                                                     <tr>
                                                                         <td>{{\Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y')}}</td>
                                                                         <td></td>

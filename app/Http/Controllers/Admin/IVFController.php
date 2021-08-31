@@ -2508,6 +2508,8 @@ class IVFController extends AdminController
             $currentdate =Carbon::now()->format('d-m-y');
             $investigationReport = $this->allInvestigationReport();
             $planData = ['1'=>'Self','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
+            $planArray = [];
+            $cycleArray = [];
             if($request->ajax()){
                 $patientId = decrypt($request->patient_id);
                 $lastAppointmentData = $this->Appointment->wherePatientsId($patientId)->orderBy('id','DESC')->first();
@@ -2604,8 +2606,7 @@ class IVFController extends AdminController
                     $isTableView = 0;
                     $displayPlan = 0;
                     $displayCycle = 0;
-                    $planArray = [];
-                    $cycleArray = [];
+                   
                     $isAppointmentView = true; // for bootstrap file duplication
                     foreach($ivfVisitDate as $key => $date)
                     {

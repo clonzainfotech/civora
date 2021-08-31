@@ -169,7 +169,7 @@
                             <a href="{{url('ivf/ivfedit/'.encrypt($patient_id))}}" class="mb-1 ml-1">
                                 <button class="btn btn-primary pull-right">Visit-1</button>
                             </a>
-                            <a href="{{URL::to('get-all-report/'.encrypt($patient_id).'?status=ivf')}}" class="mb-1 ml-1">
+                            <a href="{{URL::to('get-all-report/'.encrypt($patient_id).'?status=ivf')}}" target="_blank" class="mb-1 ml-1">
                                 <button class="btn btn-primary pull-right">View Reports</button>
                             </a>
                         </div>
@@ -283,7 +283,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                {{Form::select('rmo_doctor',$rmoDcotor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
+                                {{Form::select('rmo_doctor',$rmoDoctor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
                             </div>
                         </div>
                     </div>
@@ -1950,7 +1950,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                {{Form::select('rmo_doctor',$rmoDcotor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
+                                                {{Form::select('rmo_doctor',$rmoDoctor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
                                             </div>
                                         </div>
                                     @endif
@@ -2942,7 +2942,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        {{Form::select('rmo_doctor',$rmoDcotor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
+                                        {{Form::select('rmo_doctor',$rmoDoctor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
                                     </div>
                                 </div>
                             </div>

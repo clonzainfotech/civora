@@ -50,7 +50,7 @@
                         <h2><strong class="text-secondary"> {{ucwords($ancPatients->name)}}</strong>{{' care of '.$careOf}}</h2>
                     </div>
                     <div class="col-md-6">
-                        <a href="{{URL::to('get-all-report/'.encrypt($ancData->getPatients['id']).'?status=anc')}}" class="btn btn-primary pull-right">View Reports</a>
+                        <a href="{{URL::to('get-all-report/'.encrypt($ancData->getPatients['id']).'?status=anc')}}" target="_blank" class="btn btn-primary pull-right">View Reports</a>
                         @if($isConceivedIUI)
                             <a href="{{URL::to('iui/history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary pull-right">IUI History</a>
                         @endif

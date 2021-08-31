@@ -10,8 +10,15 @@
     <div class="row clearfix">
         <div class="col-md-12 p-0">
             <div class="card patients-list">
-                <div class="header">
-                    <h2><strong class="text-secondary">{{ucwords($patient->name)}}</strong></h2>
+                <div class="header d-flex">
+                    <div class="col-md-6 col-sm-6">
+                        <h2><strong class="text-secondary">{{ucwords($patient->name)}}</strong></h2>
+                    </div>
+                    <div class="col-md-6 col-sm-6 ">
+                        <a href="{{URL::to('get-all-report/'.encrypt($patient->id).'?status=gynec')}}" target="_blank" class="pull-right">
+                            <button class="btn btn-primary ">View Reports</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -281,6 +281,7 @@ class PatientsController extends AdminController
         $ANCReports = [];
         $IVFReports = [];
         $IUIReports = [];
+        $GynecReports = [];
         $patientsDetails = $this->OpdPatients->whereId($patients)->first();
         $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
         $ancAllVisit = $this->ANC->where('patients_id',$patients)->get();
@@ -401,10 +402,21 @@ class PatientsController extends AdminController
                 $IUIReports[$reportDate]['blood_report'] = !empty($investigationHistoryData) && !empty($investigationHistoryData['blood_report']['image']) ? $investigationHistoryData['blood_report']['image'] : [];
             }
         }
+        $gynecAllVisit = $this->Gynec->where('patients_id', $patients)->get();
+        if($gynecAllVisit)
+        {
+            foreach($gynecAllVisit as $gynecVisit)
+            {
+                $reportDate = Carbon::parse($gynecVisit->created_at)->format('Y-m-d H:i:s');
+                $investigationReport = !empty($gynecVisit->investigation) ? json_decode($gynecVisit->investigation,true) : '';
+                $GynecReports[$reportDate]['report'] = !empty($investigationReport['report']['images']) ? $investigationReport['report']['images'] : [];
+            }
+        }
         // dd($IVFReports);
         krsort($ANCReports);
         krsort($IVFReports);
         krsort($IUIReports);
-        return view('admin.appointment.patient.all-reports',compact('ANCReports','IVFReports','IUIReports','patientsDetails','referenceDoctor','status'));
+        krsort($GynecReports);
+        return view('admin.appointment.patient.all-reports',compact('ANCReports','IVFReports','IUIReports','GynecReports','patientsDetails','referenceDoctor','status'));
     }
 }

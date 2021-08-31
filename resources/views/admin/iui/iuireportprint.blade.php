@@ -99,8 +99,8 @@
                     <tbody>
                         <tr>
                             <td>Volume:</td>
-                            <td><strong>{{!empty($iuireportData->volume_pre) ? $iuireportData->volume_pre : '-'}}</strong></td>
-                            <td><strong>{{!empty($iuireportData->volume_post) ? $iuireportData->volume_post : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->volume_pre) ? $iuireportData->volume_pre.' ml' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->volume_post) ? $iuireportData->volume_post.' ml' : '-'}}</strong></td>
                         </tr>
                         <tr>
                             <td>Sperm Count/ml</strong></td>
@@ -109,8 +109,8 @@
                         </tr>
                         <tr>
                             <td>Total Count(mili) :</strong></td>
-                            <td><strong>{{!empty($iuireportData->total_count_pre) ? $iuireportData->total_count_pre.' /mili' : '-'}}</strong></td>
-                            <td><strong>{{!empty($iuireportData->total_count_post) ? $iuireportData->total_count_post.' /mili' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->total_count_pre) ? $iuireportData->total_count_pre.' mili' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->total_count_post) ? $iuireportData->total_count_post.' mili' : '-'}}</strong></td>
                         </tr>
                         <tr>
                             <td>Total Motility(%) :</strong></td>
@@ -133,14 +133,14 @@
                             <td><strong>{{!empty($iuireportData->non_motile_post) ? $iuireportData->non_motile_post.' %' : '-'}}</strong></td>
                         </tr>
                         <tr>
-                            <td>Normal Morphology :</strong></td>
-                            <td><strong>{{!empty($iuireportData->normal_morphology_pre) ? $iuireportData->normal_morphology_pre : '-'}}</strong></td>
-                            <td><strong>{{!empty($iuireportData->normal_morphology_post) ? $iuireportData->normal_morphology_post : '-'}}</strong></td>
+                            <td>Normal Morphology(%) :</strong></td>
+                            <td><strong>{{!empty($iuireportData->normal_morphology_pre) ? $iuireportData->normal_morphology_pre.' %' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->normal_morphology_post) ? $iuireportData->normal_morphology_post.' %' : '-'}}</strong></td>
                         </tr>
                         <tr>
                             <td>Pus Cells / hpf :</strong></td>
-                            <td><strong>{{!empty($iuireportData->pus_cells_pre) ? $iuireportData->pus_cells_pre.' /hpf' : '-'}}</strong></td>
-                            <td><strong>{{!empty($iuireportData->pus_cells_post) ? $iuireportData->pus_cells_post.' /hpf' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->pus_cells_pre) ? $iuireportData->pus_cells_pre.' hpf' : '-'}}</strong></td>
+                            <td><strong>{{!empty($iuireportData->pus_cells_post) ? $iuireportData->pus_cells_post.' hpf' : '-'}}</strong></td>
                         </tr>
                     </tbody>
                 </table>

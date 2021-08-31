@@ -5316,28 +5316,8 @@
         <div class="modal-dialog view-file-modal-dialog">
           <div class="modal-content">
             <div class="modal-header header-bottom-border">
-              <button type="button" class="close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <div class="row">
-                    <div class="col-md-12">
-                        <h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan"></span></h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5 class="modal-title" id="myModalLabel">Cycle No:- <span class="ivf-appointment-cycle-no"></span></h5>
-                    </div>
-                </div>
-                {{-- <div class="row">
-                    <div class="col-md-12">
-                        <h5 class="modal-title rm-btn" id="myModalLabel">Visit:- <span class="ivf-appointment-visit-no"></span></h5>
-                    </div>
-                </div> --}}
-                <div class="row">
-                    <div class="col-md-12 mr-5">
-                            {{-- <a class="btn edit-btn rm-btn btn-sm btn-primary">Edit</a>
-                            <a class="btn print-btn btn-sm btn-primary">Print</a> --}}
-                        <a class="btn print-fet-report btn-sm btn-primary">Print</a>
-                    </div>
+                    <button type="button" class="close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
             </div>
             <div class="modal-body">
@@ -5359,7 +5339,7 @@
                     <span class="modal-title font-20 ivf-report-title candor-color font-bold"></span>
             </div>
             <div class="modal-body">
-                <div class="ivf-details-data">
+                <div class="ivf-details">
                     <div class="w3-content w3-display-container">
                         <div class="report-image">
                             
@@ -6402,21 +6382,29 @@
                     var buttonHtml = '';
                     var previewData = '';
                     
-                    $('.ivf-appointment-plan').html(data.plan);
-                    $('.ivf-appointment-cycle-no').html(data.cycle);
+                    
                     for(i=0; i<data.data.length;i++)
                     {
                         if(typeof data.date[i] != 'undefined'){
                             var linkDate = moment(new Date(data.date[i])).format('YYYY-MM-DD HH:mm:ss');
                             var date = moment(new Date(data.date[i])).format('DD MMMM YYYY');
                         }
-
+                        console.log(data.visitNumber);
                         if(data.extraVisit[i] == 1)
                         {
                             buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extravisit="1">Print</a></div></div>';
                         }
-                        else{
-                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div><div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="">Print</a></div></div>';
+                        if(data.visitNumber[i] == 1)
+                        {
+                            buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-6 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div>'+
+                            '<div class="col-md-6 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="">Print</a></div></div>';
+                        }
+                        else
+                        {
+                        buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-3 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div>'+
+                        '<div class="col-md-3"><h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan">'+data.planArray[i]+'</span></h5></div>'+
+                        '<div class="col-md-3"><h5 class="modal-title rm-btn" id="myModalLabel">CycleNo:- <span class="ivf-appointment-plan">'+data.cycleArray[i]+'</span></h5></div>'+
+                        '<div class="col-md-3 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="">Print</a></div></div>';
 
                         }
 

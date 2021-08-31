@@ -2507,6 +2507,7 @@ class IVFController extends AdminController
             $transferDate = null;
             $currentdate =Carbon::now()->format('d-m-y');
             $investigationReport = $this->allInvestigationReport();
+            $planData = ['1'=>'Self','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
             if($request->ajax()){
                 $patientId = decrypt($request->patient_id);
                 $lastAppointmentData = $this->Appointment->wherePatientsId($patientId)->orderBy('id','DESC')->first();
@@ -2604,16 +2605,18 @@ class IVFController extends AdminController
                         $isTableView = 0;
                         $displayPlan = 0;
                         $displayCycle = 0;
+                        $planArray = [];
+                        $cycleArray = [];
                         foreach($ivfVisitDate as $key => $date)
                         {
                             $ivf = $this->IVF->where('patients_id',$patientId)->where('created_at',$key)->first();
                             $isIvfHistory = '1';
                             $ivfType = 1;
                             $isExtraVisit = 0;
-                            if($ivf)
-                            {
-                                $visitNumber[]  = '1';
-                            }
+                            // if($ivf)
+                            // {
+                            //     $visitNumber[]  = 1;
+                            // }
                             if(!$ivf)
                             {
                                 $isIvfHistory = '2';
@@ -2625,7 +2628,7 @@ class IVFController extends AdminController
                                 $ivf = $ivfHistory;
                                 $historyData = json_decode($ivf->description);
                                 $doseData = $this->Dose->pluck('name','name');
-                                $visitNumber[] = $ivf->visit;
+                                
                             }
                             //find extra visit after 1st visit
                             $firstVisit = $this->IVF->where('patients_id',$patientId)->where('created_at',$key)->first();
@@ -2642,6 +2645,8 @@ class IVFController extends AdminController
                                         $dateValue[] = $ivfExtraVisit->created_at;
                                         $extraVisit[] = 1;
                                         $encIvfId[] = null;
+                                        $cycleArray[] = null;
+                                        $planArray[] = null;
 
                                     }
                                     
@@ -2661,6 +2666,8 @@ class IVFController extends AdminController
                                         $dateValue[] = $ivfExtraVisit->created_at;
                                         $extraVisit[] = 1;
                                         $encIvfId[] = null;
+                                        $cycleArray[] = null;
+                                        $planArray[] = null;
 
                                     }
                                     
@@ -2669,6 +2676,7 @@ class IVFController extends AdminController
                             //ivf and ivf-history visit
                             if($ivf)
                             {
+                                
                                 $extraVisit[] = 0;
                                 $ivfCycleData = null;
                                 if(!isset($ivf->visit))
@@ -2689,7 +2697,10 @@ class IVFController extends AdminController
                                 {
                                     $viewAllVisit[] =  View::make('admin.ivf.preview', compact('isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
                                     // $viewAllVisit,$preview);
+                                    $cycleArray[] = $ivf->cycle_no;
+                                    $planArray[] = isset($planData[$ivf->plan]) ? $planData[$ivf->plan] : '';
                                     $dateValue[] = $key;
+                                    $visitNumber[] = isset($ivf->visit) ? $ivf->visit : 1;
                                     $ivfId = $ivf->id;
                                     $encIvfId[] = encrypt($ivfId);
                                 }
@@ -2699,7 +2710,7 @@ class IVFController extends AdminController
                         }
                 }
                 
-                $planData = ['1'=>'Self','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
+                
                 
                 return response()->json([
                     'status'=>1,
@@ -2712,6 +2723,8 @@ class IVFController extends AdminController
                     'plan' => isset($planData[$plan]) ? $planData[$plan] : '',
                     // 'type' => $type,
                     'date' => $dateValue,
+                    'cycleArray' => $cycleArray,
+                    'planArray' => $planArray,
                     'visitNumber'=>$visitNumber,
                     'data' => $viewAllVisit
                 ]);

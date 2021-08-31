@@ -123,14 +123,7 @@
             height: 100%;
             border-radius: 0;
         }
-        @media (min-width: 576px){
-            .view-iui-file-modal-dialog {
-                /* max-width: 1800px !important; */
-                max-width: 90% !important;
-                margin: 120px auto;
-            }
-
-        }
+        
         .footer-top-border{
             border-top: 1px solid #9ea2a2 !important;
             padding: 1rem !important;

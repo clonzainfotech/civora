@@ -504,7 +504,7 @@
                                                                     $lastS_day = $row->s_day;
                                                                 @endphp
                                                             @endforeach
-                                                            @if(!empty($historyData->progesterone->status) && $historyData->progesterone->status == 'yes' && !empty($historyData->progesterone->type))
+                                                            @if(!empty($historyData->progesterone->status) && $historyData->progesterone->status == 'yes' && !empty($historyData->progesterone->type) && && (in_array('progesterone',$collectionData)))
                                                                     <tr>
                                                                         <td>{{\Carbon\Carbon::parse($datarow->created_at)->format('d-m-Y')}}</td>
                                                                         <td></td>
@@ -2085,7 +2085,7 @@
                                                             </td>
                                                         </tr>
                                                     {{-- @endif --}}
-                                                    @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)))
+                                                    @if(isset($historyData->progesterone_date) && (!empty($historyData->progesterone->type)) && (!empty($historyData->progesterone_date)) && (in_array('progesterone',$collectionData)))
                                                         <tr>
                                                             <td>{{\Carbon\Carbon::parse($historyData->progesterone_date)->format('d-m-Y')}}</td>
                                                             <td></td>

@@ -152,7 +152,6 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
     /* @page { margin-top : 20px; margin-left : 100px;} */
 </style>
 @if(isset($printPreview) && $printPreview != 0)
-
     @section('content')
 @endif    
 <div class="main-print-ivf-div">
@@ -2825,7 +2824,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
         <style>
             @page { margin-top : 200px; margin-bottom : 80px;}
         </style>
-        @if(!isset($printPreview))
+        @if(!isset($printPreview) && (!isset($isAppointmentView) || $isAppointmentView == false))
             <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
         @endif
         @if($isTableView == '1' && $plan == 1)

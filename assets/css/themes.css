@@ -2637,16 +2637,18 @@ input[type=number]::-webkit-outer-spin-button {
 .all_type_payment tbody tr,.all_type_payment th{
 line-height: 6px !important;
 }
+
 @media (min-width: 576px){
-    .view-file-modal-dialog {
-        max-width: 1200px !important;
-        margin: 1.75rem auto;
+    .view-file-modal-dialog,.view-iui-file-modal-dialog {
+        max-width: 90% !important;
+        margin: 120px auto;
     }
 }
 .sepreator
 {
     border-top: 1px solid black;
     margin-bottom: 25px;
+    margin-top:10px;
 }
 .w3-black, .w3-hover-black:hover {
     color: #fff!important;

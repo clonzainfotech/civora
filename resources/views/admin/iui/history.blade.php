@@ -124,7 +124,7 @@
             border-radius: 0;
         }
         @media (min-width: 576px){
-            .view-file-modal-dialog {
+            .view-iui-file-modal-dialog {
                 /* max-width: 1800px !important; */
                 max-width: 90% !important;
                 margin: 120px auto;
@@ -173,7 +173,7 @@
             table-layout: fixed !important;
             width: inherit;
         }
-        .view-file-modal-dialog .modal-content .modal-body
+        .view-iui-file-modal-dialog .modal-content .modal-body
         {
             line-height:0.9 !important;
         }
@@ -571,7 +571,7 @@
 </div>
 
 <div class="modal fade view-file-edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog view-file-modal-dialog">
+    <div class="modal-dialog view-iui-file-modal-dialog">
       <div class="modal-content">
         <div class="modal-header header-bottom-border">
 

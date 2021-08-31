@@ -2291,6 +2291,7 @@ class IUIController extends AdminController
                 else{
                     $preview = 0;
                     $isTable_view = false;
+                    $isAppointmentView = true;
                     foreach($iuiVisitDate as $key => $value)
                     {
                         $iuiType = 1;

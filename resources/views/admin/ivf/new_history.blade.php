@@ -299,7 +299,7 @@
                 type:'GET',
                 dataType:'json'
             }).done(function(data){
-                
+                $('.ivf-details-data').html('');
                 $('.edit-btn').data('id','');
                 if(data.ivf_type == 1){
                     var ivfPreview = $('.ivf-details-data').html();

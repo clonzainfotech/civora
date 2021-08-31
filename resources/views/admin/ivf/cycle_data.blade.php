@@ -6361,6 +6361,7 @@
                 type:'GET',
                 dataType:'json'
             }).done(function(data){
+                $('.ivf-details-data').html('');
                
                 if(data.ivf_type == 1){
                 $('.ivf-details-data').html('');

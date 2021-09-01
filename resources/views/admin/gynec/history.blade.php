@@ -184,6 +184,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             type:'GET',
             dataType:'json'
         }).done(function(data){
+            $('.gynec-details-data').html('');
             if(data.gynec_type == 1){
                 var ancPreview = $('.gynec-details-data').html();
                 var buttonHtml = '';

@@ -875,7 +875,7 @@ class IVFController extends AdminController
                                 $notify->save();
                             }
                         }
-                        if(!empty($editIvfData) && empty($notify) && !empty($request->data['progesterone']['type']))
+                        if(!empty($editIvfData) && empty($notify) && !empty($request->data['progesterone']['type']) && isset($request->data['collection']) && in_array('transfer', $request->data['collection']))
                         {
                             $categoryPatientData['patients_id'] = $patientsId;
                             $categoryPatientData['date'] = Carbon::parse($request->data['follow_up'])->format('Y-m-d H:i:s');
@@ -1069,7 +1069,7 @@ class IVFController extends AdminController
                         $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
                         $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
                     }
-                    if(!empty($request->data['progesterone']['type']))
+                    if(!empty($request->data['progesterone']['type']) && isset($request->data['collection']) && in_array('transfer', $request->data['collection']))
                     {
                         // $day = $request->data['progesterone']['type'] == 'day_3' ? '3' : '5';
                         $categoryPatientData['patients_id'] = $patientsId;

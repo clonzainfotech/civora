@@ -3293,10 +3293,13 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 @endif
                                                 @if($notinject == "is-inj")
                                                     @if (!empty($row->medicine_time))
-                                                    |
-                                                            {{-- @foreach ($row->medicine_time as $time) --}}
-                                                                {{$medicine_time[$row->medicine_time]}}
-                                                            {{-- @endforeach --}}
+                                                            @if(is_array($row->medicine_time))
+                                                                @foreach ($row->medicine_time as $time)
+                                                                |{{$medicine_time[$time]}}
+                                                                @endforeach
+                                                            @else
+                                                            |{{$medicine_time[$row->medicine_time]}}
+                                                            @endif
                                                     @endif
                                                 @endif
                                             </div>
@@ -3634,10 +3637,13 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 @endif
                                                 @if($notinject == "is-inj")
                                                     @if (!empty($row->medicine_time))
-                                                    |
-                                                            {{-- @foreach ($row->medicine_time as $time) --}}
-                                                                {{$medicine_time[$row->medicine_time]}}
-                                                            {{-- @endforeach --}}
+                                                            @if(is_array($row->medicine_time))
+                                                                @foreach ($row->medicine_time as $time)
+                                                                |{{$medicine_time[$time]}}
+                                                                @endforeach
+                                                            @else
+                                                            |{{$medicine_time[$row->medicine_time]}}
+                                                            @endif
                                                     @endif
                                                 @endif
                                             </div>

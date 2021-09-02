@@ -7,7 +7,6 @@
             <th>Payment</th>
             <th>Package</th>
             <th>Payment Type</th>
-            <th>Time</th>
             <th>Condition</th>
             <th>Is Completed</th>
             <th>Date</th>
@@ -41,11 +40,7 @@
                 <td><div class="{{'edit-payment payment-'.$row->id}}">{{$row->payment}}</div></td>
                 <td><div class="{{'edit-payment package-'.$row->id}}">{{$row->package}}</div></td>
                 <td><div class="{{'edit-payment payment-type-'.$row->id}}">{{ucfirst(!empty($row->payment_type) ? $paymentTypeData[$row->payment_type] : null)}}</div></td>
-                <td>
-                    <div class="{{'edit-payment text-wrraping time-'.$row->id}}">
-                        {{$row->time}}
-                    </div>
-                </td>
+                
                 <td><div class="{{'edit-payment condition-'.$row->id}}">{{$row->condition}}</div></td>
                 <td>{{$row->is_completed == 0 ? 'No' : 'Yes'}}</td>
                 <td><div class="{{'edit-payment date-'.$row->id}}">{{$row->created_at->format('d-m-Y')}}</div></td>

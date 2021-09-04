@@ -520,7 +520,8 @@ class IUIController extends AdminController
                         // $hoDetails->ho_details =  $hoDetails;
                         $iuiPatientsData->h_o = json_encode($hoData);
                     }
-                    $autoRemark['remark'] = "Conceived from IUI";
+                    $ho_type = ['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'];
+                    $autoRemark['remark'] = "Conceived with ".(isset($request->data['ho_type']) && !empty($request->data['ho_type']) ? $ho_type[$request->data['ho_type']]: '');
                     $ancData->patients_id = $patientsId;
                     $ancData->seen_by = ($seenBy) ? $seenBy : Auth::user()->id;
                     $ancData->patients_info = $iuiPatientsData->patients_info;

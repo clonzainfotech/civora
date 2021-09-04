@@ -4181,7 +4181,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 @endphp
                                 <div class="col-md-4 child-naturally">
                                     <div class="form-group">
-                                        {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],$follow_up_case,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','placeholder'=>'Select Follow Up case of'])}}
+                                        {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],$follow_up_case,['class'=>'form-control select-padding-0 follow-up-case child-ho-type p-ho-type'])}}
                                     </div>
                                 </div>
                                 <div class="">

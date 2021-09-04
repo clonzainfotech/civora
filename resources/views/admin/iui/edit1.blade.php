@@ -4992,7 +4992,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 </div>
                                 <div class="col-md-4 child-naturally">
                                     <div class="form-group">
-                                        {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],!empty($historyData->ho_type) ? $historyData->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','placeholder'=>'Select Follow Up case of'])}}
+                                        {{Form::select("data[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'],!empty($historyData->ho_type) ? $historyData->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type p-ho-type'])}}
                                     </div>
                                 </div>
                                 <div class="">

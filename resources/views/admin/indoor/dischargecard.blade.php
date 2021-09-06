@@ -555,7 +555,7 @@
                                             </div>
                                         </div>
                                         @php
-                                            $is_birthCertificate = in_array($bookedPatientData->getprocedure['id'],[1,2]) ? '' : 'd-none';
+                                            $is_birthCertificate = in_array($bookedPatientData->getprocedure['id'],[1,2,11]) ? '' : 'd-none';
                                         @endphp
                                             <div class="{{'row clearfix '.$is_birthCertificate}}">
                                                 <div class="col-md-6">

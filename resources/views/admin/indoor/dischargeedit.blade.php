@@ -27,7 +27,7 @@
                                 $birthCertificate = !empty($dischargedata->birth_certificate) ? json_decode($dischargedata->birth_certificate): null;
                                 $birth_image = !empty($birthCertificate) ? $birthCertificate->image : null;
                             @endphp
-                            @if(!empty($birth_image) && in_array($dischargedata->getIndoorBook->getprocedure['id'],[1,2]))
+                            @if(!empty($birth_image) && in_array($dischargedata->getIndoorBook->getprocedure['id'],[1,2,11]))
                             <a href="{{URl::to($birth_image)}}" target="_blank">
                                 <button class="btn btn-primary">
                                     Birth Certificate
@@ -507,7 +507,7 @@
                                             </div>
                                         </div>
                                         @php
-                                            $is_birthCertificate = in_array($dischargedata->getIndoorBook->getprocedure['id'],[1,2]) ? '' : 'd-none';
+                                            $is_birthCertificate = in_array($dischargedata->getIndoorBook->getprocedure['id'],[1,2,11]) ? '' : 'd-none';
                                         @endphp
                                             <div class="{{'row clearfix '.$is_birthCertificate}}">
                                                 <div class="col-md-6">

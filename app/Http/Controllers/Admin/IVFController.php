@@ -1757,7 +1757,8 @@ class IVFController extends AdminController
         $patients_Id = decrypt($patientsId);
         $patients = opd::where(['id' => $patients_Id])->first();
         $ivfPaymentHistory = $this->IvfPayment->wherePatientsId($patients_Id)->orderBy('id','DESC')->first();
-        $opdCollection = $this->IndoorDeposit->wherePatientId($patients_Id)->whereChargeType(2)->orderBy('id','DESC')->first();
+        $opdCollection = $this->IndoorDeposit->wherePatientId($patients_Id)->whereNotNull('package')->whereChargeType(2)->orderBy('id','DESC')->first();
+
         $is_deposite = (!empty($opdCollection)) ? 1 : 0;
         return view('admin.ivf.payments',['patientsId' => $patientsId,'patients' => $patients,'ivfPaymentHistory' => $ivfPaymentHistory, 'is_deposite' => $is_deposite]);
     }
@@ -1766,7 +1767,8 @@ class IVFController extends AdminController
         $patients_Id = decrypt($patientsId);
         $patients = opd::where(['id' => $patients_Id])->first();
         $ivfPaymentHistory = $this->IvfPayment->wherePatientsId($patients_Id)->orderBy('id','DESC')->first();
-        $opdCollection = $this->IndoorDeposit->wherePatientId($patients_Id)->whereChargeType(2)->orderBy('id','DESC')->first();
+        $opdCollection = $this->IndoorDeposit->wherePatientId($patients_Id)->whereNotNull('package')->whereChargeType(2)->orderBy('id','DESC')->first();
+
         $is_deposite = (!empty($opdCollection)) ? 1 : 0;
         return view('admin.ivf.payments',['patientsId' => $patientsId,'patients' => $patients,'ivfPaymentHistory' => $ivfPaymentHistory, 'is_deposite' => $is_deposite]);
     }

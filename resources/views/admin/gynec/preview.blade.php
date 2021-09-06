@@ -271,7 +271,7 @@
             </table>
         @endif
         
-        @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+        @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
             
             <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
                 <tbody>

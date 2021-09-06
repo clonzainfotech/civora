@@ -315,6 +315,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('patient-detail','IndoorPatientController@index');
     Route::get('indoor/indoor_preview/{id}','IndoorController@indoor_preview');
 
+    Route::post('upload-birthCertificate','IndoorController@uploadBirthCertificate');
+
     //route for Note
     Route::post('note','NoteController@store');
     Route::get('usernote/delete/{id}','NoteController@delete');

@@ -287,6 +287,15 @@
                 getIvfHistoryData(ivfString);
             });
         });
+        $(document).on('click','.edit-btn',function(){
+                ivfVisit = $(this).data('visit');
+                
+                if(ivfVisit == 1){
+                    window.location.href = "{{URL::to('ivf/ivfedit/')}}"+'/'+ivfPId;
+                    return true;
+                }
+                
+            });
         $(document).on('click','.print-btn',function(e){
                 e.preventDefault();
                 var extraVisit = $(this).data('extravisit');
@@ -309,11 +318,7 @@
                     var buttonHtml = '';
                     var previewData = '';
                     $('.edit-btn').data('id',data.enc_ivf_id);
-                    // if(typeof data.date != 'undefined'){
-                    //     var linkDate = moment(new Date(data.date)).format('YYYY-MM-DD HH:mm:ss');
-                    //     var date = moment(new Date(data.date)).format('DD MMMM YYYY');
-                    //     $('.ivf-appointment-date').text(date);
-                    // }plan
+                    
                     $('.ivf-appointment-plan').html(data.plan);
                     $('.ivf-appointment-cycle-no').html(data.cycle);
                     for(i=0; i<data.data.length;i++)
@@ -344,7 +349,7 @@
                         buttonHtml = ivfPreview + '<div class="row mb-1"><div class="col-md-3 text-left"><h5 class="modal-title" id="myModalLabel">Date:- <span class="anc-appointment-date">'+date+'</span></h5></div>'+
                         '<div class="col-md-3"><h5 class="modal-title rm-btn" id="myModalLabel">Plan:- <span class="ivf-appointment-plan">'+data.planArray[i]+'</span></h5></div>'+
                         '<div class="col-md-3"><h5 class="modal-title rm-btn" id="myModalLabel">CycleNo:- <span class="ivf-appointment-plan">'+data.cycleArray[i]+'</span></h5></div>'+
-                        '<div class="col-md-3 text-right"><a class="btn edit-btn btn-sm btn-primary" data-visit="'+data.visitNumber[i]+'" data-id="'+data.enc_ivf_id[i]+'" data-date="'+linkDate+'">Edit</a><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="" data-ivfreport="">Print</a></div></div>';
+                        '<div class="col-md-3 text-right"><a class="btn print-btn btn-sm btn-primary" data-plan="'+data.plan+'" data-cycleno="'+data.cycle+'" data-date="'+linkDate+'" data-extraVisit="" data-ivfreport="">Print</a></div></div>';
 
                         }
 
@@ -358,7 +363,9 @@
                     w.document.open();
                     w.document.write(data.data);
                     w.document.close();
-                    w.window.print();
+                    setTimeout(function() {
+                        w.window.print();
+                    }, 800);
                 }
             }).fail(function(error){
             });

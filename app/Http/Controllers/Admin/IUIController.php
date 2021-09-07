@@ -2339,9 +2339,7 @@ class IUIController extends AdminController
                                     $dateValue[] = $iuiExtraVisit->created_at;
                                     $table_view[] = $isTable_view;
                                     $extraVisit[] = 1;
-
                                 }
-                                
                             }
                         }
                         if($preview == 1 || $preview == 0) //display only one time  table view

@@ -1292,6 +1292,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </table>
                     @endif
                 </div>
+                <div class="display">
                     {{-- $pt_view is set bcz don't want to display in patients application --}}
                     @if($planManagement && (!isset($pt_view) || $pt_view != 1) && (isset($planManagement->plan_of_management_data) || (isset($planManagement->plan) && !empty($planManagement->plan))))
                         <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
@@ -1370,7 +1371,332 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </tbody>
                         </table>
                     @endif
-                {{-- </div> --}}
+                    @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' || (!empty($investigation->laproscopy) && $investigation->laproscopy->type == 'yes') || (!empty($investigation->hcg) && $investigation->hcg->type == 'yes') || isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)))
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="panel-title header-print-title">Investigation Done Outside</div>
+                                    </td>
+                                </tr>
+                                @if(!empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes')
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">Hystroscopy: </span>
+                                            {{($investigation->hystroscopy->type == 'yes') ? 'Yes' : 'No' }}
+                                        </th>
+                                        @if(isset($investigation->hystroscopy->type) && ($investigation->hystroscopy->type == 'yes'))
+                                            <th>
+                                                <span class="ivf-label">Finding Type: </span>
+                                                {{ ($investigation->hystroscopy->finding_type == 1) ? 'Normal' : 'Abnormal' }}
+                                            </th>
+                                            @if ($investigation->hystroscopy->finding_type == 2)
+                                                <th>
+                                                    <span class="ivf-label">Abnormal Details: </span>
+                                                    {{!empty($investigation->hystroscopy->abnormal_details) ? $investigation->hystroscopy->abnormal_details : '-' }}
+                                                </td>
+                                            @endif
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(isset($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes')
+                                    <tr>
+                                        @if($investigation->hystroscopy->finding_date)
+                                            <th>
+                                                <span class="ivf-label">Finding Date:</span>
+                                                {{$investigation->hystroscopy->finding_date}}
+                                            </th>
+                                        @endif
+                                        @if($investigation->hystroscopy->finding_details)
+                                            <th>
+                                                <span class="ivf-label">Details: </span>
+                                                {{$investigation->hystroscopy->finding_details}}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes')
+                                    <tr>
+                                        <th colspan="9">
+                                            <span class="ivf-label">Laproscopy:  </span>
+                                            @if (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type))
+                                                {{$investigation->laproscopy->type == 'yes' ? 'Yes' : 'No' }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->laproscopy) && ((!empty($investigation->laproscopy->finding_date) || !empty($investigation->laproscopy->laproscopy_type))))
+                                    <tr>
+                                        @if(!empty($investigation->laproscopy->finding_date))
+                                            <th>
+                                                <span class="ivf-label">Date: </span>
+                                                {{$investigation->laproscopy->finding_date}}
+                                            </th>
+                                        @endif
+
+                                        @if (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->laproscopy_type) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes')
+                                            <td>
+                                                {{ ($investigation->laproscopy->laproscopy_type == 2) ? 'Abnormal' : 'Normal' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->laproscopy->laproscopy_type == 2)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">RT Tube: </span>
+                                            {{($investigation->laproscopy->rt_tube_type == 2) ? 'Abnormal' : 'Normal'}}
+                                        </th>
+                                        @if ($investigation->laproscopy->rt_tube_type == 2)
+                                            <td colspan="6">
+                                                {{ !empty($investigation->laproscopy->rt_tube_details) ? $investigation->laproscopy->rt_tube_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->laproscopy->laproscopy_type == 2)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label"> Uterus: </span>
+                                            {{ ($investigation->laproscopy->uterus_type == 2) ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if ($investigation->laproscopy->uterus_type == 2)
+                                            <td colspan="9">
+                                                {{ !empty($investigation->laproscopy->uterus_details) ? $investigation->laproscopy->uterus_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->laproscopy->laproscopy_type == 2)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">LT Tube:  </span>
+                                            {{ ($investigation->laproscopy->lt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if ($investigation->laproscopy->lt_tube_type == 2)
+                                            <td colspan="6">
+                                                {{ !empty($investigation->laproscopy->lt_tube_details) ? $investigation->laproscopy->lt_tube_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->laproscopy->laproscopy_type == 2 && !empty($investigation->laproscopy->other))
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label"> Other:  </span>
+                                            {{$investigation->laproscopy->other}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->hcg) && $investigation->hcg->type == 'yes')
+                                    <tr>
+                                        <th colspan="9">
+                                            <span class="ivf-label">  HSG: </span>
+                                            @if (!empty($investigation->hcg->type))
+                                                {{ $investigation->hcg->type == 'yes' ? 'Yes' : 'No' }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->hcg->date) || !empty($investigation->hcg->type))
+                                    <tr>
+                                        @if(!empty($investigation->hcg->date))
+                                            <th>
+                                                <span class="ivf-label">Date: </span>
+                                                {{$investigation->hcg->date}}
+                                            </th>
+                                        @endif
+                                        @if (!empty($investigation->hcg->type) && $investigation->hcg->type == 'yes')
+                                            <td>
+                                                {{ ($investigation->hcg->laproscopy_type == 2) ? 'Abnormal' : 'Normal' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->hcg->laproscopy_type == 2)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label">RT Tube: </span>
+                                            {{ ($investigation->hcg->rt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if ($investigation->hcg->rt_tube_type == 2)
+                                            <td colspan="9">
+                                                {{ !empty($investigation->hcg->rt_tube_details) ? $investigation->hcg->rt_tube_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->hcg->laproscopy_type == 2 && $investigation->hcg->uterus_type)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label"> Uterus: </span>
+                                            {{ ($investigation->hcg->uterus_type == 2) ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if($investigation->hcg->uterus_type == 2)
+                                            <td colspan="9">
+                                                {{!empty($investigation->hcg->uterus_details) ? $investigation->hcg->uterus_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if ($investigation->hcg->laproscopy_type == 2)
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label"> LT Tube:  </span>
+                                            {{ ($investigation->hcg->lt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
+                                        </th>
+                                        @if ($investigation->hcg->lt_tube_type == 2)
+                                            <td colspan="9">
+                                                {{ !empty($investigation->hcg->lt_tube_details) ? $investigation->hcg->lt_tube_details : '-' }}
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->cbc) || !empty($investigation->urine) || !empty($investigation->rbs) || !empty($investigation->hiv))
+                                    <tr>
+                                        @if(!empty($investigation->cbc))
+                                            <th>
+                                                <span class="ivf-label"> CBC:  </span>
+                                                {{$investigation->cbc}}
+                                            </td>
+                                        @endif
+                                        @if(!empty($investigation->urine))
+                                            <th>
+                                                <span class="ivf-label">  Urine:  </span>
+                                                {{$investigation->urine}}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->rbs))
+                                            <th>
+                                                <span class="ivf-label">  RBS:  </span>
+                                                {{$investigation->rbs}}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->hiv))
+                                            <th>
+                                                <span class="ivf-label">  HIV: </span>
+                                                {{ !empty($investigation->hiv) ? $investigation->hiv : '-' }}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->hbs_ag) || !empty($investigation->date_1))
+                                    <tr>
+                                        @if(!empty($investigation->hbs_ag))
+                                            <th>
+                                                <span class="ivf-label"> Hbs Ag:  </span>
+                                                {{$investigation->hbs_ag}}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->date_1))
+                                            <th>
+                                                <span class="ivf-label">Date 1:</span>
+                                                {{$investigation->date_1}}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->tsh) || !empty($investigation->fsh) || !empty($investigation->prolectin) || !empty($investigation->lh))
+                                    <tr>
+                                        @if(!empty($investigation->tsh))
+                                            <th>
+                                                <span class="ivf-label">   TSH:  </span>
+                                                {{ !empty($investigation->tsh) ? $investigation->tsh : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->fsh))
+                                            <th>
+                                                <span class="ivf-label">  FSH:  </span>
+                                                {{ !empty($investigation->fsh) ? $investigation->fsh : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->prolectin))
+                                            <th>
+                                                <span class="ivf-label"> Prolectin: </span>
+                                                {{ !empty($investigation->prolectin) ? $investigation->prolectin : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->lh))
+                                            <th>
+                                                <span class="ivf-label">  LH: </span>
+                                                {{ !empty($investigation->lh) ? $investigation->lh : '-' }}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->amh) || !empty($investigation->e2) || !empty($investigation->p2) || !empty($investigation->date_2))
+                                    <tr>
+                                        @if(!empty($investigation->amh))
+                                            <th>
+                                                <span class="ivf-label"> AMH:  </span>
+                                                {{ !empty($investigation->amh) ? $investigation->amh : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->e2))
+                                            <th>
+                                                <span class="ivf-label"> E2:  </span>
+                                                {{ !empty($investigation->e2) ? $investigation->e2 : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->p2))
+                                            <th>
+                                                <span class="ivf-label">  P2:  </span>
+                                                {{ !empty($investigation->p2) ? $investigation->p2 : '-' }}
+                                            </th>
+                                        @endif
+                                        @if(!empty($investigation->date_2))
+                                            <th>
+                                                <span class="ivf-label">  Date 2:  </span>
+                                                {{!empty($investigation->date_2) ? $investigation->date_2 : '-'}}
+                                            </th>
+                                        @endif
+                                    </tr>
+                                @endif
+                                @if(isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)) 
+                                    <tr >
+                                        <th>
+                                            <span class="ivf-label">Other Report :</span>
+                                            {{$investigation->investigation_extra}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($investigation->investigation_data))
+                                    <tr>
+                                        <th>
+                                            @php
+                                                $investigationData = [];
+                                                $investigationValueDetails = [];
+                                                $investigationReport = $investigationReport['reportData'];
+                                                $data = $investigation->investigation_data;
+                                                $investigationValueData = (array)$investigation->investigation_details;
+                                                foreach($data as $key => $value){
+                                                    if(!empty($investigationValueData[$value])){
+                                                        $investigationValueDetails[$investigationReport[$value]] = $investigationValueData[$value];
+                                                    }else{
+                                                        $investigationData[] = $investigationReport[$value];
+                                                    }
+                                                }
+                                            @endphp
+                                            @if(count($investigationData)>0)
+                                                <span class="ivf-label">Investigation Advise : {{implode(',',$investigationData)}}</span>
+                                            @endif
+                                        </th>
+                                    </tr>
+                                    @if(!empty($investigationValueDetails))
+                                        <tr>
+                                            <th>
+                                                <span class="ivf-label">Investigation Done :</span>
+                                                @foreach($investigationValueDetails as $key => $value)
+                                                    {!! '<span class="ivf-label">'.$key.'</span> :' .  $value !!}
+                                                @endforeach
+                                            </th>
+                                        </tr>
+                                    @endif
+                                @endif
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
                 <?php
                 unset($treatment->medicinedata);
                 ?>
@@ -1473,331 +1799,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
                 
                 {{-- investigation --}}
-                @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' || (!empty($investigation->laproscopy) && $investigation->laproscopy->type == 'yes') || (!empty($investigation->hcg) && $investigation->hcg->type == 'yes') || isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)))
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
-                        <tbody>
-                            <tr>
-                                <td colspan="9">
-                                    <div class="panel-title header-print-title">Investigation Done Outside</div>
-                                </td>
-                            </tr>
-                            @if(!empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes')
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Hystroscopy: </span>
-                                        {{($investigation->hystroscopy->type == 'yes') ? 'Yes' : 'No' }}
-                                    </th>
-                                    @if(isset($investigation->hystroscopy->type) && ($investigation->hystroscopy->type == 'yes'))
-                                        <th>
-                                            <span class="ivf-label">Finding Type: </span>
-                                            {{ ($investigation->hystroscopy->finding_type == 1) ? 'Normal' : 'Abnormal' }}
-                                        </th>
-                                        @if ($investigation->hystroscopy->finding_type == 2)
-                                            <th>
-                                                <span class="ivf-label">Abnormal Details: </span>
-                                                {{!empty($investigation->hystroscopy->abnormal_details) ? $investigation->hystroscopy->abnormal_details : '-' }}
-                                            </td>
-                                        @endif
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(isset($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes')
-                                <tr>
-                                    @if($investigation->hystroscopy->finding_date)
-                                        <th>
-                                            <span class="ivf-label">Finding Date:</span>
-                                            {{$investigation->hystroscopy->finding_date}}
-                                        </th>
-                                    @endif
-                                    @if($investigation->hystroscopy->finding_details)
-                                        <th>
-                                            <span class="ivf-label">Details: </span>
-                                            {{$investigation->hystroscopy->finding_details}}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes')
-                                <tr>
-                                    <th colspan="9">
-                                        <span class="ivf-label">Laproscopy:  </span>
-                                        @if (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type))
-                                            {{$investigation->laproscopy->type == 'yes' ? 'Yes' : 'No' }}
-                                        @endif
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->laproscopy) && ((!empty($investigation->laproscopy->finding_date) || !empty($investigation->laproscopy->laproscopy_type))))
-                                <tr>
-                                    @if(!empty($investigation->laproscopy->finding_date))
-                                        <th>
-                                            <span class="ivf-label">Date: </span>
-                                            {{$investigation->laproscopy->finding_date}}
-                                        </th>
-                                    @endif
-
-                                    @if (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->laproscopy_type) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes')
-                                        <td>
-                                            {{ ($investigation->laproscopy->laproscopy_type == 2) ? 'Abnormal' : 'Normal' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->laproscopy->laproscopy_type == 2)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">RT Tube: </span>
-                                        {{($investigation->laproscopy->rt_tube_type == 2) ? 'Abnormal' : 'Normal'}}
-                                    </th>
-                                    @if ($investigation->laproscopy->rt_tube_type == 2)
-                                        <td colspan="6">
-                                            {{ !empty($investigation->laproscopy->rt_tube_details) ? $investigation->laproscopy->rt_tube_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->laproscopy->laproscopy_type == 2)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label"> Uterus: </span>
-                                        {{ ($investigation->laproscopy->uterus_type == 2) ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if ($investigation->laproscopy->uterus_type == 2)
-                                        <td colspan="9">
-                                            {{ !empty($investigation->laproscopy->uterus_details) ? $investigation->laproscopy->uterus_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->laproscopy->laproscopy_type == 2)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">LT Tube:  </span>
-                                        {{ ($investigation->laproscopy->lt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if ($investigation->laproscopy->lt_tube_type == 2)
-                                        <td colspan="6">
-                                            {{ !empty($investigation->laproscopy->lt_tube_details) ? $investigation->laproscopy->lt_tube_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->laproscopy->laproscopy_type == 2 && !empty($investigation->laproscopy->other))
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label"> Other:  </span>
-                                        {{$investigation->laproscopy->other}}
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->hcg) && $investigation->hcg->type == 'yes')
-                                <tr>
-                                    <th colspan="9">
-                                        <span class="ivf-label">  HSG: </span>
-                                        @if (!empty($investigation->hcg->type))
-                                            {{ $investigation->hcg->type == 'yes' ? 'Yes' : 'No' }}
-                                        @endif
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->hcg->date) || !empty($investigation->hcg->type))
-                                <tr>
-                                    @if(!empty($investigation->hcg->date))
-                                        <th>
-                                            <span class="ivf-label">Date: </span>
-                                            {{$investigation->hcg->date}}
-                                        </th>
-                                    @endif
-                                    @if (!empty($investigation->hcg->type) && $investigation->hcg->type == 'yes')
-                                        <td>
-                                            {{ ($investigation->hcg->laproscopy_type == 2) ? 'Abnormal' : 'Normal' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->hcg->laproscopy_type == 2)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">RT Tube: </span>
-                                        {{ ($investigation->hcg->rt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if ($investigation->hcg->rt_tube_type == 2)
-                                        <td colspan="9">
-                                            {{ !empty($investigation->hcg->rt_tube_details) ? $investigation->hcg->rt_tube_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->hcg->laproscopy_type == 2 && $investigation->hcg->uterus_type)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label"> Uterus: </span>
-                                        {{ ($investigation->hcg->uterus_type == 2) ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if($investigation->hcg->uterus_type == 2)
-                                        <td colspan="9">
-                                            {{!empty($investigation->hcg->uterus_details) ? $investigation->hcg->uterus_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if ($investigation->hcg->laproscopy_type == 2)
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label"> LT Tube:  </span>
-                                        {{ ($investigation->hcg->lt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
-                                    </th>
-                                    @if ($investigation->hcg->lt_tube_type == 2)
-                                        <td colspan="9">
-                                            {{ !empty($investigation->hcg->lt_tube_details) ? $investigation->hcg->lt_tube_details : '-' }}
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->cbc) || !empty($investigation->urine) || !empty($investigation->rbs) || !empty($investigation->hiv))
-                                <tr>
-                                    @if(!empty($investigation->cbc))
-                                        <th>
-                                            <span class="ivf-label"> CBC:  </span>
-                                            {{$investigation->cbc}}
-                                        </td>
-                                    @endif
-                                    @if(!empty($investigation->urine))
-                                        <th>
-                                            <span class="ivf-label">  Urine:  </span>
-                                            {{$investigation->urine}}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->rbs))
-                                        <th>
-                                            <span class="ivf-label">  RBS:  </span>
-                                            {{$investigation->rbs}}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->hiv))
-                                        <th>
-                                            <span class="ivf-label">  HIV: </span>
-                                            {{ !empty($investigation->hiv) ? $investigation->hiv : '-' }}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->hbs_ag) || !empty($investigation->date_1))
-                                <tr>
-                                    @if(!empty($investigation->hbs_ag))
-                                        <th>
-                                            <span class="ivf-label"> Hbs Ag:  </span>
-                                            {{$investigation->hbs_ag}}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->date_1))
-                                        <th>
-                                            <span class="ivf-label">Date 1:</span>
-                                            {{$investigation->date_1}}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->tsh) || !empty($investigation->fsh) || !empty($investigation->prolectin) || !empty($investigation->lh))
-                                <tr>
-                                    @if(!empty($investigation->tsh))
-                                        <th>
-                                            <span class="ivf-label">   TSH:  </span>
-                                            {{ !empty($investigation->tsh) ? $investigation->tsh : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->fsh))
-                                        <th>
-                                            <span class="ivf-label">  FSH:  </span>
-                                            {{ !empty($investigation->fsh) ? $investigation->fsh : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->prolectin))
-                                        <th>
-                                            <span class="ivf-label"> Prolectin: </span>
-                                            {{ !empty($investigation->prolectin) ? $investigation->prolectin : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->lh))
-                                        <th>
-                                            <span class="ivf-label">  LH: </span>
-                                            {{ !empty($investigation->lh) ? $investigation->lh : '-' }}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->amh) || !empty($investigation->e2) || !empty($investigation->p2) || !empty($investigation->date_2))
-                                <tr>
-                                    @if(!empty($investigation->amh))
-                                        <th>
-                                            <span class="ivf-label"> AMH:  </span>
-                                            {{ !empty($investigation->amh) ? $investigation->amh : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->e2))
-                                        <th>
-                                            <span class="ivf-label"> E2:  </span>
-                                            {{ !empty($investigation->e2) ? $investigation->e2 : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->p2))
-                                        <th>
-                                            <span class="ivf-label">  P2:  </span>
-                                            {{ !empty($investigation->p2) ? $investigation->p2 : '-' }}
-                                        </th>
-                                    @endif
-                                    @if(!empty($investigation->date_2))
-                                        <th>
-                                            <span class="ivf-label">  Date 2:  </span>
-                                            {{!empty($investigation->date_2) ? $investigation->date_2 : '-'}}
-                                        </th>
-                                    @endif
-                                </tr>
-                            @endif
-                            @if(isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)) 
-                                <tr >
-                                    <th>
-                                        <span class="ivf-label">Other Report :</span>
-                                        {{$investigation->investigation_extra}}
-                                    </th>
-                                </tr>
-                            @endif
-                            @if(!empty($investigation->investigation_data))
-                                <tr>
-                                    <th>
-                                        @php
-                                            $investigationData = [];
-                                            $investigationValueDetails = [];
-                                            $investigationReport = $investigationReport['reportData'];
-                                            $data = $investigation->investigation_data;
-                                            $investigationValueData = (array)$investigation->investigation_details;
-                                            foreach($data as $key => $value){
-                                                if(!empty($investigationValueData[$value])){
-                                                    $investigationValueDetails[$investigationReport[$value]] = $investigationValueData[$value];
-                                                }else{
-                                                    $investigationData[] = $investigationReport[$value];
-                                                }
-                                            }
-                                        @endphp
-                                        @if(count($investigationData)>0)
-                                            <span class="ivf-label">Investigation Advise : {{implode(',',$investigationData)}}</span>
-                                        @endif
-                                    </th>
-                                </tr>
-                                @if(!empty($investigationValueDetails))
-                                    <tr>
-                                        <th>
-                                            <span class="ivf-label">Investigation Done :</span>
-                                            @foreach($investigationValueDetails as $key => $value)
-                                                {!! '<span class="ivf-label">'.$key.'</span> :' .  $value !!}
-                                            @endforeach
-                                        </th>
-                                    </tr>
-                                @endif
-                            @endif
-                        </tbody>
-                    </table>
-                @endif
+                
             </div>
         @endif
         @if($isIvfHistory == '2')
@@ -3329,7 +3331,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <span class="visit-lable-value">{{ucwords(strtolower($ivf->getPatientsDetails['name']))}}</span>
                     </div>
                     <div class="mb-2">
-                            <span class="visit-lable">AGE :- </span> 
+                            <span class="visit-lable">Age / Weight :- </span> 
                             <span class="visit-lable-value">{{$ivf->getPatientsDetails['age'].' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : '')}}</span>
                     </div>
                     <div class="mb-2">

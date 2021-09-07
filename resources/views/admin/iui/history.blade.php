@@ -1231,7 +1231,9 @@
                     w.document.open();
                     w.document.write(data.data);
                     w.document.close();
-                    w.window.print();
+                    setTimeout(function () {
+                        w.window.print();
+                    }, 300);
                     window.location.href = url;
                 }else{
                     location.reload();
@@ -1599,7 +1601,9 @@
                     w.document.open();
                     w.document.write(data.data);
                     w.document.close();
-                    w.window.print();
+                    setTimeout(function () {
+                        w.window.print();
+                    }, 300);
                 }
             }).fail(function(error){
 
@@ -1742,7 +1746,9 @@
                         w.document.open();
                         w.document.write(data.data);
                         w.document.close();
+                        setTimeout(function () {
                         w.window.print();
+                    }, 300);
                     } else if (data.status == 1) {
                         $('#iui-report-modal').modal('hide');
                     }else{

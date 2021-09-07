@@ -166,7 +166,9 @@
                     w.document.open();
                     w.document.write(data.preview);
                     w.document.close();
-                    w.window.print();
+                    setTimeout(function () {
+                        w.window.print();
+                    }, 300);
                 }
                 else{
                     

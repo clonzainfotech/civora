@@ -2238,17 +2238,22 @@ class IUIController extends AdminController
                 else
                 {
                     $iuiVisitDate = [];
+                    $iuiDateData = $this->IUI->where('patients_id',$patientId)->first();
+                    $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')];
+                    $iuiVisitDate = array_merge($iuiDate,$iuiVisitDate);
+                     $iuiFirstVisit = $iuiDateData;
                     foreach($iuiAllData as $key => $iui_all_data)
                     {
                         $iuiHistoryDate = $this->IuiHistory->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$iui_all_data->cycle_no)->pluck('cycle_no','created_at')->toArray();
-                        $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$iui_all_data->cycle_no)->first();
-                        $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$iui_all_data->cycle_no];
-                        
-                        $iuiVisits = array_merge($iuiHistoryDate,$iuiDate);
-                        $iuiVisitDate = array_merge($iuiVisits,$iuiVisitDate);
-                        $iuiFirstVisit = $iuiDateData;
+                        // $iuiDateData = $this->IUI->where('patients_id',$patientId)->orderBy('created_at','DESC')->where('cycle_no',$iui_all_data->cycle_no)->first();
+                        // $iuiDate = [Carbon::parse($iuiDateData->created_at)->format('Y-m-d H:i:s')=>$iui_all_data->cycle_no];
+                        // $iuiVisits = array_merge($iuiHistoryDate,$iuiDate);
+                        $iuiVisitDate = array_merge($iuiHistoryDate,$iuiVisitDate);
+                        // $iuiFirstVisit = $iuiDateData;
                         
                     }
+                    
+                    // dd($iuiVisitDate);
                 }
                 
                 if($historyDate)
@@ -2279,18 +2284,19 @@ class IUIController extends AdminController
                     $preview = 0;
                     $isTable_view = false;
                     $isAppointmentView = true;
+                    $displayCycle = 0;
                     foreach($iuiVisitDate as $key => $value)
                     {
                         $iuiType = 1;
                         $iuiExtra = null;
                         $isExtraVisit = 0;
-
+                        
                         $iuiHistoryData = collect($this->IuiHistory->wherePatientsId($patientId)->whereCycleNo($value)->get());
                         $iuiSecondVisit = $iuiHistoryData->where('visit',2)->first();
                         if($iuiSecondVisit){
                             $iuiSecondVisit = json_decode($iuiSecondVisit->description);
                         }
-                        $iuiData = $this->IUI->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->first();
+                        $iuiData = $this->IUI->where('patients_id',$patientId)->where('created_at','=',$key)->first();
                         if($iuiData)
                         {
                             $preview = 0;
@@ -2300,16 +2306,13 @@ class IUIController extends AdminController
                         if(empty($iuiData))
                         {
                             $iuiData = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->orderBy('id','DESC')->first();
-                            // if($iuiData && ($iuiData->visit == 2))
-                            // {
-                                
-                            //     // $preview = 1;
-                            //     $iuiData->study_report = true;
-                            //     $preview++;
-                            //     // $isTable_view = ($request->is_appointmentView && $request->is_appointmentView == 1) ? true : false;
-                            //     $isTable_view = true;
-                            // }
-                            if($iuiData && ($iuiData->visit == 3 || $iuiData->visit == 4 || $iuiData->visit == 2)){
+                            if($displayCycle != $value)
+                            {
+                                $preview = 0;
+                            }
+                            if($iuiData && ($iuiData->visit == 3 || $iuiData->visit == 4 || $iuiData->visit == 2))
+                            {
+                                $displayCycle = $value;
                                 $iuiData->study_report = true;
                                 $isTable_view = true;
                                 $preview++;
@@ -2320,7 +2323,6 @@ class IUIController extends AdminController
                             $iuiThirdVisit = json_decode($iuiThirdVisit->description);
                         }
                         $iui = $iuiData;
-                        // $iui->iui_print = false;
                         //find extra visit after 1st visit
                         $firstVisit = $this->IUI->where('patients_id',$patientId)->where('cycle_no',$value)->where('created_at','=',$key)->first();
                         if($firstVisit)

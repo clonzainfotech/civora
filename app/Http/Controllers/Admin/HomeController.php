@@ -524,6 +524,9 @@ class HomeController extends AdminController
                 $hoDate = $mon.' '.$day;
                 // $hoData[$hoDate] = $hoDate;
             }
+            
+            
+            // dd($preg_week);
             $ancAutoRemark = app('App\Http\Controllers\Admin\ANCController')->getAutoRemark($patients_id,$current_anc_id);;
             
             $html = '';

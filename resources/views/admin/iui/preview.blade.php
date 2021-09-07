@@ -109,23 +109,12 @@
     .w-300{
         width: 300px !important;
     }
-    /* th
-    {
-        font-weight: 100;
-    } */
-
+    
     .print-panel-primary{
-        border: 1px solid;
+        /* border: 1px solid; */
         padding: 11px;
     }
-    /* .follicular-table .follicular_div_1
-    {
-        width: 65%;
-    }
-    .follicular-table .follicular_div_2
-    {
-        width: 35%;
-    } */
+    
     .follicular-table .visit-lable
     {   font-weight: bold;
         color: black !important;
@@ -161,6 +150,10 @@
     .font-bold
     {
         font-weight : 700;
+    }
+    .display
+    {
+        display: flex;
     }
     
     @page { margin-top : 200px; margin-left : 100px;}
@@ -1181,267 +1174,271 @@
                             </tbody>
                         </table>
                     @endif
-
-                    @if($husbandFactor && !empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->habbit) || !empty($husbandFactor->sperm_count) || !empty($husbandFactor->personal_history_date) || !empty($husbandFactor->remark))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
-                            <tbody>
-                                <tr>
-                                    <td colspan="9">
-                                        <div class="panel-title header-print-title">Husband Factor</div>
-                                    </td>
-                                </tr>
-                                @if(!empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->age) || !empty($husbandFactor->habbit))
+                    <div class="display">
+                        @if($husbandFactor && !empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->habbit) || !empty($husbandFactor->sperm_count) || !empty($husbandFactor->personal_history_date) || !empty($husbandFactor->remark))
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
+                                <tbody>
                                     <tr>
-                                        @if(!empty($husbandFactor->occupation))
-                                            <th>
-                                                <span class="iui-label">Occupation:  </span>
-                                                {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
-                                                <br>
-                                                @if(!empty($husbandFactor->age))
-                                                    <span class="iui-label">Age:  </span>
-                                                    {{ !empty($husbandFactor->age) ? $husbandFactor->age : '-' }}
-                                                @endif
-                                                <br>
-                                                @if(!empty($husbandFactor->habbit))
-                                                    <span class="iui-label"> Habbit:  </span>
-                                                    {{ !empty($husbandFactor->habbit) ? $husbandFactor->habbit : '-' }}
-                                                @endif
-                                            </th>
-                                        @endif
-                                            <th>
-                                                
-                                                @if (!empty($husbandFactor->seman_analysis))
-                                                <span class="iui-label">Semen Analysis:  </span>
-                                                    @if ($husbandFactor->seman_analysis == 1)
-                                                        WNL
-                                                    @elseif ($husbandFactor->seman_analysis == 2)
-                                                        Oligospermia
-                                                    @elseif ($husbandFactor->seman_analysis == 3)
-                                                        Azoospermic
+                                        <td colspan="9">
+                                            <div class="panel-title header-print-title">Husband Factor</div>
+                                        </td>
+                                    </tr>
+                                    @if(!empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->age) || !empty($husbandFactor->habbit))
+                                            @if(!empty($husbandFactor->occupation))
+                                            <tr>
+                                                <th>
+                                                    <span class="iui-label">Occupation:  </span>
+                                                    {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
+                                                    <br>
+                                                    @if(!empty($husbandFactor->age))
+                                                        <span class="iui-label">Age:  </span>
+                                                        {{ !empty($husbandFactor->age) ? $husbandFactor->age : '-' }}
                                                     @endif
+                                                    <br>
+                                                    @if(!empty($husbandFactor->habbit))
+                                                        <span class="iui-label"> Habbit:  </span>
+                                                        {{ !empty($husbandFactor->habbit) ? $husbandFactor->habbit : '-' }}
+                                                    @endif
+                                                </th>
+                                            </tr>
+                                            @endif
+                                            <tr>
+                                                <th>
+                                                    @if (!empty($husbandFactor->seman_analysis))
+                                                    <span class="iui-label">Semen Analysis:  </span>
+                                                        @if ($husbandFactor->seman_analysis == 1)
+                                                            WNL
+                                                        @elseif ($husbandFactor->seman_analysis == 2)
+                                                            Oligospermia
+                                                        @elseif ($husbandFactor->seman_analysis == 3)
+                                                            Azoospermic
+                                                        @endif
+                                                    @endif
+                                                    <br>
+                                                    @if(!empty($husbandFactor->sperm_count))
+                                                        <span class="iui-label"> Sperm Count:  </span>
+                                                        {{ !empty($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '-' }}
+                                                    @endif
+                                                    <br>
+                                                    @if(!empty($husbandFactor->motility))
+                                                        <span class="iui-label"> Motility:  </span>
+                                                        {{ !empty($husbandFactor->motility) ? $husbandFactor->motility : '-' }}
+                                                    @endif
+                                                </th>
+                                            </tr>
+                                    @endif
+                                    @if(!empty($husbandFactor->amount_in_ml) || !empty($husbandFactor->personal_history_date))
+                                        <tr>
+                                            @if(!empty($husbandFactor->amount_in_ml))
+                                                <th>
+                                                    <span class="iui-label">Amount in ML:  </span>
+                                                    {{ !empty($husbandFactor->amount_in_ml) ? $husbandFactor->amount_in_ml : '-' }}
+                                                </th>
+                                            @endif
+                                            @if(!empty($husbandFactor->personal_history_date))
+                                                <th>
+                                                    <span class="iui-label"> Date:  </span>
+                                                    {{ !empty($husbandFactor->personal_history_date) ? $husbandFactor->personal_history_date : '-' }}
+                                                </th>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    @if ($husbandFactor->seman_analysis == 2 && (!empty($husbandFactor->medicine) || !empty($husbandFactor->duration) || !empty($husbandFactor->sperm_report)))
+                                        <tr>
+                                            @if( !empty($husbandFactor->medicine) )
+                                                <th>
+                                                    <span class="iui-label">Medicine:  </span>
+                                                    {{ !empty($husbandFactor->medicine) ? $husbandFactor->medicine : '-' }}
+                                                </th>
+                                            @endif
+                                            @if(!empty($husbandFactor->duration))
+                                                <th>
+                                                    <span class="iui-label">  Duration:  </span>
+                                                    {{ !empty($husbandFactor->duration) ? $husbandFactor->duration : '-' }}
+                                                </th>
+                                            @endif
+                                            @if(!empty($husbandFactor->sperm_report))
+                                                <th>
+                                                    <span class="iui-label">Sperm Report:  </span>
+                                                    {{ !empty($husbandFactor->sperm_report) ? $husbandFactor->sperm_report : '-' }}
+                                                </th>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    @if(!empty($husbandFactor->remark))
+                                        <tr>
+                                            <th>
+                                                <span class="ivf-label">Husband Factor Remark : </span>
+                                                {{ $husbandFactor->remark}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        @endif
+
+                        @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
+                            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
+                                <tbody>
+                                    @php
+                                        // $personal_history_type = ['1'=>'NAD','2'=>"Diabetes Mellitus",'3'=>"Thyroid",'4'=>"Heart Disease",'5'=>"Hypertension"];
+                                    @endphp
+                                    @if(!empty($patientDetailedHO->personal_history_history_type) && count((array)$patientDetailedHO->personal_history_history_type) > 1)
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Personal History :</span>
+                                                {{implode(',',$patientDetailedHO->personal_history_history_type)}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(!empty($patientDetailedHO->personal_history_date))
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Date :</span>
+                                                {{\Carbon\Carbon::parse($patientDetailedHO->personal_history_date)->format('D d M Y')}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(!empty($patientDetailedHO->family_history) && count((array)$patientDetailedHO->family_history) > 1)
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Family History :</span>
+                                                {{implode(',',$patientDetailedHO->family_history)}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @php
+                                        // $personal_past_history_type = ['nad'=>'NAD','tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'];
+                                    @endphp
+
+                                    @if(!empty($patientDetailedHO->past_history_type) && count((array)$patientDetailedHO->past_history_type) > 1)
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Past History :</span>
+                                                {{implode(',',$patientDetailedHO->past_history_type)}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        @endif
+
+                        @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="9">
+                                            <div class="panel-title header-print-title">On Examination</div>
+                                        </td>
+                                    </tr>
+                                    @if($oe->p_s->type == 'yes')
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">P / S:</span>
+                                                {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
+                                                @if ($oe->p_s->type == 'yes')
+                                                    {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
                                                 @endif
-                                                <br>
-                                                @if(!empty($husbandFactor->sperm_count))
-                                                    <span class="iui-label"> Sperm Count:  </span>
-                                                    {{ !empty($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(!empty($oe->cervix->details))
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Cervix:  </span>
+                                                {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if($oe->tvs->type == 'yes')
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Transvaginal Ultrasonography :</span>
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if ($oe->tvs->type == 'yes')
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Uterus:  </span>
+                                                {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
+                                            </th>
+                                            @if ($oe->uterus->type == '2')
+                                                <th>
+                                                    <span class="iui-label">Abnormal Details:  </span>
+                                                    {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
+                                                </th>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Endometrial Thickness:  </span>
+                                                {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <th>
+                                            <span class="iui-label">Right Ovary</span>
+                                            @if (!empty($oe->ovary->right->updated_details))
+                                                @foreach ($oe->ovary->right->updated_details as $key => $value)
+                                                    @php
+                                                        echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                                Follicle numbers per ovary
+                                                {{$oe->ovary->right->afcs}}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <span class="iui-label">Left Ovary</span>
+                                            @if (!empty($oe->ovary->left->updated_details))
+                                                @foreach ($oe->ovary->left->updated_details as $key => $value)
+                                                    @php
+                                                        echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
+                                                Follicle numbers per ovary
+                                                {{$oe->ovary->left->afcs}}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                    {{-- @endif --}}
+                                    @if(!empty($oe->le) && !empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' && (!empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">Vitals</span>
+                                                @if(!empty($oe->le->temp))
+                                                    <br>
+                                                    <span class="iui-label">&nbsp;Temp :</span>
+                                                    {{$oe->le->temp}}
                                                 @endif
-                                                <br>
-                                                @if(!empty($husbandFactor->motility))
-                                                    <span class="iui-label"> Motility:  </span>
-                                                    {{ !empty($husbandFactor->motility) ? $husbandFactor->motility : '-' }}
+                                                @if(!empty($oe->le->pulse))
+                                                    <br>
+                                                    <span class="iui-label">&nbsp;Pulse :</span>
+                                                    {{$oe->le->pulse}} / Min
+                                                @endif
+                                                @if(!empty($oe->le->bp))
+                                                    <br>
+                                                    <span class="iui-label"> B.P :</span>
+                                                    {{$oe->le->bp}} MMHG
                                                 @endif
                                             </th>
-                                    </tr>
-                                @endif
-                                @if(!empty($husbandFactor->amount_in_ml) || !empty($husbandFactor->personal_history_date))
-                                    <tr>
-                                        @if(!empty($husbandFactor->amount_in_ml))
-                                            <th>
-                                                <span class="iui-label">Amount in ML:  </span>
-                                                {{ !empty($husbandFactor->amount_in_ml) ? $husbandFactor->amount_in_ml : '-' }}
-                                            </th>
-                                        @endif
-                                        @if(!empty($husbandFactor->personal_history_date))
-                                            <th>
-                                                <span class="iui-label"> Date:  </span>
-                                                {{ !empty($husbandFactor->personal_history_date) ? $husbandFactor->personal_history_date : '-' }}
-                                            </th>
-                                        @endif
-                                    </tr>
-                                @endif
-                                @if ($husbandFactor->seman_analysis == 2 && (!empty($husbandFactor->medicine) || !empty($husbandFactor->duration) || !empty($husbandFactor->sperm_report)))
-                                    <tr>
-                                        @if( !empty($husbandFactor->medicine) )
-                                            <th>
-                                                <span class="iui-label">Medicine:  </span>
-                                                {{ !empty($husbandFactor->medicine) ? $husbandFactor->medicine : '-' }}
-                                            </th>
-                                        @endif
-                                        @if(!empty($husbandFactor->duration))
-                                            <th>
-                                                <span class="iui-label">  Duration:  </span>
-                                                {{ !empty($husbandFactor->duration) ? $husbandFactor->duration : '-' }}
-                                            </th>
-                                        @endif
-                                        @if(!empty($husbandFactor->sperm_report))
-                                            <th>
-                                                <span class="iui-label">Sperm Report:  </span>
-                                                {{ !empty($husbandFactor->sperm_report) ? $husbandFactor->sperm_report : '-' }}
-                                            </th>
-                                        @endif
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <th>
-                                        <span class="ivf-label">Husband Factor Remark : </span>
-                                        {{ !empty($husbandFactor->remark) ? $husbandFactor->remark : '-' }}
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    @endif
-
-                    @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
-                        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
-                            <tbody>
-                                @php
-                                    // $personal_history_type = ['1'=>'NAD','2'=>"Diabetes Mellitus",'3'=>"Thyroid",'4'=>"Heart Disease",'5'=>"Hypertension"];
-                                @endphp
-                                @if(!empty($patientDetailedHO->personal_history_history_type) && count((array)$patientDetailedHO->personal_history_history_type) > 1)
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Personal History :</span>
-                                            {{implode(',',$patientDetailedHO->personal_history_history_type)}}
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if(!empty($patientDetailedHO->personal_history_date))
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Date :</span>
-                                            {{\Carbon\Carbon::parse($patientDetailedHO->personal_history_date)->format('D d M Y')}}
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if(!empty($patientDetailedHO->family_history) && count((array)$patientDetailedHO->family_history) > 1)
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Family History :</span>
-                                            {{implode(',',$patientDetailedHO->family_history)}}
-                                        </th>
-                                    </tr>
-                                @endif
-                                @php
-                                    // $personal_past_history_type = ['nad'=>'NAD','tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'];
-                                @endphp
-
-                                @if(!empty($patientDetailedHO->past_history_type) && count((array)$patientDetailedHO->past_history_type) > 1)
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Past History :</span>
-                                            {{implode(',',$patientDetailedHO->past_history_type)}}
-                                        </th>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    @endif
-
-                    @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
-                            <tbody>
-                                <tr>
-                                    <td colspan="9">
-                                        <div class="panel-title header-print-title">On Examination</div>
-                                    </td>
-                                </tr>
-                                @if($oe->p_s->type == 'yes')
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">P / S:</span>
-                                            {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
-                                            @if ($oe->p_s->type == 'yes')
-                                                {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
-                                            @endif
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if(!empty($oe->cervix->details))
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Cervix:  </span>
-                                            {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if($oe->tvs->type == 'yes')
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Transvaginal Ultrasonography :</span>
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if ($oe->tvs->type == 'yes')
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Uterus:  </span>
-                                            {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
-                                        </th>
-                                        @if ($oe->uterus->type == '2')
-                                            <th>
-                                                <span class="iui-label">Abnormal Details:  </span>
-                                                {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
-                                            </th>
-                                        @endif
-                                    </tr>
-                                @endif
-                                @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Endometrial Thickness:  </span>
-                                            {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
-                                        </th>
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <th>
-                                        <span class="iui-label">Right Ovary</span>
-                                        @if (!empty($oe->ovary->right->updated_details))
-                                            @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                                @php
-                                                    echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                                @endphp
-                                            @endforeach
-                                        @endif
-                                        @if(!empty($oe->ovary->right->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                            Follicle numbers per ovary
-                                            {{$oe->ovary->right->afcs}}
-                                        @endif
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <span class="iui-label">Left Ovary</span>
-                                        @if (!empty($oe->ovary->left->updated_details))
-                                            @foreach ($oe->ovary->left->updated_details as $key => $value)
-                                                @php
-                                                    echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                                @endphp
-                                            @endforeach
-                                        @endif
-                                        @if(!empty($oe->ovary->left->afcs) && isset($mh->lmd_date_diff) && in_array($mh->lmd_date_diff,['2','3','4']))
-                                            Follicle numbers per ovary
-                                            {{$oe->ovary->left->afcs}}
-                                        @endif
-                                    </th>
-                                </tr>
-                                {{-- @endif --}}
-                                @if(!empty($oe->le) && !empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' && (!empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
-                                    <tr>
-                                        <th>
-                                            <span class="iui-label">Vitals</span>
-                                            @if(!empty($oe->le->temp))
-                                                <br>
-                                                <span class="iui-label">&nbsp;Temp :</span>
-                                                {{$oe->le->temp}}
-                                            @endif
-                                            @if(!empty($oe->le->pulse))
-                                                <br>
-                                                <span class="iui-label">&nbsp;Pulse :</span>
-                                                {{$oe->le->pulse}} / Min
-                                            @endif
-                                            @if(!empty($oe->le->bp))
-                                                <br>
-                                                <span class="iui-label"> B.P :</span>
-                                                {{$oe->le->bp}} MMHG
-                                            @endif
-                                        </th>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    @endif
-
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+                    <div class="display">
                     @if($planManagement && isset($planManagement->plan_of_management_data))
                         <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
                             <tbody>
@@ -1651,6 +1648,7 @@
                             </tbody>
                         </table>
                     @endif
+                    </div>
                     <?php
                         unset($treatment->medicinedata);
                     ?>

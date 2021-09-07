@@ -479,6 +479,7 @@ class HomeController extends AdminController
             $eddDate = '';
             $remark = '';
             $current_anc_id = null;
+            $hoDate = null;
             if($ancHistory)
             {
                 $ancFirst = $this->ANC->where('patients_id',$patients_id)->where('id',$ancHistory->anc_id)->first();
@@ -507,10 +508,22 @@ class HomeController extends AdminController
                     $ancCreatedDate = $ancFirst->created_at;
                 }
             }
-            
-            
-            
-            // dd($preg_week);
+            if(!empty($lmp))
+            {
+                $days = 30;
+                $oldDate = Carbon::parse($lmp)->format('Y-m-d');
+                $nowDate = Carbon::now()->format('Y-m-d');
+                $diffDays = Carbon::parse($oldDate)->diffInDays($nowDate);
+                $totalDays = $diffDays;
+                $hoDate = (int)($totalDays/$days).'-'.$totalDays % $days; 
+            }
+            if($hoDate){
+                $hoDate = explode('-',$hoDate);
+                $mon = $hoDate[0]. ' month';
+                $day = $hoDate[1]. ' day';
+                $hoDate = $mon.' '.$day;
+                // $hoData[$hoDate] = $hoDate;
+            }
             $ancAutoRemark = app('App\Http\Controllers\Admin\ANCController')->getAutoRemark($patients_id,$current_anc_id);;
             
             $html = '';
@@ -557,6 +570,7 @@ class HomeController extends AdminController
                 $html = $html.' Placenta : '.$ancAutoRemark['placenta'];
             }
             $data = '<p><span class="font-bold candor-color">LMP Date : </span>'.(!empty($lmp) ? \Carbon\Carbon::parse($lmp)->format('d M Y') : '-').'</p>
+                    <p><span class="font-bold candor-color">H/O : </span>'.(!empty($hoDate) ? $hoDate : '').'</p>
                     <p><span class="font-bold candor-color">EDD Date : </span>'.(!empty($eddDate) ? \Carbon\Carbon::parse($eddDate)->format('d M Y') : '-').'</p>
                     <p><span class="font-bold candor-color">Preg. Week : </span>'.$preg_week.'</p>
                     <p><span class="font-bold candor-color">Remark : </span>'.$html.'</p>

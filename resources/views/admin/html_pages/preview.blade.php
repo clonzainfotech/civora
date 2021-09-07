@@ -9,7 +9,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
     img{
-      margin: 0px 0px 0px 40px;
+      display: block !important;
+      margin-left: auto;
+      margin-right: auto;
     }
     body
     {

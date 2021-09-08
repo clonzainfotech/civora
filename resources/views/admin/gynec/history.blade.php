@@ -18,6 +18,12 @@
                         <a href="{{URL::to('get-all-report/'.encrypt($patient->id).'?status=gynec')}}" target="_blank" class="pull-right">
                             <button class="btn btn-primary ">View Reports</button>
                         </a>
+                        @if($isIvfHistory)
+                            <a href="{{URL::to('ivf/history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary pull-right">IVF History</a>
+                        @endif
+                        @if($isAncHistory)
+                            <a href="{{URL::to('anc/history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary pull-right">ANC History</a>
+                        @endif
                     </div>
                 </div>
             </div>

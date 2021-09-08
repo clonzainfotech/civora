@@ -204,6 +204,8 @@ class GynecController extends AdminController
         try{
             $data = [];
             $ancImagesData = [];
+            $isIvfHistory = null;
+            $isAncHistory = null;
             $pId = decrypt($patientsId);
             $patient = $this->OpdPatients->where('id',$pId)->first();
             $medicines = $this->Medicine->pluck('name','name');
@@ -285,6 +287,7 @@ class GynecController extends AdminController
                 $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
                 $surgicallyData = $this->surgicallyType()['data'];
                 // 
+                
                 $data['personalData'] = $personalData;
                 $data['familyData'] = $familyData;
                 $data['pastData'] = $pastData;
@@ -299,9 +302,12 @@ class GynecController extends AdminController
                 $data['gynecData'] = $gynec;
                 $data['hospitalDoctor'] = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
                 $data['editGynec'] = View::make('admin.gynec.edit',$data)->render();
+               
                 return $data;
             }
-            return view('admin.gynec.history',compact('date','patientsId','medicines','patient'));
+            $isIvfHistory = !empty($this->IvfHistory->where('patients_id',$pId)->get()) ? true : false;
+                $isAncHistory = !empty($this->AncHistory->where('patients_id',$pId)->get()) ? true : false;
+            return view('admin.gynec.history',compact('date','patientsId','medicines','patient','isIvfHistory','isAncHistory'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);

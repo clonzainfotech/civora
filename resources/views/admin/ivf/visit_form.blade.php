@@ -414,7 +414,7 @@
                         <label for="progesteroneyes">
                             Yes
                         </label>
-                        {{Form::radio("data[collected][frozen][type]",'no',!empty($embroyReady) && $embroyReady == 0 ? true : false,['id'=>'progesteroneno'])}}
+                        {{Form::radio("data[collected][frozen][type]",'no',!empty($semenFreezing) && $semenFreezing == 0 ? true : false,['id'=>'progesteroneno'])}}
                         <label for="progesteroneno">
                             No
                         </label>
@@ -427,11 +427,11 @@
                 </div>
                 <div class="{{'col-md-2 '.$embroyReadyValueData}}">
                     <div class="radio is-conceived">
-                        {{Form::radio("data[collected][report][embroy][type]",'yes',!empty($ivfData->collected->report->embroy->type) && $ivfData->collected->report->embroy->type == 'yes' ? true : false,['id'=>'embroyyes'])}}
+                        {{Form::radio("data[collected][report][embroy][type]",'yes',!empty($embroyReady) && $embroyReady == 1 ? true : false,['id'=>'embroyyes'])}}
                         <label for="embroyyes">
                             Yes
                         </label>
-                        {{Form::radio("data[collected][report][embroy][type]",'no',!empty($ivfData->collected->report->embroy->type) && $ivfData->collected->report->embroy->type == 'no' ? true : false,['id'=>'embroyno'])}}
+                        {{Form::radio("data[collected][report][embroy][type]",'no',!empty($embroyReady) && $embroyReady == 0 ? true : false,['id'=>'embroyno'])}}
                         <label for="embroyno">
                             No
                         </label>

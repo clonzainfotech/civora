@@ -1229,7 +1229,7 @@ class IVFController extends AdminController
                     // $lastIvfHistory->plan = 2;
                     // $ivfHistory->description = json_encode($lastIvfHistory);
                     $transferIvf = $this->IvfHistory->wherePatientsId($id)->wherePlan($lastIvfHistory->plan)->orderBy('id','desc')->first();
-                    $newCycle_no = !empty($transferIvf) ? $transferIvf->cycle_no : 1;
+                    $newCycle_no = !empty($transferIvf) ? $transferIvf->cycle_no+1 : 1;
                     $extraVisit = $this->IvfExtraVisit->wherePatientId($id)->where('plan',$ivfHistory->plan)->where('cycle_no',$ivfHistory->cycle_no)->update(['plan'=>$lastIvfHistory->plan,'cycle_no' => $newCycle_no]);
                     $ivfHistory->plan = $lastIvfHistory->plan;
                     $ivfHistory->cycle_no = $newCycle_no;

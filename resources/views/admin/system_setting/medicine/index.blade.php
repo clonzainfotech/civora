@@ -49,7 +49,7 @@
                     <div class="col-md-3 text-right">
                         <ul class="nav nav-tabs padding-0">
                             <div class="input-group">
-                                <input type="text" class="form-control search-medicine" placeholder="Search...">
+                                <input type="text" class="form-control search-medicine" placeholder="Search..." readonly="readonly" onfocus="this.removeAttribute('readonly')">
                                 <span class="input-group-addon search-border">
                                     <i class="zmdi zmdi-search"></i>
                                 </span>

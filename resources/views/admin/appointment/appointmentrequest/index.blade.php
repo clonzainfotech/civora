@@ -4,16 +4,6 @@
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 @stop
-<style>
-    /* .rejectReason{
-        height: 80px;
-    }
-    .select-reason
-    {
-        height: 70px !important;
-        overflow: auto !important;
-    } */
-</style>
 
 @section('content')
     <div class="row clearfix appointment">
@@ -104,14 +94,14 @@
                                 <div class="col-md-2 form-padding">
                                     Reason:
                                 </div>
-                                <div class="col-md-8 form-padding rejectReason gu d-none">
-                                    {{Form::select('remark',config('app.reject_apt_reason_gu'),'',['class'=>'form-control select-padding-0 select-reason gu'])}}
+                                <div class="col-md-8 form-padding reason gu d-none">
+                                    {{Form::select('remark',config('app.reject_apt_reason_gu'),'',['class'=>' select-padding-0 select-reason gu'])}}
                                 </div>
                                 <div class="col-md-8 form-padding reason en">
-                                    {{Form::select('remark',config('app.reject_apt_reason_en'),'',['class'=>'form-control select-padding-0 select-reason en'])}}
+                                    {{Form::select('remark',config('app.reject_apt_reason_en'),'',['class'=>'select-padding-0 select-reason en'])}}
                                 </div>
                                 <div class="col-md-8 form-padding reason hn d-none">
-                                    {{Form::select('remark',config('app.reject_apt_reason_hn'),'',['class'=>'form-control select-padding-0 select-reason hn'])}}
+                                    {{Form::select('remark',config('app.reject_apt_reason_hn'),'',['class'=>'select-padding-0 select-reason hn'])}}
                                 </div>
                             </div>
                         </div>

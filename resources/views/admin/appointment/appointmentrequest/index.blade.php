@@ -198,7 +198,7 @@
         $(document).on('change','select.language',function(){
             var lan = $(this).val();
             $('.reason').addClass('d-none');
-            $('.'+lan).removeClass('d-none');
+            $('.reason.'+lan).removeClass('d-none');
         })
     </script>
 

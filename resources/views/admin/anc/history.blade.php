@@ -70,9 +70,9 @@
                     <div class="row">
                         <div class="col-md-12 col-lg-12">
                             <strong class="pr-3">ANC Previous Visit</strong>
-                            @if(!empty($getTotalAncNumber))
-                                {{Form::select("previous_anc_id",$getTotalAncNumber,'',['class'=>'select-padding-0 anc_visit_id','placeholder'=>'Select Previous Anc.','data-class'=>'previous'])}}
-                            @endif
+                            {{-- @if(!empty($getTotalAncNumber)) --}}
+                                {{Form::select("previous_anc_id",$getTotalAncNumber,'',['class'=>'select-padding-0 anc_visit_id float-right','placeholder'=>'Select Previous Anc.','data-class'=>'previous'])}}
+                            {{-- @endif --}}
                         </div>
                     </div>
                     <div class="row">

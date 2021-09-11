@@ -420,7 +420,7 @@
                                                                         <td>{{!empty($row->day) ? $row->day : '-'}}</td>
                                                                         <td>{{!empty($row->s_day) ? 's'.$row->s_day : '-'}}</td>
                                                                         {{-- <td>{{!empty($row->date) ? \Carbon\Carbon::parse($row->date)->format('d/m/Y') : '-'}}</td> --}}
-                                                                        <td>{{ \Carbon\Carbon::parse($row->date)->format('d-m-Y')}}</td>
+                                                                        <td>{{ !empty($row->date) ? \Carbon\Carbon::parse($row->date)->format('d-m-Y') : ''}}</td>
                                                                         <td>{{!empty($row->injection) ? $injectionData[$row->injection] : '-'}}</td>
                                                                         <td>{{!empty($row->hmg) ? $row->hmg : '-'}}</td>
                                                                         <td>{{!empty($row->hmg_brand_name) ? $row->hmg_brand_name : '-'}}</td>

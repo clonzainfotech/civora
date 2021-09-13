@@ -941,10 +941,10 @@ class ReportController extends AdminController
                     'infertility_data' => View::make('admin.ivf.payment_preview', compact('ivfPayment'))->render()
                 ]);
             }
-            $appointment = ($type == 2) ? $this->IuiHistory->where('visit',2)->where('cycle_status',1) : $this->IvfHistory->where('visit',2)->where('cycle_status',1);
+            $appointment = ($type == 2) ? $this->IuiHistory->where('visit',2)->where('cycle_status',1)->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1) : $this->IvfHistory->where('visit',2)->where('cycle_status',1)->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
             if($patientStatus == 2)
             {
-                $appointment = ($type == 2) ? $this->IUI->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1) : $this->IVF->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
+                $appointment = ($type == 2) ? $this->IUI->doesnthave('getPatientsDetails.getIuiHistory')->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1) : $this->IVF->doesnthave('getPatientsDetails.getIvfHistory')->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
             }
             $patientId = $request->patient_id;
             if($patientId) {

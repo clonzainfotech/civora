@@ -1,6 +1,7 @@
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
 @if(!isset($printPreview))
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+
 @endif
 <style>
 .degree {
@@ -79,6 +80,42 @@ h6 {
 {
     width: 50% !important;
 }
+span,.p-name,strong,td,.drname,.proffesion{
+    font-size: 14px;
+}
+/* .p-name{
+    font-size: 14px !important;
+}
+strong{
+    font-size: 14px;
+}
+td{
+    font-size: 14px;
+} */
+.table{
+    margin-bottom: 0px !important;
+}
+/* .drname{
+    font-size: 14px;
+} */
+/* .proffesion{
+    font-size: 14px;
+} */
+.doctor-info{
+    padding: 0px 0;
+}
+.ivf-report-print{
+    padding: 0px;
+}
+.title{
+    margin: 0px !important;
+}
+h4{
+    margin: 0px !important;
+}
+.copyright p{
+    font-size: 18px !important;
+}
 </style>
 @php
     // if($isAppointmentView)
@@ -98,40 +135,42 @@ h6 {
 
     <div class="ivf-report-print">
         <div class="row d-flex">
-            <div class="col-md-10 text-left">
+            <div class="col-xl-10 col-xs-10 text-left">
                 <span>Patient Name:</span>
                 <strong class="p-name">{{ ucwords(strtolower($ivfReport->getPatients['name']))}}</strong>
             </div>
-            <div class="col-md-2 col-sm-2 text-right">
+            <div class="col-xl-2 col-xs-3 text-right">
                 <span><strong>Age:</strong></span>
                 <span>{{!empty($ivfReport->getPatients['age']) ? $ivfReport->getPatients['age'].' Year' : '-'}}</span><br>
             </div>
         </div>
         <div class="row d-flex">
             @if(!empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status == 'yes')
-                <div class="col-md-2">
+                <div class="col-xl-2 col-xs-2">
                     <span>Surgery/Donor : </span>
                     <span>{{'Yes'}}</span>
                 </div>
             @endif
             @if (isset($ivfReportData->is_donor->status) && !empty($ivfReportData->is_donor->status) && $ivfReportData->is_donor->status =='yes')
-                <div class="col-md-8">
+                <div class="col-xl-8 col-xs-8">
                     <span>Donor Name:</span>
                     <span>{{ucwords(strtolower($ivfReportData->donor->name))}}</span>
                 </div>
-                <div class="col-md-2">
+                <div class="col-xl-2 col-xs-2">
                     <span>Age:</span>
                     <span>{{$ivfReportData->donor->age}}</span>
                 </div>
             @endif
         </div>
 
-        <div class="row d-flex" style="padding-bottom: 20px">
-            <div class="col-md-8 col-sm-8 text-left">
+        <div class="row d-flex" 
+        {{-- style="padding-bottom: 20px" --}}
+        >
+            <div class="col-xl-8 col-xs-8 text-left">
                 <span>Indication:</span>
                 <span>{{!empty($ivfReportData->indication) ? $ivfReportData->indication : ''}}</span>
             </div>
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xl-4 col-xs-4 text-right">
                 <span><strong>Weight:</strong></span>
                 <span>{{!empty($ivfReport->getPatients['weight']) ? $ivfReport->getPatients['weight'].' KG' : '-'}}</span><br>
             </div>
@@ -139,14 +178,12 @@ h6 {
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-xl-12 col-xs-12">
                 <div><h6 class="candor-color"><strong><u>Stimulation:</u></strong></h6></div>
             </div>
         </div>
-
-
         <div class="row">
-            <div class="col-md-6 col-sm-6">
+            <div class="col-xl-6 col-xs-6">
                 <table class="table table-bordered pick-up-table" width="50">
                     <tbody>
                         <tr>
@@ -175,7 +212,7 @@ h6 {
                 </table>
             </div>
 
-            <div class="col-md-6 col-sm-6">
+            <div class="col-xl-6 col-xs-6">
                 <table class="table table-bordered pick-up-table" width="50">
                     <tbody>
                         <tr>
@@ -208,12 +245,18 @@ h6 {
                     </tbody>
                 </table>
             </div>
-        
-            <div class="col-md-6 col-sm-6">
+        </div>
+            <div class="row">
+                <div class="col-xl-12 col-xs-12">
+                    <div><h6 class="candor-color"><strong><u>Ovum pick up::</u></strong></h6></div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-xl-6 col-xs-6">
                     <table class="table table-bordered pick-up-table" width="50">
-                        <thead>
+                        {{-- <thead>
                             <tr><h6 class="candor-color"><strong><u>Ovum pick up:</u></strong></h6></tr>
-                        </thead>
+                        </thead> --}}
                         <tbody>
                             <tr>
                                 <td><strong>Date</strong></td>
@@ -247,8 +290,8 @@ h6 {
                     </table>
 
             </div>
-            <div class="col-md-6 col-sm-6">
-                    <table class="table table-bordered pick-up-table mt-3" width="50">
+            <div class="col-xl-6 col-xs-6">
+                    <table class="table table-bordered pick-up-table" width="50">
                         <tbody>
                             <tr>
                                 <td><strong>Semen Report</strong></td>
@@ -290,10 +333,13 @@ h6 {
             $baseUrl = asset('assets/images');
             // echo $baseUrl;
         @endphp
-        <div class="row mb-2 er-image-div">
+        <div class="row  er-image-div">
+            <div class="col-xl-1 col-xs-1">
+
+            </div>
             @foreach($erImageArray as $erImage)
                 @if(getimagesize($baseUrl.'/'.$erImage.'.jpg'))
-                    <div class="col-md-2 col-sm-2">
+                    <div class="col-xl-2 col-xs-2 text-center">
                         {{-- <div class="input-group"> --}}
                             <span class="mt-5 er_image_name"><strong>{{ucwords($erImage)}}</strong></span>
                             <br>
@@ -306,10 +352,13 @@ h6 {
                     </div>
                 @endif
             @endforeach
+            <div class="col-xl-1 col-xs-1">
+
+            </div>
         </div>
         @if((isset($ivfReportData->pt_remark) && !empty($ivfReportData->pt_remark)) || !empty($ivfReportData->remark))
-        <div class="row" style="padding: 20px 0">
-                <div class="col-md-12 text-left">
+        <div class="row" >
+                <div class="col-xl-12 col-xs-12 text-left">
                     <span class="candor-color"><strong>Remark:<strong></span>
                     @if(isset($pt_view) && $pt_view == 1)
                     <span>{{isset($ivfReportData->pt_remark) && !empty($ivfReportData->pt_remark) ? $ivfReportData->pt_remark : '-'}}</span>
@@ -321,17 +370,17 @@ h6 {
         @endif
 
         <div class="row doctor-info">
-                <div class="col-md-4">
+                <div class="col-xl-4 col-xs-4">
                     <div class='drname'>{{$ivfReport->getPatients->getHospitalDoctor['name'] }}</div>
                     <div class='degree'>{{$ivfReport->getPatients->getHospitalDoctor['degree'] }}</div>
                     <div class='proffesion'>{{$ivfReport->getPatients->getHospitalDoctor['designation'] }}</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xl-4 col-xs-4">
                     <div class='drname'>Dr. juhi Dhameliya</div>
                     <div class='degree'></div>
                     <div class='proffesion'>embryologist</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xl-4 col-xs-4">
                     <div class='drname'>{{config('app.embroyologist_doctor')}}</div>
                     <div class='degree'>({{config('app.embroyologist_degree')}})</div>
                     <div class='proffesion'>embryologist</div>

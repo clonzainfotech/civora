@@ -91,7 +91,9 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::post('editPatientWeight','PatientController@editPatientWeight');
         Route::post('deletePatientWeight','PatientController@deletePatientWeight');
         Route::get('getPatientWeight','PatientController@getPatientWeight');
-        
+
+        //patient's USG images
+        Route::get('getPatientUsgImageList','PatientController@getPatientUsgImageList');
     });
 
 });

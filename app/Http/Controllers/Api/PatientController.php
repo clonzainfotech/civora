@@ -334,6 +334,11 @@ class PatientController extends ApiController
         }
 
     }
+    /**
+    * Add patient memory photos
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function addPatientMemory(Request $request)
     {
         $token = $request->header('Authorization');
@@ -373,6 +378,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Edit patient memory photos
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function editPatientMemory(Request $request)
     {
         $token = $request->header('Authorization');
@@ -413,6 +423,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Delete patient memory photos
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function deletePatientMemory(Request $request)
     {
         $token = $request->header('Authorization');
@@ -444,6 +459,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Return patient memory photos list
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function getPatientMemory(Request $request)
     {
         $token = $request->header('Authorization');
@@ -468,6 +488,11 @@ class PatientController extends ApiController
         if (strtotime($a['date']) == strtotime($b['date'])) return 0;
         return (strtotime($a['date']) > strtotime($b['date'])) ?-1:1;
     }
+    /**
+    * Add patient weight
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function addPatientWeight(Request $request)
     {
         $token = $request->header('Authorization');
@@ -503,6 +528,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Edit patient Weight
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function editPatientWeight(Request $request)
     {
         $token = $request->header('Authorization');
@@ -537,6 +567,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Delete patient Weight
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function deletePatientWeight(Request $request)
     {
         $token = $request->header('Authorization');
@@ -568,6 +603,11 @@ class PatientController extends ApiController
             return $this->sendError(__('auth.failed'), 401);
         }
     }
+    /**
+    * Get patient Weight list
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function getPatientWeight(Request $request)
     {
         $token = $request->header('Authorization');
@@ -579,6 +619,74 @@ class PatientController extends ApiController
             {   
                 $patient_memory = $this->PatientWeight->where('patients_id',$user->id)->get();
                 return $this->sendResponse('Get Weight List Successfully',$patient_memory);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+    /**
+    * Return patient's USG images list
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function getPatientUsgImageList(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            $data = [];
+            if ($user && !empty($user->code)) 
+            {   
+                $ancAllVisit = $this->ANC->where('patients_id',$user->id)->orderBy('id','desc')->first();
+                if($ancAllVisit)
+                {
+                    $ancAllHistoryVisit = $this->AncHistory->where('anc_id',$ancAllVisit->id)->where('patients_id',$user->id)->get();
+                    $usgReport = !empty($ancAllVisit->usg) ? json_decode($ancAllVisit->usg,true) : '';
+                    if(!empty($usgReport['images']))
+                    {
+                        foreach($usgReport['images'] as $images)
+                        {
+                            if(is_file($images))
+                            {
+                                $imageType = mime_content_type($images);  
+                                if($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" && !empty($imageType)) 
+                                {
+                                    $data[] =  $images;
+                                }
+                            }
+                        }
+                    }
+                }
+                if($ancAllHistoryVisit)
+                {
+                    foreach($ancAllHistoryVisit as $ancHistoryVisit)
+                    {
+                        $usgHistoryReport = !empty($ancHistoryVisit->usg) ? json_decode($ancHistoryVisit->usg,true) : '';
+                        if(!empty($usgHistoryReport['images']))
+                        {
+                            foreach($usgHistoryReport['images'] as $images)
+                            {
+                                if(is_file($images))
+                                {
+                                    $imageType = mime_content_type($images);  
+                                    if($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" && !empty($imageType)) 
+                                    {
+                                        $data = array_merge((array)$images,$data);
+                                    }
+                                }
+                                
+                            }
+							
+                        }
+                    }
+                }
+                return $this->sendResponse('Get USG images list successfully',array_reverse($data));
             } 
             else 
             {

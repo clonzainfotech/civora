@@ -1369,6 +1369,7 @@ class IVFController extends AdminController
             $dataForSameCycle = collect($this->IvfHistory
                                 ->wherePatientsId($id)
                                 ->where('plan', '1')
+                                ->where('description->progesterone->status', 'yes')
                                 // ->where('cycle_status', '2')
                                 ->get());
             $dataSamecycle = $dataForSameCycle->mapWithKeys(function($value){
@@ -2760,7 +2761,7 @@ class IVFController extends AdminController
                                     }
                                 }
                                 //ivf Transfer Report
-                                if($ivf->plan != 1 && $preview == 2)
+                                if($preview == 2)
                                 {
                                     
                                     $transferReport = $this->IvfTransferReport->where('patient_id',$patientId)->where('cycle_no',$ivf->cycle_no)->wherePlan($ivf->plan)->first();

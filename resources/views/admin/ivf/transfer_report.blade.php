@@ -18,7 +18,7 @@
             .p-name{
                 font-size: 18px;
             }
-            .table thead th {
+            .ivf-transfer-report .table thead th {
                 border-bottom: 2px solid black !important;
             }
             .ivf-transfer-report .table-bordered td, .table-bordered th {

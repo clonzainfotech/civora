@@ -104,7 +104,7 @@
 
                     {{--report--}}
                     @if(in_array(Auth::user()->role,[1,2,4]))
-                    <li class="{{ (Request::segment(1) === 'report' && empty(Request::segment(2)))  || Request::segment(1) === 'category-report' || Request::segment(1) == 'ref-pro-doctor-report' || Request::segment(1) == 'remark-appointment-report' || Request::segment(1) === 'cut-report' || Request::segment(1) === 'ivf-payment-report'|| Request::segment(1) == 'infertility-report' || Request::segment(1) === 'ref-doctor-report' || Request::segment(1) === 'collection-report' || Request::segment(1) === 'patient-report' || Request::segment(1) == 'edd-patient' || Request::segment(1) === 'sms-manager' || Request::segment(1) === 'ca-expense-report' ? 'active open' : null || Request::segment(1) === 'hormon-inj-report' ? 'active open' : null }}">
+                    <li class="{{ (Request::segment(1) === 'report' && empty(Request::segment(2)))  || Request::segment(1) === 'category-report' || Request::segment(1) == 'ref-pro-doctor-report' || Request::segment(1) == 'remark-appointment-report' || Request::segment(1) === 'cut-report' || Request::segment(1) === 'ivf-payment-report'|| Request::segment(1) == 'infertility-report' || Request::segment(1) === 'ref-doctor-report' || Request::segment(1) === 'collection-report' || Request::segment(1) === 'patient-report' || Request::segment(1) == 'edd-patient' || Request::segment(1) === 'sms-manager' || Request::segment(1) === 'ca-expense-report' || Request::segment(1) === 'hormon-inj-report' ? 'active open' : null }}">
                         <a href="javascript:void(0);"  class="menu-toggle waves-effect waves-block">
                         <span>reports</span></a>
                         <ul class="ml-menu" style="display: none;">
@@ -145,7 +145,7 @@
 
                     {{--system--}}
                     @if(in_array(Auth::user()->role,[1,2]))
-                    <li class="{{ Request::segment('1') == 'reference-doctor' || Request::segment('1') == 'reference-doctor-pro' || Request::segment('1') == 'category' || Request::segment('1') == 'indoorsetting' || Request::segment('1') == 'systemsetting' || Request::segment('1') == 'medicines-mapping' || Request::segment('1') == 'medicines-setting' ||  Request::segment('1') == 'injection' ? 'active open' : null || Request::segment('1') == 'charge' ? 'active open' : null || Request::segment('1') == 'inj-charge' ? 'active open' : null || Request::segment('1') == 'plan' ? 'active open' : null || Request::segment('1') == 'html-page' ? 'active open' : null}}">
+                    <li class="{{ Request::segment('1') == 'reference-doctor' || Request::segment('1') == 'reference-doctor-pro' || Request::segment('1') == 'category' || Request::segment('1') == 'indoorsetting' || Request::segment('1') == 'systemsetting' || Request::segment('1') == 'medicines-mapping' || Request::segment('1') == 'medicines-setting' ||  Request::segment('1') == 'injection' || Request::segment('1') == 'charge' || Request::segment('1') == 'inj-charge' || Request::segment('1') == 'plan' || Request::segment('1') == 'html-page' ? 'active open' : null}}">
                         <a href="javascript:void(0);"  class="menu-toggle waves-effect waves-block">
                         {{--<i class="material-icons">hotel</i>--}}
                             <span>system</span></a>

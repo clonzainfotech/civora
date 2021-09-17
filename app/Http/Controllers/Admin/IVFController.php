@@ -1907,57 +1907,11 @@ class IVFController extends AdminController
     }
 
 
-    // ivf payment store and also all charges store in ivf_payment table
-   /* public function ivfPaymentStore(Request $request){
-        $patientsId = decrypt($request->patients_id);
-        // $patientsId = $request->patients_id;
-        $ivfPaymentData = $this->IvfPayment->wherePatientsId($patientsId)->whereCycleNo($request->no_cycle)->first();
-        $ivfPayment = $this->IvfPayment;
-        if($ivfPaymentData){
-            $ivfPayment = $ivfPaymentData;
-        }
-         $ivfPayment->patients_id = $patientsId;
-        $ivfPayment->patient_name = $request->p_name;
-        $ivfPayment->husband_name = $request->h_name;
-        $ivfPayment->sonography_charge = $request->sonography;
-        $ivfPayment->ivf_lab_charge = $request->ivf_lab_charge;
-        $ivfPayment->embroy_tranfer = $request->embryo_transfer;
-        $ivfPayment->embroy_freezing = $request->embryo_freezing;
-        $ivfPayment->hystrocopy = $request->hystrocopy;
-        $ivfPayment->icsi_ivf_charge = $request->icsi_ivf_charge;
-        $ivfPayment->medical_medicines = $request->medical_medicines;
-        $ivfPayment->unconscious_charge = $request->unconscious_charge;
-        $ivfPayment->blood_report = $request->blood_report;
-        $ivfPayment->tesa_pesa = $request->tesa_pesa;
-        $ivfPayment->hystrocopy = $request->hystrocopy;
-        $ivfPayment->created_by = Auth::user()->id;
-        $ivfPayment->condition = $request->condition;
-        $ivfPayment->payment_type = $request->payment_type;
-        $ivfPayment->payment = $request->payment;
-        $ivfPayment->package = $request->package;   
-        // $ivfDeposit = $this->IndoorDeposit->wherePatientId($patientsId)->whereChargeType(2)->orderBy('id','DESC')->first();
-        $ivfPayment->cycle_no = $request->no_cycle;
-        $ivfPayment->time = $request->time;
-        $ivfPayment->remark = $request->remark;
-        $ivfPayment->visit = 1;
-        // $ivfPayment->remaining_payment = $request->total_payment;
-        // if($ivfDeposit){
-        //     $ivfPayment->remaining_payment = abs($ivfDeposit->total - ($ivfPaymentData ? (int)$ivfPaymentData->remaining_payment : $request->total_payment));
-        // }
-        // $ivfPayment->total_payment = $request->total_payment;
-        $ivfPayment->save();
-        
-            if($request->isprint){
-                return response()->json([
-                    'status' => 1,
-                    'data' => View::make('admin.ivf.payment_preview', compact('ivfPayment'))->render()
-                ]);
-            }else{
-                return ['status'=>'true'];  
-            }  
-    }
-*/
-
+    /**
+    * Return on ivf plan report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function ivfPlanReport($plan, $patientId, $cycleNo) {
         try {
             $plan = decrypt($plan);
@@ -1981,6 +1935,11 @@ class IVFController extends AdminController
             return back();
         }
     }
+    /**
+    * store ivf plan report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function ivfPlanReportStore(Request $request) {
         try {
             $patientId = decrypt($request->patient_id);
@@ -2044,6 +2003,11 @@ class IVFController extends AdminController
         }
 
     }
+    /**
+    * Get IVF report data
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
 
     public function getIvfReportData(Request $request) {
         try {
@@ -2198,7 +2162,11 @@ class IVFController extends AdminController
             return ['status'=>false];
         }
     }
-
+    /**
+    * Return on iVF transfer report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function getIvfTransferReportData(Request $request) {
         try {
             $patientId = decrypt($request->patient_id);
@@ -2218,7 +2186,11 @@ class IVFController extends AdminController
             ];
         }
     }
-
+    /**
+    * Update Transfer report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function updateTransferReport(Request $request) {
         try {
             // dd($request->update_ivf_transfer_report_id);
@@ -2465,6 +2437,11 @@ class IVFController extends AdminController
         return ['status'=>true];
     }
 
+    /**
+    * Return Images key
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     private function getImagesKey($ivfData,$data){
         $imagesKey = [];
         $removedImageKey = [];
@@ -2918,6 +2895,11 @@ class IVFController extends AdminController
         }
     }
 
+    /**
+    * Remove IVF visit
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function removeLastCycleVisit(Request $request,$visitId){
         try{
             $visitId = decrypt($visitId);
@@ -2931,7 +2913,11 @@ class IVFController extends AdminController
             return ['status'=>2];
         }
     }
-
+    /**
+    * get FET report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
     public function getFetReport(Request $request){
         try{
             $pId = decrypt($request->patient_id);

@@ -4,6 +4,11 @@
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 @stop
+<style>
+    .upper-border {
+        border-top: 2px solid #000000 !important;
+    }
+</style>
 
 @section('content')
     <div class="row clearfix report refdoctor reference-doctor-report">
@@ -44,6 +49,13 @@
                                         'data-live-search' => 'true'
                                     ])}}
                                 </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                    {{Form::select('patients',$patients,'',[
+                                        'class'=>'form-control select-padding-0 patients',
+                                        'placeholder'=>'Select patient',
+                                        'data-live-search' => 'true'
+                                    ])}}
+                                </div>
                             </div>
                         </div>
                     <div class="tab-content m-t-10">
@@ -73,6 +85,7 @@
         var injId = '';
         var typeId = '';
         var qstring = 'fromdate=' + fromdate + '&todate=' + todate ;
+        var patients = '';
 
         $(document).ready(function () {
             $('input[name="daterange"]').daterangepicker({
@@ -87,14 +100,14 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId;
+                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId +'&patients='+patients;
                 getHormonInjData(qstring);
             });
             $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
                 $("#daterange").val('');
                 fromdate = '';
                 todate = '';
-                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId;
+                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId +'&patients='+patients;
                 getHormonInjData(qstring);
             });
             getHormonInjData(qstring);
@@ -103,14 +116,20 @@
             $(document).on('click', '.pagination a', function (event) {
                 event.preventDefault();
                 page = $(this).attr('href').split('page=')[1];
-                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId;
+                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId +'&patients='+patients;
                 getHormonInjData(qstring);
             });
             $(document).on('change','select.injection',function(){
                 injId = $(this).val();
-                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId;
+                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId +'&patients='+patients;
                 getHormonInjData(qstring);
             });
+            $(document).on('change','select.patients',function(){
+                patients = $(this).val();
+                qstring = 'page=' + page + '&fromdate=' + fromdate + '&todate=' + todate + '&inj=' + injId +'&patients='+patients;
+                getHormonInjData(qstring);
+            });
+
 
         });
 

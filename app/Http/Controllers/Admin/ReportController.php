@@ -1675,48 +1675,44 @@ class ReportController extends AdminController
     public function getHormonInjectionReport(Request $request)
     {
         try{
-            $injection = $this->InjectionCharge->pluck('name','id');
+            $injection = $this->InjectionCharge->pluck('name','name');
+            $patients = $this->OpdPatients->pluck('name','id')->toArray();
             if($request->ajax()){
-                // $injectionCharge = $this->IndoorDeposit->where('charge_type',1)->orderBy('id', 'DESC');
-                
-                // select('*',DB::raw('count(injection) as totalInj'),DB::raw('sum(amount) as totalAmount'))->where('charge_type',1)->where(\DB::raw('DATE(created_at)'),$date)->where('patient_id',$data[$i]->getPatients['id'])->groupBy('injection')
-                $injectionCharge = $this->IndoorDeposit->where('charge_type',1)->where(function($query) {
-                    $query->whereHas('getInjectionCharge', function($query){
-                    });
-                });
-                
+                $injManager = $this->InjectionManager;
                 if(!empty($request->inj))
                 {
-                    $injectionCharge = $injectionCharge->where('injection',$request->inj)->orderBy('id', 'DESC');
-                }
+                    $injManager = $injManager->where('injection',$request->inj)->orderBy('id', 'DESC');
+                } 
+                if(!empty($request->patients))
+                {
+                    $patientId = $request->patients;
+                    $injManager = $injManager->where(function($query) use($patientId){
+                        $query->whereHas('getPatientsDetails', function($query) use($patientId) {
+                            $query->where('id', $patientId);
+                        });
+                    });
+                } 
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
-                
                 if($fromdate || $todate){
                     $fromdate = $fromdate;
                     $todate = $todate;
-                    $injectionCharge = $injectionCharge->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $injManager = $injManager->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                 }
-                $injectionCharge = $injectionCharge->groupBy('injection');
-                $injectionCharge = collect($injectionCharge->get())
-                    ->map(function ($query) {
-                            $query->totalInj = $query->getTotalInjection();
-                            $query->created_at = \Carbon\Carbon::parse($query->created_at)->format('Y-m-d');
-                            return $query;
-                    });
-                $injectionCharge = collect($injectionCharge);
-                $injectionCharge = $injectionCharge->groupBy('getPatients.name');
+                $injManager = collect($injManager->get());
+                $injManager = $injManager->groupBy('injection');
+                // dd($injManager);
                 if($request->isprint==1){
                     return response()->json([
-                        View::make('admin.report.hormon_injection.preview', compact('injectionCharge'))->render()
+                        View::make('admin.report.hormon_injection.preview', compact('injManager'))->render()
                     ]);
                 }
 
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.hormon_injection.data',compact('injectionCharge'))->render();
+                $data['report_data'] = View::make('admin.report.hormon_injection.data',compact('injManager'))->render();
                 return $data;
             }
-            return view('admin.report.hormon_injection.index',compact('injection'));
+            return view('admin.report.hormon_injection.index',compact('injection','patients'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);

@@ -630,8 +630,8 @@ class AdminController extends BaseController
      * @param $data
      */
     public function addGoogleSheet($data) {
-        Sheets::spreadsheet('1--KyhVNaT60VIALVRC8tIeIZ_EweqYR6P1ESy3NSVEQ')
-            ->sheet('DataSheet')
+        Sheets::spreadsheet(config('app.expense_sheet_id'))
+            ->sheet(config('app.expense_sheet_name'))
             ->append([$data]);
         return true;
     }

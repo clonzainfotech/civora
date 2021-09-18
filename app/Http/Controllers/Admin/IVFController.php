@@ -1012,6 +1012,8 @@ class IVFController extends AdminController
             if(!$request->ivf_visit_id)
             {
                 $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+                $updateConsulting = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['in_consulting_room'=>0]);
+
             }
             $isIvfHistory =  '1';
             $ivfCycleData = null;
@@ -3076,7 +3078,12 @@ class IVFController extends AdminController
             $ivfExtraVisit->save();
 
             $now = Carbon::now()->format('Y-m-d');
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
+            if(!$request->ivf_extra_visit_id)
+            {
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
+                $updateConsulting = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['in_consulting_room'=>0]);
+            }
+
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
             $appointmentTime = null;
             $followDate = !empty($followupDate) ? date('Y-m-d',strtotime($followupDate)) : null;

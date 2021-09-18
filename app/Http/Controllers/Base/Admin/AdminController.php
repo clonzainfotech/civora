@@ -520,6 +520,9 @@ class AdminController extends BaseController
         $patientnotify->category = $cat;
         $patientnotify->opd_area = $title;
         $patientnotify->save();
+        $patientsId = decrypt($request->pId);
+        $now = Carbon::now()->format('Y-m-d');
+        $updateApooitnment = $this->Appointment->where('patients_id',$patientsId)->where('date',$now)->update(['in_consulting_room'=>1]);
 
         $options = array(
             'cluster' => env('PUSHER_APP_CLUSTER'),

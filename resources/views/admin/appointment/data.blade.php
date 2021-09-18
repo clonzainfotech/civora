@@ -30,6 +30,7 @@
         @forelse($appointment as $row)
             @php
                 $isDone = '';
+                $inConsultingroom = '';
                 if($row->arrival_time){
                     $isDone = 'is_arrival';
                     if(empty($row->getAppointmentCharges)){
@@ -38,11 +39,14 @@
                     if($row->is_done == 1 && !empty($row->getAppointmentCharges)){
                         $isDone = 'is-done';
                     }
+                    if($row->in_consulting_room == 1){
+                        $inConsultingroom = 'in-cosulting';
+                    }
                 }
                 $uniqId = (($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration;
                 // && !empty($row->arrival_time)
             @endphp
-            <tr data-id="{{encrypt($row->id)}}" data-next="{{$row->next_appointment}}" class="{{'appointmentdata '.$isDone}}">
+            <tr data-id="{{encrypt($row->id)}}" data-next="{{$row->next_appointment}}" class="{{'appointmentdata '.$isDone.' '.$inConsultingroom}}">
                 <td>
                     {{-- <div class="inline @if(empty($row->time) || \Carbon\Carbon::parse($row->getPatientsDetails['created_at'])->format('Y-m-d') == \Carbon\Carbon::now()->format('Y-m-d')) new-opd-patient @endif"> --}}
                         {{ ((($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration) . '.' }}

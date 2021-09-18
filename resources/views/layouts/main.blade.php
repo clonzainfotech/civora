@@ -180,9 +180,10 @@ $menu = "";
                 {
                     swal("Thank You!", "", "success");
                     $(e).parent().html("reuqest send!");
+                    var pId = $(e).attr('id');
                     $.ajax({
                         url:"{{url('patient_notification')}}",
-                        data:{name:name,cat:cat,title:title},
+                        data:{name:name,cat:cat,title:title,pId:pId},
                     });
                 }
         });

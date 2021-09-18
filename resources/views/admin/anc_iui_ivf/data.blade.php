@@ -30,6 +30,7 @@
                 //     $isDone = ' appointment-opd-tr';
                 // }
                 $isDone = '';
+                $inConsultingroom = '';
                 if(!empty($row->arrival_time) && $row->arrival_time > 0){
                     $isDone = 'is_arrival';
                     // if(empty($row->getAppointmentCharges)){
@@ -37,6 +38,9 @@
                     // }
                     if($row->is_done == 1){
                         $isDone = 'is-done';
+                    }
+                    if($row->in_consulting_room == 1){
+                        $inConsultingroom = 'in-cosulting';
                     }
                     // if($row->is_done == 1 && !empty($row->getAppointmentCharges) ){
                     //     $isDone = 'is-done';
@@ -119,7 +123,7 @@
                     @if($categoryId == '17' || $categoryId == '18' || strtolower($row->categoryDetails['name']) == 'gynec' || strtolower($row->categoryDetails['name']) == 'new gynec' || strtolower($row->categoryDetails['name']) == 'old gynec')
                         {{$row->getPatientsDetails->getGynec ? 'old-gynec' : 'new-gynec'}}
                     @endif
-                    {{$isDone}} " data-apid="{{encrypt($row->id)}}">
+                    {{$isDone}} {{$inConsultingroom}}" data-apid="{{encrypt($row->id)}}">
                 <td> {{ ((($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration) . '.' }}</td>
                 <td class="line-height">{{\Carbon\Carbon::parse($row->date)->format('d-m-Y')}}<br>{{\Carbon\Carbon::parse($row->time)->format('h:i a')}}</td>
                 <td>{{$row->arrival_time}}</td>
@@ -158,7 +162,7 @@
                     <span>{{!empty($patient_notification['read_by']) ? 'Read by '.$patient_notification['read_by'] : 'Unseen'}}</span>
                 @else
                     @if($row->arrival_time)
-                        <button class="btn btn-danger btn-sm notify-patient" value="fgdg"  onclick="callPatient('{{$name}}','{{$cName}}',this)">Call Patient</button>
+                        <button class="btn btn-danger btn-sm notify-patient" id="{{encrypt($row->patients_id)}}"  onclick="callPatient('{{$name}}','{{$cName}}',this)">Call Patient</button>
                     @endif
                 @endif
                 </td>

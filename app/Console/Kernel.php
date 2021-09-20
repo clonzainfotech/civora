@@ -23,20 +23,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('db:backup')->dailyAt('01:00');
-        $schedule->command('db:backup')->dailyAt('08:00');
-        $schedule->command('db:backup')->dailyAt('09:00');
-        $schedule->command('db:backup')->dailyAt('10:00');
-        $schedule->command('db:backup')->dailyAt('11:00');
-        $schedule->command('db:backup')->dailyAt('12:00');
-        $schedule->command('db:backup')->dailyAt('13:00');
-        $schedule->command('db:backup')->dailyAt('14:00');
-        $schedule->command('db:backup')->dailyAt('17:00');
-        $schedule->command('db:backup')->dailyAt('18:00');
-        $schedule->command('db:backup')->dailyAt('19:00');
-        $schedule->command('db:backup')->dailyAt('20:00');
-        $schedule->command('db:backup')->dailyAt('21:00');
-        $schedule->command('db:uploadbackup')->dailyAt('21:10');
+        $schedule->command('db:backup')->dailyAt('00:00');
+        // $schedule->command('db:backup')->dailyAt('08:00');
+        // $schedule->command('db:backup')->dailyAt('09:00');
+        // $schedule->command('db:backup')->dailyAt('10:00');
+        // $schedule->command('db:backup')->dailyAt('11:00');
+        // $schedule->command('db:backup')->dailyAt('12:00');
+        // $schedule->command('db:backup')->dailyAt('13:00');
+        // $schedule->command('db:backup')->dailyAt('14:00');
+        // $schedule->command('db:backup')->dailyAt('17:00');
+        // $schedule->command('db:backup')->dailyAt('18:00');
+        // $schedule->command('db:backup')->dailyAt('19:00');
+        // $schedule->command('db:backup')->dailyAt('20:00');
+        // $schedule->command('db:backup')->dailyAt('21:00');
+        $schedule->command('db:uploadbackup')->dailyAt('01:00');
     }
 
     /**

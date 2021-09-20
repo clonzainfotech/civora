@@ -41,6 +41,7 @@ Route::prefix('v1')->namespace('Api')->group(function () {
         Route::post('deleteReview','ReviewController@deleteReview');
 
         Route::get('/events','EventController@getEvents');
+        Route::post('/get-all-events','EventController@getAllEvents');
         Route::post('/eventdetails','EventController@eventDetails');
 
         Route::get('/holidays','HolidayController@index');

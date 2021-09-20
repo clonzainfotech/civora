@@ -17,11 +17,11 @@
     {
       text-align: justify; 
       padding:20px;
-      font-family: poppins-regular;
+      font-family: montserrat-regular;
     }
 @font-face {
-    font-family: poppins-regular;
-    src: url('../fonts/Poppins-Regular.ttf');
+    font-family: montserrat-regular;
+    src: url('../fonts/montserrat_regular.otf');
 }
   </style>
 </head>

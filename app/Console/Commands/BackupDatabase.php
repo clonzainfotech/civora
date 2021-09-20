@@ -68,7 +68,7 @@ class BackupDatabase extends Command
      */
     public function getfile()
     {
-        File::cleanDirectory('storage/backups/db_'.date('Y_m_d'));
+        // File::cleanDirectory('storage/backups/db_'.date('Y_m_d'));
         if(!is_dir(storage_path($this->rootPath))){
             mkdir(storage_path($this->rootPath));
         }

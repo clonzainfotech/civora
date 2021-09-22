@@ -9,6 +9,7 @@
             <th>Amount</th>
             <th>Payment Method</th>
             <th>Given For</th>
+            <th>Patient</th>
             <th>Notes</th>
             <th>Added by</th>
             <th>Added on</th>
@@ -26,6 +27,7 @@
                 <td>{{$row->amount}}</td>
                 <td>{{$row->payment_method}}</td>
                 <td>{{$row->given_for}}</td>
+                <td>{{$row->getPatient['name']}}</td>
                 <td>{{$row->note}}</td>
                 <td>{{ ucwords(strtolower($row->getUser['name'])) }}</td>
                 <td>{{$row->created_at}}</td>

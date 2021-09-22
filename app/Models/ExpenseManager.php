@@ -14,4 +14,7 @@ class ExpenseManager extends BaseModel
     public function getExpenseCategory() {
         return $this->belongsTo('App\Models\ExpenseCategory','expense_category');
     }
+    public function getPatient() {
+        return $this->belongsTo('App\Models\OpdPatients','patients_id');
+    }
 }

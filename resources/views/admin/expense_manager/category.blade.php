@@ -91,6 +91,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ml-4">
+                            <div class="checkbox">
+                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric','id'=>'is_pediatric'])}}
+                                <label for="is_pediatric">
+                                    Pediatric Category
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- footer -->
                 <div class="modal-footer center-footer justify-content-center">
@@ -142,6 +152,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ml-4">
+                            <div class="checkbox">
+                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric','id'=>'is_pediatric_update'])}}
+                                <label for="is_pediatric_update">
+                                    Pediatric Category
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- footer -->
                 <div class="modal-footer center-footer justify-content-center">
@@ -161,11 +181,17 @@
             var id = $(this).data("id");
             var name = $(this).data("name");
             var status = $(this).data("status");
+            var pediatric = $(this).data("pediatric");
             document.getElementById("sts").value = status;
             $('select #sts').val(status);
             $('#sts').selectpicker('refresh');
             $(".modal-body #cname").val( name );
             $(".modal-body #id").val( id );
+            if(pediatric == 1)
+            {
+                $('.is_pediatric').prop('checked',true);
+            }
+            $(".modal-body .is_pediatric").val( pediatric );
             var token = "{{csrf_token()}}";
         });
         $(document).on('click','.updatecategory',function(e){
@@ -192,7 +218,7 @@
                     url: "{{URL::to('expense-category/update')}}",
                     dataType: 'json',
                     type: 'post',
-                    data:{id:id,name:name,_token:token,status:status,type:type}
+                    data:{id:id,name:name,_token:token,status:status,type:type,pediatric:pediatric}
                 }).done(function(data) {
                     $('#Updatectegory').modal('hide');
                     location.reload();
@@ -208,6 +234,8 @@
             var token = "{{csrf_token()}}";
             var type = 2;
             var i=1;
+            var pediatric = $('.is_pediatric').val();
+
             document.getElementById("errorcategory").innerHTML="";
             document.getElementById("error-status").innerHTML="";
             if(name == ""){
@@ -226,7 +254,7 @@
                     url: "{{URL::to('categoryAdd')}}",
                     dataType: 'json',
                     type: 'post',
-                    data:{name:name,_token:token,status:status,type:type}
+                    data:{name:name,_token:token,status:status,type:type,pediatric:pediatric}
                 }).done(function(data) {
                     $('#Addctegory').modal('hide');
                     location.reload();
@@ -260,6 +288,12 @@
 
             });
         }
-
+        $(document).on('click','.is_pediatric,.is_pediatric_update',function(){
+            $(this).val(0);
+            if($(this).prop('checked') == true)
+            {
+                $(this).val(1);
+            }
+        })
     </script>
 @stop

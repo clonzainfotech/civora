@@ -1718,4 +1718,54 @@ class ReportController extends AdminController
             abort(500);
         }
     }
+    /**
+    * Get Pediatric Collection Report
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function getPedCollection(Request $request)
+    {
+        try{
+            if($request->ajax())
+            {
+                $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->pluck('id','id');
+                $income = $this->IncomeManager->whereIn('income_category',$category);
+                $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->pluck('id','id');
+                $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $fromdate = $fromdate;
+                    $todate = $todate;
+                    $expense = $expense->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $income = $income->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                }
+                $income = collect($income->get())->map(function ($query){
+                    $query->income_category = $query->getExpenseCategory['name'];
+                    return $query;
+                });
+                $income = $income->groupBy('income_category');
+                
+                $expense = collect($expense->get())->map(function ($query){
+                    $query->expense_category = $query->getExpenseCategory['name'];
+                    return $query;
+                });
+                $expense = $expense->groupBy('expense_category');
+                if($request->isprint == 1)
+                {
+                    $data['status'] = 1;
+                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense'))->render();
+                    return $data;
+                }
+                $data['status'] = 1;
+                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense'))->render();
+                return $data;
+            }
+            return view('admin.report.pediatric.index');
+        }
+        catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
 }

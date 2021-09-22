@@ -5,6 +5,7 @@
             <th>Category</th>
             <th>Created by</th>
             <th>Status</th>
+            <th>Pediatic</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
                     @else
                     <span class="badge text-danger"> Deactive</span>
                     @endif</td>
+                <td>{{!empty($row->is_pediatric) ? 'YES' : 'NO'}}</td>
                 <td>
                     <a href="#" class="a-color" data-toggle="modal" data-target="#Updatectegory">
                         <button class="btn  btn-icon  btn-neutral candor-color btn-icon-mini edit-expense" data-id="{{$row->id}}" data-name="{{$row->name}}" data-status="{{$row->status}}">

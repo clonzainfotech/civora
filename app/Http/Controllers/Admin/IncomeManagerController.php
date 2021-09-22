@@ -83,8 +83,9 @@ class IncomeManagerController extends AdminController
     public function create(){
         try{
             $category = $this->Category->whereStatus(1)->pluck('name','id');
+            $patients = $this->OpdPatients->pluck('name','id');
             $expensecategory = $this->ExpenseCategory->where('type','=','1')->whereStatus(1)->pluck('name','id');
-            return view('admin.income_manager.create',compact('category','expensecategory'));
+            return view('admin.income_manager.create',compact('category','expensecategory','patients'));
         }catch(Exception $e){
             abort(500);
         }
@@ -117,6 +118,7 @@ class IncomeManagerController extends AdminController
             $income->given_by = $request->given_by;
             $income->note = $request->note;
             $income->income_category = $request->incomecategory;
+            $income->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $income->created_by = \Auth()->user()->id;
             $income->save();
 
@@ -143,13 +145,13 @@ class IncomeManagerController extends AdminController
 
         $income = $this->IncomeManager->where('id',$incomeId)->first();
         $expensecategory = $this->ExpenseCategory->where('type','=','1')->whereStatus(1)->pluck('name','id');
-
+        $patients = $this->OpdPatients->pluck('name','id');
         if($request->ajax()){
             $data = [];
             $data['income'] = $income;
             return $data;
         }
-        return view('admin.income_manager.edit',compact('income','expensecategory'));
+        return view('admin.income_manager.edit',compact('income','expensecategory','patients'));
     }
 
     /**
@@ -179,6 +181,7 @@ class IncomeManagerController extends AdminController
             $income->given_by = $request->given_by;
             $income->note = $request->note;
             $income->income_category = $request->incomecategory;
+            $income->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $income->created_by = \Auth()->user()->id;
             $income->save();
             return redirect('income-manager');

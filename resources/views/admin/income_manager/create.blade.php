@@ -77,7 +77,13 @@
                                                 </div>
                                                 <span class="form-error-msg">
                                                         {{$errors->first('given_by')}}
-                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    {{Form::select('patients_id',$patients,'',['class'=>'form-control patients_id','placeholder'=>'Select Patient','data-live-search' => 'true'])}}
+                                                </div>
+                                                
                                             </div>
                                             <div class="col-sm-12">
                                                 <div class="form-group">

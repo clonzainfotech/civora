@@ -79,8 +79,9 @@ class ExpenseManagerController extends AdminController
 
     public function create(){
         $category = $this->Category->whereStatus(1)->pluck('name','id');
+        $patients = $this->OpdPatients->pluck('name','id');
         $expensecategory = $this->ExpenseCategory->where('type','=','2')->whereStatus(1)->pluck('name','id');
-        return view('admin.expense_manager.create',compact('category','expensecategory'));
+        return view('admin.expense_manager.create',compact('category','expensecategory','patients'));
     }
 
     /**
@@ -111,6 +112,7 @@ class ExpenseManagerController extends AdminController
             $expense->given_for = $request->given_for;
             $expense->note = $request->note;
             $expense->expense_category = $request->expensecategory;
+            $expense->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $expense->created_by = \Auth()->user()->id;
             $expense->save();
             $expense_note = !empty($request->note) ? $request->note : '';
@@ -147,8 +149,9 @@ class ExpenseManagerController extends AdminController
             $data['expense'] = $expense;
             return $data;
         }
+        $patients = $this->OpdPatients->pluck('name','id');
         $expensecategory = $this->ExpenseCategory->where('type','=','2')->whereStatus(1)->pluck('name','id');
-        return view('admin.expense_manager.edit',compact('expense','expensecategory'));
+        return view('admin.expense_manager.edit',compact('expense','expensecategory','patients'));
     }
 
     /**
@@ -178,6 +181,7 @@ class ExpenseManagerController extends AdminController
             $expense->given_for = $request->given_for;
             $expense->note = $request->note;
             $expense->expense_category = $request->expensecategory;
+            $expense->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $expense->created_by = \Auth()->user()->id;
             $expense->save();
             return redirect('expense-manager');

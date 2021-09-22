@@ -8,6 +8,7 @@
             <th>Amount</th>
             <th>Payment Method</th>
             <th>Given By</th>
+            <th>Patient</th>
             <th>Notes</th>
             <th>Income Category</th>
             <th>Added by</th>
@@ -25,6 +26,7 @@
                 <td>{{$row->amount}}</td>
                 <td>{{$row->payment_method}}</td>
                 <td>{{$row->given_by}}</td>
+                <td>{{$row->getPatient['name']}}</td>
                 <td>{{$row->note}}</td>
                 <td>{{ucfirst($row->getExpenseCategory['name'])}}</td>
                 <td>{{ ucwords(strtolower($row->getUser['name'])) }}</td>

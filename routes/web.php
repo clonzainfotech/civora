@@ -252,6 +252,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('ca-expense-report/getCaExpense','ReportController@getCaExpense');
     Route::get('all-collection-report','ReportController@getAllCollectionReport');
     Route::get('hormon-inj-report','ReportController@getHormonInjectionReport');
+    Route::get('pediatric-report','ReportController@getPedCollection');
+
 
     // infertility report data
     Route::get('infertility-report','ReportController@infertilityReport');

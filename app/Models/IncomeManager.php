@@ -16,4 +16,7 @@ class IncomeManager extends BaseModel
     public function getExpenseCategory() {
         return $this->belongsTo('App\Models\ExpenseCategory','income_category');
     }
+    public function getPatient() {
+        return $this->belongsTo('App\Models\OpdPatients','patients_id');
+    }
 }

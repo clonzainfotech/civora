@@ -73,6 +73,12 @@
                                                         {{$errors->first('given_for')}}
                                                     </span>
                                                 </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        {{Form::select('patients_id',$patients,'',['class'=>'form-control patients_id','placeholder'=>'Select Patient','data-live-search' => 'true'])}}
+                                                    </div>
+                                                    
+                                                </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <div class="form-group">
                                                         {{Form::select('expensecategory',$expensecategory,!empty($patientData->getAppointment['category_id']) ? $patientData->getAppointment['category_id'] : null,['class'=>'form-control select-padding-0 category_data','placeholder'=>'Select Category','required'])}}

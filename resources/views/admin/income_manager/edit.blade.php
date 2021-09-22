@@ -81,6 +81,12 @@
                                                         {{$errors->first('given_by')}}
                                                     </span>
                                                 </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        {{Form::select('patients_id',$patients,$income->patients_id,['class'=>'form-control patients_id','placeholder'=>'Select Patient','data-live-search' => 'true'])}}
+                                                    </div>
+                                                    
+                                                </div>
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         {{Form::textarea('note',$income->note,['class'=>'form-control no-resize remark','placeholder'=>'Note','rows'=>'2'])}}

@@ -199,6 +199,7 @@
             var id=$('.id').val();
             var status =$( ".updatestatus option:selected" ).val();
             var type = 2;
+            var pediatric = $('.is_pediatric').val();
             var token = "{{csrf_token()}}";
             var i=1;
             document.getElementById("erorcategory").innerHTML="";

@@ -1728,9 +1728,9 @@ class ReportController extends AdminController
         try{
             if($request->ajax())
             {
-                $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->pluck('id','id');
+                $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->whereStatus('1')->pluck('id','id');
                 $income = $this->IncomeManager->whereIn('income_category',$category);
-                $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->pluck('id','id');
+                $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->whereStatus('1')->pluck('id','id');
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;

@@ -23,7 +23,7 @@
                 <td>{{!empty($row->is_pediatric) ? 'YES' : 'NO'}}</td>
                 <td>
                     <a href="#" class="a-color" data-toggle="modal" data-target="#Updatectegory">
-                        <button class="btn  btn-icon  btn-neutral candor-color btn-icon-mini edit-expense" data-id="{{$row->id}}" data-name="{{$row->name}}" data-status="{{$row->status}}">
+                        <button class="btn  btn-icon  btn-neutral candor-color btn-icon-mini edit-expense" data-id="{{$row->id}}" data-name="{{$row->name}}" data-status="{{$row->status}}" data-pediatric="{{$row->is_pediatric}}">
                             <i class="zmdi zmdi-edit material-icons"></i>
                         </button>
                     </a>

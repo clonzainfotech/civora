@@ -1841,15 +1841,16 @@
             @if(!empty($ivfData->plan))
                 {{Form::hidden('data[plan]',$ivfData->plan)}}
                 {{Form::hidden('data[transfer_type]',!empty($ivfData->transfer_type) ? $ivfData->transfer_type : null)}}
-            {{-- @else
+            {{-- @endif --}}
+            @else
                 {{Form::hidden('data[plan]',null)}}
-            @endif --}}
-            @elseif(!empty($ivfData->skip_cycle) && $ivfData->skip_cycle == 'yes')
+            @endif
+            @if(!empty($ivfData->skip_cycle) && $ivfData->skip_cycle == 'yes' && !empty($ivfData->plan))
                 {{Form::hidden('data[skip_cycle]','yes')}}
                 {{Form::hidden('data[skip_reason]',$ivfData->skip_reason)}}
                 {{Form::hidden('data[plan]',$ivfData->plan)}}
-            @else
-                {{Form::hidden('data[plan]',null)}}
+            {{-- @else
+                {{Form::hidden('data[plan]',null)}} --}}
             @endif
         </div>
     @else

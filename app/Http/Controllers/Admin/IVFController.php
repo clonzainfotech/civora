@@ -1097,11 +1097,12 @@ class IVFController extends AdminController
                     $ivf->c_o = $ivf->co;
                     $ivf->h_o = $ivf->ho;
                 }
+
                 if(!empty($request->visit)){
                     $historyData = json_decode($ivf->description);
                     $isIvfHistory = '2';
                     $isTableView = '1';
-                    $ivfCycleData = $this->IvfHistory->wherePatientsId($patientsId)->whereCycleNo($request->cycle_no)->wherePlan(!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->get();
+                    $ivfCycleData = $this->IvfHistory->wherePatientsId($patientsId)->whereCycleNo($request->cycle_no)->wherePlan($request['plan_type'])->get();
                     $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->where('cycle_no',$request->cycle_no)->where('visit',2)->first();
                         $ivfSecondVisitData = !empty($ivfSecondVisit) ? json_decode($ivfSecondVisit->description) : null;
                         $ivfFirst = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();

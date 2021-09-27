@@ -12,6 +12,9 @@ class IndoorDeposit extends BaseModel
         return $this->belongsTo('App\Models\OpdPatients','patient_id');
     }
 
+    public function getPatientsDetails(){
+        return $this->belongsTo('App\Models\OpdPatients','patient_id');
+    }
     public function getUsers(){
         return $this->belongsTo('App\User','admin_id');
     }

@@ -217,31 +217,76 @@ class PatientsController extends AdminController
 
             $patient = $this->getPatients();
             $pMobileNumber = $this->OpdPatients->pluck('mobile_number','id')->toArray();
+            $category = $this->Category->pluck('name','id')->toArray();
             if($request->ajax()){
+
                 $patientId = $request->patient_id;
+                $category = $request->category;
                 $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
-                if($patientId){
-                    $patientReportOpd = $this->Appointment
-                                            ->wherePatientsId($patientId)
-                                            ->orderBy('date', 'DESC')
-                                            ->get();
-                    $indoorDeposit = $this->IndoorDeposit
-                                            ->wherePatientId($patientId)
-                                            ->orderBy('created_at', 'DESC')
-                                            ->get();
-                    $patientReportOpd = $patientReportOpd->merge($indoorDeposit);
-                    if($request->isprint == 1) {
-                        return response()->json([
-                            View::make('admin.report.patient.preview', compact('patient','procedures','patientReportOpd','patientReportHormon'))->render()
-                        ]);
-                    }
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                $patientReportOpd = $this->Appointment;
+                $indoorDeposit = $this->IndoorDeposit;
+                $indoorBook = $this->IndoorBook
+                    ->whereIsFinalInvoice(1)
+                    ->whereNotNull('final_invoice_date');
+                if($patientId)
+                {
+                    $patientReportOpd = $patientReportOpd->wherePatientsId($patientId);
+                    $indoorDeposit = $indoorDeposit->wherePatientId($patientId);
+                    $indoorBook = $indoorBook->wherePatientId($patientId);
+                }
+                if($category)
+                {
+                    $patientReportOpd = $patientReportOpd->whereCategoryId($category);
+                }
+                if($fromdate || $todate)
+                {
+                    $fromdate = $fromdate;
+                    $todate = $todate;
+                    $indoorDeposit = $indoorDeposit->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $patientReportOpd = $patientReportOpd->whereBetween('date', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+                    $indoorBook = $indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+                }
+                $patientReportOpd = collect($patientReportOpd->get())
+                ->map(function ($query) {
+                    $query->date = $query->date;
+                    return $query;
+                });
+                $indoorDeposit = collect($indoorDeposit->get())
+                    ->map(function ($query) {
+                        $query->date = $query->created_at;
+                        return $query;
+                    });
+                $indoorBook = collect($indoorBook->get())
+                    ->map(function ($query) {
+                        $procedureName = implode(', ', $this->IndoorProcedure
+                            ->whereIn('id', explode(',', $query->procedure_id))
+                            ->pluck('name')
+                            ->toArray());
+                        $query->procedure_name = $procedureName;
+                        $query->date = $query->final_invoice_date;
+                        $query->amount = $query->getInvoice['grand_total_amt'];
+                        return $query;
+                    });
+                    // dd($indoorBook);
+                $patientReportOpd = collect($patientReportOpd)->merge($indoorDeposit);
+                $patientReportOpd = $patientReportOpd->merge($indoorBook);
+                $patientReportOpd = $patientReportOpd->sortby('date');
+                $patientReportOpd = $patientReportOpd->groupBy('getPatientsDetails.name');
+                // dd($patientReportOpd);
+                if($request->isprint == 1) {
+                    return response()->json([
+                        View::make('admin.report.patient.preview', compact('patient','procedures','patientReportOpd','patientReportHormon'))->render()
+                    ]);
                 }
                 return response()->json([
                     View::make('admin.report.patient.data', compact('patientReportOpd','procedures','patientReportHormon', 'patient'))->render()
                 ]);
             }
-            return view('admin.report.patient.index',compact('patientReportOpd', 'patientReportHormon', 'patient','pMobileNumber'));
+            return view('admin.report.patient.index',compact('patientReportOpd', 'patientReportHormon', 'patient','pMobileNumber','category'));
         }catch(Exception $e){
+            log::debug($e);
             abort(500);
         }
     }

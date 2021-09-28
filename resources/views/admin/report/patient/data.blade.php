@@ -139,7 +139,7 @@
                                 </div>
                                 @php
                                 $grandTotal += $total;
-                                $totalIncome += $grandTotal;
+                                $totalIncome += $total;
                             @endphp
                         </td>
                     </tr>

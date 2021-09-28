@@ -151,11 +151,8 @@
         $(document).on('click','.print-report',function(){
 
             $.ajax({
-                url: "{{URL::to('patient-report')}}",
-                data: {
-                    patient_id: $('.patient option:selected').val(),
-                    isprint: 1,
-                },
+                url: "{{URL::to('patient-report')}}?" + qstring,
+                
                 dataType: 'json',
             }).done(function(data) {
                 w = window.open(window.location.href,"_blank");

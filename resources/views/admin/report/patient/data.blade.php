@@ -12,10 +12,23 @@
         
     </thead>
     <tbody>
+        <td class="patientdata-loader" colspan="7">
+            <div class="row">
+                <div class="page-loader-wrapper medicine-loader">
+                    <div class="loader">
+                        <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
         @php
-                $i = 1;    
-            @endphp
-        @foreach($patientReportOpd as $rowList => $data)
+            $i = 1;   
+            $totalIncome = 0; 
+        @endphp
+         <tr>
+            <td colspan="7" class="sub-headline">Total Patients : {{ count($patientReportOpd)}}</td>
+        </tr>
+        @forelse($patientReportOpd as $rowList => $data)
             @if (count($patientReportOpd) > 0)
                 <tr>
                     <td colspan="7" class="sub-headline">{{ $rowList }}</td>
@@ -126,6 +139,7 @@
                                 </div>
                                 @php
                                 $grandTotal += $total;
+                                $totalIncome += $grandTotal;
                             @endphp
                         </td>
                     </tr>
@@ -137,12 +151,23 @@
                 {{Form::hidden('print', 1, ['class'=>'print'])}}
                 <tr class="bt-none">
                     <td class="bt-none" colspan="5"></td>
-                    <th class="bt-none" colspan="1">Grand Total : </th>
+                    <th class="bt-none" colspan="1">Total : </th>
                     <th class="grand-total-top-border" colspan="1">{{$grandTotal}}</td>
                 </tr>
             @else
                 <td colspan='7' class="text-center">No records available</td>
             @endif
-        @endforeach
+        @empty
+            <td colspan="7" class="text-center cutdata">No records available</td>
+        @endforelse
+        @if ($totalIncome > 0)
+            <tr class="bt-none cutdata">
+                <th class="bt-none" colspan="5"></th>
+                <th class="bt-none" colspan="1">Grand Total :</th>
+                <th class="grand-total-top-border" colspan="1">
+                    {{ $totalIncome }}
+                </th>
+            </tr>
+        @endif
     </tbody>
 </table>

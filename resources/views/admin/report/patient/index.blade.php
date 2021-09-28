@@ -130,26 +130,22 @@
                 qstring = 'fromdate=' + fromdate + '&todate=' + todate+"&patient_id="+pId+'&category='+category;
                 getPatientData(qstring);
             })
-        function getPatientData(qstring){
-            $.ajax({
-                url: "{{URL::to('patient-report')}}?" + qstring,
-                dataType: 'json',
-                }).done(function(data) {
-                    $('.patient-data').html(data);
-                    $('.is-print').attr('disabled', true);
-                    if ($('.print').val() != undefined) {
-                        $('.is-print').removeAttr('disabled');
-                    }
-                });
-            // $.ajax({
-            //     url: "{{URL::to('patient-report')}}?" + qstring,
-            //     dataType: 'json',
-            // }).done(function(data) {
-            //     $('.patient-data').html(data);
-
-            // }).fail(function() {
-
-            // });
+            function getPatientData(qstring){
+                $('.patientdata-loader').removeClass('d-none');
+                $('.cutdata').addClass('d-none');
+                $.ajax({
+                    url: "{{URL::to('patient-report')}}?" + qstring,
+                    dataType: 'json',
+                    }).done(function(data) {
+                        
+                        $('.patient-data').html(data);
+                        $('.patientdata-loader').addClass('d-none');
+                        $('.cutdata').removeClass('d-none');
+                        $('.is-print').attr('disabled', true);
+                        if ($('.print').val() != undefined) {
+                            $('.is-print').removeAttr('disabled');
+                        }
+                    });
         }
 
         $(document).on('click','.print-report',function(){

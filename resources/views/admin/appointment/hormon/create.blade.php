@@ -449,15 +449,7 @@
             var paymentMethod = $('select.payment-method').val();
             $('.form-error-msg').text('');
             $('.date-error').text('');
-            $('.hormon-inj-required').each(function(){
-                
-                if($(this).val().length == 0)
-                {
-                    valid = 0;
-                    var error_id = $(this).data('error');
-                    $('span.'+error_id).html('This field required');
-                }
-            })
+            
             if(hname == ''){
                 valid = 0;
                 $('.hnameerror').text('The hname field is required.');
@@ -471,6 +463,15 @@
                 $('.htype').text('The type field is required.');
             }
             if(htype == 1){
+                $('.hormon-inj-required').each(function(){
+                
+                    if($(this).val().length == 0)
+                    {
+                        valid = 0;
+                        var error_id = $(this).data('error');
+                        $('span.'+error_id).html('This field required');
+                    }
+                })
                 // if (injection == '') {
                 //     valid = 0;
                 //     $('.injection').text('The injection field is required.');

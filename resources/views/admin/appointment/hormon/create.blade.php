@@ -59,7 +59,7 @@
                         <div class="row hormon-row hinjection-data injection">
                             <div class="col-md-3">
                                     {{Form::select('hinjection[]',$injection,'',[
-                                    'class'=>'form-control hinjection hormon-inj-required',
+                                    'class'=>'form-control hinjection',
                                     'placeholder'=>'Select Injection',
                                     'data-id'=>"injection_1",
                                     'data-error'=>"injection_1",
@@ -74,7 +74,7 @@
                                     <span class="input-group-addon  unik-lbl-spn col-md-4">Injection Qty&nbsp;</span>
                                     {{Form::number('qty[]',null,['class'=>'form-control col-sm-4 hormon-inj-required','data-error'=>'qty_1','placeholder'=>'Quantity'])}}
                                     {{Form::text('qty_type','',[
-                                        'class'=>'form-control col-sm-4 amount qty_type_1 hormon-inj-required',
+                                        'class'=>'form-control col-sm-4 amount qty_type_1',
                                         'data-error'=>'qty_type_1',
                                         'readonly'
                                     ])}}
@@ -437,6 +437,7 @@
             $('input[type="text"][name="doctor_mobile_number"]').val(validCharge(value));
         }
         function hormonerrorMessage() {
+            
             var valid = 1;
             var hname=document.getElementById('hname').value;
             var htype=document.getElementById('htype').value;
@@ -462,9 +463,17 @@
                 valid = 0;
                 $('.htype').text('The type field is required.');
             }
-            if(htype == 1){
-                $('.hormon-inj-required').each(function(){
-                
+            if(htype == 1)
+            {
+                $('.hinjection').selectpicker('refresh');
+                if($('select.hinjection').val() == '')
+                {
+                    valid = 0;
+                    var error_id = $('select.hinjection').data('error');
+                    $('span.'+error_id).html('This field required');
+                }
+                $('.hormon-inj-required').each(function()
+                {
                     if($(this).val().length == 0)
                     {
                         valid = 0;

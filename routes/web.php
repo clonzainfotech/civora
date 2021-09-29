@@ -44,7 +44,7 @@ Auth::routes();
 Route::get('get-iui-report','Admin\IUIController@getIuiDetails');
 Route::get('get-ivf-report','Admin\IVFController@getIvfDetails');
 Route::get('get-anc-report','Admin\ANCController@getAncDetails');
-Route::get('get-gynec-details','GynecController@getGynecDetails');
+Route::get('get-gynec-details','Admin\GynecController@getGynecDetails');
 Route::post('login','Admin\UserController@login')->name('login');
 Route::post('register','Admin\UserController@register')->name('register');
 Route::get('update-lmp/{type}','Base\Admin\AdminController@updateLmp');

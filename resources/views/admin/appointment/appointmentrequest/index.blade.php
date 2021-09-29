@@ -43,6 +43,7 @@
                                         <th>Appointment</th>
                                         <th>Time</th>
                                         <th>Patient Name</th>
+                                        <th>Create On</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -52,6 +53,7 @@
                                             <td>{{$requests->appointment_date}}</td>
                                             <td>{{$requests->appointment_time}}</td>
                                             <td class="patient_name">{{strtolower($requests->getPatients['name'])}}</td>
+                                            <td >{{ \Carbon\Carbon::parse($requests->created_at)->format('d-m-Y h:i A')}}</td>
                                             <td>
                                                 <a class="apt-approve" data-id="{{encrypt($requests->id)}}"><span class="badge is-bill badge-success">Approve</span></a>
                                                 <a class="apt-reject" data-id="{{encrypt($requests->id)}}" data-target="#reject-modal" data-toggle="modal"><span class="badge is-bill badge-danger">Reject</span></a>

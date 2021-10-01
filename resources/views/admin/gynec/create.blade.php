@@ -91,7 +91,7 @@
                                                         </div>
                                                     </div>
                                                 @else
-                                                    <div class='col-md-11 complain-multi duration-value'>
+                                                    <div class='col-md-11 complain-multi'>
                                                         {{Form::select('ho[ho_details]',$hoData,'',['class'=>'form-control ho-data select-padding-0 duration-data anc-dose-val ho_type_value','placeholder'=>'Select H/O','data-medicine'=>2])}}
                                                         <span class="form-error-msg ho-data-msg">
                                                             {{$errors->first('ho_details')}}

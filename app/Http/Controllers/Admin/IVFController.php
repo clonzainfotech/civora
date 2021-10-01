@@ -656,7 +656,7 @@ class IVFController extends AdminController
                         $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->update(['cycle_status'=>2]);
                         $ivfFirstVisitData = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
                         //set EDD date and lmpdate from second visit
-                        $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->where('cycle_no',$request->cycle_no)->where('visit',2)->first();
+                        $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request['plan_type'])->where('cycle_no',$request->cycle_no)->where('visit',2)->first();
                         $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
                         $ivf_mh_data = json_decode($ivfFirstVisitData->m_h);
                         $ivf_mh_data->last_menstrual_date = !empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : '';
@@ -949,6 +949,7 @@ class IVFController extends AdminController
                                     $followDate = !empty($nextAppontment['date']) ? $nextAppontment['date'] : $followDate;
                                 }
                             }
+                            // dd($followDate);
                             $appointment = $this->Appointment->where('patients_id',$patientsId)->orderBy('id','DESC')->first();
                             if($appointment){
                                 $appointmentData['appointmentId'] = encrypt($appointment->id);

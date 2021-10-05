@@ -158,6 +158,107 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading"
+                                        role="tab"
+                                        id="headingThree_1">
+                                        <h4 class="panel-title"> <a class="collapsed"
+                                                role="button"
+                                                data-toggle="collapse"
+                                                data-parent="#accordion_1"
+                                                href="#doctor"
+                                                aria-expanded="false"
+                                                aria-controls="doctor"> Doctor</a> </h4>
+                                    </div>
+                                    <div id="doctor"
+                                        class="panel-collapse collapse show doctor-details"
+                                        role="tabpanel"
+                                        aria-labelledby="headingThree_1">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        {{Form::select('reference_doctor',$referenceDoctor,$patient->reference_doctor_id,[
+                                                            'class'=>'form-control select-padding-0 reference_doctor',
+                                                            'placeholder'=>'Select Reference Doctor',
+                                                            'data-live-search'=>'true',
+                                                        ])}}
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 doctor-name d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text('doctor_name', '', [
+                                                            'class'=>'form-control doctor',
+                                                            'placeholder'=>'Doctor Name'
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('doctor_name')}}
+                                                    </span>
+                                                </div>
+                                                <div class=" col-md-6 col-sm-6 doctor-mobile-number d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text('doctor_mobile_number','',[
+                                                            'class'=>'form-control doctor',
+                                                            'placeholder'=>'Doctor Mobile Number',
+                                                            'oninput' => 'doctorMobileNumber(this.value)',
+                                                            'maxlength' => 10
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('doctor_mobile_number')}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        {{Form::select('hospital_doctor',$hospitalDoctor,$patient->hospital_doctor_id,['class'=>'form-control select-padding-0 hospital_doctor','placeholder'=>'Select Hospital Doctor','data-live-search'=>'true'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        {{Form::select('pro_reference_doctor',$proReferenceDoctor,$patient->reference_doctor_pro_id,['class'=>'form-control select-padding-0 pro-ref-hospital-doctor','placeholder'=>'Select Pro Reference Doctor','data-live-search'=>'true'])}}
+                                                    </div>
+                                                </div>
+                                                <div class=" col-md-6 col-sm-6 ref-pro-doctor-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text('pro_reference_doctor_name','',[
+                                                            'class'=>'form-control',
+                                                            'placeholder'=>'Pro Doctor Name',
+                                                        ])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class=" col-md-6 col-sm-6 ref-pro-doctor-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text('pro_reference_doctor_mobile_number','',[
+                                                            'class'=>'form-control ref-pro-doctor checkvalue',
+                                                            'placeholder'=>'Pro Doctor Mobile Number',
+                                                            'oninput' => 'otherProMobileNumber(this.value)',
+                                                            'maxlength' => 10
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('pro_reference_doctor_mobile_number')}}
+                                                    </span>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    {{Form::textarea('other_patient_reference',!empty($patient->other_patient_reference) ? $patient->other_patient_reference : null,[
+                                                        'class'=>'form-control no-resize remark',
+                                                        'placeholder'=>'Other atient Reference',
+                                                        'rows'=>'2'
+                                                    ])}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- location and communication -->
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingThree_1">
@@ -349,6 +450,34 @@
         format: 'hh:mm a',
         switchOnClick: true
     });
+    proReferenceDoctor($('select.pro-ref-hospital-doctor').val());
+    $(document).on('change','select.pro-ref-hospital-doctor',function(){
+            var value = $(this).val();
+            proReferenceDoctor(value);
+    });
+    $('select[name="reference_doctor"]').on('change', function() {
+            referenceDoctorField($(this).val());
+        });
+    referenceDoctorField($('select[name="reference_doctor"]').val());
+    function referenceDoctorField(value){
+        if (value == 'other') {
+            $('input[type="text"][name="doctor_name"]').prop('required', 'required');
+            $('input[type="text"][name="doctor_mobile_number"]').prop('required', 'required');
+            $('.doctor-name').removeClass('d-none');
+            $('.doctor-mobile-number').removeClass('d-none');
+        } else {
+            $('input[type="text"][name="doctor_name"]').prop('required', false);
+            $('input[type="text"][name="doctor_mobile_number"]').prop('required', false);
+            $('.doctor-name').addClass('d-none');
+            $('.doctor-mobile-number').addClass('d-none');
+        }
+    }
+    function proReferenceDoctor(value){
+        $('.ref-pro-doctor-data').addClass('d-none');
+        if(value == 'other'){
+            $('.ref-pro-doctor-data').removeClass('d-none');
+        }
+    }
     $(document).ready(function(){
         $(".patient-form").submit(function() { 
             var years = $('.years').val();

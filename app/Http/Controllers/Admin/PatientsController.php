@@ -101,7 +101,11 @@ class PatientsController extends AdminController
             $patient = $this->OpdPatients->find($patientId);
             $city = $this->City->pluck('name','name');
             $state = $this->getState()['state'];
-            return view('admin.appointment.patient.edit', compact('patient','city','state'));
+            $doctor = $this->getDoctor();
+            $referenceDoctor = ['other'=>'Other'] + $doctor['referenceDoctor']->toArray();
+            $proReferenceDoctor = ['other'=>'Other'] + $this->ReferenceDoctorPro->pluck('name','id')->toArray();
+            $hospitalDoctor = $doctor['hospitalDoctor'];
+            return view('admin.appointment.patient.edit', compact('patient','city','state','referenceDoctor','proReferenceDoctor','hospitalDoctor'));
         }catch(Exception $e){
             abort(500);
         }
@@ -124,7 +128,11 @@ class PatientsController extends AdminController
             }
             $city = $this->City->pluck('name','name');
             $state = $this->getState()['state'];
-            return view('admin.appointment.patient.edit', compact('city','state','patient','self_bookingId'));
+            $doctor = $this->getDoctor();
+            $referenceDoctor = ['other'=>'Other'] + $doctor['referenceDoctor']->toArray();
+            $proReferenceDoctor = ['other'=>'Other'] + $this->ReferenceDoctorPro->pluck('name','id')->toArray();
+            $hospitalDoctor = $doctor['hospitalDoctor'];
+            return view('admin.appointment.patient.edit', compact('city','state','patient','self_bookingId','referenceDoctor','proReferenceDoctor','hospitalDoctor'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);
@@ -168,8 +176,29 @@ class PatientsController extends AdminController
                     $patient->city = $request->city_2;
                 }
                 $patient->state=$request->state;
+                //reference doctor
+                if ($request->input('reference_doctor') == 'other') {
+                    $referenceDoctor = $this->ReferenceDoctor;
+                    $referenceDoctor->name = $request->doctor_name;
+                    $referenceDoctor->mobile_number = $request->doctor_mobile_number;
+                    $referenceDoctor->created_by = Auth::user()->id;
+                    $referenceDoctor->save();
+                }
+
+                //reference doctor
+                if ($request->input('pro_reference_doctor') == 'other') {
+                    $proReferenceDoctor = $this->ReferenceDoctorPro;
+                    $proReferenceDoctor->name = $request->pro_reference_doctor_name;
+                    $proReferenceDoctor->mobile_number = $request->pro_reference_doctor_mobile_number;
+                    $proReferenceDoctor->created_by = Auth::user()->id;
+                    $proReferenceDoctor->save();
+                }
+
+                $patient->reference_doctor_id = ($request->input('reference_doctor') == 'other') ? $referenceDoctor->id : $request->reference_doctor;
+                $patient->reference_doctor_pro_id = ($request->input('pro_reference_doctor') == 'other') ? $proReferenceDoctor->id : $request->pro_reference_doctor;
                 $patient->mobile_number=$request->mobile_number;
                 $patient->other_mobile_number=$request->other_mobile_number;
+                $patient->other_patient_reference=$request->other_patient_reference;
                 $patient->email=$request->email;
                 $patient->weight=$request->weight;
                 $patient->height=$request->height;
@@ -318,8 +347,8 @@ class PatientsController extends AdminController
     */
     private function getDoctor(){
         $referenceDoctor = $this->ReferenceDoctor->orderBy('name','ASC')->pluck('name','id');
-
-        return ['referenceDoctor' => $referenceDoctor];
+        $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+        return['referenceDoctor'=>$referenceDoctor,'hospitalDoctor'=>$hospitalDoctor];
     }
      /**
     * Generate patient code

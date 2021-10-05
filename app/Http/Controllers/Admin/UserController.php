@@ -60,6 +60,7 @@ class UserController extends AdminController
             'mobile_number' => 'nullable|numeric|unique:patients|unique:patients_signup|digits:10',
             'other_mobile_number' => 'nullable|numeric|unique:patients|unique:patients_signup|digits:10',
             'dob' => 'required',
+            'gender' => 'required',
             'residence' => 'required',
             'main_area' => 'required',
         ];
@@ -80,6 +81,7 @@ class UserController extends AdminController
         $patient->residence = $request->residence;
         $patient->mobile_number = $request->mobile_number;
         $patient->other_mobile_number = $request->other_mobile_number;
+        $patient->gender = $request->gender;
         $patient->main_area = $request->main_area;
         $patient->city = $request->city;
         $patient->state = $request->state;

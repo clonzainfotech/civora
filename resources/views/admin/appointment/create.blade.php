@@ -350,6 +350,15 @@
                                         </div>
                                         
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{Form::textarea('other_patient_reference',!empty($patientData->other_patient_reference) ? $patientData->other_patient_reference : null,[
+                                                'class'=>'form-control no-resize remark',
+                                                'placeholder'=>'Other atient Reference',
+                                                'rows'=>'2'
+                                            ])}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

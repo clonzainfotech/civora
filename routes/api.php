@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->namespace('Api')->group(function () {
 
     Route::post('/login', 'AuthApiController@login');
+    Route::post('/signup', 'AuthApiController@register');
     Route::post('/otp_verify', 'AuthApiController@otp_verify');
     Route::get('/hospital_tutorials', 'HomeController@hospital_tutorials');
     Route::get('/getQ_A', 'HomeController@getQAns');

@@ -129,6 +129,53 @@ class AuthApiController extends ApiController
     }
 
     /**
+    * Register Patient
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function register(Request $request){
+
+        $rule = [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'surname' => 'required',
+            'dob' => 'required',
+            'mobile_number' => 'nullable|numeric|unique:patients|unique:patients_signup|digits:10',
+            'other_mobile_number' => 'nullable|numeric|unique:patients|unique:patients_signup|digits:10',
+            'gender' => 'required',
+            'residence' => 'required',
+            'main_area' => 'required',
+            'city' =>'required',
+            'state' =>'required',
+            'reason' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(),$rule);
+
+        if($validator->fails()){
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        $patient = $this->PatientSignup;
+        $patient->name = trim($request->first_name).' '.trim($request->last_name).' '.trim($request->surname);
+        // dd($patient->name);
+        $patient->dob = Carbon::parse($request->dob)->format('Y-m-d');
+        $patient->residence = $request->residence;
+        $patient->mobile_number = $request->mobile_number;
+        $patient->other_mobile_number = $request->other_mobile_number;
+        $patient->gender = $request->gender;
+        $patient->main_area = $request->main_area;
+        $patient->city = $request->city;
+        $patient->state = $request->state;
+        $patient->reference_doctor = $request->reference_doctor;
+        $patient->reference_patient = $request->reference_patient;
+        $patient->other_reference = $request->other;
+        $patient->reason = $request->reason;
+        $patient->save();
+        $success['msg'] = "Please contact to Radha Candor IVF Hospital for Approve your Request";
+        return $this->sendResponse('Register Successfully.',$success);
+            
+    }
+    /**
     * Logout
     * @param  \Illuminate\Http\Request 
     * @return \Illuminate\Http\Response

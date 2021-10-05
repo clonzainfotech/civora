@@ -1,5 +1,5 @@
 @extends('layouts.authentication')
-@section('title', '404')
+@section('title', 'ThankYou')
 <style>
     .page-header .container>.content-center{
         top: 35% !important;

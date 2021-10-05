@@ -353,6 +353,8 @@ class AppointmentController extends AdminController
 
             $patients->reference_doctor_id = ($request->input('reference_doctor') == 'other') ? $referenceDoctor->id : $request->reference_doctor;
             $patients->reference_doctor_pro_id = ($request->input('pro_reference_doctor') == 'other') ? $proReferenceDoctor->id : $request->pro_reference_doctor;
+            $patients->other_patient_reference=$request->other_patient_reference;
+
             $patients->city = $request->city_1;
 
             if($request->city_1 == 'Other'){
@@ -432,6 +434,7 @@ class AppointmentController extends AdminController
             $updatePatient->weight = $request->weight;
             $updatePatient->other_mobile_number = $request->other_mobile_number;
             $updatePatient->reference_doctor_id =  $patients->reference_doctor_id;
+            $updatePatient->other_patient_reference=$request->other_patient_reference;
             $updatePatient->reference_doctor_pro_id =  $patients->reference_doctor_pro_id;
             $updatePatient->hospital_doctor_id = $request->hospital_doctor;
             $updatePatient->residence = $request->residence;
@@ -488,6 +491,7 @@ class AppointmentController extends AdminController
 
             return;
         }else{
+            $updatePatient->other_patient_reference=$request->other_patient_reference;
             $updatePatient->reference_doctor_id =  $patients->reference_doctor_id;
             $updatePatient->reference_doctor_pro_id =  $patients->reference_doctor_pro_id;
             $updatePatient->save();
@@ -702,6 +706,8 @@ class AppointmentController extends AdminController
             $patients->other_mobile_number = $request->other_mobile_number;
             $patients->reference_doctor_id = ($request->input('reference_doctor') == 'other') ? $referenceDoctor->id : $request->reference_doctor;
             $patients->reference_doctor_pro_id = ($request->input('pro_reference_doctor') == 'other') ? $proReferenceDoctor->id : $request->pro_reference_doctor;
+            $patients->other_patient_reference=$request->other_patient_reference;
+
             if($request->hospital_doctor > 0){
                 $patients->hospital_doctor_id = $request->hospital_doctor;
             }

@@ -32,4 +32,19 @@ class ApiController extends BaseController
 
         return response()->json($response, $code);
     }
+    /**
+     * return singUp response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function sendNotApproved($error, $code = 404)
+    {
+        $response = [
+            'status' => 2,
+            'message' => $error,
+        ];
+
+        return response()->json($response, $code);
+    }
 }

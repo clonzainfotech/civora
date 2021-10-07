@@ -53,7 +53,7 @@ class AuthApiController extends ApiController
             $patient = $this->PatientSignup->where('mobile_number',$request->only($login_type))->where('is_approved',0)->first();
             if($patient)
             {
-                return $this->sendError('Please contact to Radha Candor IVF Hospital of Approve your Request');
+                return $this->sendNotApproved('Please contact to Radha Candor IVF Hospital of Approve your Request');
             }
 
         }

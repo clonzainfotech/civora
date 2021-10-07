@@ -3164,6 +3164,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             @php
                                 $nowDate = \Carbon\Carbon::parse($historyData->trigger_date)->format('Y-m-d');
                                 $nowTime = \Carbon\Carbon::parse(!empty($historyData->trigger->hcg->time) ? $historyData->trigger->hcg->time : (!empty($historyData->trigger->decapeptyl->time) ? $historyData->trigger->decapeptyl->time : null))->format('H:i:s');
+                                if(empty($historyData->trigger->hcg->time) && $historyData->trigger->decapeptyl->time && !empty($historyData->trigger->ovutring->time))
+                                {
+                                    $nowTime = \Carbon\Carbon::parse($historyData->trigger->ovutring->time)->format('H:i:s');
+                                }
                                 $triggerDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
                                 $triggerDate = \Carbon\Carbon::parse($triggerDateTime)->format('D d M Y');
                             @endphp

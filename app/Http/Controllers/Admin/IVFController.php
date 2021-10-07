@@ -557,9 +557,10 @@ class IVFController extends AdminController
                 
                 $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
                 $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                $ovutringTime = !empty($data['trigger']['ovutring']['time']) ? Carbon::parse($data['trigger']['ovutring']['time']) : null;
                 $tDate = !empty($data['trigger_date']) ? Carbon::parse($data['trigger_date'])->format('Y-m-d') : null;
                 $collectData = !empty($data['collection']) ? $data['collection'] : [];
-                if((in_array('trigger',$collectData) && !empty($tDate) && $request->is_trigger == 'yes') && (!empty($hcgTime) || !empty($decapeptylTime))){
+                if((in_array('trigger',$collectData) && !empty($tDate) && $request->is_trigger == 'yes') && (!empty($hcgTime) || !empty($decapeptylTime) || !empty($ovutringTime))){
                     if($request->plan_type == 1){
                         $msg = 'Advise Trigger ';
                     }
@@ -570,6 +571,10 @@ class IVFController extends AdminController
                     if(!empty($hcgTime)){
                         $hTime = Carbon::parse($hcgTime)->format('H:i:s');
                         $checkTriggerTime = $hTime;
+                    }
+                    if(!empty($ovutringTime)){
+                        $oTime = Carbon::parse($ovutringTime)->format('H:i:s');
+                        $checkTriggerTime = $oTime;
                     }
                     if(!empty($hcgTime) && !empty($decapeptylTime)){
                         $checkHcgTime = strtotime($hcgTime);
@@ -830,14 +835,24 @@ class IVFController extends AdminController
                             $nowDate = \Carbon\Carbon::parse($editIvfData->trigger_date)->format('Y-m-d');
                             $hcgTime = !empty($editIvfData->trigger->hcg->time) ? Carbon::parse($editIvfData->trigger->hcg->time) : null;
                             $decapeptylTime = !empty($editIvfData->trigger->decapeptyl->time) ? Carbon::parse($editIvfData->trigger->decapeptyl->time) : null;
+                            $ovutringTime = isset($editIvfData->trigger->ovutring) && !empty($editIvfData->trigger->ovutring->time) ? Carbon::parse($editIvfData->trigger->ovutring->time) : null;
                             $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                            if((empty($hcgTime) && empty($decapeptylTime)) && !empty($ovutringTime))
+                            {
+                                $nowTime = \Carbon\Carbon::parse($ovutringTime)->format('H:i:s');
+                            }
                             $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
                             if($notify->date == $pickUpDateTime)
                             {
                                 $nowDate = \Carbon\Carbon::parse($request['data']['trigger_date'])->format('Y-m-d');
                                 $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
                                 $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                                $ovutringTime = !empty($data['trigger']['ovutring']['time']) ? Carbon::parse($data['trigger']['ovutring']['time']) : null;
                                 $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                                if((empty($hcgTime) && empty($decapeptylTime)) && !empty($ovutringTime))
+                                {
+                                    $nowTime = \Carbon\Carbon::parse($ovutringTime)->format('H:i:s');
+                                }
                                 $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
                                 $notify->date = $pickUpDateTime;
                                 $notify->reminder_date = Carbon::parse($pickUpDateTime)->subDays(1)->format('Y-m-d');
@@ -853,7 +868,12 @@ class IVFController extends AdminController
                             $nowDate = \Carbon\Carbon::parse($request['data']['trigger_date'])->format('Y-m-d');
                             $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
                             $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                            $ovutringTime = !empty($data['trigger']['ovutring']['time']) ? Carbon::parse($data['trigger']['ovutring']['time']) : null;
                             $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                            if((empty($hcgTime) && empty($decapeptylTime)) && !empty($ovutringTime))
+                            {
+                                $nowTime = \Carbon\Carbon::parse($ovutringTime)->format('H:i:s');
+                            }
                             $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
                             
                             $pickUpDate = Carbon::parse($pickUpDateTime)->format('Y-m-d');
@@ -1065,7 +1085,12 @@ class IVFController extends AdminController
                         $nowDate = \Carbon\Carbon::parse($triggerDate)->format('Y-m-d');
                         $hcgTime = !empty($data['trigger']['hcg']['time']) ? Carbon::parse($data['trigger']['hcg']['time']) : null;
                         $decapeptylTime = !empty($data['trigger']['decapeptyl']['time']) ? Carbon::parse($data['trigger']['decapeptyl']['time']) : null;
+                        $ovutringTime = !empty($data['trigger']['ovutring']['time']) ? Carbon::parse($data['trigger']['ovutring']['time']) : null;
                         $nowTime = \Carbon\Carbon::parse(!empty($hcgTime) ? $hcgTime : (!empty($decapeptylTime) ? $decapeptylTime : null))->format('H:i:s');
+                        if((empty($hcgTime) && empty($decapeptylTime)) && !empty($ovutringTime))
+                        {
+                            $nowTime = \Carbon\Carbon::parse($ovutringTime)->format('H:i:s');
+                        }
                         $pickUpDateTime = \Carbon\Carbon::parse($nowDate.' '.$nowTime)->addHours(35)->format('Y-m-d H:i:s');
                         
                         $pickUpDate = Carbon::parse($pickUpDateTime)->format('Y-m-d');

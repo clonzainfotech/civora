@@ -48,7 +48,15 @@ class AuthApiController extends ApiController
         // if($user_data){
         //     $user = $user_data;
         // }
+        if($login_type == 'mobile')
+        {
+            $patient = $this->PatientSignup->where('mobile_number',$request->only($login_type))->where('is_approved',0)->first();
+            if($patient)
+            {
+                return $this->sendError('Please contact to Radha Candor IVF Hospital of Approve your Request');
+            }
 
+        }
         if($user_data) {
             // $user_new = $user->is_verify = 0;
             $user_data->mobile_number=$request->input('login');

@@ -584,7 +584,8 @@ class AppointmentController extends ApiController
         // $patientData = $this->OpdPatients->where('token', $token)->first();
         $patientData = $this->PatientToken->where('token', $token)->first();
 
-        if($patientData){
+        if($patientData)
+        {
             $appointmentData = collect($this->Appointment->select('id','patients_id','date','time','category_id')->where('patients_id',$patientData->patients_id)->orderBy('id','DESC')->get())->map(function($q){
                 $q->status = date('Y-m-d') > $q->date ? 1 : 0;
                 $q->profile_picture = $q->getPatientsDetails['profile_picture'];
@@ -636,7 +637,7 @@ class AppointmentController extends ApiController
                 $appointmentTime = \Carbon\Carbon::parse($request->time)->format('H:i:s');
                 $nextAppointmentTime = \Carbon\Carbon::parse($request->time)->addMinute(15)->format('H:i:s');
                 $checkTotalAppointment = $this->AppointmentRequest->where('appointment_date',\Carbon\Carbon::parse($request->date)->format('Y-m-d'))->where('is_book',0)->whereBetween('appointment_time',[$appointmentTime,$nextAppointmentTime])->get();
-                $totalappointment = $request->doctor_id == 11 ? 3 : 2;
+                $totalappointment = $request->doctor_id == 11 ? 3 : 2; // for jaydev sir, set 3 appointment in 15 min and for shivani ma'am ,set 2 appointmment
                 if(count($checkTotalAppointment) == $totalappointment) 
                 {
                     return $this->sendResponse('Appointmnet already booked on this time. Please Choose other sloat or change Doctor');
@@ -704,6 +705,7 @@ class AppointmentController extends ApiController
             }
         }
     }
+
     /**
     * Return list of Doctor for appoinment
     * @param  \Illuminate\Http\Request 
@@ -713,14 +715,53 @@ class AppointmentController extends ApiController
 
         $token = $request->header('Authorization');
         
-        $doctor = [];
+        $result = [];
         if($token) 
         {
-            $doctor = $this->User->whereIn('id',[11,42])->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
-        }
-        return $this->sendResponse('Get Doctor list successfully',$doctor);
-    }
+            $doctors = $this->User->whereIn('id',[11,42])->whereRole('3')->whereStatus('1')->get();
+            foreach($doctors as $doctor)
+            {
+                $data['doctor_id'] = $doctor->id;
+                $data['name'] = $doctor->name;
+                array_push($result,$data);
+            }
 
+        }
+        return $this->sendResponse('Get Doctor list successfully',$result);
+    }
+   
+    /**
+    * Return count of sloat book
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function getSloatBookCount(Request $request)
+    {
+        $rule = [
+            'doctor_id'=>'required',
+            'date'=>'required'
+        ];
+        $validator = Validator::make($request->all(),$rule);
+        if($validator->fails()){
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        $result = [];
+        $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45','04:00','04:15','04:30','04:45','05:00','05:15','05:30','05:45','06:00','06:15','06:30','06:45'];
+        if($request->doctor_id == 11)
+        {
+            $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45'];
+        }
+        foreach($sloats as $sloat)
+        {
+            $appointmentTime = \Carbon\Carbon::parse($sloat)->format('H:i:s');
+            $nextAppointmentTime = \Carbon\Carbon::parse($sloat)->addMinute(15)->format('H:i:s');
+            $checkTotalAppointment = $this->AppointmentRequest->where('seen_by',$request->doctor_id)->where('appointment_date',\Carbon\Carbon::parse($request->date)->format('Y-m-d'))->where('is_book',0)->whereBetween('appointment_time',[$appointmentTime,$nextAppointmentTime])->get();
+            $data['sloat'] = $sloat.'-'.\Carbon\Carbon::parse($nextAppointmentTime)->format('H:i');
+            $data['count'] = count($checkTotalAppointment);
+            array_push($result,$data);
+        }
+        return $this->sendResponse('Get Sloat Count successfully',$result);
+    }
 
 }
 

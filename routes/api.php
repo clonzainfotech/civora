@@ -27,7 +27,6 @@ Route::prefix('v1')->namespace('Api')->group(function () {
     Route::get('getHtmlPages','HomeController@getHtmlPages');
     Route::post('getRegisterStatus','AuthApiController@registerStatus');
 
-
     Route::middleware('APIToken')->group(function () {
         // Logout
         Route::get('/home', 'HomeController@home');
@@ -99,8 +98,10 @@ Route::prefix('v1')->namespace('Api')->group(function () {
 
         //patient's USG images
         Route::get('getPatientUsgImageList','PatientController@getPatientUsgImageList');
-        Route::get('getappointmentDoctorList','AppointmentController@appointmentDoctorList');
 
+        //Appointment sloat
+        Route::get('getappointmentDoctorList','AppointmentController@appointmentDoctorList');
+        Route::post('getSloatBookCount','AppointmentController@getSloatBookCount');
     });
 
 });

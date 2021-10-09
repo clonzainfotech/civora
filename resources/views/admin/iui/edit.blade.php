@@ -3831,8 +3831,10 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                             {{Form::text("follow_up",!empty($historyPlan->follow_up) ? \Carbon\Carbon::parse($historyPlan->follow_up)->format('D d M Y') : null,['class'=>'form-control datetimepicker follow-up-date','disabled'])}}
                                             {{Form::hidden('data[plan][follow_up]',$historyPlan->follow_up)}}
                                             {{Form::hidden('data[new_follow_up]',$historyPlan->follow_up)}}
+                                            {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                         @else
                                             {{Form::text("data[plan][follow_up]",!empty($historyPlan->follow_up) ? \Carbon\Carbon::parse($historyPlan->follow_up)->format('D d M Y') : null,['class'=>'form-control datetimepicker follow-up-date next-date'])}}
+                                            {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                         @endif
                                     </div>
                                     <span class="follow-date-msg form-error-msg"></span>
@@ -4613,6 +4615,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 {{Form::hidden('data[new_follow_up]',$historyData->date)}}
                             @endif
                             {{Form::text("data[date]",!empty($historyData->date) ? \Carbon\Carbon::parse($historyData->date)->format('D d M Y') : \Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker date next-date',!empty($historyData->date) ? 'disabled' : ''])}}
+                            {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                         </div>
                     </div>
                 </div>
@@ -5484,6 +5487,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                             {{Form::hidden('data[new_follow_up]',$historyData->follow_up)}}
                                                         @endif
                                                         {{Form::text("data[follow_up]",!empty($historyData->follow_up) ? \Carbon\Carbon::parse($historyData->follow_up)->format('D d M Y') : \Carbon\Carbon::now()->addHours(35)->format('D d M Y'),['class'=>'form-control datetimepicker follow-up-date next-date '.$hcgIuiDate,$ovalution == 'yes' || !empty($historyData->follow_up) ? 'disabled' : null])}}
+                                                        {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                                     </div>
                                                     <span class="follow-date-msg form-error-msg"></span>
                                                 </div>

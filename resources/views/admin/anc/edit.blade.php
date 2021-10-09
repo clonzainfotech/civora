@@ -4857,9 +4857,12 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     </span>
                     {{-- {{Form::text("oe[follow_up]", '',['class'=>'form-control datetimepicker followup followup-date'])}} --}}
                     {{Form::text("oe[follow_up]", '',['class'=>'form-control datetimepicker followup next-date'])}}
+                    
                     {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
                     {{Form::hidden('is_follow_up',1,['class'=>'is-followup'])}}
+                    {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                 </div>
+                <span class="not-available-error form-error-msg"></span>
                 <span class="gsac-no-data-followup form-error-msg"></span>
             </div>
             <div class="col-md-1">

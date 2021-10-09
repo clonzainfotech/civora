@@ -989,6 +989,15 @@ class AppointmentController extends AdminController
             $diff = $date->diffIndays($addDate) + ($request->date ? 0 : $request->day);
             $date = Carbon::parse($date)->format('Y-m-d');
             $status = !empty($appointmentTime['status']) ? $appointmentTime['status'] : null;
+            if($date > Carbon::now()->format('Y-m-d'))
+            {
+                $absence_doctor = $this->User->where('id',Auth::user()->id)->whereStatus('1')->whereRaw("find_in_set('".Carbon::parse($request->date)->format('m/d/Y')."',absence_dates)")->first();
+                if($absence_doctor)
+                {
+                    $status = 'not-available';
+                }
+            }
+            
             return ['date'=>$date,'diff'=>$diff,'time'=>$time,'status'=>$status];
 
         }catch(Exception $e){

@@ -1205,40 +1205,60 @@
             var url = "{{URL::to('iui')}}";
             $('.iui-bill-preview').attr('disabled', true);
             $('.submit').prop('disabled', true);
-            $.ajax({
-                url:'{{URL::to("iui")}}',
-                type:'POST',
-                dataType:'json',
-                data:iuiData,
-                cache: false,
-                contentType: false,
-                processData: false,
-            }).done(function(data){
-                if(data.status == 'true' && data.secondVisit == false){
-                    window.location.href = url;
-                }else if(data.status == 1){
-                    $('#iui_history_id').val(data.id);
-                    w = window.open(window.location.href, "_blank");
-                    w.document.open();
-                    w.document.write(data.data);
-                    w.document.close();
-                    setTimeout(function () {
-                        w.window.print();
-                    }, 300);
-                    // window.location.href = url;
-                } else if (data.status == 5 || data.status == 8) {
-                    w = window.open(window.location.href, "_blank");
-                    w.document.open();
-                    w.document.write(data.data);
-                    w.document.close();
-                    setTimeout(function () {
-                        w.window.print();
-                    }, 300);
-                    window.location.href = url;
-                }else{
-                    location.reload();
-                }
-            });
+            if($('.is-notAvailable').val() == 1)
+            {
+                var date = moment(new Date($('.next-date').val())).format('dddd DD MMMM YYYY');
+                swal({
+                title: 'Not Available',
+                text: 'You are Not available on '+ date +' . Are you sure want to give Appointment?',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#00cfd1",
+                confirmButtonText: "Yes!",
+                closeOnConfirm: false,
+                cancelButtonClass: 'btn btn-danger',
+                }, function (isConfirm) {
+                    if(isConfirm == true)
+                    {
+                        $('.showSweetAlert').hide();
+                        $.ajax({
+                            url:'{{URL::to("iui")}}',
+                            type:'POST',
+                            dataType:'json',
+                            data:iuiData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                        }).done(function(data){
+                            if(data.status == 'true' && data.secondVisit == false){
+                                window.location.href = url;
+                            }else if(data.status == 1){
+                                $('#iui_history_id').val(data.id);
+                                w = window.open(window.location.href, "_blank");
+                                w.document.open();
+                                w.document.write(data.data);
+                                w.document.close();
+                                setTimeout(function () {
+                                    w.window.print();
+                                }, 300);
+                                // window.location.href = url;
+                            } else if (data.status == 5 || data.status == 8) {
+                                w = window.open(window.location.href, "_blank");
+                                w.document.open();
+                                w.document.write(data.data);
+                                w.document.close();
+                                setTimeout(function () {
+                                    w.window.print();
+                                }, 300);
+                                window.location.href = url;
+                            }else{
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
         }
 
         // get form data

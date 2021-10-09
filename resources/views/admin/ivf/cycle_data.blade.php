@@ -1216,6 +1216,7 @@
                                                                                 {{Form::text("data[follow_up]",'',['class'=>'form-control datetimepicker tranfer-follow-date follow-up-date next-date'])}}
                                                                             @endif
                                                                             {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
+                                                                            {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
@@ -2530,6 +2531,7 @@
                                                                         {{Form::text("data[follow_up]",'',['class'=>'form-control datetimepicker tranfer-follow-date follow-up-date next-date'])}}
                                                                     @endif
                                                                     {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
+                                                                    {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-1">
@@ -4693,6 +4695,7 @@
                                                     {{Form::text("data[follow_up]",'',['class'=>'form-control datetimepicker tranfer-follow-date follow-up-date next-date'])}}
                                                 @endif
                                                 {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
+                                                {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                                             </div>
                                         </div>
                                         <div class="col-md-1">
@@ -6052,7 +6055,27 @@
                     }
                     return true;
                 }
-                ivfFormData(formData);
+                var date = moment(new Date($('.next-date').val())).format('dddd DD MMMM YYYY');           
+                if($('.is-notAvailable').val() == 1)
+                {
+                    swal({
+                    title: 'Not Available',
+                    text: 'You are Not available on '+ date +' . Are you sure want to give Appointment?',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#00cfd1",
+                    confirmButtonText: "Yes!",
+                    closeOnConfirm: false,
+                    cancelButtonClass: 'btn btn-danger',
+                    }, function (isConfirm) {
+                        if(isConfirm == true)
+                        {
+                            $('.showSweetAlert').hide();
+                            ivfFormData(formData);
+                        }
+                    });
+                }
+                
             });
 
             $(document).on('click','.transfer',function(e){

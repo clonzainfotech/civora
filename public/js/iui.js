@@ -669,6 +669,15 @@ function getNextAppointmentDate(appointmentId,day,date,time){
         type: 'post',
         data:{appointmentId:appointmentId,day:day,date:date,time:time,status:true}
     }).done(function(data) {
+        $('.is-notAvailable').val(0);
+        if(data.status == 'not-available')
+        {
+            var date = moment(data.date).format('dddd DD MMMM YYYY');
+            $('.next-date').val(date);
+            $('.next-day').val(data.diff);
+            $('.next-time').val(data.time);
+            $('.is-notAvailable').val(1);
+        }
         if(data.status == null){
             var date = moment(data.date).format('dddd DD MMMM YYYY');
             $('.next-date').val(date);

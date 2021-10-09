@@ -1836,6 +1836,7 @@
                     @endif --}}
                     {{Form::hidden('appointment_date',$ivfData->follow_up,['class'=>'last-appointment-date'])}}
                     {{Form::text("data[follow_up]",\Carbon\Carbon::parse($ivfData->follow_up)->format('D d M Y'),['class'=>'form-control datetimepicker follow-up-date tranfer-follow-date next-date'])}}
+                    {{Form::hidden('is_notAvailable',0,['class'=>'is-notAvailable'])}}
                 </div>
             </div>
             @if(!empty($ivfData->plan))

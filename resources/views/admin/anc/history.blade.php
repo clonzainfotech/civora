@@ -263,8 +263,26 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             if(this.value==3){
                 formData.append('isprint', 3);
             }
-            
-            ancFormData(formData);
+            var date = moment(new Date($('.next-date').val())).format('dddd DD MMMM YYYY');           
+            if($('.is-notAvailable').val() == 1)
+            {
+                swal({
+                title: 'Not Available',
+                text: 'You are Not available on '+ date +' . Are you sure want to give Appointment?',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#00cfd1",
+                confirmButtonText: "Yes!",
+                closeOnConfirm: false,
+                cancelButtonClass: 'btn btn-danger',
+                }, function (isConfirm) {
+                    if(isConfirm == true)
+                    {
+                        $('.showSweetAlert').hide();
+                        ancFormData(formData);
+                    }
+                });
+            }
         });
 
         $(document).on('change','select.anc_visit_id',function(e){
@@ -470,6 +488,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             }, 1000);
             return false;
         }
+        
         return true;
     }
 

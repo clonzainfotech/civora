@@ -286,8 +286,10 @@
                                     </div>
                                 </div>
                                 <div class="{{'col-md-4 doctor-fields ' . $doctorFields}}">
-                                    <div class="input-group">
-                                        <span class="input-group-addon unik-lbl-spn">Absence Date :</span>
+                                    <label class="vertical-form-label pr-0">
+                                        Absence Date :
+                                    </label>
+                                    <div class="form-group">
                                         {{Form::text("absence_dates",!empty($user->absence_dates) ? $user->absence_dates : '',['class'=>'form-control datetime','placeholder'=>'Select Absence Date'])}}
                                     </div>
                                 </div>

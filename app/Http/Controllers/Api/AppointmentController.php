@@ -764,13 +764,12 @@ class AppointmentController extends ApiController
                 $nextAppointmentTime = \Carbon\Carbon::parse($sloat)->addMinute(16)->format('h:i');
                 $checkTotalAppointment = $this->AppointmentRequest->where('seen_by',$request->doctor_id)->where('appointment_date',\Carbon\Carbon::parse($request->date)->format('Y-m-d'))->where('is_book',0)->where('appointment_time',$appointmentTime)->get();
                 $data['sloat'] = \Carbon\Carbon::parse($sloat)->format('h:i').'-'.$nextAppointmentTime;
+                //count = how many sloat is available
                 $data['count'] = ($totalSloat - count($checkTotalAppointment)) >= 0  ? ($totalSloat - count($checkTotalAppointment)) : 0;
-                if(strtotime($sloat) <= time())
+                if(strtotime($sloat) <= time() && date('y-m-d') == \Carbon\Carbon::parse($request->date)->format('Y-m-d'))
                 {
                     $data['count'] = 0;
                 }
-                // $data['count'] = 1;
-                //set 16:00 timestamp(1633689000)
                 $now = date('Y-m-d');
                 $data['status'] = strtotime($sloat) >= strtotime($now.' 16:00') ? 1 : 0;
                 array_push($result,$data);

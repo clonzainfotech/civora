@@ -766,7 +766,7 @@ class AppointmentController extends ApiController
                 $data['sloat'] = \Carbon\Carbon::parse($sloat)->format('h:i').'-'.$nextAppointmentTime;
                 //count = how many sloat is available
                 $data['count'] = ($totalSloat - count($checkTotalAppointment)) >= 0  ? ($totalSloat - count($checkTotalAppointment)) : 0;
-                if(strtotime($sloat) <= time() && date('y-m-d') >= \Carbon\Carbon::parse($request->date)->format('Y-m-d'))
+                if(strtotime($sloat) <= time() && \Carbon\Carbon::parse($request->date)->format('Y-m-d') <= date('Y-m-d'))
                 {
                     $data['count'] = 0;
                 }

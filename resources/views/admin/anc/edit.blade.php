@@ -4739,7 +4739,6 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             'id' => 'treatment-medicine',
                             'placeholder'=>'Enter medicine name',
                         ])}}
-
                         {{-- {{Form::select("treatment[medicinedata][]",$medicines,$mData,['id'=>'treatment-medicine','class'=>'form-control medicine','multiple'=>true])}} --}}
                         {{-- {{Form::select('treatment[medicinedata][]',$medicines,$mData,['class'=>'form-control medicine co_value_data medicine-co','placeholder'=>'Select Medicine','multiple'=>true])}} --}}
                     </div>
@@ -4762,6 +4761,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day",'7'=>"6 hourly",'8'=>"8 hourly",'9'=>"12 hourly",'10'=>"24 hourly"];
 
                             }
+                            $till_follow_up = (isset($medicinesDays[$row->medicine]) && empty($medicinesDays[$row->medicine])) ? 'till-follow-up' : '';
                             ?>
                             <div class="{{'row '.$notinject}}" data-id="{{$mId}}">
                                 <div class='col-md-2'>
@@ -4808,7 +4808,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class='col-md-2'>
                                     <div class='input-group'>
                                         <span class='input-group-addon'>Day :</span>
-                                        {{Form::number('treatment['.$mId.'][no]',$row->no,['class'=>'form-control till-follow-up'])}}
+                                        {{Form::number('treatment['.$mId.'][no]',$row->no,['class'=>'form-control '.$till_follow_up])}}
                                     </div>
                                 </div>
                                 <div class='col-md-4'>

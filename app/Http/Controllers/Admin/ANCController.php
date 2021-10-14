@@ -1068,6 +1068,7 @@ class ANCController extends AdminController
             $ancDate = [Carbon::parse($ancDateData->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ancDateData->created_at)->format('Y-m-d H:i:s')];
             $date = array_merge($ancHistoryDate,$ancDate);
             $medicines = $this->Medicine->pluck('name','name')->toArray();
+            $medicinesDays = $this->Medicine->pluck('number','name')->toArray();
             $hospitalTime = $this->appointmentTime('09:00', '17:00', '5 mins');
             $ovaryData = $this->OvaryDetail->pluck('name','name');
             $hoData = $this->getHoData();
@@ -1199,6 +1200,7 @@ class ANCController extends AdminController
                 $data['ancData'] = $ancData;
                 $data['ancHistoryId'] = $ancHistoryId;
                 $data['medicines'] = $medicines;
+                $data['medicinesDays'] = $medicinesDays;
                 $data['treatment'] = $treatment;
                 $data['lmdDate'] = $lmdDate;
                 $data['eddDate'] = $eddDate;

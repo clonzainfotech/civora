@@ -92,7 +92,7 @@ class AppointmentController extends AdminController
                     $appointment = $appointment->where(function($query) use($search) {
                         $query
                         ->orWhereHas('getPatientsDetails', function($query) use($search) {
-                            $query->where('mobile_number','LIKE',$search.'%');
+                            $query->where('mobile_number','LIKE',$search.'%')->orWhere('code','LIKE',$search.'%');
                         });
                     });
                 }

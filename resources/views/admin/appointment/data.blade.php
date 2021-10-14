@@ -5,7 +5,7 @@
             <th>Arrival Time</th>
             <th>Appointment Date & Time</th>
             <th>Name</th>
-            <th>Mobile</th>
+            <th>Mobile / Code</th>
             <th>Category</th>
             <th>Seen By</th>
             @if(in_array(Auth::user()->role,[1,2]))
@@ -105,7 +105,7 @@
                         @endif
                     {{-- </td> --}}
                 </td>
-                <td>{{$row->getPatientsDetails['mobile_number']}}</td>
+                <td class="line-height">{{$row->getPatientsDetails['mobile_number']}}<br>{{$row->getPatientsDetails['code']}}</td>
                 <td>{{ucfirst($row->categoryDetails['name'])}}</td>
                 <td>{{$row->getSeenBy['name']}}</td>
 

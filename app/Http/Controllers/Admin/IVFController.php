@@ -1166,6 +1166,10 @@ class IVFController extends AdminController
                     $isTableView = '0';
                     $isIvfHistory = '4';
                 }
+                if($request->isprint == 7){
+                    $isTableView = '0';
+                    $isIvfHistory = '7';
+                }
                 $investigationReport = $this->allInvestigationReport();
                 return response()->json([
                     'status' => 1,

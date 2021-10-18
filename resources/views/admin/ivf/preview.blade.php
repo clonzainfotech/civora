@@ -2831,6 +2831,52 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 </table>
             </div>
         @endif
+        @if($isIvfHistory == '7')
+            <style>
+                @page { margin-top : 5px; margin-bottom : 80px;}
+            </style>
+            @php
+                $coming = $investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes') ? 'Hystroscopy':'';
+                $coming .= $investigation && (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes') ? 'Laproscopy':'';
+            @endphp
+            <div class="ivf-print-data">
+                <div class="row mb-2 patient-detail">
+                    {{-- <div class="col-md-12">
+                        <strong>{{ ucwords(strtolower('Coming for '.$coming))}}</strong>
+                    </div> --}}
+                    <div class="col-md-12 patient-name">
+                        <strong>{{ ucwords(strtolower($ivf->getPatients['name']))}}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <strong>{{ $ivf->getPatients['mobile_number'] }}</strong>
+                    </div>
+                    <br>
+                    <div class="col-md-12">
+                        <span>Date : {{!empty($historyData->follow_up) ? \Carbon\Carbon::parse($historyData->follow_up)->format('D d M Y') : '-'}}</span>
+                    </div>
+                    <br>
+                    @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes'))
+                        <div class="col-md-12">
+                            <strong>{{ ucwords(strtolower('Coming for Hystroscopy'))}}</strong>
+                        </div>
+                        <div class="col-md-12">
+                            {{isset($investigation->hystroscopy->detail) ? 'Deatil : '.$investigation->hystroscopy->detail : ''}}
+                        </div>
+                        <br>
+                    @endif
+                    @if($investigation && (!empty($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes'))
+                        <div class="col-md-12">
+                            <strong>{{ ucwords(strtolower('Coming for Laproscopy'))}}</strong>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            {{isset($investigation->laproscopy->detail) ? 'Deatil : '.$investigation->laproscopy->detail : ''}}
+                        </div>
+                    @endif
+                </div>
+                <br>
+            </div>
+        @endif
     @elseif(isset($isTableView) && $isTableView == '1')
         <style>
             @page { margin-top : 200px; margin-bottom : 80px;}

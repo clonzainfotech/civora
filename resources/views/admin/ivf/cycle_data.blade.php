@@ -708,7 +708,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 hystroscopy-type d-none">
-                                                            <div class="hystroscopy-images"></div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">Detail: &nbsp;</span>
+                                                                        {{Form::text("investigation[hystroscopy][detail]",'',['class'=>'form-control'])}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <div class="hystroscopy-images"></div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1">
@@ -731,7 +741,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 laproscopy-type d-none">
-                                                            <div class="laproscopy-images"></div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">Detail: &nbsp;</span>
+                                                                        {{Form::text("investigation[laproscopy][detail]",'',['class'=>'form-control'])}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <div class="laproscopy-images"></div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     
@@ -1864,6 +1884,7 @@
                         <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
                         <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
                         <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                        <button type="submit" class="btn btn-primary admission-print submit d-none" value="7">Admission Print</button>
                         <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
                         {{Form::close()}}
                     @endif
@@ -2463,7 +2484,17 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 hystroscopy-type d-none">
-                                                                <div class="hystroscopy-images"></div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Detail: &nbsp;</span>
+                                                                            {{Form::text("investigation[hystroscopy][detail]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        <div class="hystroscopy-images"></div>
+                                                                    </div>
+                                                                </div>
                                                                 {{-- <div class="row">
                                                                     <div class="col-md-4">
                                                                         {{Form::file('investigation[hystroscopy][images][]',['class'=>'form-control hystroscopy-file',"multiple"=>'true'])}}
@@ -2491,7 +2522,17 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 laproscopy-type d-none">
-                                                                <div class="laproscopy-images"></div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">Detail: &nbsp;</span>
+                                                                            {{Form::text("investigation[laproscopy][detail]",'',['class'=>'form-control'])}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        <div class="laproscopy-images"></div>
+                                                                    </div>
+                                                                </div>
                                                                 {{-- <div class="row">
                                                                     <div class="col-md-4">
                                                                         {{Form::file('investigation[laproscopy][images][]',['class'=>'form-control laproscopy-file',"multiple"=>'true'])}}
@@ -2952,6 +2993,8 @@
                                 <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
                                 <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
                                 <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                                <button type="submit" class="btn btn-primary admission-print submit d-none" value="7">Admission Print</button>
+
                                 <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
                             @endif
                         {{Form::close()}}
@@ -3347,8 +3390,18 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 hystroscopy-type d-none">
-                                        <div class="hystroscopy-images"></div>
+                                    <div class="col-md-8 hystroscopy-type d-none">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Detail: &nbsp;</span>
+                                                    {{Form::text("investigation[hystroscopy][detail]",'',['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="hystroscopy-images"></div>
+                                            </div>
+                                        </div>
                                         {{-- <div class="row">
                                             <div class="col-md-4">
                                                 {{Form::file('investigation[hystroscopy][images][]',['class'=>'form-control hystroscopy-file',"multiple"=>'true'])}}
@@ -3375,8 +3428,18 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 laproscopy-type d-none">
-                                        <div class="laproscopy-images"></div>
+                                    <div class="col-md-8 laproscopy-type d-none">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Detail: &nbsp;</span>
+                                                    {{Form::text("investigation[laproscopy][detail]",'',['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="laproscopy-images"></div>
+                                            </div>
+                                        </div>
                                         {{-- <div class="row">
                                             <div class="col-md-4">
                                                 {{Form::file('investigation[laproscopy][images][]',['class'=>'form-control laproscopy-file',"multiple"=>'true'])}}
@@ -4888,6 +4951,7 @@
                             <a class="btn btn-primary t-print transfer-print d-none" data-id="">Transfer Print</a>
                             <button type="submit" class="btn btn-primary submit d-none" value="3" id="ivf_print"> Print IVF</button>
                             <button type="submit" class="btn btn-primary submit d-none" value="4" id="ivf_report_print"> Save & Print IVF Report</button>
+                            <button type="submit" class="btn btn-primary admission-print submit d-none" value="7">Admission Print</button>
                             <a href="{{URL::previous()}}" class="btn btn-default">Cancel</a>
                         {{Form::close()}}
                     </div>
@@ -5959,12 +6023,16 @@
                 if(this.value == 3){
                     formData.append('isprint', 3);
                 }
+                if(this.value == 7){
+                    formData.append('isprint', 7);
+                }
                 if(this.value == 4){
                     formData.append('is_ivf_report_print', 4);
                 }
                 if(this.value == 5){
                     formData.append('is_ivf_transfer_print', 5);
                 }
+                
                 var transferPlan = $('select.plan-transfer').val();
                 var ivfReport = $('.ivf-report-status').val();
                 var cNumber = $('.cycle-no-data').val();
@@ -6321,6 +6389,13 @@
                 var visitId = $(this).data('id');
                 showConfirmMessage(visitId);
             });
+            $(document).on('click','.radio .hystroscopy-type,.radio .laproscopy-type',function(){
+                $('.admission-print').addClass('d-none');
+                if($(this).val() == 'yes')
+                {
+                    $('.admission-print').removeClass('d-none');
+                }
+            })
         });
 
         function ivfFormData(data){

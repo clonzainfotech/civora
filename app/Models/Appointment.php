@@ -112,6 +112,41 @@ class Appointment extends BaseModel
         $status = $childNumber ? $childNumber : 0;
         return $status;
     }
+    public function getUsgReason(){
+        $anc = ANC::where('patients_id',$this->patients_id)
+                    ->where('o_e->new_follow_up',$this->date)
+                    ->orderBy('id','DESC')
+                    ->first();
+        if(!$anc){
+            $anc = AncHistory::where('patients_id',$this->patients_id)
+                    ->where('o_e->new_follow_up',$this->date)
+                    ->orderBy('id','DESC')
+                    ->first();
+        }
+        $status = '';
+        if($anc)
+        {
+            $usg = json_decode($anc->usg);
+            if(!empty($usg->early_scan) && carbon::parse($usg->early_scan)->format('Y-m-d') == $this->date)
+            {
+                $status .= 'Early Scan';
+            }
+            if(!empty($usg->nt_scan) && carbon::parse($usg->nt_scan)->format('Y-m-d') == $this->date)
+            {
+                $status .= 'NT Scan';
+            }
+            if(!empty($usg->anomalies_miles) && carbon::parse($usg->anomalies_miles)->format('Y-m-d') == $this->date)
+            {
+                $status .= 'Anomalies Miles';
+            }
+            if(!empty($usg->growth_scan) && carbon::parse($usg->growth_scan)->format('Y-m-d') == $this->date)
+            {
+                $status .= 'Growth Scan';
+            }
+
+        }
+        return $status;
+    }
     public function getAppointmentDateANC()
     {
         $status = 0;

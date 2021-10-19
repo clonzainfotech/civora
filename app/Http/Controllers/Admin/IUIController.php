@@ -2501,7 +2501,7 @@ class IUIController extends AdminController
             
             foreach($iuiHistory as $iuiData)
             {
-                $date = carbon::parse($ivfData->created_at)->format('d M Y H:i');
+                $date = carbon::parse($iuiData->created_at)->format('d M Y H:i');
                 $description = !empty($iuiData->description) ? json_decode($iuiData->description) : null;
                 $data[$date]['blood_report'] = !empty($description->blood_report) && !empty($description->blood_report->image)  ? (array)$description->blood_report->image : [];
                 $data[$date]['usg'] = !empty($description->usg) && !empty($description->usg->images)  ? (array)$description->usg->images : [];

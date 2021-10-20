@@ -128,7 +128,13 @@
             
             $(document).on('click','.submit',function(e){
                 e.preventDefault();
-                
+                if($('select.seen-by').val() == ''){
+                    $('.seen-by-error').text('Please select doctor');
+                    $('html, body').animate({
+                        scrollTop: ($('.seen-by').offset().top - 150)
+                    }, 1000);
+                    return false;
+                }
                 $('.submit').attr('disabled',true);
                 var iuiFormData = new FormData($(".extra-iui-form")[0]);
                 if(this.value==1){

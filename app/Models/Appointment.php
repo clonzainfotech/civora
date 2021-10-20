@@ -137,7 +137,7 @@ class Appointment extends BaseModel
             }
             if(!empty($usg->anomalies_miles) && carbon::parse($usg->anomalies_miles)->format('Y-m-d') == $this->date)
             {
-                array_push($status,'Anomalies Miles');
+                array_push($status,'Anomalies Scan');
             }
             if(!empty($usg->growth_scan) && carbon::parse($usg->growth_scan)->format('Y-m-d') == $this->date)
             {

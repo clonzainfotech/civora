@@ -145,7 +145,7 @@ class GynecController extends AdminController
             $gynec->is_gynec = $request->is_gynec;
             $gynec->save();
             $now = Carbon::now()->format('Y-m-d');
-            $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',$now)->update(['is_done'=>1]);
+            $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by]);
             $updateConsulting = $this->Appointment->wherePatientsId($pId)->where('date',$now)->update(['in_consulting_room'=>0]);
 
             Session::flash('msg','Record has been successfully added.');

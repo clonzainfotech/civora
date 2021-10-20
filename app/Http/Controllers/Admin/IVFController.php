@@ -1036,7 +1036,7 @@ class IVFController extends AdminController
             // dd($request->ivf_visit_id);
             if(!$request->ivf_visit_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by',$ivf->seen_by]);
                 $updateConsulting = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['in_consulting_room'=>0]);
 
             }
@@ -3031,6 +3031,8 @@ class IVFController extends AdminController
             $bloodReportImages = null;
             $bloodReportImagesData = [];
             $bloodReportImagesArray = [];
+            $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+            $rmoDoctor = $this->User->whereRole('3')->where('is_rmo_doctor',1)->whereStatus('1')->pluck('name','id')->toArray();
             if($request->ajax()){
                 $ivfHistoryData = null;
                 $date = $request->date;
@@ -3051,7 +3053,7 @@ class IVFController extends AdminController
                 }
                 $bloodReportImagesArray = json_encode($bloodReportImagesData,true);
                 $data['status'] = 1;
-                $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('bloodReportImagesArray','ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
+                $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('hospitalDoctor','rmoDoctor','bloodReportImagesArray','ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
                 return $data;
             }
             return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no','plan'));
@@ -3110,6 +3112,8 @@ class IVFController extends AdminController
             }
             // dd($ivfExtraVisitOe);
             $ivfExtraVisit->patient_id = $patientId;
+            $ivfExtraVisit->seen_by = $request->seen_by;
+            $ivfExtraVisit->rmo_doctor = $request->rmo_doctor;
             $ivfExtraVisit->cycle_no = $cycle_no;
             $ivfExtraVisit->plan = $plan;
             $ivfExtraVisit->co = json_encode($request->co);
@@ -3121,7 +3125,7 @@ class IVFController extends AdminController
             $now = Carbon::now()->format('Y-m-d');
             if(!$request->ivf_extra_visit_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by]);
                 $updateConsulting = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['in_consulting_room'=>0]);
             }
 

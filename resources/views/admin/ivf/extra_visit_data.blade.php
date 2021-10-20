@@ -20,6 +20,29 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
     @endphp
         <!--1 C/O -->
         {{Form::hidden('ivf_extra_visit_id',!empty($ivfHistoryData) ? encrypt($ivfHistoryData->id) : null)}}
+        <div class="row">
+            <div class="col-md-1">
+                <label class="vertical-form-label pr-0">
+                    Seen By :
+                </label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {{Form::select('seen_by',$hospitalDoctor, (!empty($ivfHistoryData)) ? $ivfHistoryData->seen_by : null,['class'=>'form-control select-padding-0 seen-by','placeholder'=>'Select Doctor'])}}
+                </div>
+                <span class="seen-by-error text-danger mb-2"></span>
+            </div>
+            <div class="col-md-1">
+                <label class="vertical-form-label pr-0">
+                    RMO Doctor :
+                </label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {{Form::select('rmo_doctor',$rmoDoctor,(!empty($ivfHistoryData)) ? $ivfHistoryData->rmo_doctor : null,['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
+                </div>
+            </div>
+        </div>
         <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingThree_1">
             <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse"

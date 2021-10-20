@@ -127,7 +127,13 @@
             getIvfData();
             $('.complain-multi .show-tick').addClass('d-none');
             $(document).on('click','.submit',function(e){
-                
+                if($('select.seen-by').val() == ''){
+                    $('.seen-by-error').text('Please select doctor');
+                    $('html, body').animate({
+                        scrollTop: ($('.seen-by').offset().top - 150)
+                    }, 1000);
+                    return false;
+                }
                 var ivfFormData = new FormData($(".extra-ivf-form")[0]);
                 $('.submit').attr('disabled',true);
                 if(this.value==1){

@@ -1047,7 +1047,7 @@ class IUIController extends AdminController
             $now = Carbon::now()->format('Y-m-d');
             if(!$request->iui_history_id && !$request->iui_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$iui->seen_by]);
                 $updateConsulting = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['in_consulting_room'=>0]);
 
                 if(!empty($request->data['hcg']['type']) && $request->data['hcg']['type'] == 'yes' && !empty($request->data['hcg']['time']) && $request->data['hcg']['iui']['status'] == 'yes')
@@ -2055,6 +2055,8 @@ class IUIController extends AdminController
             $bloodReportImages = null;
             $bloodReportImagesData = [];
             $bloodReportImagesArray = [];
+            $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+            $rmoDoctor = $this->User->whereRole('3')->where('is_rmo_doctor',1)->whereStatus('1')->pluck('name','id')->toArray();
             if($request->ajax()){
                 $iuiHistoryData = null;
                 $date = $request->date;
@@ -2077,7 +2079,7 @@ class IUIController extends AdminController
                 }
                 $bloodReportImagesArray = json_encode($bloodReportImagesData,true);
                 $data['status'] = 1;
-                $data['extra_visit_data'] = View::make('admin.iui.extra_visit_data',compact('bloodReportImagesArray','iuiHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','iuiPatients'))->render();
+                $data['extra_visit_data'] = View::make('admin.iui.extra_visit_data',compact('hospitalDoctor','rmoDoctor','bloodReportImagesArray','iuiHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','iuiPatients'))->render();
                 return $data;
             }
             return view('admin.iui.extra_visit',compact('iuiPatients','iuiHistoryDate','medicines','cycle_no'));
@@ -2134,6 +2136,8 @@ class IUIController extends AdminController
                 $iuiExtraVisitOe['blood_report']['image'] = $bloodReportOldImages;
             }
             $iuiExtraVisit->patient_id = $patientId;
+            $iuiExtraVisit->seen_by = $request->seen_by;
+            $iuiExtraVisit->rmo_doctor = $request->rmo_doctor;
             $iuiExtraVisit->cycle_no = $cycle_no;
             $iuiExtraVisit->co = json_encode($request->co);
             $iuiExtraVisit->lmp = json_encode($request->lmp);
@@ -2144,7 +2148,7 @@ class IUIController extends AdminController
             $now = Carbon::now()->format('Y-m-d');
             if(!$request->iui_extra_visit_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by]);
                 $updateConsulting = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['in_consulting_room'=>0]);
             }
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;

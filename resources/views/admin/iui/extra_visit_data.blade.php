@@ -20,6 +20,29 @@
     @endphp
         <!--1 C/O -->
         {{Form::hidden('iui_extra_visit_id',!empty($iuiHistoryData) ? encrypt($iuiHistoryData->id) : null)}}
+        <div class="row">
+            <div class="col-md-1">
+                <label class="vertical-form-label pr-0">
+                    Seen By :
+                </label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {{Form::select('seen_by',$hospitalDoctor, (!empty($iuiHistoryData)) ? $iuiHistoryData->seen_by : null,['class'=>'form-control select-padding-0 seen-by','placeholder'=>'Select Doctor'])}}
+                </div>
+                <span class="seen-by-error text-danger mb-2"></span>
+            </div>
+            <div class="col-md-1">
+                <label class="vertical-form-label pr-0">
+                    RMO Doctor :
+                </label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {{Form::select('rmo_doctor',$rmoDoctor,(!empty($iuiHistoryData)) ? $iuiHistoryData->rmo_doctor : null,['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
+                </div>
+            </div>
+        </div>
         <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingThree_1">
             <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse"

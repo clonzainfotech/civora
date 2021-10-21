@@ -1249,7 +1249,7 @@ class IVFController extends AdminController
                 ->whereCycleNo($lastCycleNo)
                 ->where('description->progesterone->status', 'yes')
                 ->first();
-                if(empty($sameCycle) && (!isset($lastIvfHistory->plan) || (isset($lastIvfHistory->plan) && (empty($lastIvfHistory->plan) || $lastIvfHistory->plan == null || $lastIvfHistory->plan == ''))) && $ivfHistory->plan == 1)
+                if(empty($sameCycle) && (!isset($lastIvfHistory->plan) || (isset($lastIvfHistory->plan) && ($lastIvfHistory->plan != $ivfHistory->plan) && (empty($lastIvfHistory->plan) || $lastIvfHistory->plan == null || $lastIvfHistory->plan == ''))) && $ivfHistory->plan == 1)
                 {
                     $ivfReport = $this->IvfPlanReport->wherePlanAndPatientsIdAndCycleNo($ivfHistory->plan, $id, $ivfHistory->cycle_no)->first();
                     if($ivfReport){

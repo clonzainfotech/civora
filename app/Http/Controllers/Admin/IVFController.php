@@ -1036,7 +1036,7 @@ class IVFController extends AdminController
             // dd($request->ivf_visit_id);
             if(!$request->ivf_visit_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by',$ivf->seen_by]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$ivf->seen_by]);
                 $updateConsulting = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['in_consulting_room'=>0]);
 
             }

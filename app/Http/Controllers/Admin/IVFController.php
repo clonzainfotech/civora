@@ -1766,8 +1766,12 @@ class IVFController extends AdminController
                                 ->where('description->collected->report->embroy->type', 'yes')
                                 ->first();
             $getIvfByPlanAndCycle = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cNumber)->where('plan',$pStatus)->orderBy('id','DESC')->first();
-            
+            //check semen and embroy is used in previous cycle or not
+            $isSemen_used = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',($cNumber-1))->where('plan',$pStatus)->where('description->collected->frozen->type', 'yes')->where('description->is_transfer','no')->where('description->skip_cycle','yes')->orderBy('id','DESC')->first();
+            $isEmbroy_used = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',($cNumber-1))->where('plan',$pStatus)->where('description->collected->report->embroy->type', 'yes')->where('description->is_transfer','no')->where('description->skip_cycle','yes')->orderBy('id','DESC')->first();
             $data = [];
+            $data['isSemen_used'] = !empty($isSemen_used) ? true : false;
+            $data['isEmbroy_used'] = !empty($isEmbroy_used) ? true : false;
             $data['pickupDate'] = $pickupDate;
             $data['sProtocol'] = $sProtocol;
             $data['totalocc'] = $totalocc;

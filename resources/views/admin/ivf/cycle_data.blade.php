@@ -3332,23 +3332,23 @@
                                 
                                 <div class="row mt-1">
                                     @if($pStatus == 3)
-                                    <div class="col-md-2">
-                                        <label class="vertical-form-label pr-0">
-                                            Semen Freezing :
-                                        </label>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="radio is-conceived">
-                                            {{Form::radio("data[collected][frozen][type]",'yes','',['id'=>'progesteroneyes'])}}
-                                            <label for="progesteroneyes">
-                                                Yes
-                                            </label>
-                                            {{Form::radio("data[collected][frozen][type]",'no','',['id'=>'progesteroneno'])}}
-                                            <label for="progesteroneno">
-                                                No
+                                        <div class="col-md-2">
+                                            <label class="vertical-form-label pr-0">
+                                                Semen Freezing :
                                             </label>
                                         </div>
-                                    </div>
+                                        <div class="col-md-1">
+                                            <div class="radio is-conceived">
+                                                {{Form::radio("data[collected][frozen][type]",'yes',$isSemen_used == true ? true : '',['id'=>'progesteroneyes'])}}
+                                                <label for="progesteroneyes">
+                                                    Yes
+                                                </label>
+                                                {{Form::radio("data[collected][frozen][type]",'no','',['id'=>'progesteroneno'])}}
+                                                <label for="progesteroneno">
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div>
                                     @endif
                                     @if($pStatus == 3 || $pStatus == 4)
                                     {{Form::hidden('ivf_report_id', '' , ['id' => 'ivf_report_id'])}}
@@ -3359,7 +3359,7 @@
                                     </div>
                                     <div class="col-md-2 embroy-yes">
                                         <div class="radio is-conceived">
-                                            {{Form::radio("data[collected][report][embroy][type]",'yes','',['id'=>'embroyyes'])}}
+                                            {{Form::radio("data[collected][report][embroy][type]",'yes',$isEmbroy_used == true ? true : '',['id'=>'embroyyes'])}}
                                             <label for="embroyyes">
                                                 Yes
                                             </label>

@@ -3391,6 +3391,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
             @endif
             {{Form::hidden("appointment_time", '',['class'=>'form-control next-time'])}}
             @if($visitNo == 2)
+                
                 <div class="row">
                     <div class="col-md-1">
                         <label class="vertical-form-label pr-0">
@@ -3423,11 +3424,29 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                         <a href="{{URL::to('iui/extra-visit/'.encrypt($iui->patients_id).'/'.encrypt($cycleNo))}}" class="btn btn-primary btn-ivf-report">Extra Visit</a>
                     </div>
                 </div>
+                
                 @if($remark && !$iuiHistoryId)
                     <span class="remark-text">Remark: {{$remark}}</span>
                     <br>
                     <br>
                 @endif
+                <div class="row">
+                    {{-- <div class="col-md-12"> --}}
+                        {{-- <h6>Husband Factor :</h6>  --}}
+                        <div class="col-md-3"><span class="font-bold font-16">Husband Factor : </span>{{$husbandFactor->remark}}</div>
+                        <div class="col-md-3">
+                            <span class="font-bold">Age : </span>{{$husbandFactor->age}}
+                        </div>
+                        <div class="col-md-3">
+                            <span class="font-bold">Sperm Count : </span>{{$husbandFactor->sperm_count}}
+                        </div>
+                        <div class="col-md-3">
+                            <span class="font-bold">Motility : </span>{{$husbandFactor->motility}}
+                        </div>
+                    {{-- </div>  --}}
+                    
+                </div>
+                <br>
                 {{--1 lmd date --}}
                 <div class="panel panel-primary">
                     <div class="panel-heading" role="tab" id="headingThree_1">
@@ -3977,6 +3996,50 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                         </div>
                     </div>
                 </div>
+                {{-- 6 .husband_factor --}}
+                <div class="panel panel-primary">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#husband_factor" href="#husband_factor" aria-expanded="false"
+                                aria-controls="husband_factor">6. Husband Factor</a></h4>
+                    </div>
+                    <div id="husband_factor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Age : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[age]",'',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Sperm Count : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[sperm_count]",'',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Motility : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[motility]",'',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        {{Form::textarea("h_factor[remark]",'',['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -4085,6 +4148,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                     <br>
                     <br>
                 @endif
+                
                 {{Form::hidden('visit',3, ['id' => 'visit','class'=>'visit-value'])}}
                 {{Form::hidden('iui_history_id',$iuiHistoryId, ['id' => 'iui_history_id'])}}
                 {{-- {{Form::hidden('iui_history_id',$iuiHistoryId)}} --}}
@@ -4654,6 +4718,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
             @if($visitNo == 3)
             @php
                 $lastHistoryData = json_decode($iuiHistoryData[count($iuiHistoryData)-1]['description']);
+                $husbandFactor = !empty($iuiSecondVisit->husband_factor) ? json_decode($iuiSecondVisit->husband_factor) : null;
             @endphp
             <div class=" col-md-12 follicular_table_print">
                 <div class="row mb-15 mb-5 do_print">{{--mb-15 is used in print--}}
@@ -4682,9 +4747,19 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 <span class="visit-lable-value">{{isset($iuiSecondVisitData->iui) && ($iuiSecondVisitData->iui == 'yes') ? 'COH+IUI ' : ''}} {{!empty($iuiSecondVisitData->plan->plan_type) ? $iuiSecondVisitData->plan->plan_type : null}}</span>
                         </div>
                         <div class="mb-3">
-                                <span class="visit-lable">Induction With :- </span> 
-                                <span class="visit-lable-value">{{!empty($iuiSecondVisitData->plan->agenet) ? $iuiSecondVisitData->plan->agenet[0] : ''}}</span>
+                            <span class="visit-lable">Induction With :- </span> 
+                            <span class="visit-lable-value">{{!empty($iuiSecondVisitData->plan->agenet) ? $iuiSecondVisitData->plan->agenet[0] : ''}}</span>
                         </div>
+                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                            <div class="mb-3">
+                                <span class="visit-lable">Male Age :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) ? $husbandFactor->age : ''}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="visit-lable">Male Factor Remark :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) ? $husbandFactor->remark : ''}}</span>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-md-6 follicular_div_2">
                         <div class="mb-3">
@@ -4716,6 +4791,16 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">CYCLE NO :- </span> 
                             <span class="visit-lable-value">{{$cycleNo}}</span>
                         </div>
+                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                            <div class="mb-3">
+                                <span class="visit-lable">Sperm Count :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) ? $husbandFactor->sperm_count : ''}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="visit-lable">Motility :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) ? $husbandFactor->motility : ''}}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row mt-2">

@@ -2644,6 +2644,10 @@ input[type=number]::-webkit-outer-spin-button {
 {
     font-size: 20px !important;
 }
+.font-16
+{
+    font-size: 16px !important;
+}
 .all_type_payment tbody tr,.all_type_payment th{
 line-height: 6px !important;
 }

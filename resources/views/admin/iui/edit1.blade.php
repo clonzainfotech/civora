@@ -4001,6 +4001,52 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </div>
                     </div>
                 </div>
+                @php
+                    $husbandFactor = !empty($iui->husband_factor) ? json_decode($iui->husband_factor) : null;
+                @endphp
+                <div class="panel panel-primary">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#husband_factor" href="#husband_factor" aria-expanded="false"
+                                aria-controls="husband_factor">6. Husband Factor</a></h4>
+                    </div>
+                    <div id="husband_factor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Age : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[age]",!empty($husbandFactor) && isset($husbandFactor->age) ? $husbandFactor->age : '',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Sperm Count : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[sperm_count]",!empty($husbandFactor) && isset($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            Motility : &nbsp;
+                                        </span>
+                                        {{Form::text("h_factor[motility]",!empty($husbandFactor) && isset($husbandFactor->motility) ? $husbandFactor->motility : '',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        {{Form::textarea("h_factor[remark]",!empty($husbandFactor) && isset($husbandFactor->remark) ? $husbandFactor->remark : '',['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">

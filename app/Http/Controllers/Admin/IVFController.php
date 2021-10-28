@@ -907,6 +907,7 @@ class IVFController extends AdminController
                         }
                     }
                     $ivfHistory->description = json_encode($data);
+                    $ivfHistory->husband_factor = isset($request['h_factor']) ? json_encode($request['h_factor']) : null;
                     $ivfHistory->investigation = isset($request->investigation) ? json_encode($investigationData) : null;
                     $ivfHistory->trigger_date = !empty($request->data['collection']) && in_array('trigger',$request->data['collection']) && !empty($request->data['trigger_date']) ? Carbon::parse($request->data['trigger_date'])->format('Y-m-d') : null;
                     $ivfHistory->trigger_time = !empty($request->data['collection']) && in_array('trigger',$request->data['collection']) ? $triggerTime : null;
@@ -1765,6 +1766,7 @@ class IVFController extends AdminController
                                 ->where('plan',$pStatus)
                                 ->where('description->collected->report->embroy->type', 'yes')
                                 ->first();
+            $ivfVisit = $this->IVF->where('patients_id',$id)->first();
             $getIvfByPlanAndCycle = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',$cNumber)->where('plan',$pStatus)->orderBy('id','DESC')->first();
             //check semen and embroy is used in previous cycle or not
             $isSemen_used = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',($cNumber-1))->where('plan',$pStatus)->where('description->collected->frozen->type', 'yes')->where('description->is_transfer','no')->where('description->skip_cycle','yes')->orderBy('id','DESC')->first();
@@ -1786,6 +1788,7 @@ class IVFController extends AdminController
             $data['cycleData'] = $cycleData ? $cycleData : [];
             $data['medicines'] = $medicines;
             $data['ivfSecondVisitData'] = !empty($ivfSecondHistory) ? json_decode($ivfSecondHistory->description) : null;
+            $data['ivfSecondHistory'] = !empty($ivfSecondHistory) ? $ivfSecondHistory : null;
             $data['isForm'] = $isForm;
             $data['visit'] = $visit;
             $data['plan'] = $plan;
@@ -1818,6 +1821,7 @@ class IVFController extends AdminController
             $data['historyEmbroyReady'] = !empty($historyEmbroyReady) ? 'Yes' : 'No';
             $data['nextVisitValue'] = !empty($getIvfByPlanAndCycle) ? $getIvfByPlanAndCycle->visit : 0 ;
             $data['cycleStatus'] = !empty($getIvfByPlanAndCycle) ? $getIvfByPlanAndCycle->cycle_status : 0 ;
+            $data['ivfVisit'] = $ivfVisit;
             return view('admin.ivf.cycle_data',$data);
         }catch(Exception $e){
             log::debug($e);

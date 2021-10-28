@@ -195,6 +195,7 @@
             $historyLmddateData = null;
             $historyLmddateDate = null;
             $historyLmdDiff = null;
+            $husbandFactor = json_decode($ivfSecondHistory->husband_factor);
             if($LMPDate){
             
 
@@ -226,10 +227,11 @@
            
         @endphp
         @if($cycle_no>0 && $pStatus == 1)
-        @php
-             $lastCycleData = json_decode($cycle[count($cycle)-1]['description']);
-             $lastCycle = $cycle[count($cycle)-1];
-        @endphp
+            @php
+                $lastCycleData = json_decode($cycle[count($cycle)-1]['description']);
+                $lastCycle = $cycle[count($cycle)-1];
+                
+            @endphp
             @foreach($cycle as $row)
                 <div class="card d-none {{'visit-card-'.$row->id}}">
                     <div class="body">
@@ -243,6 +245,7 @@
             <div class="card pick_up_table">
                 <div class="body">
                     {{Form::open(['class'=>'form ivf','files'=>'true','id'=>'ivf-form'])}}
+                    
                     <div class="row">
                         <div class="col-md-12">
                             <table class='unik-header-table table m-b-0'>
@@ -259,11 +262,21 @@
                                     <th class="font-15"><span class="font-bold ">LMP Date: </span>{{\Carbon\Carbon::parse($historyLmddateDate)->format('D d M Y')}}</th>
                                     <th class="font-15"><span class="font-bold ">Weight: </span>{{isset($lastCycleData->weight) && !empty($lastCycleData->weight) ? $lastCycleData->weight.' kg' : ''}}</th>
                                 </tr>
+                                @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                                <tr>
+                                    <th class="font-15"><span class="font-bold ">Male Age : </span>{{$husbandFactor->age}}</th>
+                                    <th class="font-15"><span class="font-bold ">Sperm Count : </span>{{$husbandFactor->sperm_count}}</th>
+                                </tr>
+                                <tr>
+                                    <th class="font-15"><span class="font-bold ">Male Factor Remark : </span>{{isset($husbandFactor->remark) ? $husbandFactor->remark : ''}}</th>
+                                    <th class="font-15"><span class="font-bold ">Motility : </span>{{$husbandFactor->motility}}</th>
+                                </tr>
+                                @endif
                                 </thead>
                             </table>
                         </div>
                     </div>
-                    <br>
+                    
                     @if(($cycle[count($cycle)-1]['cycle_status'] != 2))
                     <div class="row">
                         <div class="col-md-1">
@@ -1950,6 +1963,16 @@
                                                 <span class="visit-lable-value">{{$historySemenFreezing}}</span>
                                             </div>
                                         @endif
+                                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                                            <div class="mb-2">
+                                                <span class="visit-lable">Male Age : </span>
+                                                <span class="visit-lable-value">{{$husbandFactor->age}}</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="visit-lable">Male Factor Remark :</span>
+                                                <span class="visit-lable-value">{{isset($husbandFactor->remark) ? $husbandFactor->remark : ''}}</span>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="col-md-6 follicular_div_2">
                                         <div class="mb-2">
@@ -1977,7 +2000,16 @@
                                                 <span class="visit-lable-value">{{$historyEmbroyReady}}</span>
                                             </div>
                                         @endif
-                                        
+                                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                                        <div class="mb-2">
+                                            <span class="visit-lable">Sperm Count : </span>
+                                            <span class="visit-lable-value">{{$husbandFactor->sperm_count}}</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <span class="visit-lable">Motility : </span>
+                                            <span class="visit-lable-value">{{$husbandFactor->motility}}</span>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 
@@ -3009,6 +3041,27 @@
                 <div class="body">
                     <div class="col-md-12 col-lg-12">
                         {{Form::open(['class'=>'form ivf','files'=>'true','id'=>'ivf-form'])}}
+                        <h6>Husband Factor</h6>
+                            <div class="row">
+                                
+                                @php
+                                    $husbandFactor = json_decode($ivfVisit->husband_factor);
+                                @endphp
+                                @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                                    <div class="col-md-3"><span class="font-bold">Remark : </span>{{isset($husbandFactor->remark) ? $husbandFactor->remark : ''}}</div>
+                                    <div class="col-md-3">
+                                        <span class="font-bold">Age : </span>{{$husbandFactor->age}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="font-bold">Sperm Count : </span>{{$husbandFactor->sperm_count}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="font-bold">Motility : </span>{{$husbandFactor->motility}}
+                                    </div>
+
+                                @endif
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="vertical-form-label pr-0">
@@ -3040,10 +3093,12 @@
                             {{Form::hidden('patients_id',$patientsId,['class'=>'patients-id'])}}
                             {{Form::hidden('last_s_days',$sDay,['class'=>'last-s-days'])}}
                             {{Form::hidden('last_protocol_date',$pDate,['class'=>'last-protocol-date'])}}
-
+                            
                             <h4 class="col-md-2 visit-lable m-0">Visit :<span class="col-md-2 visit-lable-value">{{$visit}}
                                 {{-- <span class="plan-text">{{!empty($ivfSecondVisitData->plan) ? $planData[$ivfSecondVisitData->plan] : null}}</span> --}}
                             </h4><br>
+                                
+                            
                             @if(!$isTransfer)
                                 {{Form::hidden('data[is_transfer]','no',['class'=>'is-transfer'])}}
                                 {{Form::hidden('data[is_transfer_print]','no')}}
@@ -4703,7 +4758,35 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="pt-3 pb-3 pl-2"> Treatment </div>
+                                    <div class="row">
+                                        <div class="col-md-2"> Husband Factor : 
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Age : &nbsp;</span>
+                                                {{Form::text('h_factor[age]','',['class'=>'form-control weight','placeholder'=>'Enter Age'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Sperm Count : &nbsp;</span>
+                                                {{Form::text('h_factor[sperm_count]','',['class'=>'form-control weight','placeholder'=>'Enter Sperm Count'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Motility : &nbsp;</span>
+                                                {{Form::text('h_factor[motility]','',['class'=>'form-control weight','placeholder'=>'Enter Motility'])}}
+                                            </div>
+                                        </div>
+                                        {{-- <div class="row"> --}}
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    {{Form::textarea("h_factor[remark]",'',['class'=>'form-control no-resize remark','placeholder'=>'Husband Factor Remark','rows'=>'2'])}}
+                                                </div>
+                                            </div>
+                                        {{-- </div> --}}
+                                    </div>
                                     <div id="treatment" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree_1">
                                         <div class="panel-body" id="parent">
                                             <div class="row treatment-data" id="t_data_1">

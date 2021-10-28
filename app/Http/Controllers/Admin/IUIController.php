@@ -648,6 +648,7 @@ class IUIController extends AdminController
                 }
                
                 $iui->description = json_encode($data);
+                $iui->husband_factor = isset($request['h_factor']) ? json_encode($request['h_factor']) : null;
                 if(!empty($request->data['oe']['ovary']['right']['details']) || !empty($request->data['oe']['ovary']['left']['details'])){
                     $rightData = !empty($request->data['oe']['ovary']['right']['details']) ? $request->data['oe']['ovary']['right']['details'] : [];
                     $leftData = !empty($request->data['oe']['ovary']['left']['details']) ? $request->data['oe']['ovary']['left']['details'] : [];

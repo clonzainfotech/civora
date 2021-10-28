@@ -1045,6 +1045,38 @@
             </div>
         </div>
         <br>
+        @if($ivf->visit == 2)
+            @php
+                $husbandFactor = !empty($ivf->husband_factor) ? json_decode($ivf->husband_factor) : null;
+            @endphp
+            <div class="row">
+                <div class="col-md-2"> Husband Factor : 
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Age : &nbsp;</span>
+                        {{Form::text('h_factor[age]',!empty($husbandFactor) && isset($husbandFactor->age) ? $husbandFactor->age : '',['class'=>'form-control weight','placeholder'=>'Enter Age'])}}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Sperm Count : &nbsp;</span>
+                        {{Form::text('h_factor[sperm_count]',!empty($husbandFactor) && isset($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : '',['class'=>'form-control weight','placeholder'=>'Enter Sperm Count'])}}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Motility : &nbsp;</span>
+                        {{Form::text('h_factor[motility]',!empty($husbandFactor) && isset($husbandFactor->motility) ? $husbandFactor->motility : '',['class'=>'form-control weight','placeholder'=>'Enter Motility'])}}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="input-group">
+                        {{Form::textarea("h_factor[remark]",!empty($husbandFactor) && isset($husbandFactor->remark) ? $husbandFactor->remark : '',['class'=>'form-control no-resize remark','placeholder'=>'Husband Factor Remark','rows'=>'2'])}}
+                    </div>
+                </div>
+            </div>
+        @endif
         {{-- pre operative data --}}
             @if(($ivf->plan != 2 || $ivf->plan != 3 || $ivf->plan != 4) && $ivf->visit == 2)
             

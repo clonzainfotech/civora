@@ -32,11 +32,11 @@
                     @php
                         $cycleNumber++;
                         $cycleNoKey = array_search('1',$dataForSkipPlans);
-                        
+                        $currentCycle = false;
                         $class = null;
                         if($lastPlan == 1 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
-                            
+                            $currentCycle = true;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
@@ -53,7 +53,7 @@
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['1_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['1_'.$row] : ''}}</span>
                         <span>{{isset($dataForSamecycle_value['1_'.$row]) &&  $dataForSamecycle_value['1_'.$row] == true ? 'Transfer : Same Cycle' : ''}}</span>
-                        <span class="candor-color"><b>{{isset($isIvfappointment) && $lastPlan == 1 && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
+                        <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(1).'/'.encrypt($row))}}">
@@ -88,10 +88,10 @@
                         $cycleNumber++;
                         $cycleNoKey = array_search('2',$dataForSkipPlans);
                         $class = null;
+                        $currentCycle = false;
                         if($lastPlan == 2 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
-                            
-                            
+                            $currentCycle = true;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
@@ -108,7 +108,7 @@
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['2_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['2_'.$row] : ''}}</span>
-                        <span class="candor-color"><b>{{isset($isIvfappointment) && $lastPlan == 2 && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
+                        <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">
@@ -140,9 +140,10 @@
                     $cycleNumber++;
                         $cycleNoKey = array_search('3',$dataForSkipPlans);
                         $class = null;
+                        $currentCycle = false;
                         if($lastPlan == 3 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
-                            
+                            $currentCycle = true;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
@@ -160,7 +161,7 @@
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['3_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['3_'.$row] : ''}}</span>
-                        <span class="candor-color"><b>{{isset($isIvfappointment) && $lastPlan == 3 && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
+                        <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">
@@ -193,8 +194,10 @@
                         $cycleNumber++;
                         $cycleNoKey = array_search('4',$dataForSkipPlans);
                         $class = null;
+                        $currentCycle = false;
                         if($lastPlan == 4 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
+                            $currentCycle = true;
                         }
                         $cycleNo = explode('_',$cycleNoKey);
                         $cycleNo = array_filter($cycleNo);
@@ -211,7 +214,7 @@
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['4_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['4_'.$row] : ''}}</span>
-                        <span class="candor-color"><b>{{isset($isIvfappointment) && $lastPlan == 4 && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
+                        <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         
                         <div class="row">
                             <div class="col-md-12">

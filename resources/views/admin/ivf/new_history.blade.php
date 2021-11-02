@@ -53,6 +53,7 @@
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['1_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['1_'.$row] : ''}}</span>
                         <span>{{isset($dataForSamecycle_value['1_'.$row]) &&  $dataForSamecycle_value['1_'.$row] == true ? 'Transfer : Same Cycle' : ''}}</span>
+                        <span class="candor-color"><b>{{isset($isIvfappointment) && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(1).'/'.encrypt($row))}}">
@@ -107,6 +108,7 @@
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['2_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['2_'.$row] : ''}}</span>
+                        <span class="candor-color"><b>{{isset($isIvfappointment) && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">
@@ -158,6 +160,7 @@
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['3_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['3_'.$row] : ''}}</span>
+                        <span class="candor-color"><b>{{isset($isIvfappointment) && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">

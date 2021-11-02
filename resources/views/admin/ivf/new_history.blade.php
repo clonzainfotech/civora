@@ -34,7 +34,7 @@
                         $cycleNoKey = array_search('1',$dataForSkipPlans);
                         
                         $class = null;
-                        if($lastPlan == 1 && $lastCycleNo == $row){
+                        if($lastPlan == 1 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
                             
                         }
@@ -87,7 +87,7 @@
                         $cycleNumber++;
                         $cycleNoKey = array_search('2',$dataForSkipPlans);
                         $class = null;
-                        if($lastPlan == 2 && $lastCycleNo == $row){
+                        if($lastPlan == 2 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
                             
                             
@@ -138,7 +138,7 @@
                     $cycleNumber++;
                         $cycleNoKey = array_search('3',$dataForSkipPlans);
                         $class = null;
-                        if($lastPlan == 3 && $lastCycleNo == $row){
+                        if($lastPlan == 3 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
                             
                         }
@@ -190,7 +190,7 @@
                         $cycleNumber++;
                         $cycleNoKey = array_search('4',$dataForSkipPlans);
                         $class = null;
-                        if($lastPlan == 4 && $lastCycleNo == $row){
+                        if($lastPlan == 4 && $lastCycleNo == $row && $isIvfappointment == true){
                             $class = 'current-cycle';
                         }
                         $cycleNo = explode('_',$cycleNoKey);
@@ -204,15 +204,19 @@
                             $class = 'skip-cycle';
                             $cycleNumber--;
                         }
+                        
                     @endphp
                     <div class="{{'card p-3 patient_name '.$class}}">
                         <span>{{isset($dataForSkipReason['4_'.$row]) ? 'Skip Reason : '.$dataForSkipReason['4_'.$row] : ''}}</span>
+                        <span class="candor-color"><b>{{isset($isIvfappointment) && ($isIvfappointment == true) ? 'Current Cycle' : ''}}</b></span>
+                        
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">
                                     <div class="pt-1 pb-1">
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(4).'/'.encrypt($row))}}">
                                             <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>    
+                                            
                                         </a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>

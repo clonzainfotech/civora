@@ -1340,19 +1340,20 @@ class IVFController extends AdminController
             $fetCycleNo = last($fetCycle);
             $fetOdCycleNo = last($fetOdCycle);
             $fetEdCycleNo = last($fetEdCycle);
-            $lastAppointment = $this->Appointment->where('patients_id',$id)->orderBy('id','DESC')->first();
+            // $lastAppointment = $this->Appointment->where('patients_id',$id)->orderBy('id','DESC')->first();
+            $isIvfappointment = $this->Appointment->where('patients_id',$id)->where('date','>=',Carbon::now()->format('Y-m-d'))->whereIn('category_id',[1,2])->where('is_done',0)->orderBy('id','desc')->first();
             $currentDate = Carbon::now()->format('Y-m-d');
             $newCycle = false;
             switch ($planTransfer) {
                 case 1:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $pickupCycleNo;
-                        // if($lastAppointment->date <= $currentDate){
+                        $value = $pickupCycleNo;
+                        if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
                             $newCycle = true;
                             $value = $pickupCycleNo + 1;
                             
-                        // }
+                        }
                         if(!$pickupCycleNo){
                             $value = 1;
                         }
@@ -1365,11 +1366,12 @@ class IVFController extends AdminController
                 case 2:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $fetCycleNo;
+                        $value = $fetCycleNo;
                         // if($lastAppointment->date <= $currentDate || ($ivfReport && $lastAppointment->date <= $currentDate)){
+                            if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
                             $newCycle = true;
                             $value = $fetCycleNo + 1;
-                        // }
+                        }
                         if(!$fetCycleNo){
                             $value = 1;
                         }
@@ -1383,11 +1385,11 @@ class IVFController extends AdminController
                 case 3:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $fetOdCycleNo;
-                        // if($lastAppointment->date <= $currentDate){
+                        $value = $fetOdCycleNo;
+                        if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
                             $newCycle = true;
                             $value = $fetOdCycleNo + 1;
-                        // }
+                        }
                         if(!$fetOdCycleNo){
                             $value = 1;
                         }
@@ -1400,11 +1402,11 @@ class IVFController extends AdminController
                 case 4:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $fetEdCycleNo;
-                        // if($lastAppointment->date <= $currentDate){
+                        $value = $fetEdCycleNo;
+                        if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
                             $newCycle = true;
                             $value = $fetEdCycleNo + 1;
-                        // }
+                        }
                         if(!$fetEdCycleNo){
                             $value = 1;
                         }
@@ -1463,6 +1465,7 @@ class IVFController extends AdminController
             $leftOvaryData = $this->OvaryDetail->where('type',1)->pluck('name','name');
             $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
             $doseData = $this->Dose->pluck('name','name');
+            $isIvfappointment = $this->Appointment->where('patients_id',$id)->where('date','>=',Carbon::now()->format('Y-m-d'))->whereIn('category_id',[1,2])->where('is_done',0)->orderBy('id','desc')->first();
             $isIvf = 'no';
             $data['isIvf'] = $isIvf;
             $data['ivf'] = $ivf;
@@ -1495,6 +1498,7 @@ class IVFController extends AdminController
             $data['dataForSkipReason'] = $dataForSkipReason;
             $data['dataSamecycle'] = $dataSamecycle;
             $data['dataForSamecycle_value'] = $dataForSamecycle_value;
+            $data['isIvfappointment'] = !empty($isIvfappointment) ? true : false;
             if($request->ajax()){
                 $data['history'] = View::make('admin.ivf.edit',$data)->render();
                 return $data;
@@ -1822,6 +1826,7 @@ class IVFController extends AdminController
             $data['nextVisitValue'] = !empty($getIvfByPlanAndCycle) ? $getIvfByPlanAndCycle->visit : 0 ;
             $data['cycleStatus'] = !empty($getIvfByPlanAndCycle) ? $getIvfByPlanAndCycle->cycle_status : 0 ;
             $data['ivfVisit'] = $ivfVisit;
+            
             return view('admin.ivf.cycle_data',$data);
         }catch(Exception $e){
             log::debug($e);

@@ -89,8 +89,9 @@ class MedicalController extends AdminController
             $ivfDate = [];
             $iuiDate = [];
             $gynecDate = [];
+            $stichDate = [];
             $patients = $this->OpdPatients->find($pId);
-            $appointmentData = $this->Appointment->wherePatientsId($pId)->whereIn('category_id',['1','2','3','4','5','6','17'])->where('is_done',1)->orderBy('id','DESC')->pluck('category_id','category_id')->toArray();
+            $appointmentData = $this->Appointment->wherePatientsId($pId)->whereIn('category_id',['1','2','3','4','5','6','17','22'])->where('is_done',1)->orderBy('id','DESC')->pluck('category_id','category_id')->toArray();
             $appointmentData = array_unique($appointmentData);
             $lastCatgoryId = array_first($appointmentData);
             $lastType = null;
@@ -101,7 +102,9 @@ class MedicalController extends AdminController
                 if($ivf){
                     $ivfDate = [Carbon::parse($ivf->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($ivf->created_at)->format('Y-m-d H:i:s')];
                 }
+                $ivfExtraVisitDate = $this->IvfExtraVisit->where('patient_id',$pId)->pluck('created_at','created_at')->toArray();
                 $ivfDate = array_merge($ivfHistoryDate,$ivfDate);
+                $ivfDate = array_merge($ivfDate,$ivfExtraVisitDate);
             }
             if(array_key_exists(3,$appointmentData) || array_key_exists(4,$appointmentData)){
                 $categoryData['2'] = 'IUI'; 
@@ -110,7 +113,10 @@ class MedicalController extends AdminController
                 if($iui){
                     $iuiDate = [Carbon::parse($iui->created_at)->format('Y-m-d H:i:s')=>Carbon::parse($iui->created_at)->format('Y-m-d H:i:s')];
                 }
+                $iuiExtraVisitDate = $this->IuiExtraVisit->where('patient_id',$pId)->pluck('created_at','created_at')->toArray();
+
                 $iuiDate = array_merge($iuiHistoryDate,$iuiDate);
+                $iuiDate = array_merge($iuiDate,$iuiExtraVisitDate);
             }
             if(array_key_exists(5,$appointmentData) || array_key_exists(6,$appointmentData)){
                 $categoryData['3'] = 'ANC'; 
@@ -125,6 +131,10 @@ class MedicalController extends AdminController
                 $categoryData['4'] = 'Gynec';
                 $gynecDate = $this->Gynec->where('patients_id',$pId)->pluck('created_at','created_at')->toArray();
             }
+            if(array_key_exists(22,$appointmentData)){
+                $categoryData['5'] = 'Stich';
+                $stichDate = $this->Stich->where('patients_id',$pId)->pluck('created_at','created_at')->toArray();
+            }
             if(!$request->date){
                 if($lastCatgoryId == 1 || $lastCatgoryId == 2){
                     $lastType = 'category-data-1';
@@ -138,6 +148,9 @@ class MedicalController extends AdminController
                 if($lastCatgoryId == 17){
                     $lastType = 'category-data-4';
                 }
+                if($lastCatgoryId == 22){
+                    $lastType = 'category-data-5';
+                }
             }
             $mData = new Collection();
             $ancHistory = $this->AncHistory->where('patients_id',$pId)->orderBy('id','DESC');
@@ -147,6 +160,7 @@ class MedicalController extends AdminController
             $iuiHistory = $this->IuiHistory->where('patients_id',$pId)->orderBy('id','DESC');
             $iui = $this->IUI->where('patients_id',$pId)->orderBy('id','DESC');
             $gynec = $this->Gynec->where('patients_id',$pId)->orderBy('id','DESC');
+            $stich = $this->Stich->where('patients_id',$pId)->orderBy('id','DESC');
             $date = $request->date;
             $type = null;
             if(!empty($date)){
@@ -177,11 +191,16 @@ class MedicalController extends AdminController
                     $gynec = $gynec->whereBetween('created_at', [$startDate, $endDate]);
                     $lastType = 'category-data-4';
                 }
+                if($type == 'stich-date'){
+                    $stich = $stich->whereBetween('created_at', [$startDate, $endDate]);
+                    $lastType = 'category-data-5';
+                }
             }
             $anc = $anc->get();
             $ivf = $ivf->get();
             $iui = $iui->get();
             $gynec = $gynec->get();
+            $stich = $stich->get();
             $ancHistory = $ancHistory->get();
             $iuiHistory = $iuiHistory->get();
             $ivfHistory = $ivfHistory->get();
@@ -195,6 +214,7 @@ class MedicalController extends AdminController
                 $data['ivfData'] = $ivfData;
                 $data['iuiData'] = $iuiData;
                 $data['gynecData'] = $gynec;
+                $data['stichData'] = $stich;
                 $data['ivfDate'] = $ivfDate;
                 $data['ivfDate'] = $ivfDate;
                 $data['dateType'] = $type;
@@ -202,6 +222,7 @@ class MedicalController extends AdminController
                 $data['date'] = $request->date;
                 $data['lastType'] = $lastType;
                 $data['gynecDate'] = $gynecDate;
+                $data['stichDate'] = $stichDate;
                 if($request->is_print){
                     $ancHistory = $this->AncHistory->where('patients_id',$pId)->orderBy('id','DESC');
                     $anc = $this->ANC->where('patients_id',$pId)->orderBy('id','DESC');
@@ -210,10 +231,12 @@ class MedicalController extends AdminController
                     $iuiHistory = $this->IuiHistory->where('patients_id',$pId)->orderBy('id','DESC');
                     $iui = $this->IUI->where('patients_id',$pId)->orderBy('id','DESC');
                     $gynec = $this->Gynec->where('patients_id',$pId)->orderBy('id','DESC');
+                    $stich = $this->Stich->where('patients_id',$pId)->orderBy('id','DESC');
                     $anc = $anc->get();
                     $ivf = $ivf->get();
                     $iui = $iui->get();
                     $gynec = $gynec->get();
+                    $stich = $stich->get();
                     $ancHistory = $ancHistory->get();
                     $iuiHistory = $iuiHistory->get();
                     $ivfHistory = $ivfHistory->get();

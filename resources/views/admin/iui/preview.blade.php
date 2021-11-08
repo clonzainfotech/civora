@@ -1238,6 +1238,7 @@
                                         <th>
                                             <span class="iui-label">Right Ovary</span>
                                             @if (!empty($oe->ovary->right->updated_details))
+                                                <br>
                                                 @foreach ($oe->ovary->right->updated_details as $key => $value)
                                                     @php
                                                         echo !empty($value) ? $value .  '<br />' : '- <br />';
@@ -1254,6 +1255,7 @@
                                         <th>
                                             <span class="iui-label">Left Ovary</span>
                                             @if (!empty($oe->ovary->left->updated_details))
+                                                <br>
                                                 @foreach ($oe->ovary->left->updated_details as $key => $value)
                                                     @php
                                                         echo !empty($value) ? $value .  '<br />' : '- <br />';

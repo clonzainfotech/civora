@@ -91,7 +91,7 @@ class MedicalController extends AdminController
             $gynecDate = [];
             $stichDate = [];
             $patients = $this->OpdPatients->find($pId);
-            $appointmentData = $this->Appointment->wherePatientsId($pId)->whereIn('category_id',['1','2','3','4','5','6','17','22'])->where('is_done',1)->orderBy('id','DESC')->pluck('category_id','category_id')->toArray();
+            $appointmentData = $this->Appointment->wherePatientsId($pId)->whereIn('category_id',['1','2','3','4','5','6','17','18','22'])->where('is_done',1)->orderBy('id','DESC')->pluck('category_id','category_id')->toArray();
             $appointmentData = array_unique($appointmentData);
             $lastCatgoryId = array_first($appointmentData);
             $lastType = null;
@@ -127,7 +127,7 @@ class MedicalController extends AdminController
                 }
                 $ancDate = array_merge($ancHistoryDate,$ancDate);
             }
-            if(array_key_exists(17,$appointmentData)){
+            if(array_key_exists(17,$appointmentData) || array_key_exists(18,$appointmentData)){
                 $categoryData['4'] = 'Gynec';
                 $gynecDate = $this->Gynec->where('patients_id',$pId)->pluck('created_at','created_at')->toArray();
             }
@@ -145,7 +145,7 @@ class MedicalController extends AdminController
                 if($lastCatgoryId == 5 || $lastCatgoryId == 6){
                     $lastType = 'category-data-3';
                 }
-                if($lastCatgoryId == 17){
+                if($lastCatgoryId == 17 || $lastCatgoryId == 18){
                     $lastType = 'category-data-4';
                 }
                 if($lastCatgoryId == 22){

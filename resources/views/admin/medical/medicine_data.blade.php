@@ -112,7 +112,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                                             <td>{{$medicine_status}}</td>
                                             <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
                                             <td>{{$row->no.' days'}}</td>
-                                            <td>{{isset($row->note) !empty($row->note) ? $row->note : '-'}}</td>
+                                            <td>{{isset($row->note)  && !empty($row->note) ? $row->note : '-'}}</td>
                                         </tr>
                                         @endforeach
                                     @else
@@ -246,7 +246,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                                             <td>{{$medicine_status}}</td>
                                             <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
                                             <td>{{$row->no.' days'}}</td>
-                                            <td>{{isset($row->note) !empty($row->note) ? $row->note : '-'}}</td>
+                                            <td>{{isset($row->note)  && !empty($row->note) ? $row->note : '-'}}</td>
                                         </tr>
                                         @endforeach
                                     @else
@@ -392,7 +392,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                                             <td>{{$medicine_status}}</td>
                                             <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
                                             <td>{{$row->no.' days'}}</td>
-                                            <td>{{isset($row->note) !empty($row->note) ? $row->note : '-'}}</td>
+                                            <td>{{isset($row->note)  && !empty($row->note) ? $row->note : '-'}}</td>
 
                                         </tr>
                                         @endforeach
@@ -558,7 +558,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                                                 <td>{{$medicine_status}}</td>
                                                 <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
                                                 <td>{{$row->no.' days'}}</td>
-                                                <td>{{isset($row->note) !empty($row->note) ? $row->note : '-'}}</td>
+                                                <td>{{isset($row->note)  &&  !empty($row->note) ? $row->note : '-'}}</td>
     
                                             </tr>
                                             @endforeach
@@ -693,7 +693,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                                             <td>{{$medicine_status}}</td>
                                             <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
                                             <td>{{$row->no.' days'}}</td>
-                                            <td>{{isset($row->note) !empty($row->note) ? $row->note : '-'}}</td>
+                                            <td>{{isset($row->note)  && !empty($row->note) ? $row->note : '-'}}</td>
                                             
                                         </tr>
                                         @endforeach

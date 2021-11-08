@@ -2959,7 +2959,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 <div class="col-md-3"></div>
                                 <div class="{{'col-md-9 left-details'}}">
                                     <div class="row">
-                                        <div class="{{'col-md-5 complain-multi ovary-left-abnormal-type'}} ">
+                                        <div class="{{'col-md-5 complain-multi ovary-left-abnormal-type '.$ovaryLeftType}} ">
                                             {{Form::select("oe[ovary][left][details][]",$leftOvaryData,!empty($oe->ovary->left->details) ? $oe->ovary->left->details : null,[
                                                 'class'=>'form-control co-value co_value_data oe_ovary_left_details',
                                                 'placeholder'=>'Abnormal Details',

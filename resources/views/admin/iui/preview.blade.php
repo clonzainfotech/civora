@@ -3043,7 +3043,7 @@
                                 @endif
                                 @if($row->visit == 2)
                                     @php
-                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','<',$row->created_at)->orderBy('id','DESC')->get();
+                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($row->cycle_no)->where('created_at','<',$row->created_at)->orderBy('id','DESC')->get();
                                     @endphp
                                     @if(!empty($iuiExtraVisit))
                                             @foreach($iuiExtraVisit as $iuiExtra)
@@ -3188,7 +3188,7 @@
                                 @endif
                                 @if(!empty($data->ovalution) && $data->ovalution == 'yes')
                                     @php
-                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->where('created_at','>',$row->created_at)->orderBy('id','DESC')->get();
+                                        $iuiExtraVisit = IuiExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($row->cycle_no)->where('created_at','>',$row->created_at)->orderBy('id','DESC')->get();
                                     @endphp
                                     @if(!empty($iuiExtraVisit))
                                             @foreach($iuiExtraVisit as $iuiExtra)

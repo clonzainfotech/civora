@@ -86,6 +86,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     // patient
     Route::post('get-patient-data','PatientsController@edit');
     Route::any('patient-report','PatientsController@getPatientReport');
+    Route::get('patient-history/{id}','PatientsController@getPatientHistory');
 
     //Appointment
     Route::get('appointment/{usg?}','AppointmentController@index');

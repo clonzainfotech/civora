@@ -1817,5 +1817,71 @@ class ANCController extends AdminController
         }
         return $ancArray;
     }
+    /**
+     * return all appointment wise anc view
+     * @return  view
+     * @param 
+     */
+    public function getAncAppointmentWiseVisit($historyDate,$patient_id,$anc_id)
+    {
+        $patientId = decrypt($patient_id);
+        $opdPatient = $this->OpdPatients->find($patientId);
+        $patients = $this->OpdPatients->find($patientId);
+        $personal_history_type = $this->AncHoHistory->where('type',1)->pluck('name','name')->toArray();
+        $personal_past_history_type = $this->AncHoHistory->where('type',2)->pluck('name','name')->toArray();
+        $currentdate=Carbon::now()->format('d-m-y');
+        $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>'8 Weeks',6=>'8 - 10 Weeks',7=>'10 - 12 Weeks',8=>'12 Weeks',9=>'Uterus Just Palpable',10=>'14 Weeks',11=>'16 Weeks',12=>'18 Weeks',13=>'20 Weeks',14=>'22 Weeks',15=>'24 Weeks',16=>'26 Weeks',17=>'28 Weeks',18=>'30 Weeks',19=>'32 Weeks',20=>'34 Weeks',21=>'36 Weeks',22=>'Full Term'];
+        $placenta = $this->getPlacenta()['placenta'];
+        $isGsac = false;
+        $nextAppointmentDate = null;
+        $ancHistory = null;
+        $isNextAppointment = null;
+        $usgStatus = null;
+        $isFirstVisit = true;
+        $ancType = 1;
+        $ancData = $this->ANC->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        if($ancData)
+        {
+            $p_info = !empty($ancData->patients_info) ? json_decode($ancData->patients_info) : null;
+            $weight = !empty($p_info->weight) ? $p_info->weight : null;
+            // $anc_id = $ancData->id;
+            $ancFirstVisitData = $ancData;
+        }
+        
+
+        if(!$ancData)
+        {
+            $ancData = $this->AncHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+            $h_o = !empty($ancData->h_o) ? json_decode($ancData->h_o) : null;
+            $weight = !empty($h_o->weight) ? $h_o->weight : null;
+            $ancFirstVisitData = $this->ANC->where('patients_id',$patientId)->where('id',$ancData->anc_id)->first();
+            // $anc_id = $ancData->anc_id;
+        }
+        $date = Carbon::parse($historyDate)->format('d-m-y');
+        $upt = json_decode($ancFirstVisitData->patients_obstratics, true);
+        $oe = json_decode($ancFirstVisitData->o_e, true);
+        $mhData = !empty($ancData->m_h) ? json_decode($ancData->m_h) : null;
+        $lmdDate = !empty($mhData->last_menstrual_date) ? $mhData->last_menstrual_date : null;
+        $eddDate = !empty($mhData->edd) ? $mhData->edd : null;
+        $usgEddDate = !empty($mhData->usg_edd) ? $mhData->usg_edd : null;
+        $oeData = !empty($ancData->o_e) ? json_decode($ancData->o_e,true) : null;
+        $previousAnc = null;
+        $investigationReport = $this->allInvestigationReport();
+        $now = Carbon::now()->format('Y-m-d');
+        $usgStatus = 0;
+        $usg = json_decode($ancData->usg,true);
+        $oe_followUp = !empty($oeData['follow_up']) ? Carbon::parse($oeData['follow_up'])->format('D d M Y') : '';
+        if(((!empty($usg['nt_scan']) && $usg['nt_scan'] == $oe_followUp) || (!empty($usg['early_scan']) && $usg['early_scan'] == $oe_followUp) || (!empty($usg['anomalies_miles']) && $usg['anomalies_miles'] == $oe_followUp) || (!empty($usg['growth_scan']) && $usg['growth_scan'] == $oe_followUp))){
+            $usgStatus = 1;
+        }
+
+        if(!empty($upt['upt_type']) && $upt['upt_type'] == 'positive' && isset($oe['utdata'][1]['ut_type']) && $oe['utdata'][1]['ut_type'] == 'g-sac' && (strtolower($oe['utdata'][1]['oe_ut_sac']) == 'no' || strtolower($oe['utdata'][1]['oe_ut_sac_2']) == 'no')) {
+            $isGsac = true;
+        }
+        $ancAutoRemark = $this->getAutoRemark($patientId,$anc_id);
+
+        return View::make('admin.anc.preview', compact('ancFirstVisitData','investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','date','patients','ancAutoRemark'))->render();
+    }
+
     
 }

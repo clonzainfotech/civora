@@ -2627,14 +2627,14 @@ class IUIController extends AdminController
         if($iuiSecondVisit){
             $iuiSecondVisit = json_decode($iuiSecondVisit->description);
         }
-        $iuiData = $category == 3 ? $this->IUI->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first() : null;
+        $iuiData = $category == 3 ? $this->IUI->where('patients_id',$patientId)->where('created_at',$historyDate)->first() : null;
         if($iuiData)
         {
             $isTable_view = false;
         }
         if(empty($iuiData))
         {
-            $iuiData = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->orderBy('id','DESC')->first();
+            $iuiData = $this->IuiHistory->where('patients_id',$patientId)->where('cycle_no',$cycleNo)->where('created_at',$historyDate)->orderBy('id','DESC')->first();
             if($iuiData && $iuiData->cycle_no != $cycleNo)
             {
                 $preview = 0;
@@ -2645,12 +2645,12 @@ class IUIController extends AdminController
                 $isTable_view = true;
             }
         }
-        $iuiThirdVisit = $this->IuiHistory->wherePatientsId($patientId)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->where('visit',3)->where('description->ovalution','yes')->first();
+        $iuiThirdVisit = $this->IuiHistory->wherePatientsId($patientId)->where('cycle_no',$cycleNo)->where('created_at',$historyDate)->where('visit',3)->where('description->ovalution','yes')->first();
         if($iuiThirdVisit){
             $iuiThirdVisit = json_decode($iuiThirdVisit->description);
         }
         $iui = $iuiData;
-        $iuiExtraVisit = $this->IuiExtraVisit->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $iuiExtraVisit = $this->IuiExtraVisit->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->where('created_at',$historyDate)->first();
         if(!empty($iuiExtraVisit))
         {
             $preview = 0;
@@ -2658,9 +2658,10 @@ class IUIController extends AdminController
             $isTable_view = false;
             return View::make('admin.iui.preview', compact('iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData','investigationReport','iuiExtraVisit','iuiPatients','isExtraVisit','isAppointmentView'))->render();
         }
-        $iuiReport = $this->IUIReport->where('patients_id',$patientId)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $iuiReport = $this->IUIReport->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
         if($iuiReport)
         {
+            $preview = 0;
             return View::make('admin.iui.iuireportprint', compact('iuiReport'))->render();
         }
         if($preview == 1 || $preview == 0) //display only one time  table view

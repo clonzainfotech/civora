@@ -1839,7 +1839,7 @@ class ANCController extends AdminController
         $usgStatus = null;
         $isFirstVisit = true;
         $ancType = 1;
-        $ancData = $this->ANC->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $ancData = $this->ANC->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
         if($ancData)
         {
             $p_info = !empty($ancData->patients_info) ? json_decode($ancData->patients_info) : null;
@@ -1848,7 +1848,7 @@ class ANCController extends AdminController
         }
         if(!$ancData)
         {
-            $ancData = $this->AncHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+            $ancData = $this->AncHistory->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
             $h_o = !empty($ancData->h_o) ? json_decode($ancData->h_o) : null;
             $weight = !empty($h_o->weight) ? $h_o->weight : null;
             $ancFirstVisitData = $this->ANC->where('patients_id',$patientId)->where('id',$ancData->anc_id)->first();

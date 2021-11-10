@@ -3254,18 +3254,18 @@ class IVFController extends AdminController
         
         $isTableView = 0;
         $isAppointmentView = true; // for bootstrap file duplication
-        $ivf = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $ivf = $this->IVF->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
         $isIvfHistory = '1';
         $isExtraVisit = 0;
         $plan = decrypt($plan);
         $cycleNo = decrypt($cycleNo);
-        $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
         $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->where('visit',2)->first();
         $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
         if($ivfHistory)
         {
             $isIvfHistory = '2';
-            $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+            $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
             if($ivfHistory && ($ivfHistory->plan != $plan || ($ivfHistory->plan == $plan && $ivfHistory->cycle_no != $cycleNo)))//display all plan visits in one page
             {
                 $preview = 0;
@@ -3274,7 +3274,7 @@ class IVFController extends AdminController
             $historyData = json_decode($ivf->description);
             $doseData = $this->Dose->pluck('name','name');
         }
-        $ivfExtraVisit = $this->IvfExtraVisit->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d %H:%i'))"),$historyDate)->first();
+        $ivfExtraVisit = $this->IvfExtraVisit->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->where('created_at',$historyDate)->first();
         if(!empty($ivfExtraVisit))
         {
             $isExtraVisit = 1; 

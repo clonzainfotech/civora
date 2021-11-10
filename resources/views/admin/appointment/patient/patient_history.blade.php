@@ -71,7 +71,7 @@
                                 <div class="header category-header">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h2><strong>{{$key.' - '.$category}}</strong></h2>
+                                            <h2><strong>{{Carbon\Carbon::parse($key)->format('d/m/Y').' - '.$category}}</strong></h2>
 
                                         </div>
                                         <div class="col-md-6 text-right">

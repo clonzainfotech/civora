@@ -558,7 +558,7 @@ class PatientsController extends AdminController
         $iuiExtraVisit = $this->IuiExtraVisit->select('created_at',DB::raw("4 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
         $ivf = $this->IVF->select('created_at',DB::raw("1 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
         $ivfHistory = $this->IvfHistory->select('created_at',DB::raw("2 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
-        $ivfExtraVisit = $this->IvfExtraVisit->select('created_at',DB::raw("4 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
+        $ivfExtraVisit = $this->IvfExtraVisit->select('created_at',DB::raw("2 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
 
         // $ivfTransfer = $this->IvfTransferReport->select('created_at',DB::raw("2 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
         // $ivfplanReport = $this->IvfPlanReport->select('created_at',DB::raw("2 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
@@ -596,6 +596,16 @@ class PatientsController extends AdminController
                         $history[$created_at]['IVF'][$ivf->cycle_no.'/'.$planData[$ivf->plan]] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
                         // $history[$created_at] = $preview;
                     }
+                }
+                $ivfExtra = $this->IvfExtraVisit->where('patient_id',$pId)->where('created_at',$date)->first();
+                if($ivfExtra)
+                {
+                    $cycle_no = encrypt($ivfExtra->cycle_no);
+                    $plan = encrypt($ivfExtra->plan);
+                    $preview = 0;
+                    $created_at = Carbon::parse($ivfExtra->created_at)->format('Y-m-d H:i');
+                    $history[$created_at]['IVF'][$ivfExtra->cycle_no] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
+                    // $history[$created_at] = $preview;
                 }
                 $ivf = $this->IVF->where('patients_id',$pId)->where('created_at',$date)->first();
                 if($ivf && $category_id == 1)

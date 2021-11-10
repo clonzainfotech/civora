@@ -3259,6 +3259,7 @@ class IVFController extends AdminController
         $isExtraVisit = 0;
         $plan = decrypt($plan);
         $cycleNo = decrypt($cycleNo);
+        $ivfPatients = $this->OpdPatients->find($patientId);
         $ivfHistory = $this->IvfHistory->where('patients_id',$patientId)->where('created_at',$historyDate)->first();
         $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$plan)->where('cycle_no',$cycleNo)->where('visit',2)->first();
         $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
@@ -3296,6 +3297,7 @@ class IVFController extends AdminController
                 $isTableView = 1;
                 $displayPlan = $ivfCycleData[0]->plan;
                 $displayCycle = $ivfCycleData[0]->cycle_no;
+                $preview++;
                 //ivf pickUP report
                 if($ivf->plan == 1 && $preview == 2)
                 {
@@ -3310,16 +3312,17 @@ class IVFController extends AdminController
                 //ivf Transfer Report
                 if($preview == 2)
                 {
-                    
-                    $transferReport = $this->IvfTransferReport->where('patient_id',$patientId)->where('cycle_no',$ivf->cycle_no)->wherePlan($ivf->plan)->first();
+                    $transferReport = $this->IvfTransferReport->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->wherePlan($plan)->first();
                     if($transferReport)
                     {
+                        $preview = 0;
                         $pt_view = 0;
                         $printPreview = 0;
                         return View::make('admin.ivf.transfer_report', compact('transferReport','pt_view','printPreview'))->render();
                     }
                 }
-                $preview++;
+                
+                
             }
             if($preview <= 1)
             {

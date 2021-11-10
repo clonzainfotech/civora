@@ -3510,7 +3510,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                 @endphp
                                 @if($row->visit == 2)
                                     @php
-                                        $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id))->where('plan',$row->plan)->where('cycle_no',$row->cycle_no)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
+                                        $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->where('plan',$row->plan)->where('cycle_no',$row->cycle_no)->where('created_at','<',$row->created_at)->orderBy('id','ASC')->get();
                                     @endphp
                                     @if(!empty($ivfExtraVisit))
                                             @foreach($ivfExtraVisit as $ivfExtra)

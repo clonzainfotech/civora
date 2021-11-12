@@ -560,12 +560,13 @@ class PatientsController extends AdminController
         $ivfHistory = $this->IvfHistory->select('created_at',DB::raw("2 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
         $ivfExtraVisit = $this->IvfExtraVisit->select('created_at',DB::raw("2 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
         $gynec = $this->Gynec->select('created_at',DB::raw("18 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
+        $stich = $this->Stich->select('created_at',DB::raw("22 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
         // $ivfTransfer = $this->IvfTransferReport->select('created_at',DB::raw("2 as category_id"))->where('patient_id',$pId)->pluck('category_id','created_at')->toArray();
         // $ivfplanReport = $this->IvfPlanReport->select('created_at',DB::raw("2 as category_id"))->where('patients_id',$pId)->pluck('category_id','created_at')->toArray();
         $history = [];
         // $allVisit = [];
         $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
-        $allVisit = array_merge($anc,$ancHistory,$iui,$iuiHistory,$iuiExtraVisit,$iuiReport,$ivf,$ivfHistory,$ivfExtraVisit,$gynec);
+        $allVisit = array_merge($anc,$ancHistory,$iui,$iuiHistory,$iuiExtraVisit,$iuiReport,$ivf,$ivfHistory,$ivfExtraVisit,$gynec,$stich);
         krsort($allVisit);
         // $preview = 0;
         foreach($allVisit as $date => $category_id)
@@ -684,6 +685,17 @@ class PatientsController extends AdminController
                 {
                     $created_at = Carbon::parse($gynec->created_at)->format('Y-m-d H:i');
                     $history[$created_at]['GYNEC'][''] = app('App\Http\Controllers\Admin\GynecController')->getGynecAppointmentWiseVisit($date,$patient_id);
+                    // $history[$created_at] = $created_at;
+                }
+            }
+            if($category_id == 22)
+            {
+                // $preview = [];
+                $stich = $this->Stich->where('patients_id',$pId)->where('created_at',$date)->first();
+                if($stich)
+                {
+                    $created_at = Carbon::parse($stich->created_at)->format('Y-m-d H:i');
+                    $history[$created_at]['STICH'][''] = app('App\Http\Controllers\Admin\StichController')->getStichAppointmentWiseVisit($date,$patient_id);
                     // $history[$created_at] = $created_at;
                 }
             }

@@ -2999,12 +2999,8 @@ class IVFController extends AdminController
                 $pId = $ivfHistory->patients_id;
                 $ivfHistory->delete();
                 //update last history status
-                $updateIvfHistory = $this->IvfHistory->wherePlan($plan)->whereCycleNo($cycle_no)->where('patients_id',$pId)->orderBy('id','desc')->first();
-                if($updateIvfHistory)
-                {
-                    $updateIvfHistory->cycle_status = 1;
-                    $updateIvfHistory->save();
-                }
+                $updateIvfHistory = $this->IvfHistory->wherePlan($plan)->whereCycleNo($cycle_no)->where('patients_id',$pId)->update(['cycle_status'=>1]);
+                
                 Session::flash('msg','Record has been successfully removed.');
             }
             return ['status'=>1];

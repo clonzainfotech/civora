@@ -152,4 +152,24 @@ class StichController extends AdminController
             abort(500);
         }
     }
+    /**
+     * return all appointment wise ivf view
+     * @return  view
+     * @param 
+     */
+    public function getStichAppointmentWiseVisit($date,$patient_id)
+    {
+        try
+        {
+
+            $patientId = decrypt($patient_id);
+            $stich = $this->Stich->where('created_at',$date)->where('patients_id',$patientId)->first();
+            return View::make('admin.stich.preview', compact('stich'))->render();
+        }catch(Exception $e){
+            // log::Debug($e);
+            abort(500);
+        }
+
+    }
+
 }

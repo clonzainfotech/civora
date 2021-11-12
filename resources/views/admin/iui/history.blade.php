@@ -195,10 +195,11 @@
                         <h2><strong class="text-secondary">{{ucwords($iui->getPatientsInfo->name)}}</strong>{{' care of '.$careof}}</h2>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="{{URL::to('get-all-report/'.encrypt($iui->getPatientsInfo->id).'?status=iui')}}" target="_blank" class="btn btn-primary mr-1">View Reports</a>
-                        <a class="btn btn-primary view-file-edit ml-2">View File & Edit</a>
+                        <a href="{{URL::to('patient-history/'.encrypt($iui->getPatientsInfo->id))}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View History</a>
+                        <a href="{{URL::to('get-all-report/'.encrypt($iui->getPatientsInfo->id).'?status=iui')}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View Report</a>
+                        <a class="btn btn-primary view-file-edit ml-2 btn-sm">View File & Edit</a>
                         @if(!empty($iuiReportStatus))
-                        <a class="btn btn-primary view-iui-report ml-2" data-toggle="modal" data-target="#iui-report-modal">IUI Report</a>
+                        <a class="btn btn-primary view-iui-report ml-2 btn-sm" data-toggle="modal" data-target="#iui-report-modal">IUI Report</a>
                         @endif
                     </div>
                 </div>

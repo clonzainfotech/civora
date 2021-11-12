@@ -161,16 +161,18 @@
                                 </a>
                             @endif --}}
                             @if($visit == 2 || $isTransfer == true)
-                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right">Extra Visit</button></a>
+                                <a href="{{URL::to('ivf/extra-visit/'.encrypt($patient_id).'/'.encrypt($cycleNumber).'/'.encrypt($pStatus))}}" class="mb-1 ml-1"><button class="btn btn-primary pull-right btn-sm">Extra Visit</button></a>
                             @endif
+                            <a href="{{URL::to('patient-history/'.encrypt($patient_id))}}" target="_blank" class="btn btn-primary btn-sm pull-right">View History</a>
+
                             <a href="#" class="mb-1">
-                                <button class="btn btn-primary pull-right view-file-edit">View File & Edit</button>
+                                <button class="btn btn-primary pull-right view-file-edit btn-sm">View File & Edit</button>
                             </a>
                             <a href="{{url('ivf/ivfedit/'.encrypt($patient_id))}}" class="mb-1 ml-1">
-                                <button class="btn btn-primary pull-right">Visit-1</button>
+                                <button class="btn btn-primary pull-right btn-sm">Visit-1</button>
                             </a>
                             <a href="{{URL::to('get-all-report/'.encrypt($patient_id).'?status=ivf')}}" target="_blank" class="mb-1 ml-1">
-                                <button class="btn btn-primary pull-right">View Reports</button>
+                                <button class="btn btn-primary pull-right btn-sm">View Reports</button>
                             </a>
                         </div>
                     </div>
@@ -2002,7 +2004,7 @@
                                                 <span class="visit-lable-value">{{$historyEmbroyReady}}</span>
                                             </div>
                                         @endif
-                                        @if(!empty($husbandFactor) && (!empty($husbandFactor->sperm_count) || !empty($husbandFactor->remark) || !empty($husbandFactor->motility)))
+                                        @if(!empty($husbandFactor) && (!empty($husbandFactor->sperm_count) || isset($husbandFactor->remark) || !empty($husbandFactor->remark) || !empty($husbandFactor->motility)))
                                         <div class="mb-2">
                                             <span class="visit-lable">Sperm Count : </span>
                                             <span class="visit-lable-value">{{$husbandFactor->sperm_count}}</span>
@@ -6703,7 +6705,7 @@
             }, function () {
                 removeLastCycleVisit(visitId);
                 $('.showSweetAlert').hide();
-                location.reload();
+                // location.reload();
             });
         }
 

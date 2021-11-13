@@ -480,7 +480,7 @@ class HomeController extends AdminController
             $remark = '';
             $current_anc_id = null;
             $hoDate = null;
-            if($ancHistory)
+            if($ancHistory && $request->category != 5)
             {
                 $ancFirst = $this->ANC->where('patients_id',$patients_id)->where('id',$ancHistory->anc_id)->first();
                 $mhData = !empty($ancFirst->m_h) ? json_decode($ancFirst->m_h) : null;
@@ -494,7 +494,7 @@ class HomeController extends AdminController
             else
             {
                 $ancFirst = $this->ANC->where('patients_id',$patients_id)->orderBy('created_at','desc')->first();
-                if($ancFirst)
+                if($ancFirst && $request->category != 5)
                 {
                     $mhData = !empty($ancFirst->m_h) ? json_decode($ancFirst->m_h) : null;
                     $lmp = !empty($mhData->last_menstrual_date) ? $mhData->last_menstrual_date : null;
@@ -572,6 +572,7 @@ class HomeController extends AdminController
                 $html = $html.' Placenta : '.$ancAutoRemark['placenta'];
             }
             $data = '<p><span class="font-bold candor-color">LMP Date : </span>'.(!empty($lmp) ? \Carbon\Carbon::parse($lmp)->format('d M Y') : '-').'</p>
+                    <p><span class="font-bold candor-color">Patient Age : </span>'.$opdPatient->age.' Years'.'</p>
                     <p><span class="font-bold candor-color">H/O : </span>'.(!empty($hoDate) ? $hoDate : '').'</p>
                     <p><span class="font-bold candor-color">EDD Date : </span>'.(!empty($eddDate) ? \Carbon\Carbon::parse($eddDate)->format('d M Y') : '-').'</p>
                     <p><span class="font-bold candor-color">Preg. Week : </span>'.(!empty($preg_week) ? $preg_week.' week' : '-').'</p>
@@ -606,7 +607,8 @@ class HomeController extends AdminController
             }
             $package = $this->IvfPayment->where('patients_id',$patients_id)->orderBy('id','desc')->first();
             $data = '<p><span class="font-bold candor-color">Marriage Life : </span>'.$ml.'</p>
-            <p><span class="font-bold candor-color">No. Of Cycle : </span>'.$no_cycle.'</p>
+            <p><span class="font-bold candor-color">Patient Age : </span>'.$opdPatient->age.' Years'.'</p>
+            <p><span class="font-bold candor-color">Attempt Of Cycle : </span>'.$no_cycle.'</p>
             <p><span class="font-bold candor-color">Current Cycle : </span>'.$current_cycle.'</p>
             <p><span class="font-bold candor-color">Plan : </span>'.$plan_type.'</p>
             <p><span class="font-bold candor-color">Remark : </span>'.$remark.'</p>
@@ -659,7 +661,8 @@ class HomeController extends AdminController
                 $remark = !empty($currentData->remark) ? $currentData->remark : '';
             }
             $data = '<p><span class="font-bold candor-color">Marriage Life : </span>'.$ml.'</p>
-            <p><span class="font-bold candor-color">No. Of Cycle : </span>'.$no_cycle.'</p>
+            <p><span class="font-bold candor-color">Patient Age : </span>'.$opdPatient->age.' Years'.'</p>
+            <p><span class="font-bold candor-color">Attempt Of Cycle : </span>'.$no_cycle.'</p>
             <p><span class="font-bold candor-color">Current Cycle : </span>'.$current_cycle.'</p>
             <p><span class="font-bold candor-color">Plan : </span>'.$plan.'</p>
             <p><span class="font-bold candor-color">Remark : </span>'.$remark.'</p>

@@ -24,6 +24,7 @@
         $ancId = $ancData->id;
     }
     $ancCreatedDate = (!empty($ancId) || !empty($ancHistoryId)) ? $ancData->created_at : null;
+    $ancFirst_patientsObstratics = isset($ancFirstVisit) ? json_decode($ancFirstVisit->patients_obstratics) : null;
     $previousAncRemark = isset($previousAncRemark->remark) && !empty($previousAncRemark->remark) ? $previousAncRemark->remark : null;
     if(!empty($previousAnc->id)){
         $preId=$previousAnc->id;
@@ -87,7 +88,14 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
             </small>
         </h5>
     @endif
+    
     <h5 class="autoRemark">
+    @if (isset($ancFirst_patientsObstratics->gpal_status) && !empty($ancFirst_patientsObstratics->gpal_status))
+            *GPAL Status:
+                <small>
+                    {{$ancFirst_patientsObstratics->gpal_status}}
+                </small>
+    @endif
         @if($ancAutoRemark && !empty($ancAutoRemark['blood_group']))
         @if(empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['blood_group_date']))
             &nbsp;&nbsp;&nbsp;*Blood Group:
@@ -1361,6 +1369,12 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                         <span class="form-error-msg">
                             {{$errors->first('first_marriage_life')}}
                         </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">Gravida/Para/Abortaion/Live Status : &nbsp;</span>
+                                {{Form::text("p_obstratics[gpal_status]",isset($patientsObstratics->gpal_status) && !empty($patientsObstratics->gpal_status) ? $patientsObstratics->gpal_status : null,['class'=>'form-control'])}}
+                        </div>
                     </div>
                 </div>
 

@@ -385,6 +385,12 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                                         {{$errors->first('marriage_life')}}
                                                     </span>
                                             </div>
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Gravida/Para/Abortaion/Live Status : &nbsp;</span>
+                                                        {{Form::text("p_obstratics[gpal_status]",'',['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="row mt-3">

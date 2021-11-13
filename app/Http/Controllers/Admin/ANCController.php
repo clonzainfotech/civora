@@ -1163,9 +1163,11 @@ class ANCController extends AdminController
                     $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail' ?  true : false;
                 }
             }
+            $ancFirstVisit = $this->ANC->where('patients_id',$patients)->orderBy('created_at','DESC')->first();
             if($request->ajax()){
                 $oeDataCount = !empty($oe->utdata) ? count((array)$oe->utdata) : 0;
                 $data['patientsInfo'] = $patientsInfo;
+                $data['ancFirstVisit'] = $ancFirstVisit;
                 $data['medicineKey'] = $medicineKey;
                 $data['patientsObstratics'] = $patientsObstratics;
                 $data['familyData'] = $familyData;

@@ -41,6 +41,8 @@
     $remark=!empty($previousAnc->o_e) ? json_decode($previousAnc->o_e) : null;
     $blood=!empty($previousAnc->investigation) ? json_decode($previousAnc->investigation) : null;
     $ancCreatedDate = (!empty($ancData)) ? $ancData->created_at : null;
+    $ancFirst_patientsObstratics = isset($ancFirstVisitData) ? json_decode($ancFirstVisitData->patients_obstratics) : null;
+
     $contraceptionData = ['barrier_method'=>'Barrier Method','cu_t'=>'Cu - T','tl_done'=>'TL Done ','occipill'=>'Occipill','other_contraception'=>'Other'];
     $utsizearray = ["Normal Size","Just Bulky","6 Weeks","6-8 Weeks","8 Weeks","8-10 Weeks","10-12 Weeks"];
     $utsizearray1 = ["12 Weeks","Uterus Just Palpable","14 Weeks","16 Weeks","18 Weeks","20 Weeks","22 Weeks","24 Weeks","26 Weeks","28 Weeks","30 Weeks","32 Weeks","34 Weeks","36 Weeks","Full Term"];
@@ -711,6 +713,10 @@
                             </tr>
                             <tr>
                                 <th class="text-danger">
+                                @if (isset($ancFirst_patientsObstratics->gpal_status) && !empty($ancFirst_patientsObstratics->gpal_status))
+                                <span class="anc-label ">*GPAL Status:</span>
+                                                {{$ancFirst_patientsObstratics->gpal_status}}
+                                @endif
                                     @if($ancAutoRemark && !empty($ancAutoRemark['blood_group']) &&  (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['blood_group_date'])))
                                         <span class="anc-label ">*Blood Group:</span>
                                             {{$ancAutoRemark['blood_group']}}

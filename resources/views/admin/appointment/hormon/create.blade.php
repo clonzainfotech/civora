@@ -513,7 +513,6 @@
             {
                 
                 $('#package_id').selectpicker('refresh');
-                alert($('select#package_id').val());
                 if($('select#package_id').val() == '')
                 {
                     valid = 0;

@@ -748,15 +748,21 @@ class AppointmentController extends ApiController
         }
         $result = [];
         $doctor = $this->User->where('role',3)->where('id',$request->doctor_id)->first();
+        $absence_doctor = $this->User->where('id',$request->doctor_id)->whereRole('3')->whereStatus('1')->whereRaw("find_in_set('".\Carbon\Carbon::parse($request->date)->format('m/d/Y')."',absence_dates)")->first();
+        if($absence_doctor)
+        {
+            // return $this->sendResponse($absence_doctor->name.' is not available on '.\Carbon\Carbon::parse($request->date)->format('d M Y').'. Please Select other Date');
+            return $this->sendResponse('Sorry for inconvenience '.$absence_doctor->name.' not available on this date prefer other Doctor or Dates',[]);
+        }
         if($doctor)
         {
             //for shivani shah
-            $totalSloat = 2;
+            $totalSloat = 2; // check 2 patients within pre 15 min
             $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45','16:00','16:15','16:30','16:45','17:00','17:15','17:30','17:45','18:00','18:15','18:30','18:45'];
             if($request->doctor_id == 11)//for jaydev sir
             {
                 $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45'];
-                $totalSloat = 3;
+                $totalSloat = 3;// check 3 patients within pre 15 min
             }
             foreach($sloats as $sloat)
             {

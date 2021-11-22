@@ -2256,13 +2256,13 @@
                                             <tfoot>
                                                 <tr>
                                                 <td colspan="7" class="frozen_table_footer">
-                                                    @if(!$isForm && !empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2)
+                                                    @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2)
                                                     <div class="mb-2">
                                                         <span class="visit-lable">Transfer Plan :- </span> 
                                                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
                                                     </div>
                                                     @endif
-                                                    @if(!$isTransfer && $isForm && $skipPlan == $pStatus && $skipValue == 0 && $resultValue == 0)
+                                                    @if(!$isTransfer && $skipPlan == $pStatus && $skipValue == 0 && $resultValue == 0 && $lastHistory->cycle_status != 2)
                                                     
                                                         {{Form::hidden('data[is_transfer]','no',['class'=>'is-transfer'])}}
                                                         {{Form::hidden('data[is_transfer_print]','no')}}
@@ -2690,7 +2690,8 @@
                                                             </div>
                                                         </div>
                                                         {{Form::hidden("data[is_upt]",'no')}}
-                                                    @elseif($skipValue == 1) {{-- skip cycle --}}
+                                                    @endif
+                                                    @if($skipValue == 1) {{-- skip cycle --}}
                                                         @php
                                                                 $visitDate = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y');
                                                                 $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $row->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
@@ -2713,7 +2714,9 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-                                                    @else {{-- result --}}
+                                                    @endif
+                                                    @if($isTransfer)
+                                                     {{-- result --}}
                                                         {{Form::hidden("data[is_upt]",'yes')}}
                                                         {{Form::hidden('data[is_transfer]','yes',['class'=>'is-transfer'])}}
                                                         {{Form::hidden('data[is_transfer_print]','yes')}}

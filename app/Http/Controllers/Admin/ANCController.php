@@ -1142,27 +1142,27 @@ class ANCController extends AdminController
             $weekData = [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>'8 Weeks',6=>'8 - 10 Weeks',7=>'10 - 12 Weeks',8=>'12 Weeks',9=>'Uterus Just Palpable',10=>'14 Weeks',11=>'16 Weeks',12=>'18 Weeks',13=>'20 Weeks',14=>'22 Weeks',15=>'24 Weeks',16=>'26 Weeks',17=>'28 Weeks',18=>'30 Weeks',19=>'32 Weeks',20=>'34 Weeks',21=>'36 Weeks',22=>'Full Term'];
             // $firstANCData = $this->ANC->where('patients_id',$patients)->where('created_at','<',$ancCurrent->created_at)->first();
             $getTotalAncNumber = $this->getTotalAncNumber($patients,$ancCurrent->id);
-            $isConceivedIUI = false;
-            $isConceivedIVF = false;
-            $ancTranferDate = Carbon::parse($ancDateData->created_at)->format('Y-m-d H:i:s');
-            $iuiHistory = $this->IuiHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('visit',4)->where('cycle_status',2)->get();
-            if($iuiHistory)
-            {
-                foreach($iuiHistory as $iui)
-                {
-                    $iuiData = json_decode($iui->description);
-                    $isConceivedIUI = isset($iuiData) && (isset($iuiData->result) && !empty($iuiData->result) && $iuiData->result != 'fail') ? true : false;
-                }
-            }
-            $ivfHistory = $this->IvfHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('plan','!=','1')->where('cycle_status',2)->get();
-            if($ivfHistory)
-            {
-                foreach($ivfHistory as $ivf)
-                {
-                    $ivfData = json_decode($ivf->description);
-                    $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail' ?  true : false;
-                }
-            }
+            // $isConceivedIUI = false;
+            // $isConceivedIVF = false;
+            // $ancTranferDate = Carbon::parse($ancDateData->created_at)->format('Y-m-d H:i:s');
+            // $iuiHistory = $this->IuiHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('visit',4)->where('cycle_status',2)->get();
+            // if($iuiHistory)
+            // {
+            //     foreach($iuiHistory as $iui)
+            //     {
+            //         $iuiData = json_decode($iui->description);
+            //         $isConceivedIUI = isset($iuiData) && (isset($iuiData->result) && !empty($iuiData->result) && $iuiData->result != 'fail') ? true : false;
+            //     }
+            // }
+            // $ivfHistory = $this->IvfHistory->where('patients_id',$patients)->where('created_at','>=',$ancTranferDate)->where('plan','!=','1')->where('cycle_status',2)->get();
+            // if($ivfHistory)
+            // {
+            //     foreach($ivfHistory as $ivf)
+            //     {
+            //         $ivfData = json_decode($ivf->description);
+            //         $isConceivedIVF = isset($ivfData) && isset($ivfData->transfer->result_type) && !empty($ivfData->transfer->result_type) && $ivfData->transfer->result_type != 'fail' ?  true : false;
+            //     }
+            // }
             $ancFirstVisit = $this->ANC->where('patients_id',$patients)->orderBy('created_at','DESC')->first();
             if($request->ajax()){
                 $oeDataCount = !empty($oe->utdata) ? count((array)$oe->utdata) : 0;
@@ -1229,7 +1229,7 @@ class ANCController extends AdminController
                 return $data;
             }
 
-            return view('admin.anc.history',compact('ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent','isConceivedIUI','isConceivedIVF'));
+            return view('admin.anc.history',compact('ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);
@@ -1877,6 +1877,114 @@ class ANCController extends AdminController
         }
         $ancAutoRemark = $this->getAutoRemark($patientId,$anc_id);
         return View::make('admin.anc.preview', compact('ancFirstVisitData','investigationReport','weight','personal_past_history_type','personal_history_type','placenta', 'ancData','ancHistory','isNextAppointment','nextAppointmentDate','lmdDate','usgEddDate','eddDate', 'isGsac', 'isFirstVisit','currentdate','previousAnc','weekData','usgStatus','date','patients','ancAutoRemark'))->render();
+    }
+
+    /**
+     * return anc chart related record
+     * @return  view
+     * @param 
+     */
+    public function getAncChart($patientsId,$ancId)
+    {
+        $pID = decrypt($patientsId);
+        $ancId = decrypt($ancId);
+        $patients = $this->OpdPatients->find($pID);
+        $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
+        $ancHistory = $this->AncHistory->where('patients_id',$pID)->where('anc_id',$ancId)->get();
+        // $blood_report = [];
+        $blood_report['hb'] = [];
+        $blood_report['blood_group'] = [];
+        $blood_report['urine'] = [];
+        $blood_report['rbs'] = [];
+        $blood_report['hiv'] = [];
+        $blood_report['hbsag'] = [];
+        $blood_report['tsh'] = [];
+        $blood_report['fbs'] = [];
+        $blood_report['ppbs'] = [];
+        $otherDetails = [];
+        foreach($ancHistory as $anc)
+        {
+            $date = Carbon::parse($anc->created_at)->format('d-m-Y');
+            $investigation = json_decode($anc->investigation,true);
+            $injection = json_decode($anc->injection,true);
+            $usg = json_decode($anc->usg,true);
+            if(isset($investigation['investigation_details']['31']) && !empty($investigation['investigation_details']['31']))
+            {
+                array_push($blood_report['hb'],($investigation['investigation_details']['31'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['12']) && !empty($investigation['investigation_details']['12']))
+            {
+                array_push($blood_report['blood_group'],($investigation['investigation_details']['12'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['3']) && !empty($investigation['investigation_details']['3']))
+            {
+                array_push($blood_report['urine'],($investigation['investigation_details']['3'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['6']) && !empty($investigation['investigation_details']['6']))
+            {
+                array_push($blood_report['rbs'],($investigation['investigation_details']['6'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['10']) && !empty($investigation['investigation_details']['10']))
+            {
+                array_push($blood_report['hiv'],($investigation['investigation_details']['10'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['8']) && !empty($investigation['investigation_details']['8']))
+            {
+                array_push($blood_report['hbsag'],($investigation['investigation_details']['8'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['14']) && !empty($investigation['investigation_details']['14']))
+            {
+                array_push($blood_report['tsh'],($investigation['investigation_details']['14'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['2']) && !empty($investigation['investigation_details']['2']))
+            {
+                array_push($blood_report['fbs'],($investigation['investigation_details']['2'].'('.$date.')'));
+            }
+            if(isset($investigation['investigation_details']['4']) && !empty($investigation['investigation_details']['4']))
+            {
+                array_push($blood_report['ppbs'],($investigation['investigation_details']['4'].'('.$date.')'));
+            }
+            if(!empty($injection['tt1']))
+            {
+                $otherDetails['tt1'] = $injection['tt1'];
+            }
+            if(!empty($injection['tt2']))
+            {
+                $otherDetails['tt2'] = $injection['tt2'];
+            }
+            if(!empty($injection['betnasol_1']))
+            {
+                $otherDetails['betnasol_1'] = $injection['betnasol_1'];
+            }
+            if(!empty($injection['betnasol_2']))
+            {
+                $otherDetails['betnasol_2'] = $injection['betnasol_2'];
+            }
+            if(!empty($injection['nt_scan']))
+            {
+                $otherDetails['nt_scan'] = $injection['nt_scan'];
+            }
+            if(!empty($injection['anomalies_miles']))
+            {
+                $otherDetails['anomalies_miles'] = $injection['anomalies_miles'];
+            }
+            if(isset($investigation['d_m_date']) && !empty($investigation['d_m_date']))
+            {
+                $otherDetails['d_m_date'] = $investigation['d_m_date'];
+            }
+            
+
+            // $blood_report['hb'][$date] = isset($investigation['investigation_details']['31']) ? $investigation['investigation_details']['31'] : '';
+            // $blood_report['blood_group'][$date] = isset($investigation['investigation_details']['12']) ? $investigation['investigation_details']['12'] : '';
+            // $blood_report['urine'][$date] = isset($investigation['investigation_details']['3']) ? $investigation['investigation_details']['3'] : '';
+            // $blood_report['rbs'][$date] = isset($investigation['investigation_details']['6']) ? $investigation['investigation_details']['6'] : '';
+            // $blood_report['hiv'][$date] = isset($investigation['investigation_details']['10']) ? $investigation['investigation_details']['10'] : '';
+            // $blood_report['hbsag'][$date] = isset($investigation['investigation_details']['8']) ? $investigation['investigation_details']['8'] : '';
+            // $blood_report['tsh'][$date] = isset($investigation['investigation_details']['14']) ? $investigation['investigation_details']['14'] : '';
+            // $blood_report['fbs'][$date] = isset($investigation['investigation_details']['2']) ? $investigation['investigation_details']['2'] : '';
+            // $blood_report['ppbs'][$date] = isset($investigation['investigation_details']['4']) ? $investigation['investigation_details']['4'] : '';
+        }
+        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails'));
     }
 
     

@@ -51,13 +51,14 @@
                     </div>
                     <div class="col-md-6">
                         <a href="{{URL::to('get-all-report/'.encrypt($ancData->getPatients['id']).'?status=anc')}}" target="_blank" class="btn btn-primary pull-right">View Reports</a>
-                        @if($isConceivedIUI)
+                        {{-- @if($isConceivedIUI)
                             <a href="{{URL::to('iui/history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary pull-right">IUI History</a>
                         @endif
                         @if($isConceivedIVF)
                             <a href="{{URL::to('ivf/history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary pull-right">IVF History</a>
-                        @endif
+                        @endif --}}
                         <a href="{{URL::to('patient-history/'.encrypt($ancData->getPatients['id']))}}" target="_blank" class="btn btn-primary pull-right">View History</a>
+                        <a href="{{URL::to('get-anc-chart/'.encrypt($ancData->getPatients['id']).'/'.encrypt($ancCurrent->id))}}" target="_blank" class="btn btn-primary pull-right">ANC Chart</a>
                     </div>
                 </div>
             </div>

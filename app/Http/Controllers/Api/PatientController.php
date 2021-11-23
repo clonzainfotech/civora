@@ -322,6 +322,21 @@ class PatientController extends ApiController
                         }
                     }
                 }
+                $gynecAllVisit = $this->Gynec->where('patients_id', $patients)->get();
+                if($gynecAllVisit)
+                {
+                    foreach($gynecAllVisit as $gynecVisit)
+                    {
+                        $reportDate = Carbon::parse($gynecVisit->created_at)->format('Y-m-d H:i:s');
+                        $investigationReport = !empty($gynecVisit->investigation) ? json_decode($gynecVisit->investigation,true) : '';
+                        if(!empty($investigationReport['report']['images']))
+                        {
+                            $data[] = array('date' => $reportDate,"category"=> 'GYNEC',"report_type" => 'Blood Report','url' => $investigationReport['report']['images']);
+                        }
+                        // $GynecReports[$reportDate]['report'] = !empty($investigationReport['report']['images']) ? $investigationReport['report']['images'] : [];
+                    }
+                }
+
                 usort($data, array( $this, 'cmp' ));//dort array in desc date wise
                 return $this->sendResponse('get User Report Successfully',$data);
             } 

@@ -1890,10 +1890,10 @@ class IVFController extends AdminController
         $patients_Id = decrypt($patientsId);
         $patients = opd::where(['id' => $patients_Id])->first();
         // $ivfPaymentHistory = null;
-        $ivfPaymentList = $this->IvfPayment->select(DB::raw("CONCAT(package,'- Cycle : ',cycle_no) as package"),'id')->wherePatientsId($patientsId)->pluck('package','id');
+        $ivfPaymentList = $this->IvfPayment->select(DB::raw("CONCAT(package,'- Cycle : ',cycle_no) as package"),'id')->wherePatientsId($patients_Id)->pluck('package','id');
         $opdCollection = $this->IndoorDeposit->wherePatientId($patients_Id)->whereNotNull('package')->whereChargeType(2)->orderBy('id','DESC')->first();
 
-        return view('admin.ivf.payments',['patientsId' => $patientsId,'patients' => $patients]);
+        return view('admin.ivf.payments',['patientsId' => $patientsId,'patients' => $patients,'ivfPaymentList'=>$ivfPaymentList]);
     }
 
     /**

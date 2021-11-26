@@ -1280,6 +1280,18 @@ class IUIController extends AdminController
                     $remark = $iuiRemarkData->remark;
                 }
             }
+            // $now = Carbon::now()->format('Y-m-d');
+            $LastIuiVisit = $this->IuiHistory->wherePatientsId($id)->orderBy('created_at','desc')->first();
+            if($LastIuiVisit)
+            {
+                $iuiExtraVisit  = $this->IuiExtraVisit->where('patient_id',$id)->whereCycleNo($iui->cycle_no)->where('created_at','>',$LastIuiVisit->created_at)->first();
+                if($iuiExtraVisit)
+                {
+                    $oe = json_decode($iuiExtraVisit->oe);
+                    $remark = isset($oe->remark) && !empty($oe->remark) ? $oe->remark : '';
+                }
+            }
+
             $durationOfData = ['other'=>'Other'] + getDurationOfData(2)['data'];
             $thirdDescription = !empty($iuiThirdVisit) ? json_decode($iuiThirdVisit->description) : null;
             //if select cycle from dropdown thwn don't change visitNo

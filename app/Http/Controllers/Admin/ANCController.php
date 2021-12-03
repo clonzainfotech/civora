@@ -1164,9 +1164,11 @@ class ANCController extends AdminController
             //     }
             // }
             $ancFirstVisit = $this->ANC->where('patients_id',$patients)->orderBy('created_at','DESC')->first();
+            $todayAncVisit = $this->AncHistory->where('patients_id',$patients)->whereDate('created_at',Carbon::now()->format('Y-m-d'))->first();
             if($request->ajax()){
                 $oeDataCount = !empty($oe->utdata) ? count((array)$oe->utdata) : 0;
                 $data['patientsInfo'] = $patientsInfo;
+                $data['todayAncVisit'] = $todayAncVisit;
                 $data['ancFirstVisit'] = $ancFirstVisit;
                 $data['medicineKey'] = $medicineKey;
                 $data['patientsObstratics'] = $patientsObstratics;
@@ -1229,7 +1231,7 @@ class ANCController extends AdminController
                 return $data;
             }
 
-            return view('admin.anc.history',compact('ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent'));
+            return view('admin.anc.history',compact('todayAncVisit','ancData','patientsId','date','hospitalTime','weekData','medicines','ancPatients','referenceDoctor','getTotalAncNumber','ancCurrent'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);

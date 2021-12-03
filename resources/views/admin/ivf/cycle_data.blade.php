@@ -2212,7 +2212,7 @@
                                                             <td></td>
                                                         </tr>
                                                     @endif
-                                                    {{-- @if(isset($historyData->is_transfer) && $historyData->is_transfer == 'yes') --}}
+                                                    @if(isset($historyData->is_transfer) && $historyData->is_transfer == 'yes')
                                                         @php
                                                             $ivfExtraVisit = IvfExtraVisit::where('patient_id',$row->patients_id)->whereCycleNo($cycleNumber)->where('plan',$pStatus)->where('created_at','>',$row->created_at)->orderBy('id','ASC')->get();
                                                         @endphp
@@ -2233,7 +2233,7 @@
                                                                 </tr>
                                                                 @endforeach
                                                         @endif
-                                                    {{-- @endif --}}
+                                                    @endif
                                                 @endforeach
                                             
                                                 @if(!empty($lastHistoryData) && $resultValue == 0 && $skipValue == 0 && $isForm == true)

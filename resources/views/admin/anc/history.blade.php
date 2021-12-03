@@ -107,12 +107,16 @@
 
                                 </div>
                                 {{Form::hidden('patients_id',$patientsId,['class'=>'patients-id'])}}
+                                
                                 <div class="col-sm-12">
+                                    @if(empty($ancId) && empty($ancHistoryId) && !empty($todayAncVisit))
+                                        <span class="text-danger today-visit-fillup"></span><br>
+                                    @endif
                                     {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                                     {{Form::hidden('next_time','',['class'=>'next-time-value'])}}
-                                    {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
+                                    {{Form::submit('submit',['class'=>'btn btn-primary submit ' ])}}
                                     {{-- <a class="btn btn-primary next-appointment text-white">Save & Next Appointment</a> --}}
-                                    <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>
+                                    <button type="submit" class="{{'btn btn-primary abcc submit '}}" value="1" disabled>Save & Preivew</button>
                                     <button type="submit" class="btn btn-primary admission-print submit d-none" value="3">Admission Print</button>
 
                                     <a href="{{URL::to('anc')}}" class="btn btn-default">Cancel</a>
@@ -501,6 +505,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
 
     function getAncHistoryData(qstring){
         $('.submit').prop('disabled', false);
+        $('.today-visit-fillup').html('');
         $.ajax({
             url:"{{URL::to('anc/history')}}"+'/'+patientsId+'?'+qstring,
             dataType:'json',
@@ -512,6 +517,12 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
                 $('.injection').removeClass('d-none');
                 $('.m-h').removeClass('d-none');
                 $('.obstratics-history').removeClass('d-none');
+            }
+
+            if(data.todayAncVisit != null && data.ancHistoryId == null)
+            {
+                $('.submit').prop('disabled',true);
+                $('.today-visit-fillup').html("Today's visit already fill up");
             }
             $('.anc-history').html(data.editAnc);
             $('.ho-value .selectized').addClass('d-none');

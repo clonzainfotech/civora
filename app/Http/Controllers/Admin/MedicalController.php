@@ -61,7 +61,7 @@ class MedicalController extends AdminController
                     }
                 }
                 // $patients = $patients->paginate(20);
-                $patients = $patients->paginate(20);
+                $patients = $patients->paginate(100);
                 $data['status'] = 1;
                 $data['patients'] = View::make('admin.medical.data',compact('patients'))->render();
                 return $data;

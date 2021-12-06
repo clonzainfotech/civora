@@ -312,8 +312,8 @@
                     </div>
                     @endif
                     <div class="row">
-                        <div class="col-md-12">
-                            <table class='unik-table table m-b-0 table-responsive'>
+                        <div class="col-md-12 table-responsive">
+                            <table class='unik-table table m-b-0'>
                                 <thead class="pick_up_table_thead">
                                 <tr>
                                     <th class="text-secondary">Visit Date</th>
@@ -1707,7 +1707,7 @@
                                 </table>
                             </div>
                         @endif
-                        <div class="col-md-12">
+                        <div class="col-md-12 table-responsive">
                             <h5>Medicine:</h5>
                             <table class="unik-table table">
                                 <thead class="pick_up_table_thead">
@@ -2070,8 +2070,8 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="col-md-12">
-                                        <table class="table follicular-table frozen-table table-bordered table-responsive">
+                                    <div class="col-md-12 table-responsive">
+                                        <table class="table follicular-table frozen-table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th style="width:8% !important;">Date</th>
@@ -2868,7 +2868,7 @@
                                         </table>
 
                                         <h4 class=""><u>Medicine:</u></h4>
-                                        <table class="table follicular-table frozen-table table-bordered table-responsive">
+                                        <table class="table follicular-table frozen-table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight: bold !important;"> Date</th>

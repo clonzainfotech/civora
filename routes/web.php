@@ -204,6 +204,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('get-fet-report','IVFController@getFetReport');
     Route::get('get-ivf-report/{id}','IVFController@getIvfHistoryReport');
     Route::get('get-ivf-followup-date', 'IVFController@getIvfFollowupDate');
+    Route::get('ivf-result-review', 'IVFController@getIvfResultReview');
+    Route::get('ivf-result-review/{id}', 'IVFController@getIvfResultReviewDetail');
 
     Route::get('ivf-payment/{patientsId}','IVFController@ivfPayment');
     Route::post('ivf-store-payment','IVFController@ivfPaymentStore');

@@ -3389,4 +3389,47 @@ class IVFController extends AdminController
             }
         }
     }
+    /**
+     * return Ivf Result Review related Detail
+     * @return  view
+     * @param 
+     */
+    public function getIvfResultReview(Request $request)
+    {
+        try
+        {
+
+            if($request->ajax())
+            {
+                $ivfPatients = $this->IvfHistory->orderBy('created_at','desc')->groupBy('patients_id');
+                if($request->search)
+                {
+                    $search = $request->search;
+                    $ivfPatients = $ivfPatients->where(function($query) use($search) {
+                        $query
+                        ->orWhereHas('getPatientsDetails', function($query) use($search) {
+                            $query->where('name','LIKE',$search.'%')->orWhere('code','LIKE',$search.'%');
+                        });
+                    });
+                }
+                $ivfPatients = $ivfPatients->paginate(100);
+                $data['status'] = 1;
+                $data['ivfPatients'] = View::make('admin.ivf_result_review.data',compact('ivfPatients'))->render();
+                return $data;  
+            }
+            return view('admin.ivf_result_review.index');
+
+        }
+        catch(Exception $e)
+        {
+            log::Debug($e);
+            abort(500);
+        }
+    }
+    public function getIvfResultReviewDetail(Request $request , $pId)
+    {
+        $pId = decrypt($pId);
+        $patients = $this->OpdPatients->find($pId);
+        return view('admin.ivf_result_review.ivf_result_review',compact('patients'));
+    }
 }

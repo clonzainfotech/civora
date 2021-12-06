@@ -81,6 +81,7 @@
                                     <span>INFERTILITY ({{$iuiCount}})</span>&nbsp;</a></li>
                             <li class="{{ Request::segment(1) === 'call-reminder' ? 'sub active open' : null }}"><a href="{{URL::to('call-reminder')}}"><span>IUI Call Reminder</span></a></li>
                             <li class="{{ Request::segment(1) === 'iui-result' ? 'sub active open' : null }}"><a href="{{URL::to('iui-result')}}"><span>IUI Result</span></a></li>
+                            <li class="{{ Request::segment(1) === 'ivf-result-review' ? 'sub active open' : null }}"><a href="{{URL::to('ivf-result-review')}}"><span>IVF Result Reviews</span></a></li>
                         </ul>
                     </li>
                     @endif

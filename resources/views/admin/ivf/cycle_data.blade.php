@@ -1054,7 +1054,8 @@
                                                         <div class="col-md-3 transfer-data d-none">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">Embryos Transferred Image: &nbsp;</span>
-                                                                {{Form::file('embryos_transferred_image',['class'=>'form-control embryos_transferred_image'])}}
+                                                                {{Form::file('embryos_transferred_image[]',['class'=>'form-control embryos_transferred_image','accept' => 'image/png,image/jpeg,image/jpg',
+                                                                'multiple' => true])}}
                                                             </div>
                                                         </div>
                                                         
@@ -2535,7 +2536,8 @@
                                                                 <div class="col-md-3 transfer-data d-none">
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon">Embryos Transferred Image: &nbsp;</span>
-                                                                        {{Form::file('embryos_transferred_image',['class'=>'form-control embryos_transferred_image'])}}
+                                                                        {{Form::file('embryos_transferred_image[]',['class'=>'form-control embryos_transferred_image','accept' => 'image/png,image/jpeg,image/jpg',
+                                                                        'multiple' => true])}}
                                                                     </div>
                                                                 </div>
                                                                 
@@ -2841,7 +2843,7 @@
                                                                     $diff = $diff + 1;
                                                                 @endphp
                                                                 <h5 class=""><u>Result:</u></h5>
-                                                                <table class="table follicular-table frozen-table table-bordered table-responsive">
+                                                                <table class="table follicular-table frozen-table table-bordered">
                                                                     <thead>
                                                                         <tr>
                                                                             <th>Date</th>
@@ -5402,7 +5404,8 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-addon"></span>
-                                {{Form::file('embryos_transferred_image',['class'=>'form-control edit_embryos_transferred_image'])}}
+                                {{Form::file('embryos_transferred_image[]',['class'=>'form-control edit_embryos_transferred_image','accept' => 'image/png,image/jpeg,image/jpg',
+                                'multiple' => true])}}
                             </div>
                         </div>
                         

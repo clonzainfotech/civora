@@ -270,7 +270,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                     <div class="col-md-1">
                         <h5>IVF</h5>
                     </div>
-                    <div class="col-md-7 mt-2"><h6>Medicine Included in Package :- </h6><span class="font-weight-bold">{{count($ivfData) != 0 && isset($ivfData[0]->getPatientsDetails->getIVFPayment)  !empty($ivfData[0]->getPatientsDetails->getIVFPayment['medical_medicines']) ? 'Yes' : 'No'}}</span></div>
+                    <div class="col-md-7 mt-2 d-flex"><h6>Medicine Included in Package :- <span class="font-weight-bold">{{count($ivfData) != 0 && isset($ivfData[0]->getPatientsDetails->getIVFPayment) && !empty($ivfData[0]->getPatientsDetails->getIVFPayment['medical_medicines']) ? 'Yes' : 'No'}}</span></h6></div>
                     <div class="col-md-3">
                         <input type="text" class="form-control daterange ivf-date" data-id="ivf-date" placeholder="Select Date">
                     </div>

@@ -1000,11 +1000,19 @@ class IVFController extends AdminController
                         $transferReport->day = $request->day;
                         $transferReport->endo_thickness = $request->endo_thickness;
                         $transferReport->et_procedure = $request->et_procedure;
+                        
                         if(!empty($request->embryos_transferred_image)){
                             $imagePath = 'public/upload/ivf/report';
-                            $picture = $request->embryos_transferred_image;
-                            $imageName = $this->uploadImage($picture, $imagePath);
-                            $request->embryos_transferred_image = $imagePath.'/'.$imageName;
+                            $pictures = $request->embryos_transferred_image;
+                            $transferImages = [];
+                            foreach($pictures as $key => $picture)
+                            {
+                                
+                                $imageName = $this->uploadImage($picture, $imagePath);
+                                $transferImages[] = $imagePath.'/'.$imageName;
+                                
+                            }
+                            $request->embryos_transferred_image = implode(',',$transferImages);
                         }
                         // dd($request->embryos_transferred_image);
                         $transferReport->embryos_transferred = $request->embryos_transferred;
@@ -1225,7 +1233,7 @@ class IVFController extends AdminController
             $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->orderBy('id', 'DESC')->first();
             if($lastAppointment)
             {
-                if($lastAppointment->category_id == 3 || $lastAppointment->category_id == 4)
+                if(!in_array($lastAppointment->category_id,[1,2]))
                 {
                     $firstVisit = $this->IVF->where('patients_id',$id)->first();
                     if(!$firstVisit)
@@ -2338,12 +2346,19 @@ class IVFController extends AdminController
             $transferReport->et_procedure = $request->et_procedure;
             if(!empty($request->embryos_transferred_image)){
                 $imagePath = 'public/upload/ivf/report';
-                $picture = $request->embryos_transferred_image;
-                $imageName = $this->uploadImage($picture, $imagePath);
-                $request->embryos_transferred_image = $imagePath.'/'.$imageName;
-                $transferReport->embryos_transferred_image = $request->embryos_transferred_image;
+                $pictures = $request->embryos_transferred_image;
+                $transferImages = [];
+                foreach($pictures as $key => $picture)
+                {
+                    
+                    $imageName = $this->uploadImage($picture, $imagePath);
+                    $transferImages[] = $imagePath.'/'.$imageName;
+                    
+                }
+                $request->embryos_transferred_image = implode(',',$transferImages);
             }
             $transferReport->embryos_transferred = $request->embryos_transferred;
+            $transferReport->embryos_transferred_image = $request->embryos_transferred_image;
             $transferReport->frozen_embryos = $request->frozen_embryos;
             $transferReport->pickup_date = !empty($request->pick_up_date) ? \Carbon\Carbon::parse($request->pick_up_date)->format('Y-m-d') : null;
             $transferReport->simulation_protocol = $request->simulation_protocol;

@@ -4829,8 +4829,8 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             </div>
                         </div>
                     @endif
-                    <div class="col-md-12">
-                        <table class="table follicular-table table-bordered table-responsive">
+                    <div class="col-md-12 table-responsive">
+                        <table class="table follicular-table table-bordered ">
                             <thead>
                                 <tr>
                                     <th style="width:8% !important;">Date</th>
@@ -5608,7 +5608,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                         </table>
                         
                         <h4 class=""><u>Medicine:</u></h4>
-                        <table class="table follicular-table table-bordered table-responsive">
+                        <table class="table follicular-table table-bordered">
                             <thead>
                                 <tr>
                                     <th class="font-bold"> Date</th>

@@ -116,7 +116,9 @@
                             <td>Embryos Transferred Report</td>
                             <td colspan="3">
                                 @if(!empty($transferReport->embryos_transferred_image))
-                                <img src="{{url($transferReport->embryos_transferred_image)}}" height="100" width="100">
+                                    @foreach(explode(',',$transferReport->embryos_transferred_image) as $img)
+                                        <img src="{{url($img)}}" height="100" width="100">
+                                    @endforeach
                                 @endif
                             </td>
                         </tr>

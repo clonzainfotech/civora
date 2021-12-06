@@ -80,7 +80,7 @@ class OpdPatients extends BaseModel
     }
 
     public function getIVFPayment(){
-        return $this->hasOne('App\Models\IvfPayment','patients_id','id');
+        return $this->hasOne('App\Models\IvfPayment','patients_id','id')->orderBy('id','DESC');
     }
 
     public function getCurrentDoneAppointment()

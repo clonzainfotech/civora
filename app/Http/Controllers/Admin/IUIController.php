@@ -1194,7 +1194,8 @@ class IUIController extends AdminController
             //if pt in iui and currently take tretment in ivf then transfer again in iui or cuurently take tretment and now start iui then auto fill first visit 
             $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->orderBy('id', 'DESC')->first();
             //if patient is currently in anc or ivf now convert in inf then fillup first visit auto
-            if(($lastAppointment && ($lastAppointment->category_id == 1 || $lastAppointment->category_id == 2)))
+            
+            if($lastAppointment && (!in_array($lastAppointment->category_id,[3,4])))
             {
                 $firstVisit = $this->IUI->where('patients_id',$id)->first();
                 $firstVisitHistory = null;

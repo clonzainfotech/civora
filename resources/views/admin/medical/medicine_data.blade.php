@@ -270,7 +270,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                     <div class="col-md-1">
                         <h5>IVF</h5>
                     </div>
-                    <div class="col-md-7"></div>
+                    <div class="col-md-7 mt-2"><h6>Medicine Included in Package :- </h6><span class="font-weight-bold">{{count($ivfData) != 0 && isset($ivfData[0]->getPatientsDetails->getIVFPayment)  !empty($ivfData[0]->getPatientsDetails->getIVFPayment['medical_medicines']) ? 'Yes' : 'No'}}</span></div>
                     <div class="col-md-3">
                         <input type="text" class="form-control daterange ivf-date" data-id="ivf-date" placeholder="Select Date">
                     </div>
@@ -309,6 +309,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                         @endphp<br>
                         <div class="row">
                             <div class="col-md-5 ml-2">Appointment Date :- <span class="font-weight-bold">{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s')}}</span></div>
+                            <div class="col-md-5 ml-2"></div>
                         </div>
                         <br>
                         <div class="medicines-table">

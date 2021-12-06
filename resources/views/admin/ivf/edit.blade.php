@@ -601,8 +601,15 @@
                                                     Days Before
                                                 </label>
                                             </div>
+                                            
                                         </div>
-
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{Form::select("oh[type_of_infertility]",[1=>'Primary',2=>'Secondary'],isset($oh->type_of_infertility) && !empty($oh->type_of_infertility) ? $oh->type_of_infertility : null,['class'=>'form-control select-padding-0','placeholder'=>'Type Of Infertility'])}}
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <!-- for child -->
                                         <div class="row mt-3">

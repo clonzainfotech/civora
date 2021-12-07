@@ -2580,7 +2580,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                         <span class="input-group-addon">
                                             Sperm Count : &nbsp;
                                         </span>
-                                        {{Form::text("h_factor[sperm_count]",!empty($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : null,['class'=>'form-control'])}}
+                                        {{Form::text("h_factor[sperm_count]",isset($husbandFactor->sperm_count) ? $husbandFactor->sperm_count : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -2588,7 +2588,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                         <span class="input-group-addon">
                                             Motility : &nbsp;
                                         </span>
-                                        {{Form::text("h_factor[motility]",!empty($husbandFactor->motility) ? $husbandFactor->motility : null,['class'=>'form-control'])}}
+                                        {{Form::text("h_factor[motility]",isset($husbandFactor->motility) ? $husbandFactor->motility : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -4720,7 +4720,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
             @php
                 $lastHistoryData = json_decode($iuiHistoryData[count($iuiHistoryData)-1]['description']);
                 $secondVisitHusbandFactor = json_decode($iuiSecondVisit->husband_factor);
-                $husbandFactor = !empty($iuiSecondVisit->husband_factor) && (!empty($secondVisitHusbandFactor->sperm_count) || !empty($secondVisitHusbandFactor->remark) || !empty($secondVisitHusbandFactor->motility)) ? json_decode($iuiSecondVisit->husband_factor) : json_decode($iuiFirstVisit->husband_factor);
+                $husbandFactor = !empty($iuiSecondVisit->husband_factor) && (isset($secondVisitHusbandFactor->sperm_count) || !empty($secondVisitHusbandFactor->remark) || isset($secondVisitHusbandFactor->motility)) ? json_decode($iuiSecondVisit->husband_factor) : json_decode($iuiFirstVisit->husband_factor);
             @endphp
             <div class=" col-md-12 follicular_table_print">
                 <div class="row mb-15 mb-5 do_print">{{--mb-15 is used in print--}}
@@ -4752,7 +4752,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">Induction With :- </span> 
                             <span class="visit-lable-value">{{!empty($iuiSecondVisitData->plan->agenet) ? $iuiSecondVisitData->plan->agenet[0] : ''}}</span>
                         </div>
-                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                        @if(!empty($husbandFactor) && isset($husbandFactor->sperm_count) && isset($husbandFactor->motility))
                             <div class="mb-3">
                                 <span class="visit-lable">Male Age :- </span> 
                                 <span class="visit-lable-value">{{!empty($husbandFactor) && isset($husbandFactor->age) ? $husbandFactor->age : ''}}</span>
@@ -4793,7 +4793,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">CYCLE NO :- </span> 
                             <span class="visit-lable-value">{{$cycleNo}}</span>
                         </div>
-                        @if(!empty($husbandFactor) && !empty($husbandFactor->sperm_count) && !empty($husbandFactor->motility))
+                        @if(!empty($husbandFactor) && isset($husbandFactor->sperm_count) && isset($husbandFactor->motility))
                             <div class="mb-3">
                                 <span class="visit-lable">Sperm Count :- </span> 
                                 <span class="visit-lable-value">{{!empty($husbandFactor) ? $husbandFactor->sperm_count : ''}}</span>

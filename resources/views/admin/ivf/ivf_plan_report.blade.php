@@ -475,6 +475,7 @@ foreach($ivf as $ivf)
                         </div>
                     </div>
                 </div>
+                <div class="pt-3 pb-3"><h6><strong>Pending Embroy</strong></h5></div>
                 <div class="row">
                     <div class="col-md-3">
                         <div class="input-group">

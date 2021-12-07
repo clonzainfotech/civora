@@ -1729,14 +1729,14 @@ class IVFController extends AdminController
 
             }
             // $checkIsTransfer = $this->IvfHistory->wherePatientsId($id)->where('description->is_transfer','yes')->first();
-            $checkIsTransfer = $this->IvfHistory->wherePatientsId($id)->where('cycle_status','!=',2)->orderBy('id','DESC')->first();
-
+            $checkIsTransfer = $this->IvfHistory->wherePatientsId($id)->where('plan',$pStatus)->where('cycle_no',$cNumber)->orderBy('id','DESC')->first();
             if($checkIsTransfer){
                 $checkIsTransferData = json_decode($checkIsTransfer->description);
                 $checkIsTransfer = !empty($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' ? 1 : 0;
 
                 if($checkIsTransfer){
                     $checkIsTransfer = !empty($checkIsTransferData->plan) ? 0 : 1;
+
                 }
                 if(isset($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' && $checkIsTransferData->is_upt == 'yes' && ($cData != $cNumber))
                 {

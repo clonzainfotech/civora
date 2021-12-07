@@ -229,7 +229,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     @if(!empty($oe->oe_child_type))
                         <div class="col-md-3 oe-child-type">
                             <div class="form-group">
-                                {{Form::select("oe[oe_child_type]",$childType,$oe->oe_child_type,['class'=>'form-control select-padding-0','placeholder'=>'Select Child Status'])}}
+                                {{Form::select("oe[oe_child_type]",$childType,$oe->oe_child_type,['class'=>'form-control select-padding-0','placeholder'=>'Select Conceived By'])}}
                             </div>
                         </div>
                     @endif
@@ -278,7 +278,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 </div>
                                 <div class="{{'col-md-3 child-type-status '.$childStatusType}}">
                                     <div class="form-group">
-                                        {{Form::select("oe[utdata][".$key."][child_type]",$childType,!empty($value->child_type) ? $value->child_type : null,['class'=>'form-control select-padding-0','placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("oe[utdata][".$key."][child_type]",$childType,!empty($value->child_type) ? $value->child_type : null,['class'=>'form-control select-padding-0','placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 {{-- @if(($value->oe_ut_sac < 13 || $value->oe_ut_sac_2 < 13) || $value->ut_type == 'g-sac') --}}
@@ -325,7 +325,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 </div>
                                 <div class="{{'col-md-3 child-type-status '.$childStatusType}}">
                                     <div class="form-group">
-                                        {{Form::select("oe[utdata][".$key."][child_type]",$childType,!empty($value->child_type) ? $value->child_type : null,['class'=>'form-control select-padding-0','placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("oe[utdata][".$key."][child_type]",$childType,!empty($value->child_type) ? $value->child_type : null,['class'=>'form-control select-padding-0','placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 <div class="{{'col-md-1 pr-0 d-none crl-data-value-'.$key}}">
@@ -1230,7 +1230,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{-- {{Form::text("ho[ho_details_2]",'',['class'=>'form-control','placeholder'=>'H/O Details'])}} --}}
-                                {{Form::select("ho[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($ho->ho_type) ? $ho->ho_type : null,['class'=>'form-control select-padding-0 ho_type','disabled','placeholder'=>'Select Child Status'])}}
+                                {{Form::select("ho[ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($ho->ho_type) ? $ho->ho_type : null,['class'=>'form-control select-padding-0 ho_type','disabled','placeholder'=>'Select Conceived By'])}}
                                 {{Form::hidden('ho[ho_type]',!empty($ho->ho_type) ? $ho->ho_type : null)}}
                             </div>
                             <span class="form-error-msg">
@@ -1510,7 +1510,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class="col-md-1"></div>
                                 <div class="{{'col-md-4 child-naturally '.$childNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[child][child_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','data-id'=>'child-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[child][child_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type p-ho-type','data-id'=>'child-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 @php
@@ -1610,7 +1610,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             <div class="row">
                                 <div class="{{'col-md-3 mtp-naturally '.$mtpNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[mtp][mtp_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 mtp-ho-type p-ho-type','data-id'=>'mtp-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[mtp][mtp_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 mtp-ho-type p-ho-type','data-id'=>'mtp-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                     <span class="form-error-msg">
                                         {{$errors->first('ho_details_2')}}
@@ -1717,7 +1717,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class="col-md-1"></div>
                                 <div class="{{'col-md-4 abortion-naturally '.$abortionNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[abortion][abortion_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 abortion-ho-type p-ho-type','data-id'=>'abortion-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[abortion][abortion_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 abortion-ho-type p-ho-type','data-id'=>'abortion-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 @php
@@ -1902,7 +1902,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class="col-md-1"></div>
                                 <div class="{{'col-md-4 second-marriage-life-data second-child-naturally '.$childNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[second_marriage][child][child_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type second-p-ho-type','data-id'=>'second-child-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[second_marriage][child][child_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 child-ho-type second-p-ho-type','data-id'=>'second-child-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                     <span class="form-error-msg">
                                         {{$errors->first('ho_details_1')}}
@@ -2011,7 +2011,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class="col-md-1"></div>
                                 <div class="{{'col-md-4 second-marriage-life-data second-mtp-naturally '.$mtpNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[second_marriage][mtp][mtp_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 mtp-ho-type second-p-ho-type','data-id'=>'second-mtp-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[second_marriage][mtp][mtp_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($row->ho_type) ? $row->ho_type : null,['class'=>'form-control select-padding-0 mtp-ho-type second-p-ho-type','data-id'=>'second-mtp-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 @php
@@ -2110,7 +2110,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                 <div class="col-md-1"></div>
                                 <div class="{{'col-md-4 second-marriage-life-data second-abortion-naturally '.$abortionNaturally}}">
                                     <div class="form-group">
-                                        {{Form::select("p_obstratics[second_marriage][abortion][abortion_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 abortion-ho-type second-p-ho-type','data-id'=>'second-abortion-when-where-'.$key,'placeholder'=>'Select Child Status'])}}
+                                        {{Form::select("p_obstratics[second_marriage][abortion][abortion_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 abortion-ho-type second-p-ho-type','data-id'=>'second-abortion-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
                                     </div>
                                 </div>
                                 @php
@@ -2681,7 +2681,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     </div>
                     <div class="{{'col-md-3 oe-child-type '.$childStatusType}}">
                         <div class="form-group">
-                            {{Form::select("oe[oe_child_type]",$childType, !empty($oe->oe_child_type)?$oe->oe_child_type:'',['class'=>'form-control select-padding-0','placeholder'=>'Select Child Status'])}}
+                            {{Form::select("oe[oe_child_type]",$childType, !empty($oe->oe_child_type)?$oe->oe_child_type:'',['class'=>'form-control select-padding-0','placeholder'=>'Select Conceived By'])}}
                         </div>
                     </div>
                 </div>

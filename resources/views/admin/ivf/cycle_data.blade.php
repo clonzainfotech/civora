@@ -2732,7 +2732,7 @@
                                                         {{Form::hidden("data[is_upt]",'yes')}}
                                                         {{Form::hidden('data[is_transfer]','yes',['class'=>'is-transfer'])}}
                                                         {{Form::hidden('data[is_transfer_print]','yes')}}
-                                                        @if($resultValue == 0 && $isForm)
+                                                        @if($resultValue == 0)
                                                             <div class="row">
                                                                 <div class="col-md-4">
                                                                     <div class="input-group">

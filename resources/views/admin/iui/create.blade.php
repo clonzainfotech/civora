@@ -531,7 +531,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 child-naturally d-none">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[child][child_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 child-ho-type p-ho-type','data-id'=>'child-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[child][child_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 child-ho-type p-ho-type','data-id'=>'child-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                     <span class="form-error-msg">
                                                         {{$errors->first('ho_details_1')}}
@@ -621,7 +621,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 mtp-naturally d-none">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[mtp][mtp_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 mtp-ho-type p-ho-type','data-id'=>'mtp-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[mtp][mtp_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 mtp-ho-type p-ho-type','data-id'=>'mtp-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 ml-4 d-none mtp-when-where-1 when-where-2">
@@ -699,7 +699,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 abortion-naturally d-none">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[abortion][abortion_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 abortion-ho-type p-ho-type','data-id'=>'abortion-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[abortion][abortion_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 abortion-ho-type p-ho-type','data-id'=>'abortion-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 d-none abortion-when-where-1 when-where-3">
@@ -793,7 +793,7 @@
                                             <div class="row mt-3 second-marriage-life d-none">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[second_marriage][child_no]",['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6'],'',['class'=>'form-control second-child-no select-padding-0','placeholder'=>'Child No','data-status'=>'second','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[second_marriage][child_no]",['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6'],'',['class'=>'form-control second-child-no select-padding-0','placeholder'=>'Child No','data-status'=>'second','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -898,7 +898,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 second-child-naturally second-marriage-life-data d-none">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[second_marriage][child][child_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 child-ho-type second-p-ho-type','data-id'=>'second-child-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[second_marriage][child][child_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 child-ho-type second-p-ho-type','data-id'=>'second-child-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 d-none second-marriage-life-data second-child-when-where-1">
@@ -981,7 +981,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 second-mtp-naturally second-marriage-life-data d-none">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[second_marriage][mtp][mtp_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 mtp-ho-type second-p-ho-type','data-id'=>'second-mtp-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[second_marriage][mtp][mtp_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 mtp-ho-type second-p-ho-type','data-id'=>'second-mtp-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                     <span class="form-error-msg">
                                                         {{$errors->first('ho_details_2')}}
@@ -1058,7 +1058,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4 second-abortion-naturally d-none second-marriage-life-data">
                                                     <div class="form-group">
-                                                        {{Form::select("oh[second_marriage][abortion][abortion_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 abortion-ho-type second-p-ho-type','data-id'=>'second-abortion-when-where-1','placeholder'=>'Select Child Status'])}}
+                                                        {{Form::select("oh[second_marriage][abortion][abortion_data][1][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],'',['class'=>'form-control select-padding-0 abortion-ho-type second-p-ho-type','data-id'=>'second-abortion-when-where-1','placeholder'=>'Select Conceived By'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 d-none second-marriage-life-data second-abortion-when-where-1">

@@ -3429,7 +3429,9 @@ class IVFController extends AdminController
     public function getIvfResultReviewDetail(Request $request , $pId)
     {
         $pId = decrypt($pId);
-        $patients = $this->OpdPatients->find($pId);
-        return view('admin.ivf_result_review.ivf_result_review',compact('patients'));
+        $patient = $this->OpdPatients->find($pId);
+        $ivf = $this->IVF->where('patients_id',$pId)->first();
+        $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+        return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf'));
     }
 }

@@ -1627,7 +1627,7 @@ $(document).ready(function(){
                                     var childType = { '1': 'Monochorionic Monochorionic Twin', '2': 'Dichorionic Diamniotic Twin', '3': 'Trichorionic Triamniotic Triplets', '4': 'DCDA Twin Spontaneously Reduced to Singleton', '5': 'Quadruchorionic Quadruamniotic Quadruplets', '6': 'Triplets with Fetus A and B monochorionic Pair', '7': 'Twins Reduced to Singleton','8':'Monochorionic Diamniotic' };
 
                                     oeValueData += "<div class='col-md-3 child-type-status d-none'><div class='form-group'><select name='oe[utdata]["+i+"][child_type]' class='form-control select-padding-0 child-type'>";
-                                    oeValueData += '<option value="">Select Child Status</option>';
+                                    oeValueData += '<option value="">Select Conceived By</option>';
                                     $.each(childType, function(key, value) {
                                         oeValueData +=  '<option value="' + key + '">'+value+'</option>';
                                     });

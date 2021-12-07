@@ -1202,7 +1202,7 @@ class IUIController extends AdminController
                 $is_IUI_firstVisit = 0;
                 if($firstVisit)
                 {
-                    $firstVisitHistory = $this->IuiHistory->where('patients_id',$id)->where('cycle_no',$firstVisit->cycle_no)->first();
+                    $firstVisitHistory = $this->IuiHistory->where('patients_id',$id)->where('visit',4)->where('cycle_no',$firstVisit->cycle_no)->first();
                     $cycleNo = ($firstVisit) ? $firstVisit->cycle_no + 1 : 1;
                     $is_IUI_firstVisit = !empty($firstVisitHistory) ? 1 : 0;
                 }

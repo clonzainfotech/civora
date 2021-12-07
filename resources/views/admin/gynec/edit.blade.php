@@ -96,9 +96,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
         </div>
     </div>
 </div>
-@if($isGynec != 1)
+@if($isGynec != 1 )
     <!-- O/H -->
-    <div class="panel panel-primary d-none">
+    @php
+        $displayO_H = !empty($gynecId) && $isFirstVisit ==  true ? '' : 'd-none';
+    @endphp
+    <div class="{{'panel panel-primary '.$displayO_H}}">
         <div class="panel-heading" role="tab" id="headingThree_1">
         <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse"
                                 data-parent="#oh" href="#oh" aria-expanded="false"
@@ -1267,7 +1270,10 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
     </div>
 @endif
 @if($isGynec != 1)
-    <div class="panel panel-primary d-none">
+@php
+        $displayH_o = !empty($gynecId) && $isFirstVisit ==  true ? '' : 'd-none';
+    @endphp
+    <div class="{{'panel panel-primary '.$displayH_o}}">
         <div class="panel-heading" role="tab" id="headingThree_1">
             <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#patients-detailed-ho" href="#patients-detailed-ho" aria-expanded="false"
                     aria-controls="patients-detailed-ho">5. Patients Detailed H/O</a></h4>
@@ -1312,26 +1318,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         {{Form::select('p_detailes[past_history_type][]',$pastData,!empty($patientsDetails->past_history_type) ? $patientsDetails->past_history_type : null,['class'=>'form-control co-value co_value_data mb-3','placeholder'=>'Select Past History','multiple'=>true])}}
                     </div>
                 </div>
-{{--                <div class="row">--}}
-{{--                    <div class="col-md-1 pr-0">--}}
-{{--                        <label class="vertical-form-label pr-0">--}}
-{{--                            OE :--}}
-{{--                        </label>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-sm-2">--}}
-{{--                        <div class="radio is-conceived">--}}
-{{--                            {{Form::radio("p_detailes[oe_type]",'tvs',!empty($patientsDetails->oe_type) && $patientsDetails->oe_type == 'tvs' ? true : false,['id'=>'tvs','class'=>'oe-type'])}}--}}
-{{--                            <label for="tvs">--}}
-{{--                                TVS--}}
-{{--                            </label>--}}
 
-{{--                            {{Form::radio("p_detailes[oe_type]",'pa',!empty($patientsDetails->oe_type) && $patientsDetails->oe_type == 'pa' ? true : false,['id'=>'pa','class'=>'oe-type'])}}--}}
-{{--                            <label for="pa">--}}
-{{--                                PA--}}
-{{--                            </label>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
             </div>
         </div>
     </div>

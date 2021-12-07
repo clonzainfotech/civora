@@ -211,6 +211,7 @@ class GynecController extends AdminController
             $ancImagesData = [];
             $isIvfHistory = null;
             $isAncHistory = null;
+            $isFirstVisit = null;
             $pId = decrypt($patientsId);
             $patient = $this->OpdPatients->where('id',$pId)->first();
             $medicines = $this->Medicine->pluck('name','name');
@@ -230,6 +231,7 @@ class GynecController extends AdminController
                 }
                 if($request->date){
                     $gynec = $this->Gynec->where('created_at',$request->date)->first();
+                    $isFirstVisit = $this->Gynec->where('patients_id',$pId)->whereDate('created_at','<',carbon::parse($request->date)->format('Y-m-d'))->first();
                     $isGynec = $gynec->is_gynec;
                     $data['gynecId'] = $gynec->id;
                 }
@@ -264,6 +266,7 @@ class GynecController extends AdminController
                 $data['co'] = $co;
                 $data['oh'] = $oh;
                 $data['mh'] = $mh;
+                $data['isFirstVisit'] = !empty($isFirstVisit) ? false : true;
                 $data['pastHistory'] = $pastHistory;
                 $data['oe'] = $oe;
                 $data['patientsDetails'] = $patientsDetails;

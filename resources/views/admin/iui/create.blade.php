@@ -16,7 +16,14 @@
         <div class="col-md-12 p-0">
             <div class="card patients-list">
                 <div class="header">
-                    <h2><strong class="text-secondary">{{ucwords($iuiPatients->name)}}</strong></h2>
+                    @php
+                        $careof = isset($referenceDoctor[$iuiPatients->reference_doctor_id]) ? $referenceDoctor[$iuiPatients->reference_doctor_id]: '';
+                        if(!empty($iuiPatients->reference_doctor_id) && $iuiPatients->reference_doctor_id == 1)
+                        {
+                            $careof = !empty($iuiPatients->reference_pt_name) && !empty($iuiPatients->reference_pt_mobile) ? $iuiPatients->reference_pt_name.'('.$iuiPatients->reference_pt_mobile.')' :'SELF';
+                        }
+                    @endphp
+                    <h2><strong class="text-secondary">{{ucwords($iuiPatients->name)}}</strong>{{' care of '.$careof}}</h2>
                 </div>
             </div>
         </div>
@@ -159,16 +166,24 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    {{Form::select('rd_reference',$referenceDoctor,$iuiPatients->reference_doctor_id,['class'=>'form-control select-padding-0 refence-doctor','placeholder'=>'Rd Reference'])}}
+                                                    {{Form::select('rd_reference',$referenceDoctor,$iuiPatients->reference_doctor_id,['class'=>'form-control select-padding-0 refence-doctor','placeholder'=>'Reference Doctor'])}}
                                                 </div>
                                                 <span class="form-error-msg">
                                                     {{$errors->first('rd_reference')}}
                                                 </span>
                                             </div>
+                                            @if($iuiPatients->reference_doctor_id == 1)
+                                                <div class="col-md-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Reference Patient Name : &nbsp;</span>
+                                                        {{Form::text('ref_pt_name',$iuiPatients->reference_pt_name,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">Rd Mobile : &nbsp;</span>
-                                                    {{Form::number('rd_mobile_number',$iuiPatients->getReferenceDoctor['mobile_number'],['class'=>'form-control ref-mobile-number'])}}
+                                                    <span class="input-group-addon">Reference Mobile : &nbsp;</span>
+                                                    {{Form::number('rd_mobile_number',$iuiPatients->reference_doctor_id == 1 ?  $iuiPatients->reference_pt_mobile : $iuiPatients->getReferenceDoctor['mobile_number'],['class'=>'form-control ref-mobile-number'])}}
                                                 </div>
                                                 <span class="form-error-msg">
                                                     {{$errors->first('rd_mobile_number')}}

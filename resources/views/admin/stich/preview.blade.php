@@ -4,6 +4,10 @@
     $oe = !empty($stich->oe) ? json_decode($stich->oe) : null;
     $stichLine = !empty($stich->stich_line) ? json_decode($stich->stich_line) : null;
     $treatment = !empty($stich->treatment) ? json_decode($stich->treatment) : null;
+    $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
+    $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
+    $old_dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
+    $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
     $hoTypeValue = ['ftnd'=>'FTND','lscs'=>'L.S.C.S','tlh'=>'TLH','myomectomy'=>'Myomectomy','ectopic'=>'Laparoscopic Ectopic','diagnostic_hystrolapro'=>'Diagnostic Hystrolapro'];
 @endphp
 
@@ -289,82 +293,98 @@
                         unset($treatment->medicinedata);
                     @endphp
                     @if(!empty($treatment))
+                    <table class="medicine-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Dose</th>
+                                <th>Timing</th>
+                                <th>Freq.</th>
+                                <th>Duration</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         @foreach($treatment as $key=>$row)
-                        @php
-                        $mData = $row->medicine;
-                        if(!empty($row->injection_status) && $row->injection_status == 1){
-                            $mData .= ' State ';
-                            $mData .= !empty($row->route) ? $row->route : null;
-                        }else{
-                            switch($row->medicine_status){
-                                case '1':
-                                    $mData .= ' જમ્યા પછી ';
-                                    break;
-                                case '2':
-                                    $mData .= ' જમ્યા પહેલાં ';
-                                    break;
-                                case '3':
-                                    $mData .= ' માસિકની જગ્યાએ મુકવી ';
-                                    break;
-                            }
-                            // if(in_array($row->dose,['1','2','3','4'])){
-                            //     $mData .= ' દરરોજ ';
-                            // }else{
-                            //     $mData .= ' અઠવાડિયે ';
-                            // }
-                            // switch($row->dose){
-                            //     case '1':
-                            //         $mData .= ' એક વાર';
-                            //         break;
-                            //     case '2':
-                            //         $mData .= ' બે વાર';
-                            //         break;
-                            //     case '3':
-                            //         $mData .= ' ત્રણ વાર';
-                            //         break;
-                            //     case '4':
-                            //         $mData .= ' ચાર વાર';
-                            //         break;
-                            //     case '5':
-                            //         $mData .= ' એક વાર';
-                            //         break;
-                            //     case '6':
-                            //         $mData .= ' બે વાર';
-                            //         break;
-                            // }
-                            $timeData = [];
-                            // $mData .= ' ( ';
-                            foreach($row->medicine_time as $key => $value) {
-                                switch($value){
-                                    case '1':
-                                        $time = 'સવારે';
-                                        break;
-                                    case '2':
-                                        $time = 'બપોરે';
-                                        break;
-                                    case '3':
-                                        $time = 'સાંજે';
-                                        break;
-                                    case '4':
-                                        $time = 'રાત્રે';
-                                        break;
-                                }
-                                $timeData[] = $time;
-                            }
-                            $timeData = implode(',',$timeData);
-                            $mData .= $timeData;
-                            // $mData .= ' )';
-                            $mData .= ' '.$row->quantity;
-                            $mData .= ' ગોળી';
-                            $mData .= ' '.$row->no;
-                            $mData .= ' દિવસ સુધિ લેવી';
-                        }
-                    @endphp
-                    <tr>
+                            <tr>
+                                <?php
+                                    $medicine_status = '';
+                                    $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
+                                    $firstCharacter = strtoupper(substr($mId, 0, 3));
+                                    if($firstCharacter == "INJ"){
+                                        if(!empty($row->medicine_time))
+                                        {
+                                            switch($row->medicine_time){
+                                                case '1':
+                                                    $medicine_status = 'IV';
+                                                    break;
+                                                case '2':
+                                                    $medicine_status = 'IM';
+                                                    break;
+                                                case '3':
+                                                    $medicine_status = 'SC';
+                                                    break;
+                                                case '4':
+                                                    $medicine_status = 'Oral';
+                                                    break;
+                                                case '5':
+                                                    $medicine_status = 'P/V';
+                                                    break;
+                                                case '6':
+                                                    $medicine_status = 'P/A';
+                                                    break;
+                                            }
+                                        }
+                                        $mData = !empty($row->medicine_time) ? $medicine_status : $medicine_status;
+                                        if($mData==$medicine_status) {
+                                            $medicine_status = "-";
+                                        }
+                                    }else{
+                                        $mData = [0,0,0,0];
+
+                                        if(@$row->quantity>0) {
+                                            $mData[0] = $row->quantity;
+                                        }
+                                        if(@$row->quantity_2>0) {
+                                            $mData[1] = $row->quantity_2;
+                                        }
+                                        if(@$row->quantity_3>0) {
+                                            $mData[2] = $row->quantity_3;
+                                        }
+                                        if(@$row->quantity_4>0) {
+                                            $mData[3] = $row->quantity_4;
+                                        }
+                                        $mData = implode('-',$mData);
+                                        switch($row->medicine_status){
+                                            case '1':
+                                                $medicine_status = 'જમ્યા પછી';
+                                                break;
+                                            case '2':
+                                                $medicine_status = 'જમ્યા પહેલાં';
+                                                break;
+                                            case '3':
+                                                $medicine_status = 'માસિકની જગ્યાએ મુકવી';
+                                                break;
+                                        }
+                                    }
+                                ?>
+                                <td>{{$row->medicine}}</td>
+                                <td>{{$mData}}</td>
+                                <td>{{$medicine_status}}</td>
+                                <td>{{isset($dose[$row->dose]) ? $dose[$row->dose] : ''}}</td>
+                                <td>{{$row->no.' days'}}</td>
+                                <td>{{isset($row->note) && !empty($row->note) ? $row->note : '-'}}</td>
+
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endif
+                    {{-- <tr>
                         <td>
                             {{$mData}}
                         </td>
-                    </tr>
+                    </tr> --}}
                         @endforeach
                     @endif
                 </tbody>

@@ -43,6 +43,10 @@
                             <h2><strong class="text-secondary">{{ucwords($patients->name)}}</strong>
                                 @php
                                     $careof = (!empty($patients->reference_doctor_id) && isset($referenceDoctor[$patients->reference_doctor_id])) ? $referenceDoctor[$patients->reference_doctor_id] : '';
+                                    if(!empty($patients->reference_doctor_id) && $patients->reference_doctor_id == 1)
+                                    {
+                                        $careof = !empty($patients->reference_pt_name) && !empty($patients->reference_pt_mobile) ? $patients->reference_pt_name.'('.$patients->reference_pt_mobile.')' :'SELF';
+                                    }
                                 @endphp
                                 {{' care of '.$careof}}</h2>
                                 

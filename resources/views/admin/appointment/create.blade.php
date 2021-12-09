@@ -305,6 +305,32 @@
                                                 {{$errors->first('doctor_mobile_number')}}
                                             </span>
                                         </div>
+                                        {{-- if self then enter reference pt name --}}
+                                        <div class="col-md-6 col-sm-6 ref-pt-name d-none">
+                                            <div class="form-group">
+                                                {{Form::text('ref_pt_name', '', [
+                                                    'class'=>'form-control ref_pt',
+                                                    'placeholder'=>'Reference Patient Name'
+                                                ])}}
+                                            </div>
+                                            <span class="form-error-msg">
+                                                {{$errors->first('ref_pt_name')}}
+                                            </span>
+                                        </div>
+                                        <div class=" col-md-6 col-sm-6 ref-pt-mobile d-none">
+                                            <div class="form-group">
+                                                {{Form::text('ref_pt_mobile','',[
+                                                    'class'=>'form-control doctor',
+                                                    'placeholder'=>'Reference Patient Mobile Number',
+                                                    'oninput' => 'doctorMobileNumber(this.value)',
+                                                    'maxlength' => 10
+                                                ])}}
+                                            </div>
+                                            <span class="form-error-msg">
+                                                {{$errors->first('ref_pt_mobile')}}
+                                            </span>
+                                        </div>
+
                                         <div class="col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 {{Form::select('hospital_doctor',$hospitalDoctor,!empty($patientData->getHospitalDoctor['id']) ? $patientData->getHospitalDoctor['id'] : null,['class'=>'form-control select-padding-0 hospital_doctor','placeholder'=>'Select Hospital Doctor','data-live-search'=>'true'])}}
@@ -763,11 +789,24 @@
             $('input[type="text"][name="doctor_mobile_number"]').prop('required', 'required');
             $('.doctor-name').removeClass('d-none');
             $('.doctor-mobile-number').removeClass('d-none');
-        } else {
+        }
+        else if(value == '1')//self
+        {
+            $('input[type="text"][name="ref_pt_name"]').prop('required', 'required');
+            $('input[type="text"][name="ref_pt_mobile"]').prop('required', 'required');
+            $('.ref-pt-name').removeClass('d-none');
+            $('.ref-pt-mobile').removeClass('d-none');
+        }
+        else {
             $('input[type="text"][name="doctor_name"]').prop('required', false);
             $('input[type="text"][name="doctor_mobile_number"]').prop('required', false);
             $('.doctor-name').addClass('d-none');
             $('.doctor-mobile-number').addClass('d-none');
+
+            $('input[type="text"][name="ref_pt_name"]').prop('required', false);
+            $('input[type="text"][name="ref_pt_mobile"]').prop('required', false);
+            $('.ref-pt-name').addClass('d-none');
+            $('.ref-pt-mobile').addClass('d-none');
         }
     }
 
@@ -790,7 +829,16 @@
                 $('.select2-selection__rendered').text(data['patients']['name']);
                 $(".patient-code").val(data['patients']['code']);
                 $('.patient-code').selectpicker('refresh');
+                
                 $('.reference_doctor').val(data['patients']['reference_doctor_id']);
+                //if self then display refernce pt name and mobile number
+                if(data['patients']['reference_doctor_id'] == 1)
+                {
+                    $('.ref-pt-name').removeClass('d-none');
+                    $('.ref-pt-mobile').removeClass('d-none');
+                    $('input[type="text"][name="ref_pt_name"]').val(data['patients']['reference_pt_name']);
+                    $('input[type="text"][name="ref_pt_mobile"]').val(data['patients']['reference_pt_mobile']);
+                }
                 $('.reference_doctor').selectpicker('refresh');
                 $('.pro-ref-hospital-doctor').val(data['patients']['reference_doctor_pro_id']);
                 $('.pro-ref-hospital-doctor').selectpicker('refresh');

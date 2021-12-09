@@ -33,7 +33,11 @@
                     <div class="col-md-6">
                         @php
                             $careOf = (!empty($patientsDetails->reference_doctor_id) && isset($referenceDoctor[$patientsDetails->reference_doctor_id])) ? $referenceDoctor[$patientsDetails->reference_doctor_id] : '';
-                        @endphp
+							if(!empty($patientsDetails->reference_doctor_id) && $patientsDetails->reference_doctor_id == 1)
+                            {
+                                $careOf = !empty($patientsDetails->reference_pt_name) && !empty($patientsDetails->reference_pt_mobile) ? $patientsDetails->reference_pt_name.'('.$patientsDetails->reference_pt_mobile.')' :'SELF';
+                            }
+						@endphp
                         <h2><strong class="text-secondary"> {{ucwords($patientsDetails->name)}}</strong>{{' care of '.$careOf}}</h2>
                     </div>
                     {{-- <div class="col-md-6 text-right">

@@ -3390,7 +3390,7 @@ class IVFController extends AdminController
         }
     }
     /**
-     * return Ivf Result Review related Detail
+     * return Ivf patient list
      * @return  view
      * @param 
      */
@@ -3426,6 +3426,11 @@ class IVFController extends AdminController
             abort(500);
         }
     }
+    /**
+     * return Ivf Result Review related Detail
+     * @return  view
+     * @param 
+     */
     public function getIvfResultReviewDetail(Request $request , $pId)
     {
         $pId = decrypt($pId);
@@ -3433,5 +3438,15 @@ class IVFController extends AdminController
         $ivf = $this->IVF->where('patients_id',$pId)->first();
         $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
         return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf'));
+    }
+    /**
+     * Store Ivf Result Review related Detail
+     * @return  view
+     * @param 
+     */
+    public function storeIvfResultReviewDetail(Request $request)
+    {
+        
+    
     }
 }

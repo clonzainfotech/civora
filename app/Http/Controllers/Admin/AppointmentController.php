@@ -272,6 +272,10 @@ class AppointmentController extends AdminController
                 $rule['doctor_name'] = 'required|max:255';
                 $rule['doctor_mobile_number'] = 'required|numeric|digits:10|unique:reference_doctors,mobile_number';
             }
+            if ($request->input('reference_doctor') == '1') {
+                $rule['ref_pt_name'] = 'required|max:255';
+                $rule['ref_pt_mobile'] = 'required|numeric|digits:10';
+            }
 
             if ($request->input('pro_reference_doctor') == 'other') {
                 $rule['pro_reference_doctor_name'] = 'required|max:255';
@@ -372,6 +376,13 @@ class AppointmentController extends AdminController
                 $referenceDoctor->save();
             }
 
+            //reference Pt
+            $patients->reference_pt_name = null;
+            $patients->reference_pt_mobile = null;
+            if ($request->input('reference_doctor') == '1') {
+                $patients->reference_pt_name = $request->ref_pt_name;
+                $patients->reference_pt_mobile = $request->ref_pt_mobile;
+            }
             //reference doctor
             if ($request->input('pro_reference_doctor') == 'other') {
                 $proReferenceDoctor = $this->ReferenceDoctorPro;
@@ -476,6 +487,8 @@ class AppointmentController extends AdminController
             $updatePatient->dob = $request->dob ? Carbon::parse($request->dob)->format('Y-m-d') : null;
             $updatePatient->height = $request->height;
             $updatePatient->created_by = Auth::user()->id;
+            $updatePatient->reference_pt_name = $request->ref_pt_name;
+            $updatePatient->reference_pt_mobile = $request->ref_pt_mobile;
             $updatePatient->save();
 
             if(!$request->code) {
@@ -521,9 +534,12 @@ class AppointmentController extends AdminController
 
             return;
         }else{
+            
             $updatePatient->other_patient_reference=$request->other_patient_reference;
             $updatePatient->reference_doctor_id =  $patients->reference_doctor_id;
             $updatePatient->reference_doctor_pro_id =  $patients->reference_doctor_pro_id;
+            $updatePatient->reference_pt_name = $request->ref_pt_name;
+            $updatePatient->reference_pt_mobile = $request->ref_pt_mobile;
             $updatePatient->save();
             // $checkAppointment = $this->checkAppointment($patient_check->id,$request->date,$request->time,$request->arrival_time);
             $arrivalTime = null;
@@ -713,7 +729,7 @@ class AppointmentController extends AdminController
                 $referenceDoctor->created_by = Auth::user()->id;
                 $referenceDoctor->save();
             }
-
+            
             if($request->input('pro_reference_doctor') == 'other') {
                 $proReferenceDoctor = $this->ReferenceDoctorPro;
                 $proReferenceDoctor->name = $request->pro_reference_doctor_name;
@@ -722,6 +738,13 @@ class AppointmentController extends AdminController
                 $proReferenceDoctor->save();
             }
             $patients = $this->OpdPatients->find($patientsId);
+            //reference Pt
+            $patients->reference_pt_name = null;
+            $patients->reference_pt_mobile = null;
+            if ($request->input('reference_doctor') == '1') {
+                $patients->reference_pt_name = $request->ref_pt_name;
+                $patients->reference_pt_mobile = $request->ref_pt_mobile;
+            }
             $patients->name = $request->name;
             $patients->gender = $request->gender;
             $patients->age = $request->age;

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use View;
 use Auth;
+use Log;
 
 class StichController extends AdminController
 {
@@ -166,8 +167,8 @@ class StichController extends AdminController
             $stich = $this->Stich->where('created_at',$date)->where('patients_id',$patientId)->first();
             return View::make('admin.stich.preview', compact('stich'))->render();
         }catch(Exception $e){
-            // log::Debug($e);
-            abort(500);
+            log::Debug($e);
+            // abort(500);
         }
 
     }

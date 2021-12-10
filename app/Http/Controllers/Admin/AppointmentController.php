@@ -272,10 +272,10 @@ class AppointmentController extends AdminController
                 $rule['doctor_name'] = 'required|max:255';
                 $rule['doctor_mobile_number'] = 'required|numeric|digits:10|unique:reference_doctors,mobile_number';
             }
-            if ($request->input('reference_doctor') == '1') {
-                $rule['ref_pt_name'] = 'required|max:255';
-                $rule['ref_pt_mobile'] = 'required|numeric|digits:10';
-            }
+            // if ($request->input('reference_doctor') == '1') {
+            //     $rule['ref_pt_name'] = 'required|max:255';
+            //     $rule['ref_pt_mobile'] = 'required|numeric|digits:10';
+            // }
 
             if ($request->input('pro_reference_doctor') == 'other') {
                 $rule['pro_reference_doctor_name'] = 'required|max:255';

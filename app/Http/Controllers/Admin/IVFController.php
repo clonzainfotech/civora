@@ -3433,11 +3433,20 @@ class IVFController extends AdminController
      */
     public function getIvfResultReviewDetail(Request $request , $pId)
     {
-        $pId = decrypt($pId);
-        $patient = $this->OpdPatients->find($pId);
-        $ivf = $this->IVF->where('patients_id',$pId)->first();
-        $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
-        return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf'));
+        try
+        {
+            $pId = decrypt($pId);
+            $patient = $this->OpdPatients->find($pId);
+            $ivf = $this->IVF->where('patients_id',$pId)->first();
+            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pId)->first();
+            $ivfResultReviewDetail = !empty($ivfResultReview) ? json_decode($ivfResultReview->description) : null;
+            $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
+            return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf','ivfResultReviewDetail'));
+        }
+        catch(Exception $e)
+        {
+            log::Debug($e);
+        }
     }
     /**
      * Store Ivf Result Review related Detail
@@ -3446,7 +3455,28 @@ class IVFController extends AdminController
      */
     public function storeIvfResultReviewDetail(Request $request)
     {
-        
-    
+        try
+        {
+            $pID = decrypt($request->patients_id);
+            $ivf = $this->IVF->where('patients_id',$pID)->first();
+            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pID)->first();
+            if(empty($ivfResultReview))
+            {
+                $ivfResultReview = $this->IvfResultReview;
+            }
+            $ivfResultReview->patients_id = $pID;
+            $ivfResultReview->description = json_encode($request->data);
+            $ivfResultReview->save();
+            if($request->is_print && $request->is_print == 1)
+            {
+                $ivfResultReviewPrint = View::make('admin.ivf_result_review.preview',compact('ivfResultReview','ivf'))->render();
+                return ['status'=>2,'data'=>$ivfResultReviewPrint];
+            }
+            return ['status'=>1];
+        }
+        catch(Exception $e)
+        {
+            log::Debug($e);
+        }
     }
 }

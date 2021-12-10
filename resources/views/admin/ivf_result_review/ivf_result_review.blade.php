@@ -35,7 +35,7 @@
                         </div>
                     @endif
                     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                        {{Form::open(['class'=>'form ibf-result-review','files'=>true,'id'=>'','enctype'=>'multipart/form-data'])}}
+                        {{Form::open(['class'=>'form ivf-result-review','files'=>true,'id'=>'','enctype'=>'multipart/form-data'])}}
                             {{Form::hidden('patients_id',encrypt($patient->id))}}
                             {{Form::hidden('ivf_result_id','',['class'=>'ivf_result_id'])}}
                             
@@ -85,62 +85,63 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-12 pr-0">
-                                                <label class="vertical-form-label pr-0">
-                                                    <b>Serum Progestrone : </b>{{ucwords(strtolower($patient->name))}}
-                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Serum Progestrone : &nbsp;</span>
+                                                    {{Form::text("data[serum_progestrone]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->serum_progestrone) ? $ivfResultReviewDetail->serum_progestrone: '' ,['class'=>'form-control'])}}
+                                                </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">AMH : &nbsp;</span>
-                                                    {{Form::text("data[amh]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[amh]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->amh) ? $ivfResultReviewDetail->amh: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">TSH : &nbsp;</span>
-                                                    {{Form::text("data[tsh]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[tsh]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->tsh) ? $ivfResultReviewDetail->tsh: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Utreus : &nbsp;</span>
-                                                    {{Form::text("data[utreus]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[utreus]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->utreus) ? $ivfResultReviewDetail->utreus: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Endometrial : &nbsp;</span>
-                                                    {{Form::text("data[endometrial]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[endometrial]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->endometrial) ? $ivfResultReviewDetail->endometrial: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Endometrial Vascularity : &nbsp;</span>
-                                                    {{Form::text("data[endometrial_vascularity]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[endometrial_vascularity]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->endometrial_vascularity) ? $ivfResultReviewDetail->endometrial_vascularity: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Tubal Factor(TL) : &nbsp;</span>
-                                                    {{Form::text("data[tubal_factor]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[tubal_factor]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->tubal_factor) ? $ivfResultReviewDetail->tubal_factor: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Ovarian Factor : &nbsp;</span>
-                                                    {{Form::text("data[ovarian_factor]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[ovarian_factor]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovarian_factor) ? $ivfResultReviewDetail->ovarian_factor: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Endometriosis : &nbsp;</span>
-                                                    {{Form::text("data[endometriosis]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[endometriosis]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->endometriosis) ? $ivfResultReviewDetail->endometriosis: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Past History(TB, Generic, DM, HTN) : &nbsp;</span>
-                                                    {{Form::text("data[past_history]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[past_history]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->past_history) ? $ivfResultReviewDetail->past_history: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                         </div>
@@ -159,67 +160,67 @@
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Semen analysis : &nbsp;</span>
-                                                    {{Form::text("data[semen_analysis]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[semen_analysis]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->semen_analysis) ? $ivfResultReviewDetail->semen_analysis: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Ovum Quality : &nbsp;</span>
-                                                    {{Form::text("data[ovum_quality]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[ovum_quality]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovum_quality) ? $ivfResultReviewDetail->ovum_quality: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Sperm Quality : &nbsp;</span>
-                                                    {{Form::text("data[sperm_quality]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[sperm_quality]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->sperm_quality) ? $ivfResultReviewDetail->sperm_quality: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Embryo Grade : &nbsp;</span>
-                                                    {{Form::text("data[embryo_grade]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[embryo_grade]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->embryo_grade) ? $ivfResultReviewDetail->embryo_grade: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Thaw to ET Time : &nbsp;</span>
-                                                    {{Form::text("data[thaw_to_et_time]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[thaw_to_et_time]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->thaw_to_et_time) ? $ivfResultReviewDetail->thaw_to_et_time: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">ET Procedure : &nbsp;</span>
-                                                    {{Form::text("data[et_procedure]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[et_procedure]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->et_procedure) ? $ivfResultReviewDetail->et_procedure: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Cervicl Mucus : &nbsp;</span>
-                                                    {{Form::text("data[cervicl_mucus]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[cervicl_mucus]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->cervicl_mucus) ? $ivfResultReviewDetail->cervicl_mucus: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Pickup D/B : &nbsp;</span>
-                                                    {{Form::text("data[pickup]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[pickup]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->pickup) ? $ivfResultReviewDetail->pickup: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Ovum denudation D/B : &nbsp;</span>
-                                                    {{Form::text("data[ovum_denudation]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[ovum_denudation]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovum_denudation) ? $ivfResultReviewDetail->ovum_denudation: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">ICSI D/B : &nbsp;</span>
-                                                    {{Form::text("data[icsi]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[icsi]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->icsi) ? $ivfResultReviewDetail->icsi: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">ET D/B : &nbsp;</span>
-                                                    {{Form::text("data[et]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[et]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->et) ? $ivfResultReviewDetail->et: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                         </div>
@@ -238,31 +239,31 @@
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">B-HCG : &nbsp;</span>
-                                                    {{Form::text("data[b_hcg]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[b_hcg]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->b_hcg) ? $ivfResultReviewDetail->b_hcg: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Result : &nbsp;</span>
-                                                    {{Form::text("data[result]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[result]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->result) ? $ivfResultReviewDetail->result: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Outcome : &nbsp;</span>
-                                                    {{Form::text("data[outcome]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[outcome]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->outcome) ? $ivfResultReviewDetail->outcome: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group skip-cycle">
                                                     <span class="input-group-addon text-danger">Package : &nbsp;</span>
-                                                    {{Form::text("data[pkg]",'',['class'=>'form-control'])}}
+                                                    {{Form::number("data[pkg]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->pkg) ? $ivfResultReviewDetail->pkg: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Remark : &nbsp;</span>
-                                                    {{Form::text("data[remark]",'',['class'=>'form-control'])}}
+                                                    {{Form::text("data[remark]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->remark) ? $ivfResultReviewDetail->remark: '',['class'=>'form-control'])}}
                                                 </div>
                                             </div>
                                         </div>
@@ -288,8 +289,16 @@
 <script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
     <script type="text/javascript">
         
+        $(document).on('click','.submit',function(e){
+            e.preventDefault();
+            var formData = new FormData($(".ivf-result-review")[0]);
 
-        function ancFormData(data)
+            if(this.value==1){
+                formData.append('is_print', 1);
+            }
+            resultFormData(formData);
+        });
+        function resultFormData(data)
         {
             $('.submit').prop('disabled', true);
             $.ajax({
@@ -305,24 +314,25 @@
                 contentType: false,
                 processData: false
             }).done(function(data){
-                $('.how-much-error').val('');
-                if(data.status == 'true'){
+                var url = "{{URL::to('ivf-result-review')}}";
+                if(data.status == 1){
                     window.location.href = url;
-                }else if(data.status == 1){
+                }else if(data.status == 2){
                     w = window.open(window.location.href, "_blank");
                     w.document.open();
                     w.document.write(data.data);
                     w.document.close();
                     w.window.print();
-                    $('#anc_history_id').val(data.id);
-                    // window.location.href = url;
-                    $('#next-appointment-modal').modal('hide');
-                }else if(data.status == '2'){
-                    $('.how-much-error').text('Please enter valid number');
-                }else if(data.status == '3'){
-                    $('#anc_history_id').val(data.id);
-                    window.location.href = url;
                 }
+                //     $('#anc_history_id').val(data.id);
+                //     // window.location.href = url;
+                //     $('#next-appointment-modal').modal('hide');
+                // }else if(data.status == '2'){
+                //     $('.how-much-error').text('Please enter valid number');
+                // }else if(data.status == '3'){
+                //     $('#anc_history_id').val(data.id);
+                //     window.location.href = url;
+                // }
                 else{
                     location.reload();
                 }

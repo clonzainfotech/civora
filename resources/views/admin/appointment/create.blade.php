@@ -313,9 +313,9 @@
                                                     'placeholder'=>'Reference Patient Name'
                                                 ])}}
                                             </div>
-                                            <span class="form-error-msg">
+                                            {{-- <span class="form-error-msg">
                                                 {{$errors->first('ref_pt_name')}}
-                                            </span>
+                                            </span> --}}
                                         </div>
                                         <div class=" col-md-6 col-sm-6 ref-pt-mobile d-none">
                                             <div class="form-group">
@@ -792,8 +792,8 @@
         }
         else if(value == '1')//self
         {
-            $('input[type="text"][name="ref_pt_name"]').prop('required', 'required');
-            $('input[type="text"][name="ref_pt_mobile"]').prop('required', 'required');
+            // $('input[type="text"][name="ref_pt_name"]').prop('required', 'required');
+            // $('input[type="text"][name="ref_pt_mobile"]').prop('required', 'required');
             $('.ref-pt-name').removeClass('d-none');
             $('.ref-pt-mobile').removeClass('d-none');
         }
@@ -803,8 +803,8 @@
             $('.doctor-name').addClass('d-none');
             $('.doctor-mobile-number').addClass('d-none');
 
-            $('input[type="text"][name="ref_pt_name"]').prop('required', false);
-            $('input[type="text"][name="ref_pt_mobile"]').prop('required', false);
+            // $('input[type="text"][name="ref_pt_name"]').prop('required', false);
+            // $('input[type="text"][name="ref_pt_mobile"]').prop('required', false);
             $('.ref-pt-name').addClass('d-none');
             $('.ref-pt-mobile').addClass('d-none');
         }

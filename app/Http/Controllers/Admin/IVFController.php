@@ -2806,10 +2806,10 @@ class IVFController extends AdminController
                             $ivf = $ivfHistory;
                             $historyData = json_decode($ivf->description);
                             $doseData = $this->Dose->pluck('name','name');
-                            
+                            $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$ivfHistory->plan)->where('cycle_no',$ivfHistory->cycle_no)->where('visit',2)->first();
+                            $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
                         }
-                        $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$ivfHistory->plan)->where('cycle_no',$ivfHistory->cycle_no)->where('visit',2)->first();
-                        $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
+                        
                         //find extra visit after 1st visit
                         $firstVisit = $this->IVF->where('patients_id',$patientId)->where('created_at',$key)->first();
                         if($firstVisit)

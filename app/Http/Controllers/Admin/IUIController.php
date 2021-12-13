@@ -1284,9 +1284,14 @@ class IUIController extends AdminController
             }
             // $now = Carbon::now()->format('Y-m-d');
             $LastIuiVisit = $this->IuiHistory->wherePatientsId($id)->orderBy('created_at','desc')->first();
+            if(!$LastIuiVisit)
+            {
+                $LastIuiVisit = $this->IUI->wherePatientsId($id)->orderBy('created_at','desc')->first();
+            }
             if($LastIuiVisit)
             {
                 $iuiExtraVisit  = $this->IuiExtraVisit->where('patient_id',$id)->whereCycleNo($iui->cycle_no)->where('created_at','>',$LastIuiVisit->created_at)->first();
+                
                 if($iuiExtraVisit)
                 {
                     $oe = json_decode($iuiExtraVisit->oe);

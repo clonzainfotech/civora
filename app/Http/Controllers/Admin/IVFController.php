@@ -1800,6 +1800,10 @@ class IVFController extends AdminController
             $isEmbroy_used = $this->IvfHistory->where('patients_id',$id)->where('cycle_no',($cNumber-1))->where('plan',$pStatus)->where('description->collected->report->embroy->type', 'yes')->where('description->is_transfer','no')->where('description->skip_cycle','yes')->orderBy('id','DESC')->first();
             $remark = null;
             $LastIvfVisit = $this->IvfHistory->wherePatientsId($id)->orderBy('created_at','desc')->first();
+            if(!$LastIvfVisit)
+            {
+                $LastIvfVisit = $this->IVF->wherePatientsId($id)->orderBy('created_at','desc')->first();
+            }
             if($LastIvfVisit)
             {
                 $des = json_decode($LastIvfVisit->description);

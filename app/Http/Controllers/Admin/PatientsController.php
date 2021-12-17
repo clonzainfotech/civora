@@ -770,7 +770,7 @@ class PatientsController extends AdminController
                         {
                             $investigation = json_decode($anc->investigation);
                             $investigationValueDetails = [];
-                            $data = $investigation->investigation_data;
+                            $data = isset($investigation->investigation_data) ? $investigation->investigation_data : [];
                             $investigationValueData = (array)$investigation->investigation_details;
                             foreach($data as $key => $value){
                                 if(empty($investigationValueData[$value])){
@@ -797,7 +797,7 @@ class PatientsController extends AdminController
                                 $historyHubInvestigation = (isset(json_decode($ivf->investigation)->hub)) ? json_decode($ivf->investigation)->hub : null;
                                 $investigationValueDetails['wife'] = [];
                                 $data = (!empty($historyWifeInvestigation->investigation_data)) ? $historyWifeInvestigation->investigation_data : [];
-                                $investigationValueData = (array)$historyWifeInvestigation->investigation_details;
+                                $investigationValueData = (!empty($historyWifeInvestigation->investigation_details)) ? (array)$historyWifeInvestigation->investigation_details : [];
                                 foreach($data as $key => $value){
                                     if(empty($investigationValueData[$value])){
                                         $investigationData[] = isset($investigationReport[$value]) ? $investigationReport[$value] : '';

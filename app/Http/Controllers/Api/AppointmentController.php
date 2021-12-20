@@ -764,6 +764,10 @@ class AppointmentController extends ApiController
                 $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45'];
                 $totalSloat = 3;// check 3 patients within pre 15 min
             }
+            if(\Carbon\Carbon::parse($request->date)->format('l') == 'Sunday')
+            {
+                $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00'];
+            }
             foreach($sloats as $sloat)
             {
                 

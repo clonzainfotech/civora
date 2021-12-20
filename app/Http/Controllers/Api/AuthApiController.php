@@ -50,10 +50,11 @@ class AuthApiController extends ApiController
         // }
         if($login_type == 'mobile')
         {
-            $patient = $this->PatientSignup->where('mobile_number',$request->only($login_type))->where('is_approved',0)->first();
+            $patient = $this->PatientSignup->where('mobile_number',$request->only($login_type))->first();
             if($patient)
             {
-                return $this->sendNotApproved('Please contact to Radha Candor IVF Hospital of Approve your Request');
+                $user_data = $patient;
+                // return $this->sendNotApproved('Please contact to Radha Candor IVF Hospital of Approve your Request');
             }
 
         }
@@ -104,6 +105,10 @@ class AuthApiController extends ApiController
                 return $this->sendError($validator->errors()->first(), 422);
             }
             $patient = $this->OpdPatients->where('id', $pid)->first();
+            if(!$patient)
+            {
+                $patient = $this->PatientSignup->where('id', $pid)->first();
+            }
             if($patient && $patient->mobile_number == '9825604838')
             {
                 $user = $this->OpdPatients->where('id', $pid)->first();
@@ -111,6 +116,10 @@ class AuthApiController extends ApiController
             else
             {
                 $user = $this->OpdPatients->where('id', $pid)->where('otp',$request->otp)->first();
+            }
+            if(!$user)
+            {
+                $user = $this->PatientSignup->where('id', $pid)->first();
             }
             $PatientToken = $this->PatientToken;
             if($user) {

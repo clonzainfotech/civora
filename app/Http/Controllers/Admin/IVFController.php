@@ -1479,6 +1479,14 @@ class IVFController extends AdminController
             $dataFailcycle = $dataForFailCycle->mapWithKeys(function($value){
                 return [$value->plan.'_'.$value->cycle_no  => $value->plan];
             })->all();
+            $dataForConceiveCycle = collect($this->IvfHistory
+                                ->wherePatientsId($id)
+                                ->where('description->transfer->result_type', 'conceive')
+                                // ->where('cycle_status', '2')
+                                ->get());
+            $dataConceiveCycle = $dataForConceiveCycle->mapWithKeys(function($value){
+                return [$value->plan.'_'.$value->cycle_no  => $value->cycle_no];
+            })->all();
             $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             $complaints = $this->Complaint->pluck('name','name');
             $medicines = $this->Medicine->pluck('name','name');
@@ -1520,6 +1528,7 @@ class IVFController extends AdminController
             $data['dataSamecycle'] = $dataSamecycle;
             $data['dataFailcycle'] = $dataFailcycle;
             $data['dataForSamecycle_value'] = $dataForSamecycle_value;
+            $data['dataConceiveCycle'] = $dataConceiveCycle;
             $data['isIvfappointment'] = !empty($isIvfappointment) ? true : false;
             if($request->ajax()){
                 $data['history'] = View::make('admin.ivf.edit',$data)->render();
@@ -1734,10 +1743,10 @@ class IVFController extends AdminController
                 $checkIsTransferData = json_decode($checkIsTransfer->description);
                 $checkIsTransfer = !empty($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' ? 1 : 0;
 
-                if($checkIsTransfer){
-                    $checkIsTransfer = !empty($checkIsTransferData->plan) ? 0 : 1;
+                // if($checkIsTransfer){
+                //     $checkIsTransfer = !empty($checkIsTransferData->plan) ? 0 : 1;
 
-                }
+                // }
                 if(isset($checkIsTransferData->is_transfer) && $checkIsTransferData->is_transfer == 'yes' && $checkIsTransferData->is_upt == 'yes' && ($cData != $cNumber))
                 {
                     // dd($pStatus);

@@ -47,6 +47,9 @@
                             <div class="col-lg-3 col-md-6 col-sm-6">
                                 {{Form::select('charge_type',['1'=>'Hormon','2'=>'IVF','3'=>'IUI'],'',['class'=>'form-control select-padding-0 charge_type','placeholder'=>'Select Charge Category'])}}
                             </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                {{Form::select('reference_dr',$referenceDoctor,'',['class'=>'form-control select-padding-0 reference_dr','placeholder'=>'Select Reference Doctor'])}}
+                            </div>
                         </div>
                     </div>
                     <!-- Tab panes -->
@@ -163,6 +166,7 @@
         var search = '';
         var charge_type = $('.charge_type').val();
         var charge_text = $('.charge_type option:selected').val();
+        var reference_dr = '';
 
         $('.datetimepicker').bootstrapMaterialDatePicker({
             format: 'dddd DD MMMM YYYY',
@@ -182,7 +186,7 @@
         date = $('.daterange').val();
         var hname = '';
         var htype = 1;
-        qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+        qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
         var hormonQueryString = 'hname=' + hname + '&htype=' + htype+'&search='+search;
         var selectedHormonId = '';
         var hormonId = '';
@@ -196,13 +200,13 @@
 
             $('.daterange').on('apply.daterangepicker', function(ev, picker) {
                 date = $(this).val();
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
             $('.daterange').on('cancel.daterangepicker', function(ev, picker) {
                 $(".daterange").val('');
                 date = $(".daterange").val();
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
 
@@ -225,18 +229,18 @@
             $(document).on('click', '.pagination a',function(event){
                 event.preventDefault();
                 page=$(this).attr('href').split('page=')[1];
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
 
             $(document).on('change','select.patient-id',function(){
                 patientId = $(this).val();
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
             $(document).on('keyup','.search-mobile-number',function(){
                 search = $(this).val();
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
 
@@ -244,18 +248,24 @@
                 e.preventDefault();
                 charge_type = $(this).val();
                 charge_text = $('select.charge_type option:selected').text();
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
+                getHormonData(qstring);
+            });
+            $(document).on('change', 'select.reference_dr',function(e){
+                e.preventDefault();
+                reference_dr = $(this).val();
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
 
             $(document).on('click','.delete-hormon',function(){
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search;
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&reference_dr='+reference_dr;
                 hormonId = $(this).data('hormon');
                 showConfirmMessage();
             });
 
             $(document).on('click','.print-hormon',function(){
-                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&is_print=1';
+                qstring = 'page='+page+ '&date=' + date + '&patient_id='+patientId+'&charge_type='+charge_type+'&charge_value='+charge_text+'&search='+search+'&is_print=1'+'&reference_dr='+reference_dr;
                 getHormonData(qstring);
             });
 

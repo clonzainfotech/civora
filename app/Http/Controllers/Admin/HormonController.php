@@ -56,6 +56,15 @@ class HormonController extends AdminController
                         });
                     });
                 }
+                $reference_dr = $request->reference_dr;
+                if($reference_dr){
+                    $hormon = $hormon->where(function($query) use($reference_dr) {
+                        $query
+                        ->orWhereHas('getPatients', function($query) use($reference_dr) {
+                            $query->where('reference_doctor_id','LIKE',$reference_dr.'%');
+                        });
+                    });
+                }
                 if($request->is_print == 1){
                     $hormon = $hormon->orderBy('id','DESC')->get();
                     $data['data'] = View::make('admin.appointment.hormon.preview',compact('hormon','chargeValue','patients'))->render();

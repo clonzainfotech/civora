@@ -379,9 +379,11 @@ class IUIController extends AdminController
                 }
             }
             // 2 visit
+            $appointment_remark = null;
             if($request->visit != 1){
                 if(isset($request->data['hcg']['iui']['status']) && $request->data['hcg']['iui']['status'] == 'yes'){
                     $isProcudure = 1;
+                    $appointment_remark = 'For IUI';
                 }
                 $isAnc = false;
                 $iuiPatientsData = $this->IUI->where('patients_id',$patientsId)->orderBy('id','DESC')->first();
@@ -594,6 +596,7 @@ class IUIController extends AdminController
                             $appointmentData['isAnc'] = $isAnc;
                             $appointmentData['time'] = $appointmentTime;
                             $appointmentData['is_procedure'] = $isProcudure;
+                            $appointmentData['remark'] = $appointment_remark;
                             $nextAppointment = $this->nextAppointmentData($appointmentData);
                         }
 
@@ -1061,6 +1064,17 @@ class IUIController extends AdminController
                     $categoryPatientData['date'] = $iuiDtaeAndTime;
                     $categoryPatientData['reminder_date'] = Carbon::parse($iuiDtaeAndTime)->subDays(1)->format('Y-m-d');
                     $categoryPatientData['message'] = "Coming for IUI";
+                    $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
+                    $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+                }
+                if(!empty($request['data']['ovalution']) && $request['data']['ovalution'] == 'yes' && !empty($followDate))
+                {
+                    $iuiDtae = Carbon::parse($followDate)->format('Y-m-d');
+                    $iuiDtaeAndTime = \Carbon\Carbon::parse($iuiDtae)->format('Y-m-d H:i');
+                    $categoryPatientData['patients_id'] = $patientsId;
+                    $categoryPatientData['date'] = $iuiDtaeAndTime;
+                    $categoryPatientData['reminder_date'] = Carbon::parse($iuiDtaeAndTime)->subDays(1)->format('Y-m-d');
+                    $categoryPatientData['message'] = "Coming for IUI Result";
                     $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
                     $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
                 }

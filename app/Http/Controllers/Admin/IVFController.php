@@ -947,14 +947,17 @@ class IVFController extends AdminController
                         $ivfReport->pus_cells = json_encode($request->cells);
                         $ivfReport->save();
                     }
+                    $appointment_remark = null;
                     // next appointment save
                     $followupDate = !empty($request->data['follow_up']) ? $request->data['follow_up'] : null;
                     $transferDate = !empty($request->data['transfer']['follow_up']) ? $request->data['transfer']['follow_up'] : null;
                     if($transferDate){
                         $followupDate = $transferDate;
                     }
-                    if(!empty($request->data['progesterone']['type']) || (isset($request->data['collection']) && in_array('trigger', $request->data['collection']))){
+                    // if(!empty($request->data['progesterone']['type']) || (isset($request->data['collection']) && in_array('trigger', $request->data['collection']))){
+                        if(isset($request->data['collection']) && in_array('trigger', $request->data['collection'])){
                         $isProcudure = 1;
+                        $appointment_remark = 'For Trigger';
                     }
                     if($followupDate){
                         $currentDate = date('Y-m-d');
@@ -980,7 +983,7 @@ class IVFController extends AdminController
                                 $appointmentData['isAnc'] = $isAnc;
                                 $appointmentData['time'] = $appointmentTime;
                                 $appointmentData['is_procedure'] = $isProcudure;
-                                $appointmentData['remark'] = isset($request->data['collection']) && in_array('transfer', $request->data['collection']) ? 'IVF Result' : null;
+                                $appointmentData['remark'] = isset($request->data['collection']) && in_array('transfer', $request->data['collection']) ? 'For IVF Result' : $appointment_remark;
                                 $nextAppointment = $this->nextAppointmentData($appointmentData);
                             }
                     }

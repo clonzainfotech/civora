@@ -125,6 +125,7 @@
                             <li class="{{ Request::segment(1) === 'edd-patient' ? 'sub active open' : null }}"><a href="{{URL::to('edd-patient')}}" class=" waves-effect waves-block"><span>EDD Patients</span></a></li>
                             <li class="{{ Request::segment(1) === 'infertility-report' ? 'sub active open' : null }}"><a href="{{URL::to('infertility-report')}}" class=" waves-effect waves-block"><span>Infertility Report</span></a></li>
                             <li class="{{ Request::segment(1) === 'ca-expense-report' ? 'sub active open' : null }}"><a href="{{URL::to('ca-expense-report')}}"class="waves-effect waves-block"><span>CA Expense</span></a></li>
+                            <li class="{{ Request::segment(1) === 'analysis-report' ? 'sub active open' : null }}"><a href="{{URL::to('analysis-report')}}"class="waves-effect waves-block"><span>Analysis Report</span></a></li>
                         </ul>
                     </li>
                     @endif

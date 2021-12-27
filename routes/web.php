@@ -100,7 +100,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('update-appointment-time','AppointmentController@updateTime');
     Route::get('update-appointment-date-time','AppointmentController@updateAppointmentDateAndTime');
     Route::get('get-appointment-popup-Detail','AppointmentController@getAppointmentPopUpDetail');
-    
+
 
     //Donor
     Route::get('donor','DonorController@index');
@@ -138,7 +138,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
 
     //self Booking
     Route::get('self-booking','AppointmentRequestController@getSelfBookingList');
-    
+
 
     // next appointment
     Route::post('next-appointment','AppointmentController@nextAppointment');
@@ -259,6 +259,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::get('all-collection-report','ReportController@getAllCollectionReport');
     Route::get('hormon-inj-report','ReportController@getHormonInjectionReport');
     Route::get('pediatric-report','ReportController@getPedCollection');
+    Route::get('analysis-report','ReportController@analysisReport');
 
 
     // infertility report data
@@ -457,13 +458,13 @@ Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
     Route::post('html-page/store','HtmlPageController@store');
     Route::get('html-page/edit/{id}','HtmlPageController@edit');
     Route::get('html-page/delete/{id}','HtmlPageController@delete');
-    
+
     Route::any('html-page/uploadImage','HtmlPageController@upload')->name('ckeditor.upload');
 
     //report advice list
     Route::get('advice-report-list','PatientsController@getAdviceReportList');
 
     Route::get('print-preview','SystemSettingController@printpreview');
-    
+
 });
 

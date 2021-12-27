@@ -1232,11 +1232,12 @@ class IVFController extends AdminController
             $isNewCycle = true;
             $lastCycleNo= null;
             $ivfReport = false;
+            $firstVisit = $this->IVF->where('patients_id',$id)->first();
             //if pt in iui and currently take tretment in ivf then transfer again in iui or cuurently take tretment and now start iui then auto fill first visit 
             $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->orderBy('id', 'DESC')->first();
             if($lastAppointment)
             {
-                if(!in_array($lastAppointment->category_id,[1,2]))
+                if(!in_array($lastAppointment->category_id,[1,2]) || empty($firstVisit))
                 {
                     $firstVisit = $this->IVF->where('patients_id',$id)->first();
                     if(!$firstVisit)

@@ -6459,7 +6459,7 @@
                         $('.endo_thickness').val(data.data.endo_thickness);
                         $('.et_procedure').val(data.data.et_procedure);
                         var total_image = data.data.embryos_transferred_image;
-                        if(total_image.length != 0)
+                        if(total_image != null || total_image != '')
                         {
                             $('.total_embryos_transferred_image').html('Total '+total_image.split(',').length+ ' Images');
 

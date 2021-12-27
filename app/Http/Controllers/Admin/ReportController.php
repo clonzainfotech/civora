@@ -167,7 +167,7 @@ class ReportController extends AdminController
                         View::make('admin.report.category.preview', compact('categoryReport','reportDatails','category'))->render()
                     ]);
                 }
-                
+
                 $reportDatails['total'] = $categoryReport->sum('netamount');
                 $reportDatails['count'] = $categoryReport->count();
                 $reportDatails['allCategoryCount'] = $allCategoryCount;
@@ -391,8 +391,8 @@ class ReportController extends AdminController
                     });
                 })
                     ->orderBy('id', 'DESC');
-                
-                
+
+
                 //OPD
                 //charge type 5 and 6 is for  new patients category and old patients category
                 if(empty($charge_type) || $charge_type == 1 || $charge_type == 5 || $charge_type == 6)
@@ -418,7 +418,7 @@ class ReportController extends AdminController
                     ])
                     ->orderBy('id', 'DESC');
                 }
-                
+
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
                 if($fromdate || $todate){
@@ -439,7 +439,7 @@ class ReportController extends AdminController
 
                     $categoryId = [2,4,6,9,13];
                 }
-                
+
                 if(count($categoryId) > 0){
                     $reportDatails['category'] = $this->Category->where('id',$categoryId)->value('name');
                     $refDoctorReport =$refDoctorReport->WhereHas('getAppointment', function ($query) use ($categoryId) {
@@ -846,7 +846,7 @@ class ReportController extends AdminController
     public function ivfRemainigPayment(Request $request){
         try{
             $ivfPayment = $this->IvfPayment->whereNotNull('package')->orderBy('id','DESC');
-            $patients = $this->getPatients();            
+            $patients = $this->getPatients();
             if($request->ajax()){
 
                 if($request->date){
@@ -862,7 +862,7 @@ class ReportController extends AdminController
                 if($patientId){
                     $ivfPayment = $ivfPayment->where('patients_id',$patientId);
                 }*/
-                if($request->isprint){  
+                if($request->isprint){
                     $ivfPayment = $ivfPayment->get();
                     $data['status'] = 2;
                     $data['ivfpayment'] = View::make('admin.report.ivf_payment.preview',compact('ivfPayment'))->render();
@@ -931,7 +931,7 @@ class ReportController extends AdminController
             //     // $appointment = $this->IuiHistory->where('cycle_status',1)->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
             //     $appointment = $this->IUI->groupBy('patients_id')->having(DB::raw('count(patients_id)'),'=',1);
             // }
-            
+
         if($request->ajax()){
             $patientStatus = $request->patient_status;
             $type = $request->report_type;
@@ -1040,7 +1040,7 @@ class ReportController extends AdminController
             abort(500);
         }
     }
-     
+
     //ca expense report
     public function getCaExpenseReport(Request $request)
     {
@@ -1096,7 +1096,7 @@ class ReportController extends AdminController
                 // IVF
                 $ivf = $this->IndoorDeposit->where([['charge_type', '=', 2],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
                 // Main Collection Data Card
-                
+
                 $mainDataCash = $this->Appointment
                     ->whereHas('getAppointmentCharges', function($query) use($paymentType) {$query->where([
                         ['payment_mode', '=', $paymentType],
@@ -1264,7 +1264,7 @@ class ReportController extends AdminController
                     $mainDataUPI = $mainDataUPI->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     $mainDataNEFT = $mainDataNEFT->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                 }
-                
+
                 $mainDataCash  = $mainDataCash->get();
                 $mainDataCash = $mainDataCash->groupBy('category_id')->toArray();
 
@@ -1349,7 +1349,7 @@ class ReportController extends AdminController
                     $indoorNEFTDeposit = $indoorNEFTDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     $indoorDebit = $indoorDebit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                 }
-                
+
                 $indoorCaseDeposit = $indoorCaseDeposit->get()->toArray();
                 $indoorCardDeposit = $indoorCardDeposit->get()->toArray();
                 $indoorChequeDeposit = $indoorChequeDeposit->get()->toArray();
@@ -1497,14 +1497,14 @@ class ReportController extends AdminController
                 }
                 return $data;
             }
-            
+
         }catch(Exception $e){
             log::debug($e);
             abort(500);
         }
     }
     /**
-    * Get CA expense detail 
+    * Get CA expense detail
     * @param  \Illuminate\Http\Request $request
     * @return \Illuminate\Http\Response
     */
@@ -1577,7 +1577,7 @@ class ReportController extends AdminController
                     ])
                     ->orderBy('id', 'desc');
 
-                
+
                 if($fromdate || $todate){
                     $usg = $usg->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     $hormon = $hormon->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
@@ -1585,7 +1585,7 @@ class ReportController extends AdminController
                     $ivf = $ivf->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
 
                     $mainDataCash = $mainDataCash->whereBetween('date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
-                    
+
                 }
 
                 $mainDataCash  = $mainDataCash->get();
@@ -1595,7 +1595,7 @@ class ReportController extends AdminController
                 $iuiCash = array_merge(!empty($mainDataCash[3]) ? $mainDataCash[3] : [],!empty($mainDataCash[4]) ? $mainDataCash[4] : []);
                 $ancCash = array_merge(!empty($mainDataCash[5]) ? $mainDataCash[5] : [],!empty($mainDataCash[6]) ? $mainDataCash[6] : []);
                 $gynecCash = array_merge(!empty($mainDataCash[17]) ? $mainDataCash[17] : [],!empty($mainDataCash[18]) ? $mainDataCash[18] : []);
-                
+
 
                 $indoor = $this->IndoorBook
                     ->whereIsFinalInvoice(1)
@@ -1664,7 +1664,7 @@ class ReportController extends AdminController
                 $ivf = $ivf->get();
                 $income = $income->get();
                 $expense = $expense->get();
-                
+
                 return response()->json([
                     View::make('admin.report.collection.all_collection_data',compact('collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCaseDeposit','ivfCash', 'iuiCash', 'ancCash','gynecCash','procedures','indoorDebit'))->render()
                 ]);
@@ -1690,7 +1690,7 @@ class ReportController extends AdminController
                 if(!empty($request->inj))
                 {
                     $injManager = $injManager->where('injection',$request->inj)->orderBy('id', 'DESC');
-                } 
+                }
                 if(!empty($request->patients))
                 {
                     $patientId = $request->patients;
@@ -1699,7 +1699,7 @@ class ReportController extends AdminController
                             $query->where('id', $patientId);
                         });
                     });
-                } 
+                }
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
                 if($fromdate || $todate){
@@ -1757,7 +1757,7 @@ class ReportController extends AdminController
                     return $query;
                 });
                 $income = $income->groupBy('income_category');
-                
+
                 $expense = collect($expense->get())->map(function ($query){
                     $query->expense_category = $query->getExpenseCategory['name'];
                     return $query;
@@ -1784,6 +1784,50 @@ class ReportController extends AdminController
                 return $data;
             }
             return view('admin.report.pediatric.index');
+        }
+        catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+
+    public function analysisReport(Request $request) {
+        try{
+            if($request->ajax())
+            {
+                $data = [];
+                $data['total'] = $this->OpdPatients->where(function($query) {
+                        $query->whereHas('getAppointments', function($query) {
+                            return $query->whereCategoryId(3);
+                        });
+                    })->count();
+                $data['oldinf'] = $this->OpdPatients->where(function($query) {
+                        $query->whereHas('getAppointments', function($query) {
+                            return $query->whereCategoryId(4);
+                        });
+                    })->count();
+                $data ['newinf'] = $data['total'] - $data['oldinf'];
+                $data ['drop'] = $this->IuiHistory::where('visit', '<', 4 )->where('created_at', '<', (new \Carbon\Carbon)->submonths(2))->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $data ['continue'] = $data ['total'] - $data ['drop'];
+                $clomiphene = "Clomiphene Citrate";
+                $data ['cc'] = $this->IuiHistory::where('visit', 2 )->where('description','like', '%'.$clomiphene.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $ltz= "ltz";
+                $data ['ltc'] = $this->IuiHistory::where('visit', 2 )->where('description','like', '%'.$ltz.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $consive = "consive";
+                $data ['consive'] = $this->IuiHistory::where('visit', 4 )->where('description','like', '%'.$consive.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $fail = "fail";
+                $data ['fail'] = $this->IuiHistory::where('visit', 4 )->where('description','like', '%'.$fail.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+
+                $data['patients'] = $this->OpdPatients->where(function($query) {
+                    $query->whereHas('getAppointments', function($query) {
+                        return $query->where('category_id',4);
+                    });
+                })->get();
+                $data['status'] = 1;
+                $data['report_data'] = View::make('admin.report.analysis.data',compact('data'))->render();
+                return $data;
+            }
+            return view('admin.report.analysis.index');
         }
         catch(Exception $e){
             log::debug($e);

@@ -5590,7 +5590,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                             </label>
                                 
                                                             {{Form::radio("data[skip_cycle]",'no',true,['id'=>'skip_type_no','class'=>'iui-yes-no-status skip_cycle','data-type'=>'skip-details'])}}
-                                                            <label for="ps_type_no">
+                                                            <label for="skip_type_no">
                                                                 No
                                                             </label>
                                                         </div>

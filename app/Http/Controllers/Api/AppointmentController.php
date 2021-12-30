@@ -36,20 +36,23 @@ class AppointmentController extends ApiController
             if(!empty($patientData)){
                 $patientId = $patientData->patients_id;
                 $patients = $this->OpdPatients->find($patientId);
-                // $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
-                //                         ->where('patients_id', $patientId)
-                //                         ->get();
+                $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
+                                        ->where('patients_id', $patientId)
+                                        ->get();
                 $appointmentRequestData = $this->AppointmentRequest::select('id','appointment_date as date','appointment_time as time','is_book',DB::raw("DATE_FORMAT(appointment_date,'%Y') as yearKey"))
                                             ->where('patients_id', $patientId)
                                             ->where('is_book','!=',1)
                                             ->get();
-                // $data  = collect($appointmentData->merge($appointmentRequestData))->groupBy('yearKey');
-                $data  = $appointmentRequestData;
+                $data  = collect($appointmentData->merge($appointmentRequestData))->groupBy('date');
+                // $data  = $appointmentRequestData;
                 $aData = [];
                 $appointmentData = [];
-                // foreach ($data as $key=>$row) {
-                    foreach ($appointmentRequestData as $value) 
-                    {
+                // dd($data);
+                foreach ($data as $key=>$value) {
+                    // foreach ($appointmentRequestData as $value) 
+                    // {
+                
+                        $value = $value[0];
                         $utersWeek = null;
                         $oldDate = null;
                         $lastAppointment = $this->Appointment->where('patients_id', $patientId)->where('date',$value->date)->orderBy('id','DESC')->first();
@@ -104,11 +107,11 @@ class AppointmentController extends ApiController
                         $value->profile_picture = $patients->profile_picture;
                         $value->reason = $value->remark;
                         $value->week = $utersWeek;
-                        
+                       array_push($appointmentData,$value);
                     }
                     // $appointmentData[][$key] = $aData;
                 // }
-                return $this->sendResponse('Get appointment details successfully', $appointmentRequestData);
+                return $this->sendResponse('Get appointment details successfully', $appointmentData);
             }
             return $this->sendError('User is not found');
         }

@@ -75,8 +75,9 @@
                                 </a>
                                 <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                 <a href="#" class="btn btn-sm btn-primary btn-ivf-report injection-report" data-cycleno="{{$row}}" data-plan="1" data-pid="{{$patientsId}}">Injection Report</a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="1" data-pid="{{$patientsId}}">View File</a>
+                                {{-- <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="1" data-pid="{{$patientsId}}">View File</a> --}}
                                 <a href="{{URL::to('patient-history/'.$patientsId)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View History</a>
+                                <a href="{{URL::to('ivf-result-review/'.$patientsId.'/1/'.$row)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">Ivf Result Review</a>
                                         
                                 
                             </div>
@@ -137,9 +138,10 @@
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(2).'/'.encrypt($row))}}">
                                             <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>
                                         </a>
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="2" data-pid="{{$patientsId}}">View File</a>
+                                        {{-- <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="2" data-pid="{{$patientsId}}">View File</a> --}}
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="{{URL::to('patient-history/'.$patientsId)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View History</a>
+                                        <a href="{{URL::to('ivf-result-review/'.$patientsId.'/2/'.$row)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">Ivf Result Review</a>
                                     </div>
                                 </div>
                             </div>
@@ -204,6 +206,8 @@
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="3" data-pid="{{$patientsId}}">View File</a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="{{URL::to('patient-history/'.$patientsId)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View History</a>
+                                        <a href="{{URL::to('ivf-result-review/'.$patientsId.'/3/'.$row)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">Ivf Result Review</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -268,6 +272,8 @@
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>
                                         <a href="{{URL::to('patient-history/'.$patientsId)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">View History</a>
+                                        <a href="{{URL::to('ivf-result-review/'.$patientsId.'/4/'.$row)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">Ivf Result Review</a>
+
                                     </div>
                                 </div>
                             </div>

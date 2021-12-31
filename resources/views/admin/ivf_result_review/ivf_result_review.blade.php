@@ -6,7 +6,18 @@
 @stop
 @php
     $typeOfData = [1=>'Primary',2=>'Secondary'];
+    $abArray = ['1'=>"Normal",'2'=>"Abnormal"];
     $o_h = !empty($ivf->o_h) ? json_decode($ivf->o_h) : null;
+    $investigation = json_decode($ivf->investigation);
+    $laproscopy = $investigation->laproscopy->type == 'yes' ? $abArray[$investigation->laproscopy->laproscopy_type] : null;
+    $hcg = $investigation->hcg->type == 'yes' ? $abArray[$investigation->hcg->laproscopy_type] : null;
+    $tubalFactor = !empty($laproscopy) && !empty($hcg) ? $laproscopy : (!empty($laproscopy) && empty($hcg) ? $laproscopy : $hcg);
+    $o_e = !empty($ivf->o_e) ? json_decode($ivf->o_e) : null;
+    $uterus = $o_e->uterus->type == 2 ? $o_e->uterus->details : 'Normal';
+    $ovary = !empty($o_e->ovary) ? $o_e->ovary : null;
+    $right_ovary = isset($ovary->right->details) ? implode(', ',$ovary->right->details) : null;
+    $left_ovary = isset($ovary->left->details) ? implode(', ',$ovary->left->details) : null;
+
 @endphp
 @section('content')
 <div class="row clearfix anc">
@@ -21,11 +32,12 @@
                     <div class="col-md-8">
                     {{-- <ul class="header-dropdown">
                         <li> --}}
-                                <a href="{{URL::to('ivf-result-review')}}" class="btn btn-primary pull-right">Back</a>
+                                {{-- <a href="{{URL::to('ivf-result-review')}}" class="btn btn-primary pull-right">Back</a> --}}
                                 <a href="{{URL::to('patient-history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary pull-right">View History</a>
                                 <a href="{{url('ivf/ivfedit/'.encrypt($patient->id))}}" class="" target="_blank">
                                     <button class="btn btn-primary pull-right">Visit-1</button>
                                 </a>
+                                <a href="{{url('ivf/payments/'.encrypt($patient->id))}}"   target="_blank" class="btn btn-primary pull-right"> IVF Payment</a>
                                 <a href="{{URL::to('get-all-report/'.encrypt($patient->id).'?status=ivf')}}" target="_blank" class="">
                                     <button class="btn btn-primary pull-right">View Reports</button>
                                 </a>
@@ -49,6 +61,8 @@
                     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
                         {{Form::open(['class'=>'form ivf-result-review','files'=>true,'id'=>'','enctype'=>'multipart/form-data'])}}
                             {{Form::hidden('patients_id',encrypt($patient->id))}}
+                            {{Form::hidden('plan',$plan)}}
+                            {{Form::hidden('cycle_no',$cycle_no)}}
                             {{Form::hidden('ivf_result_id','',['class'=>'ivf_result_id'])}}
                             
                             <!-- H/O -->
@@ -123,24 +137,33 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             
-                                            <div class="col-md-4 pr-0">
+                                            <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Utreus : &nbsp;</span>
-                                                    {{Form::text("data[utreus]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->utreus) ? $ivfResultReviewDetail->utreus: '',['class'=>'form-control'])}}
+                                                    {{Form::text("data[utreus]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->utreus) ? $ivfResultReviewDetail->utreus: $uterus,['class'=>'form-control'])}}
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 pr-0">
+                                            <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Tubal Factor(TL) : &nbsp;</span>
-                                                    {{Form::text("data[tubal_factor]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->tubal_factor) ? $ivfResultReviewDetail->tubal_factor: '',['class'=>'form-control'])}}
+                                                    {{Form::text("data[tubal_factor]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->tubal_factor) ? $ivfResultReviewDetail->tubal_factor: $tubalFactor,['class'=>'form-control'])}}
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 pr-0">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon col-md-2">Ovarian Factor Right:</span>
+                                                    {{Form::text('data[ovarian_factor_right]',!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovarian_factor_right) ? $ivfResultReviewDetail->ovarian_factor_right: $right_ovary,['class'=>'form-control col-sm-4','placeholder'=>'Right Ovary'])}}
+                                                    <span class="input-group-addon col-md-2">Ovarian Factor left:</span>
+                                                    {{Form::text('data[ovarian_factor_left]',!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovarian_factor_left) ? $ivfResultReviewDetail->ovarian_factor_left: $left_ovary,['class'=>'form-control col-sm-4','placeholder'=>'Left Ovary'])}}
+                                                    {{-- {{Form::text('visit_charges_desc','',['class'=>'form-control col-sm-4 drvisit_charge_day','placeholder'=>'Days'])}} --}}
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-md-4 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Ovarian Factor : &nbsp;</span>
                                                     {{Form::text("data[ovarian_factor]",!empty($ivfResultReviewDetail) && isset($ivfResultReviewDetail->ovarian_factor) ? $ivfResultReviewDetail->ovarian_factor: '',['class'=>'form-control'])}}
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-md-6 pr-0">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">Day of Serum Progestrone : &nbsp;</span>

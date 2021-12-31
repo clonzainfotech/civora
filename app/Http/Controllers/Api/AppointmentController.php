@@ -205,7 +205,7 @@ class AppointmentController extends ApiController
                                     if(!empty($madicine['medicine_status'])){
                                         $madicine['medicine_status'] = $madicine_status[$madicine['medicine_status']];
                                     }
-                                    if(is_array($madicine['medicine_time']))
+                                    if(isset($madicine['medicine_time']) && is_array($madicine['medicine_time']))
                                     {
                                         $medicineTimeData = !empty($madicine['medicine_time']) ? $madicine['medicine_time'] : [];
                                         unset($madicine['medicine_time']);

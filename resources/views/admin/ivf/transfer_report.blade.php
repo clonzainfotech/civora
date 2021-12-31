@@ -81,7 +81,6 @@
                     </tbody>
                 </table>
                 <table class="table table-bordered mt-2 transfer-table">
-                   
                     <thead>
                         <tr>
                             <th colspan="4" class="text-center">Embryo Transfer</th>

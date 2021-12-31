@@ -3418,7 +3418,6 @@ class IVFController extends AdminController
     {
         try
         {
-
             if($request->ajax())
             {
                 $ivfPatients = $this->IvfHistory->orderBy('created_at','desc')->groupBy('patients_id');
@@ -3451,17 +3450,19 @@ class IVFController extends AdminController
      * @return  view
      * @param 
      */
-    public function getIvfResultReviewDetail(Request $request , $pId)
+    public function getIvfResultReviewDetail(Request $request , $pId,$plan,$cycle_no)
     {
         try
         {
             $pId = decrypt($pId);
+            // dd($pId);
             $patient = $this->OpdPatients->find($pId);
             $ivf = $this->IVF->where('patients_id',$pId)->first();
-            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pId)->first();
+            // dd($ivf);
+            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pId)->where('plan',$plan)->where('cycle_no',$cycle_no)->first();
             $ivfResultReviewDetail = !empty($ivfResultReview) ? json_decode($ivfResultReview->description) : null;
             $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
-            return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf','ivfResultReviewDetail'));
+            return view('admin.ivf_result_review.ivf_result_review',compact('patient','hospitalDoctor','ivf','ivfResultReviewDetail','plan','cycle_no'));
         }
         catch(Exception $e)
         {
@@ -3479,11 +3480,13 @@ class IVFController extends AdminController
         {
             $pID = decrypt($request->patients_id);
             $ivf = $this->IVF->where('patients_id',$pID)->first();
-            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pID)->first();
+            $ivfResultReview = $this->IvfResultReview->where('patients_id',$pID)->where('plan',$request->plan)->where('cycle_no',$request->cycle_no)->first();
             if(empty($ivfResultReview))
             {
                 $ivfResultReview = $this->IvfResultReview;
             }
+            $ivfResultReview->plan = $request->plan;
+            $ivfResultReview->cycle_no = $request->cycle_no;
             $ivfResultReview->patients_id = $pID;
             $ivfResultReview->description = json_encode($request->data);
             $ivfResultReview->save();

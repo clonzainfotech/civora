@@ -41,6 +41,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h2><strong class="text-secondary">{{ucwords($patients->name)}}</strong>
+                            {{Form::hidden('patients_id',encrypt($patients->id),['class'=>'patients_id'])}}
                                 @php
                                     $careof = (!empty($patients->reference_doctor_id) && isset($referenceDoctor[$patients->reference_doctor_id])) ? $referenceDoctor[$patients->reference_doctor_id] : '';
                                     if(!empty($patients->reference_doctor_id) && $patients->reference_doctor_id == 1)
@@ -78,7 +79,6 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <h2><strong>{{Carbon\Carbon::parse($key)->format('d/m/Y').' - '.$category}}</strong></h2>
-
                                         </div>
                                         <div class="col-md-6 text-right">
                                                 @if(!empty($cycleNo))
@@ -111,7 +111,7 @@
     <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
     <script type="text/javascript">
        var page = '';
-        var patientId = '';
+        var patientId = $('.patients_id').val();
         var referenceDoctorId = '';
         var search = '';
         var date = '';

@@ -2953,7 +2953,171 @@
                                     </div>
                                     <div id="pmanagement" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                         <div class="panel-body" id="parent">
-                                            <div class="row">
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','counceling','',['id'=>'counceling','class'=>'plan-management','data-id'=>'counceling'])}}
+                                                        <label for="counceling">
+                                                            Counceling
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 counceling d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[counceling_details]",'',['class'=>'form-control','placeholder'=>'Counceling Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','wait_watch','',['id'=>'wait_watch','class'=>'plan-management','data-id'=>'wait-watch'])}}
+                                                        <label for="wait_watch">
+                                                            Wait Watch
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 wait-watch d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[wait_watch_details]",'',['class'=>'form-control','placeholder'=>'Wait Watch Details'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-2">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','management_by_rx','',['id'=>'management_by_rx','class'=>'plan-management','data-id'=>'management-by-rx-details'])}}
+                                                        <label for="management_by_rx">
+                                                            Management by Rx.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 management-by-rx-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[management_by_rx_details]",'',['class'=>'form-control','placeholder'=>'Management By Rx. Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 management-by-rx-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::select("plan_of_management[management_by_rx_data][]",['1'=>'Clomiphene Citrate','2'=>'Letroze'],'',['class'=>'form-control select-padding-0','title'=>'Management By Rx. Details','multiple'=>true])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-3">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','hyperstimulation_iui','',['id'=>'hyperstimulation_iui','class'=>'plan-management','data-id'=>'hyperstimulation-iui-details'])}}
+                                                        <label for="hyperstimulation_iui">
+                                                            Controlled Overian Hyperstimulation With I.U.I
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 hyperstimulation-iui-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[hyperstimulation_iui_details]",'',['class'=>'form-control','placeholder'=>'Controlled Overian Hyperstimulation With I.U.I'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 hyperstimulation-iui-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::select("plan_of_management[hyperstimulation_iui_data][]",['1'=>'Only Medicine','2'=>'Medicine + Gonadotropins','3'=>'Only Gonadotropins'],'',['class'=>'form-control select-padding-0','title'=>'Controlled Overian Hyperstimulation I.U.I Data','multiple'=>true])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-3">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','laproscopy','',['id'=>'laproscopy','class'=>'plan-management','data-id'=>'laproscopy-data'])}}
+                                                        <label for="laproscopy">
+                                                            Laproscopy
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 laproscopy-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[laproscopy_details]",'',['class'=>'form-control','placeholder'=>'Laproscopy Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 laproscopy-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::select("plan_of_management[laproscopy_data][]",['1'=>'HSG','2'=>'Hystroscopy','3'=>'DHL','4'=>'Oher'],'',['class'=>'form-control select-padding-0','title'=>'Laproscopy Data','multiple'=>true])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','ivf','',['id'=>'ivf','class'=>'plan-management','data-id'=>'ivf-details'])}}
+                                                        <label for="ivf">
+                                                            I.V.F
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 ivf-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[ivf_details]",'',['class'=>'form-control','placeholder'=>'IVF Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 ivf-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::select("plan_of_management[ivf_data][]",['1'=>'Self','2'=>'OD','3'=>'ED'],'',['class'=>'form-control select-padding-0','title'=>'I.V.F Data','multiple'=>true])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-2">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','male_factor','',['id'=>'male_factor','class'=>'plan-management','data-id'=>'male-factor-data'])}}
+                                                        <label for="male_factor">
+                                                            Rx. Of Male Factor
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 male-factor-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[male_factor_details]",'',['class'=>'form-control','placeholder'=>'Rx. Of Male Factor Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','reports','',['id'=>'reports','class'=>'plan-management','data-id'=>'reports-data'])}}
+                                                        <label for="reports">
+                                                            Reports
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 reports-data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[reports_details]",'',['class'=>'form-control','placeholder'=>'Reports Details'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-iui d-none">
+                                                <div class="col-md-3">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','induction_gonadotropins_cycle','',['id'=>'induction_gonadotropins_cycle','class'=>'plan-management','data-id'=>'induction-gonadotropins-cycle-details'])}}
+                                                        <label for="induction_gonadotropins_cycle">
+                                                            Induction Gonadotropins Cycle
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 induction-gonadotropins-cycle-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[induction_gonadotropins_cycle_details]",'',['class'=>'form-control','placeholder'=>'Induction Gonadotropins Cycle Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','other','',['id'=>'plan_of_management_other','class'=>'plan-management','data-id'=>'plan_of_management_other_data'])}}
+                                                        <label for="plan_of_management_other">
+                                                            Other
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 plan_of_management_other_data d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[other_details]",'',['class'=>'form-control','placeholder'=>'Other Details'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-ivf">
                                                 <div class="col-md-1">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[is_print]','is_print','',['id'=>'is_print','class'=>'plan-management'])}}
@@ -3466,7 +3630,15 @@
                 }
             });
         }
-
+        $(document).on('change','select.category_data',function(){
+            $('.category-iui').addClass('d-none')
+            $('.category-ivf').removeClass('d-none')
+            if($(this).val() == 3 || $(this).val() == 4)
+            {
+                $('.category-iui').removeClass('d-none')
+                $('.category-ivf').addClass('d-none')
+            }
+        })
         var medicinesValue = @json($medicines);
     </script>
 @stop

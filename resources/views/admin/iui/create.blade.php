@@ -2886,7 +2886,7 @@
                                     </div>
                                     <div id="plan_management" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                         <div class="panel-body" id="parent">
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-1">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','counceling','',['id'=>'counceling','class'=>'plan-management','data-id'=>'counceling'])}}
@@ -2914,7 +2914,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-2">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','management_by_rx','',['id'=>'management_by_rx','class'=>'plan-management','data-id'=>'management-by-rx-details'])}}
@@ -2934,7 +2934,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-3">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','hyperstimulation_iui','',['id'=>'hyperstimulation_iui','class'=>'plan-management','data-id'=>'hyperstimulation-iui-details'])}}
@@ -2954,7 +2954,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-3">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','laproscopy','',['id'=>'laproscopy','class'=>'plan-management','data-id'=>'laproscopy-data'])}}
@@ -2974,7 +2974,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-1">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','ivf','',['id'=>'ivf','class'=>'plan-management','data-id'=>'ivf-details'])}}
@@ -2994,7 +2994,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-2">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','male_factor','',['id'=>'male_factor','class'=>'plan-management','data-id'=>'male-factor-data'])}}
@@ -3022,7 +3022,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row category-iui">
                                                 <div class="col-md-3">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('plan_of_management[plan_of_management_data][]','induction_gonadotropins_cycle','',['id'=>'induction_gonadotropins_cycle','class'=>'plan-management','data-id'=>'induction-gonadotropins-cycle-details'])}}
@@ -3047,6 +3047,37 @@
                                                 <div class="col-md-3 plan_of_management_other_data d-none">
                                                     <div class="form-group">
                                                         {{Form::text("plan_of_management[other_details]",'',['class'=>'form-control','placeholder'=>'Other Details'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row category-ivf d-none">
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[is_print]','is_print','',['id'=>'is_print','class'=>'plan-management'])}}
+                                                        <label for="is_print">
+                                                            Is Print
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('plan_of_management[plan_of_management_data][]','ivf','',['id'=>'ivf','class'=>'plan-management','data-id'=>'ivf-details'])}}
+                                                        <label for="ivf">
+                                                            I.V.F
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 ivf-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("plan_of_management[ivf_details]",'',['class'=>'form-control','placeholder'=>'IVF Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        {{Form::select("plan_of_management[plan]",['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'],'',[
+                                                            'class'=>'form-control select-padding-0 plan',
+                                                            'placeholder'=>'Plan'
+                                                        ])}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -3642,7 +3673,16 @@
                 }
             });
         }
-
+        $(document).on('change','select.category_data',function(){
+            alert($(this).val());
+            $('.category-ivf').addClass('d-none')
+            $('.category-iui').removeClass('d-none')
+            if($(this).val() == 1 || $(this).val() == 2)
+            {
+                $('.category-ivf').removeClass('d-none')
+                $('.category-iui').addClass('d-none')
+            }
+        })
         var medicinesValue = @json($medicines);
     </script>
 @stop

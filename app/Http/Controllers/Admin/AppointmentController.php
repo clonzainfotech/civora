@@ -1527,6 +1527,7 @@ class AppointmentController extends AdminController
                         <p><span class="font-bold candor-color">Package Condition: </span>'.(!empty($package) ? $package->condition : '-').'</p>
                         <p><span class="font-bold candor-color">Package Remark: </span>'.(!empty($package) ? $package->remark : '-').'</p>
                         <p><span class="font-bold candor-color">Payment : </span>'.$totalAmount.'</p><hr>';
+                        
                 }
                 // $data .= $payment;   
                 $data .= '<button class="btn btn-primary preview-file" data-plan="'.$plan.'" data-cycleno="'.$cycle_no.'" data-extravisit="'.$extraVisit.'" data-category="'.$request->category.'" data-date="'.$appoitmentDate.'" data-id="" data-patient = "'.$request->patients_id.'">Visit</button>';

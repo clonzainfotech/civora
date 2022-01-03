@@ -122,7 +122,20 @@ class ExpenseManagerController extends AdminController
             $this->addGoogleSheet($data);
 
             DB::commit();
-            return redirect('expense-manager');
+            $expense->amount = $this->getWordOfNumber($expense->amount);
+            $depositeWord = $expense->amount;
+            if($request->is_print == 1)
+            {
+                return response()->json([
+                   
+                    'status' => 2,
+                    'data' => View::make('admin.expense_manager.expense_preview', compact('expense','depositeWord'))->render()
+                ]);
+            }
+            return response()->json([
+                'status' => 1,
+            ]);
+            // return redirect('expense-manager');
         }catch(Exception $e){
             DB::rollback();
         }
@@ -184,7 +197,20 @@ class ExpenseManagerController extends AdminController
             $expense->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $expense->created_by = \Auth()->user()->id;
             $expense->save();
-            return redirect('expense-manager');
+            // return redirect('expense-manager');
+            $depositeWord = $this->getWordOfNumber($expense->amount);
+            
+            if($request->is_print == 1)
+            {
+                return response()->json([
+                   
+                    'status' => 2,
+                    'data' => View::make('admin.expense_manager.expense_preview', compact('expense','depositeWord'))->render()
+                ]);
+            }
+            return response()->json([
+                'status' => 1,
+            ]);
 
         }catch(Exception $e){
             abort(500);

@@ -4909,6 +4909,9 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
     });
     $('.usg-images').imageUploader({
         imagesInputName: 'usg[images]',
+        maxSize:10485760,
+        mimes:[['image/jpeg', 'image/png', 'image/jpg']],
+        extensions:['.jpg', '.jpeg', '.png','.pdf'],
     });
     $('.ho-past-data').selectize({
         create: true,

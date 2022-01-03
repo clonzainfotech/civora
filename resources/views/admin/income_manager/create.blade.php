@@ -25,7 +25,7 @@
                 <div class="body">
                     <div class="col-md-12 col-lg-12">
                         <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                        {{Form::open(['url'=>'income-manager','method'=>'post','class'=>'form appointment-form income-form','files'=>'true'])}}
+                        {{Form::open(['method'=>'post','class'=>'form appointment-form income-form','files'=>'true'])}}
                         <!-- patients basic information -->
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingThree_1">
@@ -90,12 +90,14 @@
                                                     {{Form::textarea('note','',['class'=>'form-control no-resize remark','placeholder'=>'Notes','rows'=>'2'])}}
                                                 </div>
                                             </div>
+                                            {{Form::hidden('is_print',0,['class'=>'form-control is_print'])}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 {{Form::submit('Submit',['class'=>'btn btn-primary income-save'])}}
+                                {{Form::submit('Save & Preview',['class'=>'btn btn-primary income-save btn-print'])}}
                                 <a href="{{URL::to('income-manager')}}" class="btn btn-default">Cancel</a>
                             </div>
                             {{Form::close()}}
@@ -113,7 +115,42 @@
     <script type="text/javascript">
 
         var code = '';
-        $(".income-form").submit(function() { $(".income-save").attr("disabled", true); });
+        $('.income-save').on('click',function(){
+            $('.is_print').val(0);
+            if($(this).hasClass('btn-print'))
+            {
+                $('.is_print').val(1);
+            }
+        })
+        $(".income-form").submit(function(e) { 
+            e.preventDefault();
+            $(".income-save").attr("disabled", true);
+            
+            var incomeForm = new FormData($(".income-form")[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{URL::to('income-manager')}}",
+                dataType: 'json',
+                type: 'POST',
+                data:incomeForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+            }).done(function(data) {
+                if (data.status == 2) {
+                    w = window.open(window.location.href, "_blank");
+                    w.document.open();
+                    w.document.write(data.data);
+                    w.document.close();
+                    w.window.print();
+                } else {
+                    window.location.href = "{{URL::to('income-manager')}}";
+                }
+            }).fail(function(error) {
+            }); 
+        });
         $(function () {
             $('.datetimepicker').bootstrapMaterialDatePicker({
                 format: 'dddd DD MMMM YYYY',

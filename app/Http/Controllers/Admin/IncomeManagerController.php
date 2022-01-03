@@ -106,7 +106,6 @@ class IncomeManagerController extends AdminController
             $income = $this->IncomeManager;
 
             $valid = Validator::make($request->all(),$rule);
-
             if($valid->fails()){
                 return redirect()->back()
                     ->withErrors($valid->errors())
@@ -121,9 +120,23 @@ class IncomeManagerController extends AdminController
             $income->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $income->created_by = \Auth()->user()->id;
             $income->save();
-
+            $depositeWord = $this->getWordOfNumber($income->amount);
             DB::commit();
-            return redirect('income-manager');
+
+            if($request->is_print == 1)
+            {
+                // dd(View::make('admin.income_manager.preview', compact('income','depositeWord'))->render());
+                return response()->json([
+                   
+                    'status' => 2,
+                    'data' => View::make('admin.income_manager.preview', compact('income','depositeWord'))->render()
+                ]);
+            }
+            return response()->json([
+                'status' => 1,
+            ]);
+
+            // return redirect('income-manager');
         }catch(Exception $e){
             DB::rollback();
             \Log::debug($e->getMessage());
@@ -161,6 +174,8 @@ class IncomeManagerController extends AdminController
     */
     public function update(Request $request,$id){
         try{
+            // $id = decrypt($id);
+            // dd($id);
             $income = $this->IncomeManager->find($id);
             $rule = [
                 'date' => 'required',
@@ -174,7 +189,7 @@ class IncomeManagerController extends AdminController
                     ->withErrors($valid->errors())
                     ->withInput();
             }
-
+            // dd($income);
             $income->date = Carbon::parse($request->date)->format('Y-m-d');
             $income->amount = $request->amount;
             $income->payment_method = $request->payment_method;
@@ -184,9 +199,23 @@ class IncomeManagerController extends AdminController
             $income->patients_id = !empty($request->patients_id) ? $request->patients_id : null;
             $income->created_by = \Auth()->user()->id;
             $income->save();
-            return redirect('income-manager');
+            // return redirect('income-manager');
+            $depositeWord = $this->getWordOfNumber($income->amount);
+            
+            if($request->is_print == 1)
+            {
+                return response()->json([
+                   
+                    'status' => 2,
+                    'data' => View::make('admin.income_manager.preview', compact('income','depositeWord'))->render()
+                ]);
+            }
+            return response()->json([
+                'status' => 1,
+            ]);
 
         } catch(Exception $e) {
+            log::Debug($e);
             abort(500);
         }
     }

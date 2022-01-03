@@ -2386,9 +2386,11 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2 d-none progesterone_date_div">
-                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">Sp2 Start: &nbsp;</span>
                                                                         {{Form::text("data[progesterone_date]",\Carbon\Carbon::now()->format('D d M Y'),['class'=>'form-control datetimepicker progesterone_date'])}}
-                                                                </div>
+
+                                                                    </div>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-1">

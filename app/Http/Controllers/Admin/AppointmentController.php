@@ -1535,6 +1535,8 @@ class AppointmentController extends AdminController
             {
                 $report = '';
                 $cycle_no = '';
+                $lmpDate = '';
+                $remark = '';
                 $currentHistory = $this->IuiHistory->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'=',$appoitmentDate)->first();
                 if($currentHistory)
                 {
@@ -1557,8 +1559,24 @@ class AppointmentController extends AdminController
                     $extraOeData = json_decode($isExtraVisit->oe);
                     $report .= !empty($extraOeData) && isset($extraOeData->investigation_extra) ? $extraOeData->investigation_extra : '';
                 }
+                if($request->category == 4)
+                {
+                    $iuiSecondHistory = $this->IuiHistory->where('patients_id',$patients_id)->where('visit',2)->orderBy('id','desc')->first();
+                    if($iuiSecondHistory)
+                    {
+                        $description = json_decode($iuiSecondHistory->description);
+                        $lmpDate = $description->lmp->date; 
+                    }
+                }
+                if($this->IuiHistory->where('patients_id',$patients_id)->where('visit',4)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'!=',$appoitmentDate)->orderBy('id','desc')->first())
+                {
+                    $remark = "IUI Result";
+                }
                 $data = '<p><span class="font-bold candor-color">Advise Reports : </span>'.$report.'</p>
-                        <p><span class="font-bold candor-color">Payment : </span></p>';
+                        <p><span class="font-bold candor-color">LMP Date : </span>'.(!empty($lmpDate) ? \Carbon\Carbon::parse($lmpDate)->format('d-m-Y') : '').'</p>
+                        <p><span class="font-bold candor-color">Result : </span>'.$remark.'</p>';
+
+                $data .=  '<p><span class="font-bold candor-color">Payment : </span></p>';
                 $data .= $payment;   
                 $data .= '<button class="btn btn-primary preview-file" data-cycleno="'.$cycle_no.'" data-category="'.$request->category.'" data-date="'.$appoitmentDate.'" data-id="" data-patient = "'.$request->patients_id.'">Visit</button>';
 

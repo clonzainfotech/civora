@@ -739,7 +739,7 @@
                     }
                     $progesterone_date = !empty($ivfData->progesterone->type) ? $ivfData->progesterone->type : 'd-none';
                 @endphp
-                <div class="{{'col-md-2 '.$class.' '.$progesteroneStatus}}">
+                <div class="{{'col-md-4 '.$class.' '.$progesteroneStatus}}">
                     {{Form::hidden('progesterone_status','yes')}}
                     <div class="radio is-conceived">
                         {{-- {{Form::radio("data[progesterone][type]",'day_3',!empty($ivfData->progesterone->type) && $ivfData->progesterone->type == 'day_3' ? true : false ,['id'=>'day_3','class'=>'progesterone-type'])}}
@@ -769,9 +769,11 @@
                     </div>
                 </div>
                 <div class="{{'col-md-2 progesterone_date_div ' .$progesteroneStatus}}">
-                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">Sp2 Start: &nbsp;</span>
                             {{Form::text("data[progesterone_date]", !empty($ivfData->progesterone_date) ? $ivfData->progesterone_date: '',['class'=>'form-control datetimepicker progesterone_date'])}}
-                    </div>
+
+                        </div>
                 </div>
             </div>
             {{-- @if(!empty($ivfData->trigger->hcg->status) || !empty($ivfData->trigger->decapeptyl->status) || !empty($ivfData->trigger->dualtrigger->stauts))

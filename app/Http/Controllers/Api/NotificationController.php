@@ -28,7 +28,7 @@ class NotificationController extends ApiController
                                 WHEN module = "7" THEN "opd"
                                 WHEN module = "8" THEN "remind"
                                 WHEN module = "9" THEN "payment"
-                                END) AS module'))->where('user_type',1)->where('user_id',$patientData->patients_id)->paginate(20);
+                                END) AS module'))->where('user_type',1)->where('user_id',$patientData->patients_id)->orderBy('created_at','desc')->paginate(20);
             $msg = 'Notification not found';
             if(!empty($notification)){
                 $msg = 'Get Notification successfully';

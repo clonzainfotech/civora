@@ -47,7 +47,7 @@ class AppointmentRequestController extends AdminController
                     // $appointmentData = $this->checkLastAppointmentStatus($appointmentRequests);
                     $appointmentData = true;
                     
-                    $this->storeAppointmentNotification($appointmentRequests->patients_id,1);
+                    // $this->storeAppointmentNotification($appointmentRequests->patients_id,1);
 
                     $nextAppontment = app('App\Http\Controllers\Admin\AppointmentController')->nextAppointment($request);
                     $hospitalTime = $this->appointmentTime('09:00', '23:55', '5 mins');
@@ -69,7 +69,11 @@ class AppointmentRequestController extends AdminController
                     }else{
                         $this->AppointmentRequest->whereId($apRequestId)->update(['is_book' => 2]);
                     }
-                    
+                    $patient = $this->OpdPatients->find($appointmentRequests->patients_id);
+                    if(!empty($patient->device_token))
+                    {
+                        $this->sendNotification($appointmentRequests->patients_id,$patient->device_token,$patient->name,$appointment->date,$aTime,1);
+                    }
                     return 'true';
                     // return $appointmentData['status'];
 
@@ -122,7 +126,12 @@ class AppointmentRequestController extends AdminController
                 $appRequestData->is_book = 2;
                 $appRequestData->remark = (!empty($request->reason)) ? $request->reason : '';
                 $appRequestData->save();
-                $this->storeAppointmentNotification($appRequestData->patients_id,0);
+                // $this->storeAppointmentNotification($appRequestData->patients_id,0);
+                $patient = $this->OpdPatients->find($appRequestData->patients_id);
+                    if(!empty($patient->device_token))
+                    {
+                        $this->sendNotification($appointmentRequests->patients_id,$patient->device_token,$patient->name,$appRequestData->appointment_date,null,0);
+                    }
                 //$this->Notification::sendNotificationToPatients($apRequestId);
                 return ['status' => true];
             }

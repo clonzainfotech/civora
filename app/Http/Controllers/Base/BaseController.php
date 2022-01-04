@@ -198,19 +198,63 @@ class BaseController extends Controller
     }
 
     // store appointment notification in notification module
-    public function storeAppointmentNotification($userId,$type){
+    public function storeAppointmentNotification($userId,$msg){
         $notification = $this->Notification;
         $notification->user_type = 1;
         $notification->module = 1;
         $notification->user_id = $userId;
         $notificationMsg = $this->notificationMsg();
-        $msg = $notificationMsg['appointmentRejectMsg'];
-        if($type == 1){
-            $msg = $notificationMsg['appointmentApprovalMsg'];
-        }
+        // $msg = $notificationMsg['appointmentRejectMsg'];
+        // if($type == 1){
+        //     $msg = $notificationMsg['appointmentApprovalMsg'];
+        // }
         $notification->message = $msg;
         $notification->save();
 
+    }
+
+    //send push notification when approve or reject appointment
+    public function sendNotification($patients_id,$device_tokens,$patient_name,$date,$time = null, $is_approved)
+    {
+        $SERVER_API_KEY = config('app.FCM_SERVER_KEY');
+        if($is_approved == 1)
+        {
+            $body = 'Dear ,'.ucwords($patient_name).' . This is Confirmation that you have booked appointment on '.\Carbon\Carbon::parse($date)->format('d M Y').' at '.$time.'. Your Appointment has been Approved. Thank You.';
+        }
+        else
+        {
+            $body = 'Dear ,'.ucwords($patient_name).' . This is Inform you that you have booked appointment on '.\Carbon\Carbon::parse($date)->format('d M Y').' is Rejected due to some reason. For more information contact to Radha IVF center. Thank You.';
+        }
+        $message = array(
+            "title" => "Appointment", 
+            "body" => $body
+        );
+        // payload data, it will vary according to requirement
+        $data = [
+            "to" => $device_tokens, // for multiple device ids
+            "notification" => $message
+        ];
+        $dataString = json_encode($data);
+    
+        $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+        ];
+    
+        $ch = curl_init();
+      
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+               
+        $response = curl_exec($ch);
+      
+        curl_close($ch);
+        $this->storeAppointmentNotification($patients_id,$body);
+        return $response;
     }
 
 }

@@ -858,7 +858,6 @@ class PatientsController extends AdminController
             }
             return view('admin.report_advice_list.index', compact('patients'));
         }catch(Exception $e){
-            dd($e);
             log::Debug($e);
             abort(500);
         }

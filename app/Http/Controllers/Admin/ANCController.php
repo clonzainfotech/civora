@@ -738,7 +738,30 @@ class ANCController extends AdminController
             }
             $investigationReport = $this->allInvestigationReport();
             $ancAutoRemark = $this->getAutoRemark($patientsId,$current_anc_id);
-
+            if(in_array($request->usg['termination_type'],['Delivery','Termination','Operation']) && !empty($followupDate) && !$request->anc_history_id && !$request->anc_id)
+            {
+                if(!empty($request->usg['termination_type_trem']))
+                {
+                    $tremination_term = ($request->usg['termination_type_trem'] == 'full') ? 'Full Term' : 'Pre Term';
+                    switch($request->usg['termination_type_trem']){
+                        case 'full':
+                        $tremination_term = 'Full Term';
+                            break;
+                        case 'pre':
+                        $tremination_term = 'Pre Term';
+                            break;
+                        case 'lscs':
+                        $tremination_term = 'LSCS';
+                            break;
+                    }
+                }
+                $procedureList = $this->ProcedureList;
+                $procedureList->patients_id = $patientsId;
+                $procedureList->date = carbon::parse($followupDate)->format('Y-m-d');
+                $procedureList->procedure = 'Coming For '.$request->usg['termination_type'];
+                $procedureList->description = !empty($request->usg['termination_detail']) ? $request->usg['termination_detail'].(!empty($tremination_term) ? ' - '.$tremination_term : '') : (!empty($tremination_term) ? $tremination_term : '');
+                $procedureList->save();
+            }
             if($request->isprint){
                 $anc_print = !empty($request->isprint) ? $request->isprint : 0;
                 $patient_preview = 1;

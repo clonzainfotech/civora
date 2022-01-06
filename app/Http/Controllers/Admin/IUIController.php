@@ -1070,6 +1070,13 @@ class IUIController extends AdminController
                     $categoryPatientData['message'] = "Coming for IUI";
                     $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 4;
                     $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+
+                    $procedureList = $this->ProcedureList;
+                    $procedureList->patients_id = $patientsId;
+                    $procedureList->date = Carbon::parse($iuiDtaeAndTime)->format('Y-m-d');
+                    $procedureList->procedure = 'Coming for IUI';
+                    $procedureList->description = null;
+                    $procedureList->save();
                 }
                 if(!empty($request['data']['ovalution']) && $request['data']['ovalution'] == 'yes' && !empty($followDate))
                 {

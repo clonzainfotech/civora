@@ -5,7 +5,7 @@
 <style>
     .procedure-content
     {
-        border: 2px solid #b7b8bc;
+        border: 1px solid #b7b8bc;
         border-radius: 5px;
         padding: 10px;
         line-height: 24px;
@@ -27,7 +27,7 @@
         <div class="col-md-12">
             <div class="card patients-list">
                 <div class="header">
-                    <h2><strong>This week Procedures</strong></h2>
+                    <h2><strong>This week Procedures List</strong></h2>
                     <ul class="header-dropdown">
                         
                     </ul>

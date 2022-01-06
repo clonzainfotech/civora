@@ -577,6 +577,7 @@ class AdminController extends BaseController
       }
 
     /**
+     * store category wise notification data
      * @param $data
      */
     public function storeCategoryNotification($data)
@@ -653,4 +654,5 @@ class AdminController extends BaseController
             ->append([$data]);
         return true;
     }
+    
 }

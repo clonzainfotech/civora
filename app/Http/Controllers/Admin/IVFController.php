@@ -1114,6 +1114,13 @@ class IVFController extends AdminController
                         $categoryPatientData['message'] = "Coming for PickUp";
                         $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
                         $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+
+                        $procedureList = $this->ProcedureList;
+                        $procedureList->patients_id = $patientsId;
+                        $procedureList->date = Carbon::parse($pickUpDate)->format('Y-m-d');
+                        $procedureList->procedure = 'Coming for PickUp';
+                        $procedureList->description = null;
+                        $procedureList->save();
                     }
                     if(!empty($request->data['progesterone']['type']) && isset($request->data['collection']) && in_array('progesterone', $request->data['collection']))
                     {
@@ -1124,6 +1131,41 @@ class IVFController extends AdminController
                         $categoryPatientData['message'] = "Coming for Transfer";
                         $categoryPatientData['category_id'] = !empty($request->category) ? $request->category : 2;
                         $nextAppontment = $this->storeCategoryNotification($categoryPatientData);
+
+                        //add in procedure table
+                        $procedureList = $this->ProcedureList;
+                        $procedureList->patients_id = $patientsId;
+                        $procedureList->date = Carbon::parse($followDate)->format('Y-m-d');
+                        $procedureList->procedure = 'Coming for Transfer';
+                        $procedureList->description = null;
+                        $procedureList->save();
+                    }
+                    if(!empty($followDate) && (!empty($request->investigation['hystroscopy']['type']) && $request->investigation['hystroscopy']['type'] == 'yes') || (!empty($request->investigation['laproscopy']['type']) && $request->investigation['laproscopy']['type'] == 'yes'))
+                    {   
+                        $procedure = null;
+                        $description = '';
+                        if($request->investigation['hystroscopy']['type'] == 'yes')
+                        {
+                            $procedure = 'Coming for Hystroscopy';
+                            $description = !empty($request->investigation['hystroscopy']['detail']) ? $request->investigation['hystroscopy']['detail'] : '';
+                        }
+                        if($request->investigation['laproscopy']['type'] == 'yes')
+                        {
+                            $procedure = 'Coming for Laproscopy';
+                            $description = !empty($request->investigation['laproscopy']['detail']) ? $request->investigation['laproscopy']['detail'] : '';
+                        }
+                        if($request->investigation['hystroscopy']['type'] == 'yes' && $request->investigation['laproscopy']['type'] == 'yes')
+                        {
+                            $procedure = 'Coming for Hystroscopy & Laproscopy';
+                            $description = 'Hystroscopy - '.$request->investigation['hystroscopy']['detail'].' / Laproscopy - '.$request->investigation['laproscopy']['detail'];
+                        }
+                        
+                        $procedureList = $this->ProcedureList;
+                        $procedureList->patients_id = $patientsId;
+                        $procedureList->date = Carbon::parse($followDate)->format('Y-m-d');
+                        $procedureList->procedure = $procedure;
+                        $procedureList->description = $description;
+                        $procedureList->save();
                     }
                     
                     if($ivfStatus == 1){

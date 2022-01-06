@@ -1279,7 +1279,7 @@ class IVFController extends AdminController
             $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->orderBy('id', 'DESC')->first();
             if($lastAppointment)
             {
-                if(!in_array($lastAppointment->category_id,[1,2]) && empty($firstIvfVisit))
+                if(empty($firstIvfVisit))
                 {
                     // if(empty($firstIvfVisit))
                     // {

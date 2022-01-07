@@ -88,10 +88,27 @@
                 text-align: center;
             }
             .watermark{
-            background-repeat: no-repeat; 
-            background-position: center; 
-            -webkit-print-color-adjust: exact;
-            background-image:url({{url('public/images/' . $water_mark)}});
+                background-repeat: no-repeat;
+                background-position: center;
+                -webkit-print-color-adjust: exact;
+                position: relative;
+            /* background-image:url({{url('public/images/' . $water_mark)}}); */
+            }
+            .watermark:before {
+            position: absolute;
+            content: '';
+            width: 600px;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            top: 42%;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 9;
+            opacity: 0.2;
+            background-image: url({{url('public/images/' . $water_mark)}});
+            
         }
         .study-report-table
         {

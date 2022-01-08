@@ -108,7 +108,6 @@
             z-index: 9;
             opacity: 0.2;
             background-image: url({{url('public/images/' . $water_mark)}});
-            
         }
         .study-report-table
         {

@@ -126,7 +126,7 @@
     }
     .follicular-table td,.follicular-table th
     {   
-        padding: .8rem .2rem !important;
+        padding: .1rem .2rem !important;
         text-align: center !important;
         border: 1px solid black !important;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -2870,43 +2870,43 @@
             <div class="row do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>TRANSVAGINAL FOLLICULAR STUDY</b></u></h4></div>
             </div>
-            <div class="row follicular-table mb-3">
+            <div class="row follicular-table">
                 <div class="col-md-6 col-sm-6 follicular_div_1 mr-15 text-left">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Name :- </span> 
                         <span class="visit-lable-value">{{ucwords(strtolower($iuiFirstVisit->getPatientsInfo['name']))}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">AGE / Weight :- </span> 
                             <span class="visit-lable-value">{{$iuiFirstVisit->getPatientsInfo['age'].' year'.' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : '')}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
                             <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null}} {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">L.M.P :- </span> 
                             <span class="visit-lable-value">{{!empty($iuiSecondVisit->lmp->date) ? $iuiSecondVisit->lmp->date : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Plan :- </span> 
                             <span class="visit-lable-value">{{isset($iuiSecondVisit->iui) && ($iuiSecondVisit->iui == 'yes') ? 'COH+IUI ' : ''}} {{!empty($iuiSecondVisit->plan->plan_type) ? $iuiSecondVisit->plan->plan_type : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Induction With :- </span> 
                             <span class="visit-lable-value">{{(isset($agentData[0])) ? $agentData[0] : null}}</span>
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-6 follicular_div_2 text-left">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">UTERUS :- </span> 
                         <span class="visit-lable-value">{{!empty($iuiSecondVisit->oe->ut->ut_type) && $iuiSecondVisit->oe->ut->ut_type == 1 ? 'Normal' : 'Abnormal'}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">TUBES :- </span> 
                         <span class="visit-lable-value"></span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-3 visit-lable">
                             OVARIES:- {{!empty($iuiFirstVisit->ovary->right) ? $iuiFirstVisit->ovary->right : null}}
@@ -2916,30 +2916,30 @@
                                 <div>L :- {{!empty($iuiSecondVisit->oe->ovary->left->afcs) ? $iuiSecondVisit->oe->ovary->left->afcs : null}} / RF:- {{!empty($iuiSecondVisit->oe->ovary->left->residual_follicale) ? $iuiSecondVisit->oe->ovary->left->residual_follicale : null}}</div>
                             </div> --}}
                             <div class="col-md-9 pl-10">
-                                <div class="mb-2">R :- {{!empty($iuiSecondVisit->oe->ovary->right->afcs) ? $iuiSecondVisit->oe->ovary->right->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->right->residual_follicale) ? $iuiSecondVisit->oe->ovary->right->residual_follicale : null}}</div>
+                                <div class="">R :- {{!empty($iuiSecondVisit->oe->ovary->right->afcs) ? $iuiSecondVisit->oe->ovary->right->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->right->residual_follicale) ? $iuiSecondVisit->oe->ovary->right->residual_follicale : null}}</div>
                                 @if(!empty($iuiSecondVisit->oe->ovary->right->updated_details))
-                                    <div class="mb-2">Right Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->right->updated_details)}}</div>
+                                    <div class="">Right Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->right->updated_details)}}</div>
                                 @endif
-                                <div class="mb-2">L :- {{!empty($iuiSecondVisit->oe->ovary->left->afcs) ? $iuiSecondVisit->oe->ovary->left->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->left->residual_follicale) ? $iuiSecondVisit->oe->ovary->left->residual_follicale : null}}</div>
+                                <div class="">L :- {{!empty($iuiSecondVisit->oe->ovary->left->afcs) ? $iuiSecondVisit->oe->ovary->left->afcs : null}} / RF :- {{!empty($iuiSecondVisit->oe->ovary->left->residual_follicale) ? $iuiSecondVisit->oe->ovary->left->residual_follicale : null}}</div>
                                 @if(!empty($iuiSecondVisit->oe->ovary->left->updated_details))
-                                    <div class="mb-2">Left Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->left->updated_details)}}</div>
+                                    <div class="">Left Detail :- {{implode(',',$iuiSecondVisit->oe->ovary->left->updated_details)}}</div>
                                 @endif
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">CYCLE NO :- </span> 
                         <span class="visit-lable-value">{{$iui->cycle_no}}</span>
                     </div>
                 </div>
             </div>
-            <div class="row follicular-table mb-3">
+            <div class="row follicular-table">
                 <div class="col-md-12">
-                    <table class="module-report-table study-report-table mb-2">
+                    <table class="module-report-table study-report-table ">
                         <thead>
                             <tr>
-                                <th style="width:8% !important;">Date</th>
+                                <th style="width:10% !important;">Date</th>
                                 <th style="width:5% !important">Day of Menses</th>
                                 <th style="">Rt. Ovary</th>
                                 <th style="">Lt. Ovary</th>

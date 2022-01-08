@@ -119,14 +119,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
     {
         background-color: #f3fbfa !important;
         -webkit-print-color-adjust: exact;
-        font-size: 18px;
+        font-size: 17px;
         color: black !important;
         font-weight: 600;
     }
     .follicular-table .visit-lable
     {   font-weight: bold;
         color: black !important;
-        font-size: 20px;
+        font-size: 17px;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
         -webkit-print-color-adjust: exact;
     }
@@ -135,7 +135,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
     }
     .follicular-table td,.follicular-table th
     {   
-        padding: .2rem .2rem !important;
+        padding: .1rem .2rem !important;
         text-align: center !important;
         border: 1px solid black !important;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -3473,12 +3473,12 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     <table class="module-report-table study-report-table">
                         <thead>
                             <tr>
-                                <th style="width:8% !important;">Date</th>
+                                <th style="width:10% !important;">Date</th>
                                 <th style="width:5% !important">Day of Menses</th>
                                 <th style="width:15% !important">Endometrial Thickness / Pattern</th>
-                                <th style="width:5px;">Vascularity of Endometrium</th>
-                                <th style="width: 20% !important;">Drugs </th>
-                                <th style="width: 20% !important;">Remark</th>
+                                <th style="">Vascularity of Endometrium</th>
+                                <th style="width: 40% !important;">Drugs </th>
+                                <th style="width: 30% !important;">Remark</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -2865,7 +2865,7 @@
                 }
                 $lastHistoryData = json_decode($iuiHistoryData[count($iuiHistoryData)-1]['description']);
             @endphp
-            <div class="row mb-5 do_print">
+            <div class="row do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>TRANSVAGINAL FOLLICULAR STUDY</b></u></h4></div>
             </div>
             <div class="row follicular-table mb-3">

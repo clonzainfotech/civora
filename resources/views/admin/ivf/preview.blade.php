@@ -2899,58 +2899,58 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 $lastHistory = $ivfCycleData[count($ivfCycleData)-1];
                 $lastHistoryData = !empty($lastHistory->description) ? json_decode($lastHistory->description) : null;
             ?>
-            <div class="row mb-5 do_print">
+            <div class="row do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>FROZEN EMBRYO TRANSFER STUDY</b></u></h4></div>
             </div>
-            <div class="row follicular-table mb-15 mb-5 text-left">{{--mb-15 is used in print--}}
+            <div class="row follicular-table mb-15 text-left">{{--mb-15 is used in print--}}
                 <div class="col-md-7 col-sm-7 follicular_div_1">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Name :- </span> 
                         <span class="visit-lable-value">{{ucwords($ivf->getPatientsDetails['name'])}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">AGE :- </span> 
                             <span class="visit-lable-value">{{$ivf->getPatientsDetails['age']}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
                             <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null}} {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">L.M.P :- </span> 
                             <span class="visit-lable-value">{{!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Weight :- </span> 
                         <span class="visit-lable-value">{{isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : ''}}</span>
                 </div>
                 </div>
                 <div class="col-md-5 col-sm-5 follicular_div_2">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Plan :- </span> 
                         <span class="visit-lable-value">ovarian stimulation</span>
                 </div>
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">UTERUS :- </span> 
                         <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-3 visit-lable">
                             OVARIES :- 
                             </div>
                             <div class="col-md-9 pl-15">
-                                <div class="mb-2">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
+                                <div class="">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
                                 <div>L :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->left->afcs) ? $ivfSecondVisitData->oe->ovary->left->afcs : null}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row follicular-table mb-3">
+            <div class="row follicular-table">
                 <div class="col-md-12">
                     
-                    <table class="module-report-table study-report-table mb-2">
+                    <table class="module-report-table study-report-table">
                         <thead>
                             <tr>
                                 <th class="text-secondary">Visit Date</th>
@@ -3408,66 +3408,66 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
             $lastHistoryData = !empty($lastHistory->description) ? json_decode($lastHistory->description) : null;
         @endphp
             {{-- {{print_r($ivfCycleData)}} --}}
-            <div class="row mb-5 do_print">
+            <div class="row do_print">
                 <div class="col-md-12"><h4 class="text-center font-22"><u><b>FROZEN EMBRYO TRANSFER STUDY</b></u></h4></div>
             </div>
-            <div class="row follicular-table mb-15 mb-5 text-left">
+            <div class="row follicular-table mb-15 text-left">
                 <div class="col-md-7 col-sm-7 follicular_div_1">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Name :- </span> 
                         <span class="visit-lable-value">{{ucwords(strtolower($ivf->getPatientsDetails['name']))}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Age / Weight :- </span> 
                             <span class="visit-lable-value">{{$ivf->getPatientsDetails['age'].' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : '')}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
                             <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null}} {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : null}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                             <span class="visit-lable">L.M.P :- </span> 
                             <span class="visit-lable-value">{{!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : null}}</span>
                     </div>
                     
                     @if($plan == 3)
-                        <div class="mb-2">
+                        <div class="">
                             <span class="visit-lable">Semen Freezing :- </span> 
                             {{-- <span class="visit-lable-value">{{$historySemenFreezing}}</span> --}}
                         </div>
                     @endif
                 </div>
                 <div class="col-md-5 col-sm-5 follicular_div_2">
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">UTERUS :- </span> 
                         <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ut->details) && $ivfSecondVisitData->oe->ut->ut_type == 2 ? $ivfSecondVisitData->oe->ut->details : 'Normal'}}</span>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-3 visit-lable">
                             OVARIES :- 
                             </div>
                             <div class="col-md-9 pl-15">
-                                <div class="mb-2">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
+                                <div class="">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
                                 <div>L :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->left->afcs) ? $ivfSecondVisitData->oe->ovary->left->afcs : null}}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-2">
+                    <div class="">
                         <span class="visit-lable">Endometrial Thickness :- </span> 
                         <span class="visit-lable-value">{{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->endometrial_cavity->size) ? $ivfSecondVisitData->oe->endometrial_cavity->size : ''}}</span>
                     </div>
                     @if($plan == 3 || $plan == 4)
-                        <div class="mb-2">
+                        <div class="">
                             <span class="visit-lable">Embroy Ready :- </span> 
                             {{-- <span class="visit-lable-value">{{$historyEmbroyReady}}</span> --}}
                         </div>
                     @endif
                 </div>
             </div>
-            <div class="row follicular-table mb-3">
+            <div class="row follicular-table">
                 <div class="col-md-12">
-                    <table class="module-report-table study-report-table mb-2">
+                    <table class="module-report-table study-report-table">
                         <thead>
                             <tr>
                                 <th style="width:8% !important;">Date</th>

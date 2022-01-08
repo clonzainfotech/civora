@@ -18,7 +18,28 @@
     $right_ovary = isset($ovary->right->details) ? implode(', ',$ovary->right->details) : null;
     $left_ovary = isset($ovary->left->details) ? implode(', ',$ovary->left->details) : null;
     $ivfReport = !empty($ivfReport) ? json_decode($ivfReport->description) : null;
-    // dd($ivfReport);
+    $abortion_reason = [];
+    $total_abortion = null;
+    if(!empty($o_h) && ($o_h->abortion_no != null && $o_h->abortion_no != 0 ))
+    {
+        $total_abortion = $o_h->abortion_no;
+        foreach($o_h->abortion->abortion_data as $key=>$value)
+        {
+            $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+        }
+    }
+    if(!empty($o_h) && isset($o_h->second_marriage) && ($o_h->second_marriage->abortion_no != null && $o_h->second_marriage->abortion_no != 0 ))
+    {
+        // if(!empty($o_h) && isset($o_h->second_marriage) && ($o_h->second_marriage->child_no != null && $o_h->second_marriage->child_no != 0))
+        // {
+            $total_abortion = $o_h->second_marriage->abortion_no;
+            $abortion_reason = [];
+            foreach($o_h->second_marriage->abortion->abortion_data as $key=>$value)
+            {
+                $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+            }
+        // }
+    }
 
 @endphp
 @section('content')
@@ -28,8 +49,7 @@
             <div class="header">
                 <div class="row">
                     <div class="col-md-4">
-                    <h2><strong>Ivf Result Review</strong>
-                    </h2>
+                    <h2><strong>Ivf Result Review</strong></h2>
                     </div>
                     <div class="col-md-8">
                     {{-- <ul class="header-dropdown">
@@ -94,7 +114,7 @@
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <label class="vertical-form-label pr-0">
-                                                    <b>Previous history of Abortions and reason for abortion : </b>
+                                                    <b>Previous history of Abortions and reason for abortion : </b>{{!empty($total_abortion) ? 'Total '.$total_abortion.' Abortion' : ''}}  {{count($abortion_reason) > 0 ? ' / Reason : '.implode(' , ',$abortion_reason) : ''}}
                                                 </label>
                                             </div>
                                         </div>
@@ -389,7 +409,10 @@
                     w.document.open();
                     w.document.write(data.data);
                     w.document.close();
-                    w.window.print();
+                    setTimeout(function () {
+                            w.window.print();
+                            // window.location.href = url;
+                        }, 100);
                 }
                 //     $('#anc_history_id').val(data.id);
                 //     // window.location.href = url;

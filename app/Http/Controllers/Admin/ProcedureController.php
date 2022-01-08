@@ -25,11 +25,11 @@ class ProcedureController extends AdminController
     */
     public function index(Request $request){
         if ($request->ajax()) {
-
-            $procedure = $this->ProcedureList->whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $old_procedures = $this->ProcedureList->whereDate('date','<',carbon::now()->format('Y-m-d'))->delete();
+            $procedure = $this->ProcedureList;
             $procedure = collect($procedure->get())->map(function ($query) {
                         $query->day = carbon::parse($query->date)->format('l');
-                        $query->day_date = carbon::parse($query->date)->format('l').' ('.carbon::parse($query->date)->format('d-m-Y').')';
+                        $query->date = carbon::parse($query->date)->format('d-m-Y');
                         return $query;
                     });
             $procedure = $procedure->groupBy('day');

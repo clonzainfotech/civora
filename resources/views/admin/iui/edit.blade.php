@@ -4589,12 +4589,12 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="radio is-conceived">
-                                        {{Form::radio("data[result]",'fail',!empty($historyData->result) && $historyData->result == 'fail' ? true : false,['id'=>'fail','class'=>'r-type'])}}
+                                        {{Form::radio("data[result]",'fail',!empty($historyData->result) && $historyData->result == 'fail' ? true : false,['id'=>'fail','class'=>'r-type result_fail'])}}
                                         <label for="fail">
                                             Fail
                                         </label>
 
-                                        {{Form::radio("data[result]",'consive',!empty($historyData->result) && $historyData->result == 'consive' ? true : false,['id'=>'consive','class'=>'r-type'])}}
+                                        {{Form::radio("data[result]",'consive',!empty($historyData->result) && $historyData->result == 'consive' ? true : false,['id'=>'consive','class'=>'r-type result_conceive'])}}
                                         <label for="consive">
                                             Conceive
                                         </label>
@@ -5919,7 +5919,13 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
         $(document).on('click', '.add-row', function() {
             addRow();
         });
-        
+        $(document).on('click','.upt-type',function(){
+            $('.result_fail').prop("checked", false);
+            if($(this).val() == 'negative')
+            {
+                $('.result_fail').prop("checked", true);
+            }
+        })
         $(document).ready(function(){
             $('.datetime').multiDatesPicker({
                 // minDate: 0

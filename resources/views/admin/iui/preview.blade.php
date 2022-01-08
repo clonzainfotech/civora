@@ -114,7 +114,9 @@
         /* border: 1px solid; */
         padding: 11px;
     }
-    
+    .table th,.table td {
+        border-top: none !important;
+    }
     .follicular-table .visit-lable
     {   font-weight: bold;
         color: black !important;
@@ -3303,7 +3305,7 @@
                         </table>
                     {{-- </div> --}}
                 @endif
-                    <h4 class="mt-2 text-left"><u>Medicine:</u></h4>
+                    <h4 class="mt-1 text-left"><u>Medicine:</u></h4>
                     <table class="module-report-table study-report-table">
                         <thead>
                             <tr>
@@ -3461,7 +3463,7 @@
 
     @endphp
     <div class="{{'panel panel-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
-        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
             <tbody>
                 <tr>
                     <th class="pb-1">
@@ -3475,7 +3477,7 @@
                 </tr>
             </tbody>
         </table>
-        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+        <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
             <tbody>
                 @if(!empty($co) && !empty($co->co_type) || !empty($co->since))
                     <tr>
@@ -3502,7 +3504,7 @@
         </table>
         @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
         
-            <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+            <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                 <tbody>
                     <tr>
                         <br>  
@@ -3625,7 +3627,7 @@
             unset($treatment->medicinedata);
         @endphp
             @if(count((array)$treatment) > 0)
-                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                     <tbody>
                         <tr>
                             <br>

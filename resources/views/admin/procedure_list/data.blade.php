@@ -22,6 +22,7 @@
                         <div class="col-md-3 mb-1">
                             <div class="procedure-content">
                                 <ul>
+                                    <li class=""><b><span>Date : </span>{{$row->date}}</b></li>
                                     <li class=""><b>{{ucwords($row->getPatientsDetails['name'])}}</b></li>
                                     <li class="">{{$row->getPatientsDetails['mobile_number'].(!empty($row->getPatientsDetails['other_mobile_number']) ? ' , '.$row->getPatientsDetails['other_mobile_number'] : '')}}</li>
                                     <li class="font-bold">{{ucwords($row->procedure)}}</li>

@@ -130,6 +130,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
         -webkit-print-color-adjust: exact;
     }
+    .table th,.table td {
+        border-top: none !important;
+    }
     .follicular-table td,.follicular-table th
     {   
         padding: .2rem .2rem !important;
@@ -168,7 +171,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
             @page { margin-top : 200px; margin-bottom : 80px;}
         </style>
             <div class="{{'panel panel-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
-                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                     <tbody>
                         <tr>
                             <th>
@@ -184,7 +187,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </tbody>
                 </table>
                 @if($ho)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                                 @if(!empty($ho->ho_details))
                                     <th class="w-250 ">
@@ -210,7 +213,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </tbody>
                     </table>
                 @endif
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                         @if(!empty($co) && !empty($co->co_type) || !empty($co->since))
                             <tr>
@@ -715,7 +718,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </tbody>
                     </table>
                 @if($mh)
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                         <tbody>
                             <tr>
                                 <td colspan="9">
@@ -833,7 +836,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </table>
                 @endif
                 @if($hoRx && (!empty($hoRx->taken) && !empty($hoRx->taken->status) && $hoRx->taken->status == 'yes') || (!empty($hoRx->iui) && !empty($hoRx->iui->status) && $hoRx->iui->status == 'yes') || (!empty($hoRx->ivf) && !empty($hoRx->ivf->status) && $hoRx->ivf->status == 'yes'))
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table iui-inner-data">
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table iui-inner-data">
                         <tbody>
                             <tr>
                                 <td colspan="9">
@@ -845,7 +848,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @if(isset($hoRx->taken->status) && ($hoRx->taken->status == 'yes') && isset($hoRx->taken->how_much_no) && $hoRx->taken->how_much_no > 0)
                                         <tr>
                                             {{-- <td> --}}
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if(isset($hoRx->taken->how_much))
                                                         @foreach($hoRx->taken->how_much as $key => $value)
                                                             @if(!empty($value))
@@ -859,7 +862,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                     @endif
                                                 </table>
                                                 @if (isset($hoRx->taken->type))
-                                                {{-- <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table"> --}}
+                                                {{-- <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table"> --}}
                                                     @if (isset($hoRx->taken->type))
                                                         @foreach($hoRx->taken->type as $key => $value)
                                                             @if(!empty(array_filter($value)))
@@ -897,7 +900,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @if(isset($hoRx->iui->status) && ($hoRx->iui->status == 'yes') && isset($hoRx->iui->how_much_no) && ($hoRx->iui->how_much_no > 0))
                                         <tr>
                                             <td style="width: 10%">
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if (isset($hoRx->iui->how_much))
                                                         @foreach($hoRx->iui->how_much as $key => $value)
                                                             @if(!empty($value))
@@ -912,7 +915,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 </table>
                                             </td>
                                             <td>
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if (isset($hoRx->iui->when_where))
                                                         @foreach($hoRx->iui->when_where as $key => $value)
                                                             @if(!empty($value))
@@ -927,7 +930,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 </table>
                                             </td>
                                             <td colspan="4">
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if (isset($hoRx->iui->type))
                                                         @foreach($hoRx->iui->type as $key => $value)
                                                             @if(!empty(array_filter($value)))
@@ -956,7 +959,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @if(isset($hoRx->ivf->status) && ($hoRx->ivf->status == 'yes') && isset($hoRx->ivf->how_much_no) && $hoRx->ivf->how_much_no > 0)
                                         <tr>
                                             <td style="width: 10%">
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if (isset($hoRx->ivf->how_much))
                                                         @foreach($hoRx->ivf->how_much as $key => $value)
                                                             @if(!empty($value))
@@ -971,7 +974,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 </table>
                                             </td>
                                             <td>
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @if (isset($hoRx->ivf->when_where))
                                                         @foreach($hoRx->ivf->when_where as $key => $value)
                                                             @if(!empty($value))
@@ -986,7 +989,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 </table>
                                             </td>
                                             <td colspan="4">
-                                                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                                                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                     @php
                                                         if(isset($hoRx->ivf->type)) {
                                                             $medicines = collect($hoRx->ivf->type)->toArray();
@@ -1023,7 +1026,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
                 <div class="display">
                     @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
                                     <td colspan="9">
@@ -1141,7 +1144,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </table>
                     @endif
                     @if($husbandFactor && !empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->habbit) || !empty($husbandFactor->sperm_count) || !empty($husbandFactor->personal_history_date) || !empty($husbandFactor->remark))
-                            <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                 <tbody>
                                     <tr>
                                         <td colspan="9">
@@ -1244,7 +1247,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </table>
                     @endif
                     @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
-                            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                                 <tbody>
                                     @if(!empty($patientDetailedHO->personal_history_history_type))
                                         @php
@@ -1299,7 +1302,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 <div class="display">
                     {{-- $pt_view is set bcz don't want to display in patients application --}}
                     @if($planManagement && (!isset($pt_view) || $pt_view != 1) && (isset($planManagement->plan_of_management_data) || (isset($planManagement->plan) && !empty($planManagement->plan))))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
                                     <td colspan="9">
@@ -1344,7 +1347,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     @endif
                     
                     @if($possibleCaseOfInfertility && (!empty($possibleCaseOfInfertility->other) || !empty($possibleCaseOfInfertility->infertility_type)))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
                                     <td colspan="9">
@@ -1376,7 +1379,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </table>
                     @endif
                     @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' || (!empty($investigation->laproscopy) && $investigation->laproscopy->type == 'yes') || (!empty($investigation->hcg) && $investigation->hcg->type == 'yes') || isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)))
-                        <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                        <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
                                     <td colspan="9">
@@ -1706,7 +1709,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 ?>
                 {{-- treatment tab --}}
                 @if(count((array)$treatment) > 0)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="9">
@@ -1815,7 +1818,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
             <div class="panel panel-primary">
             @if(@$historyData->is_transfer == 'no' || !isset($historyData->is_transfer_print) || $historyData->is_transfer_print == 'no')
                 @if($lmp)
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                         <tbody>
                             <tr>
                                 <th>
@@ -1847,7 +1850,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
                 @if(!empty($historyData->co_type))
                 <br>
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                         <tbody>
                             <tr>
                                 <th>
@@ -1864,7 +1867,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @endif
                 @if(!empty($historyData->le) && !empty($historyData->le->vitals_status) && $historyData->le->vitals_status == 'yes' && (!empty($historyData->le->bp) || !empty($historyData->le->temp) || !empty($historyData->le->pulse)))
                 <br>
-                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                     <tbody>
                         <tr><th><span class="ivf-label">Vitals :</span></th></tr>
                         <tr>
@@ -1900,7 +1903,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     @if($visit == 2 && $cycle == $cycle)
                         @if($oe)
                         <br>
-                            <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                 <tbody>
                                     <tr>
                                         @if ((isset($oe->oe_type) && !empty($oe->oe_type)))
@@ -2015,7 +2018,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     @else
                         @if($oe)
                         <br>
-                            <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                 <tbody>
                                     @if((isset($oe->oe_type) && !empty($oe->oe_type)))
                                     <tr>
@@ -2094,7 +2097,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         @endif
                     @endif
                 {{-- @endif --}}
-                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                     <tbody>
                         
                         @if($visit != 2 && $cycle == $cycle)
@@ -2567,7 +2570,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </th>
                 </tr>
             @else
-                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                     <tbody>
                         @if(!empty($historyData->transfer->upt_type))
                                 <tr>
@@ -2750,7 +2753,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 @page { margin-top : 5px; margin-bottom : 80px;}
             </style>
             <div class="panel panel-primary transfer-print">
-                <table class="table m-b-0 table-hover ivf-print-table">
+                <table class="table m-b-0  ivf-print-table">
                     <tbody>
                     <tr>
                         <th class="p-main-title">
@@ -3254,7 +3257,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                 @endif
                 @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
-                    <div class="col-md-12 mt-3 text-left">
+                    <div class="col-md-12 mt-1 text-left">
                         <span class="visit-lable">Transfer Plan :- </span> 
                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
                     </div>
@@ -3265,9 +3268,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $datarow->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
                             $diff = $diff + 1;
                     @endphp
-                    <div class="col-md-12 mt-3">
+                    <div class="col-md-12 mt-1">
                         <h5 class="">Skip Cycle:</h5>
-                        <table class="module-report-table study-report-table mt-3">
+                        <table class="module-report-table study-report-table mt-1">
                             <thead>
                                 <tr>
                                     <th>Follow UP</th>
@@ -3291,7 +3294,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $datarow->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
                         $diff = $diff + 1;
                     @endphp
-                    <div class="col-md-12">
+                    <div class="col-md-12 text-left">
                         <h5 class=""><u>Result:</u></h5>
                         <table class="table follicular-table frozen-table table-bordered ">
                             <thead>
@@ -3311,7 +3314,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </table>
                     </div>
                 @endif
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-1">
                     <h3 class="text-left"><u>Medicine:</u></h3>
                     <table class="module-report-table study-report-table">
                         <thead>
@@ -3591,7 +3594,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </table>
                 </div>
                 @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
-                    <div class="col-md-12 mt-3 text-left">
+                    <div class="col-md-12 mt-1 text-left">
                         <span class="visit-lable">Transfer Plan :- </span> 
                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
                     </div>
@@ -3602,9 +3605,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $row->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
                             $diff = $diff + 1;
                     @endphp
-                    <div class="col-md-12 mt-3">
+                    <div class="col-md-12 mt-1">
                         <h3 class="text-left"><u>Skip Cycle:</u></h3>
-                        <table class="module-report-table study-report-table mt-3">
+                        <table class="module-report-table study-report-table mt-1">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -3632,7 +3635,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $row->created_at)->diffInDays(\Carbon\Carbon::parse($visitDate));
                         $diff = $diff + 1;
                     @endphp
-                    <div class="col-md-12 mt-3">
+                    <div class="col-md-12 mt-1 text-left">
                         <h3 class="">Result:</h3>
                         <table class="module-report-table study-report-table">
                             <thead>
@@ -3652,7 +3655,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </table>
                     </div>
                 @endif
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-1">
                     <h3 class="text-left"><u>Medicine:</u></h3>
                     <table class="module-report-table study-report-table">
                         <thead>
@@ -3759,7 +3762,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
          @page { margin-top : 200px; margin-bottom : 80px;}
          </style>
         <div class="{{'panel panel-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
-            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                 <tbody>
                         <tr>
                             <th>
@@ -3779,7 +3782,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         
                 </tbody>
             </table>
-            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                 <tbody>
                     @if(!empty($co) && !empty($co->co_type) || !empty($co->since))
                         <tr>
@@ -3806,7 +3809,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
             </table>
             @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
               
-                <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                     <tbody>
                         <tr>
                             <br>  
@@ -3930,7 +3933,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 unset($treatment->medicinedata);
             @endphp
                 @if(count((array)$treatment) > 0)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <br>

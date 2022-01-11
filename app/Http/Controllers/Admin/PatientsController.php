@@ -234,6 +234,23 @@ class PatientsController extends AdminController
     }
 
     /**
+    * Delete patient
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function delete(Request $request) {
+        $patient = $this->PatientSignup;
+        $patientId = $request->booking_id;
+        if($patientId != null){
+            $patientId = decrypt($patientId);
+            // dd($patientId);
+            $patient = $this->PatientSignup->where('id',$patientId);
+            $patient->delete();
+            return redirect()->back();
+        }
+        
+    }
+    /**
     * Get patient report
     * @param  \Illuminate\Http\Request 
     * @return \Illuminate\Http\Response

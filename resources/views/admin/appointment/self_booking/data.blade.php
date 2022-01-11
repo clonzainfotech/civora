@@ -19,6 +19,7 @@
                 <td>{{$patient->reason == 1 ? 'Yes' : 'No'}}</td>
                 <td>
                     <a class="apt-approve" data-id="{{encrypt($patient->id)}}"><span class="badge is-bill badge-success">Approve</span></a>
+                    <a class="apt-reject" data-id="{{encrypt($patient->id)}}"><span class="badge is-bill badge-danger">Reject</span></a>
                 </td>
             </tr>
             @empty

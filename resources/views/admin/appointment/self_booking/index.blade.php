@@ -117,6 +117,23 @@
                 $('.showSweetAlert').hide();
             });
         });
+
+        $(document).on('click','.apt-reject',function () {
+            var patient_signup_id = $(this).data('id');
+            swal({
+                title: 'Are you sure?',
+                text: "You want to Reject this Patient !",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#00cfd1",
+                confirmButtonText: "Yes!",
+                closeOnConfirm: false,
+                cancelButtonClass: 'btn btn-danger',
+            }, function () {
+                window.location.href = '{{URL::to("/reject-patient")}}?booking_id='+patient_signup_id;
+                $('.showSweetAlert').hide();
+            });
+        });
         
     </script>
 

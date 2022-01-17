@@ -87,8 +87,8 @@
         margin: 0 auto;
         width: 100%;
     }
-    . {
-        border-top: 0.5px solid #dee2e6;
+    .table th,.table td {
+        border-top: none !important;
     }
     .text-danger{
         color:red;
@@ -189,7 +189,7 @@
         @page { margin-top : 200px; margin-left : 100px;}
     </style>
         <div class="{{'panel panel-primary print-panle-primary '.(isset($printPreview) && $printPreview == 1 ? 'watermark' : '')}}">
-            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+            <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                 <tbody>
                     <tr>
                         <th style="padding-bottom: 30px;">Name: {{ucwords(strtolower($patients->name))}}
@@ -208,7 +208,7 @@
                 </tbody>
             </table>
             @if($isGsac == true && $isFirstVisit == false)
-                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                     <tbody>
                     <tr>
                         <td colspan="8">
@@ -586,7 +586,7 @@
                     </tbody>
                 </table>
                 @if(!empty($treatment))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -689,7 +689,7 @@
             @else
                 <!-- H/O -->
                 @if($ho)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             @if(isset($oe->pt_remark) && !empty($oe->pt_remark) && isset($patient_preview) && $patient_preview == 1)
                                 <tr>
@@ -799,7 +799,7 @@
                 @endif
                     
                 <!-- C/O -->
-                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                     <tbody>
                         <tr>
                             <th>
@@ -827,7 +827,7 @@
                     $ancFirstusgEddDate = !empty($ancFirst_mh_date->usg_edd) ? \Carbon\Carbon::parse($ancFirst_mh_date->usg_edd)->format('D d M Y'): null;
                 @endphp
                 @if($patientsObstratics)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table '.$class}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table '.$class}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -1293,7 +1293,7 @@
                 @endif
 
                 @if($mh)
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table '.$class}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table '.$class}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -1406,7 +1406,7 @@
                     </table>
                 @endif
                 @if($ancFirst_mh_date && $isFirstVisit == false)
-                    <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
+                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                         @if($ancFirstlmdDate)
                         <tr>
                             <th>
@@ -1465,7 +1465,7 @@
                 @endphp
                 <!-- Patients Detailes --}}  -->
                 @if($patientsDetails && !$ancHistory && ($pastHistoryStatus == true  || $pfHistoryStatus == true || $pHistoryStatus == true))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             @php
                                 // $personal_history_type = ['1'=>'NAD','2'=>"Diabetes Mellitus",'3'=>"Thyroid",'4'=>"Heart Disease",'5'=>"Hypertension"];
@@ -1512,7 +1512,7 @@
 
                 <!-- OE  -->
                 @if(!empty($oe))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="8">
@@ -1947,7 +1947,7 @@
                 @endif
 
                 @if($ancData->is_gynec == 1 && !empty($oe->plan_medically_type->type))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -1974,7 +1974,7 @@
                     $nowDate = \Carbon\Carbon::now()->format('Y-m-d');
                 @endphp
                 @if(!empty($usgData) && !empty($usg->is_usg_print) && $usg->is_usg_print == 1 && (!empty($usg->early_scan) || !empty($usg->early_scan) || !empty($usg->nt_scan && (strtotime($ntScanDate) > strtotime($nowDate))) || !empty($usg->anomalies_miles)))
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -2048,7 +2048,7 @@
                 ?>
                 @if(count((array)$treatment) > 0)
                     <br>
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             <tr>
                                 <td colspan="6">
@@ -2149,7 +2149,7 @@
                         </tbody>
                     </table>
                 @endif
-                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                     <tbody>
                         @if(@$usg->termination_type && !empty($usg->termination_type) || (@$usg->termination_detail))
                             <tr>
@@ -2175,7 +2175,7 @@
                 </table>
                 {{-- investigation --}}
                 @if(!empty($patientsInvestigation->investigation_data) || (!empty($patientsInvestigation->early_scan_type) && $patientsInvestigation->early_scan_type == 'yes') || (!empty($patientsInvestigation->anc_profile_type) && $patientsInvestigation->anc_profile_type == 'yes') || (!empty($patientsInvestigation->growth_report_type) && $patientsInvestigation->growth_report_type == 'yes') || !empty($patientsInvestigation->investigation_extra) || !empty($patientsInvestigation->other_report_type) && $patientsInvestigation->other_report_type == 'yes')
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                             @if(!empty($patientsInvestigation->investigation_data))
                                 <tr>
@@ -2384,7 +2384,7 @@
                 @endphp
                 @if($ancData->is_gynec == 0 && !empty($patientsInjectionData))
                 <br>
-                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
                         <tbody>
                         @if(!empty($patientsInjection->tt1) || !empty($patientsInjection->tt2) )
                             <tr>

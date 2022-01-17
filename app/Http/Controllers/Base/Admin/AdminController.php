@@ -582,14 +582,18 @@ class AdminController extends BaseController
      */
     public function storeCategoryNotification($data)
     {
-        $categoryNotification = $this->CategoryNotification;
-        $categoryNotification->patients_id = $data['patients_id'];
-        $categoryNotification->date = $data['date'];
-        $categoryNotification->reminder_date = $data['reminder_date'];
-        $categoryNotification->message = $data['message'];
-        $categoryNotification->category_id = $data['category_id'];
-        // dd($categoryNotification);
-        $categoryNotification->save();
+        $categoryNotification =  $this->CategoryNotification->whereDate('date',$data['date'])->where('patients_id',$data['patients_id'])->where('category_id',$data['category_id'])->get();
+        if(!$categoryNotification)
+        {
+            $categoryNotification = $this->CategoryNotification;
+            $categoryNotification->patients_id = $data['patients_id'];
+            $categoryNotification->date = $data['date'];
+            $categoryNotification->reminder_date = $data['reminder_date'];
+            $categoryNotification->message = $data['message'];
+            $categoryNotification->category_id = $data['category_id'];
+            // dd($categoryNotification);
+            $categoryNotification->save();
+        }
     }
 
     /**

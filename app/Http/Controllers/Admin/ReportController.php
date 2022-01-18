@@ -715,7 +715,9 @@ class ReportController extends AdminController
                 $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
                 $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
                 $incomePaymentType = $paymentMethodValueData[$paymentType];
-                $income = $this->IncomeManager->where('payment_method',$incomePaymentType)->select("*",
+                $incomeCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('1')->whereStatus('1')->pluck('id','id');
+                
+                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->where('is_pediatric','!=',1)->where('payment_method',$incomePaymentType)->select("*",
                     \DB::raw('
                         (CASE
                             WHEN payment_method = "1" THEN "Cash"
@@ -731,7 +733,8 @@ class ReportController extends AdminController
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
                 }
                 // expense
-                $expense = $this->ExpenseManager->where('payment_method',$incomePaymentType)->select("*",
+                $expenceCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('2')->whereStatus('1')->pluck('id','id');
+                $expense = $this->ExpenseManager->whereIn('expense_category',$expenceCategory)->where('payment_method',$incomePaymentType)->select("*",
                     \DB::raw('
                         (CASE
                             WHEN payment_method = "1" THEN "Cash"
@@ -1625,12 +1628,14 @@ class ReportController extends AdminController
 
                 $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
                 $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
-                $income = $this->IncomeManager->orderBy('id', 'desc');
+                $incomeCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('1')->whereStatus('1')->pluck('id','id');
+                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->where('is_pediatric','!=',1)->orderBy('id', 'desc');
                 if($fromdate || $todate){
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
                 }
                 // expense
-                $expense = $this->ExpenseManager->orderBy('id', 'desc');
+                $expenceCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('2')->whereStatus('1')->pluck('id','id');
+                $expense = $this->ExpenseManager->whereIn('expence_category',$expenceCategory)->orderBy('id', 'desc');
 
                 if($fromdate || $todate){
                     $expense = $expense->whereBetween('date', [$fromdate, $todate]);

@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('parentPageTitle', 'IUI')
-@section('title', 'IUI')
+@section('parentPageTitle', 'Infertility')
+@section('title', 'Infertility')
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 @stop
@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <div class="card patients-list">
                 <div class="header">
-                    <h2><strong>IUI List</strong></h2>
+                    <h2><strong>Infertility List</strong></h2>
                 </div>
 
                 <div class="body">

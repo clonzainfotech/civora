@@ -549,6 +549,7 @@ class PatientsController extends AdminController
                 $reportDate = Carbon::parse($gynecVisit->created_at)->format('Y-m-d H:i:s');
                 $investigationReport = !empty($gynecVisit->investigation) ? json_decode($gynecVisit->investigation,true) : '';
                 $GynecReports[$reportDate]['report'] = !empty($investigationReport['report']['images']) ? $investigationReport['report']['images'] : [];
+                $GynecReports[$reportDate]['anc_report'] = !empty($investigationReport['anc']['images']) ? $investigationReport['anc']['images'] : [];
             }
         }
         // dd($IVFReports);

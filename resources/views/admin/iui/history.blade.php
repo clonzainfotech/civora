@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('parentPageTitle', 'IUI Appointment')
-@section('title', 'Update IUI Appointment')
+@section('parentPageTitle', 'Infertility Appointment')
+@section('title', 'Update Infertility Appointment')
 @section('page-style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
     <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet"/>

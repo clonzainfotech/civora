@@ -38,10 +38,12 @@ class AppointmentController extends ApiController
                 $patients = $this->OpdPatients->find($patientId);
                 $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                                         ->where('patients_id', $patientId)
+                                        ->orderBy('date','desc')
                                         ->get();
                 $appointmentRequestData = $this->AppointmentRequest::select('id','appointment_date as date','appointment_time as time','is_book',DB::raw("DATE_FORMAT(appointment_date,'%Y') as yearKey"))
                                             ->where('patients_id', $patientId)
                                             ->where('is_book','!=',1)
+                                            ->orderBy('date','desc')
                                             ->get();
                 $data  = collect($appointmentData->merge($appointmentRequestData))->groupBy('date');
                 // $data  = $appointmentRequestData;

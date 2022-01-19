@@ -717,7 +717,7 @@ class ReportController extends AdminController
                 $incomePaymentType = $paymentMethodValueData[$paymentType];
                 $incomeCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('1')->whereStatus('1')->pluck('id','id');
                 
-                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->where('is_pediatric','!=',1)->where('payment_method',$incomePaymentType)->select("*",
+                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->where('payment_method',$incomePaymentType)->select("*",
                     \DB::raw('
                         (CASE
                             WHEN payment_method = "1" THEN "Cash"
@@ -786,6 +786,7 @@ class ReportController extends AdminController
             }
             return view('admin.report.collection.index',compact('referenceDoctor'));
         }catch(Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }

@@ -88,11 +88,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-12 ml-4">
+                        <div class="form-group col-md-6 ml-4">
                             <div class="checkbox">
-                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric','id'=>'is_pediatric'])}}
+                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric income_category_type','id'=>'is_pediatric'])}}
                                 <label for="is_pediatric">
                                     Pediatric Category
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 ml-4">
+                            <div class="checkbox">
+                                {{Form::checkbox('is_medicare',0,'',['class'=>'is_medicare income_category_type','id'=>'is_medicare'])}}
+                                <label for="is_medicare">
+                                    Medicare Category
                                 </label>
                             </div>
                         </div>
@@ -151,9 +159,17 @@
                     <div class="row">
                         <div class="form-group col-md-12 ml-4">
                             <div class="checkbox">
-                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric_update','id'=>'is_pediatric_update'])}}
+                                {{Form::checkbox('is_pediatric',0,'',['class'=>'is_pediatric_update income_category_type','id'=>'is_pediatric_update'])}}
                                 <label for="is_pediatric_update">
                                     Pediatric Category
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 ml-4">
+                            <div class="checkbox">
+                                {{Form::checkbox('is_medicare',0,'',['class'=>'is_medicare_update income_category_type','id'=>'is_medicare_update'])}}
+                                <label for="is_medicare_update">
+                                    Medicare Category
                                 </label>
                             </div>
                         </div>
@@ -178,6 +194,7 @@
             var name = $(this).data("name");
             var status = $(this).data("status");
             var pediatric = $(this).data("pediatric");
+            var medicare = $(this).data("medicare");
             document.getElementById("sts").value = status;
             $('select #sts').val(status);
             $('#sts').selectpicker('refresh');
@@ -188,7 +205,13 @@
             {
                 $('.is_pediatric_update').prop('checked',true);
             }
+            $('.is_medicare_update').prop('checked',false);
+            if(medicare == 1)
+            {
+                $('.is_medicare_update').prop('checked',true);
+            }
             $(".modal-body .is_pediatric_update").val( pediatric );
+            $(".modal-body .is_medicare_update").val( medicare );
             var token = "{{csrf_token()}}";
         });
             $(document).on('click','.updatecategory',function(e){
@@ -198,6 +221,7 @@
                 var type = 1;
                 var token = "{{csrf_token()}}";
                 var pediatric = $('.is_pediatric_update').val();
+                var medicare = $('.is_medicare_update').val();
                 var i=1;
                 document.getElementById("erorcategory").innerHTML="";
                 document.getElementById("eror-status").innerHTML="";
@@ -216,7 +240,7 @@
                     url: "{{URL::to('expense-category/update')}}",
                     dataType: 'json',
                     type: 'post',
-                    data:{id:id,name:name,_token:token,status:status,type:type,pediatric:pediatric}
+                    data:{id:id,name:name,_token:token,status:status,type:type,pediatric:pediatric,medicare:medicare}
                 }).done(function(data) {
                     $('#Updatectegory').modal('hide');
                     location.reload();
@@ -232,6 +256,7 @@
                 var token = "{{csrf_token()}}";
                 var type = 1;
                 var pediatric = $('.is_pediatric').val();
+                var medicare = $('.is_medicare').val();
                 var i=1;
                 document.getElementById("errorcategory").innerHTML="";
                 document.getElementById("error-status").innerHTML="";
@@ -251,7 +276,7 @@
                     url: "{{URL::to('categoryAdd')}}",
                     dataType: 'json',
                     type: 'post',
-                    data:{name:name,_token:token,status:status,type:type,pediatric:pediatric}
+                    data:{name:name,_token:token,status:status,type:type,pediatric:pediatric,medicare:medicare}
                 }).done(function(data) {
                     $('#Addctegory').modal('hide');
                     location.reload();
@@ -285,12 +310,18 @@
 
             });
         }
-        $(document).on('click','.is_pediatric,.is_pediatric_update',function(){
+        $(document).on('click','.is_pediatric,.is_pediatric_update,.is_medicare,.is_medicare_update',function(){
             $(this).val(0);
             if($(this).prop('checked') == true)
             {
                 $(this).val(1);
             }
+        })
+        $(document).on('click','.income_category_type',function(){
+            $('.income_category_type').prop('checked',false);
+            $('.income_category_type').val(0);
+            $(this).prop('checked',true);
+            $(this).val(1);
         })
     </script>
 @stop

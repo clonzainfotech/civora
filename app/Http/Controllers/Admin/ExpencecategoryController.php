@@ -66,6 +66,7 @@ class ExpencecategoryController extends AdminController
             $expense->status = $request->status;
             $expense->type = $request->type;
             $expense->is_pediatric = $request->pediatric;
+            $expense->is_medicare = $request->medicare;
             $expense->created_by = \Auth()->user()->id;
             $expense->save();
             return redirect('expense-category');
@@ -111,6 +112,7 @@ class ExpencecategoryController extends AdminController
             $expense->status = $request->status;
             $expense->type = $request->type;
             $expense->is_pediatric = $request->pediatric;
+            $expense->is_medicare = $request->medicare;
             $expense->created_by = \Auth()->user()->id;
             $expense->save();
             return redirect('expense-category');

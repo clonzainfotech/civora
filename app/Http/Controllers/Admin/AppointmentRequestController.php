@@ -132,7 +132,7 @@ class AppointmentRequestController extends AdminController
                     if(!empty($patient->device_token))
                     {
                         $body = 'Dear ,'.ucwords($patient->name).' . This is Inform you that you have booked appointment on '.\Carbon\Carbon::parse($appRequestData->appointment_date)->format('d M Y').' is Rejected due to some reason. For more information contact to Radha IVF center. Thank You.';
-                        $this->sendNotification($appointmentRequests->patients_id,$patient->device_token,$body,null);
+                        $this->sendNotification($appRequestData->patients_id,$patient->device_token,$body,null);
                     }
                     //$this->Notification::sendNotificationToPatients($apRequestId);
                 return ['status' => true];

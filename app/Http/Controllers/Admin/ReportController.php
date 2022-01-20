@@ -1636,7 +1636,7 @@ class ReportController extends AdminController
                 }
                 // expense
                 $expenceCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('2')->whereStatus('1')->pluck('id','id');
-                $expense = $this->ExpenseManager->whereIn('expence_category',$expenceCategory)->orderBy('id', 'desc');
+                $expense = $this->ExpenseManager->whereIn('expense_category',$expenceCategory)->orderBy('id', 'desc');
 
                 if($fromdate || $todate){
                     $expense = $expense->whereBetween('date', [$fromdate, $todate]);

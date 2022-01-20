@@ -67,6 +67,7 @@
                         <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <span class="text-danger"><b>{{isset($dataFailcycle['1_'.$row]) ? 'Cycle Failed ' : ''}}</b></span>
                         <span class="candor-color"><b>{{isset($dataConceiveCycle['1_'.$row]) ? 'Cycle Conceived ' : ''}}</b></span>
+                        <span class="candor-color"><b>{{isset($dataNaturallyConceive['1_'.$row]) ? 'Naturally Conceived ' : ''}}</b></span>
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(1).'/'.encrypt($row))}}">
@@ -133,6 +134,7 @@
                         <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <span class="text-danger"><b>{{isset($dataFailcycle['2_'.$row]) ? 'Cycle Failed ' : ''}}</b></span>
                         <span class="candor-color"><b>{{isset($dataConceiveCycle['2_'.$row]) ? 'Cycle Conceived ' : ''}}</b></span>
+                        <span class="candor-color"><b>{{isset($dataNaturallyConceive['2_'.$row]) ? 'Naturally Conceived ' : ''}}</b></span>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -198,6 +200,7 @@
                         <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <span class="text-danger"><b>{{isset($dataFailcycle['3_'.$row]) ? 'Cycle Failed ' : ''}}</b></span>
                         <span class="candor-color"><b>{{isset($dataConceiveCycle['3_'.$row]) ? 'Cycle Conceived ' : ''}}</b></span>
+                        <span class="candor-color"><b>{{isset($dataNaturallyConceive['3_'.$row]) ? 'Naturally Conceived ' : ''}}</b></span>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -264,13 +267,14 @@
                         <span class="candor-color"><b>{{($currentCycle == true) ? 'Current Cycle' : ''}}</b></span>
                         <span class="text-danger"><b>{{isset($dataFailcycle['4_'.$row]) ? 'Cycle Failed ' : ''}}</b></span>
                         <span class="candor-color"><b>{{isset($dataConceiveCycle['4_'.$row]) ? 'Cycle Conceived ' : ''}}</b></span>
+                        <span class="candor-color"><b>{{isset($dataNaturallyConceive['4_'.$row]) ? 'Naturally Conceived ' : ''}}</b></span>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="test">
                                     <div class="pt-1 pb-1">
                                         <a id="patient_name_display" class="ivf-patinent-name" href="{{URL::to('ivf/cycle/'.encrypt($key).'/'.$patientsId.'/'.encrypt(4).'/'.encrypt($row))}}">
                                             <span>Cycle {{isset($class) && $class == 'skip-cycle' ? '- Skip' : $cycleNumber}}</span>    
-                                            
                                         </a>
                                         <a href="{{URL::to('ivf-plan-report/'.encrypt("1").'/'.$patientsId.'/'.encrypt($row))}}" class="btn btn-sm btn-primary btn-ivf-report">IVF Report</a>
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-ivf-report preview-file-btn" data-cycleno="{{$row}}" data-plan="4" data-pid="{{$patientsId}}">View File</a>

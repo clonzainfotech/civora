@@ -654,11 +654,12 @@ class IVFController extends AdminController
                         }
                         $data['transfer']['report'] = $report;
                     }
-                    if(!empty($data['transfer']['upt_type']) && $data['transfer']['upt_type'] == 'positive' && !empty($data['transfer']['result_type']) && $data['transfer']['result_type'] == 'conceive'){
+                    if((!empty($data['transfer']['upt_type']) && $data['transfer']['upt_type'] == 'positive' && !empty($data['transfer']['result_type']) && $data['transfer']['result_type'] == 'conceive') || (!empty($data['naturally_conceive']) && $data['naturally_conceive'] == 'yes')){
                         $data['plan'] = !empty($data['plan']) ? $data['plan'] : $request['plan_type'];
                         $data['transfer_type'] = 'new';
                         $data['skip_reason'] = null;
                         $category_id = 5;
+                        $ivfHistory->cycle_status = 2;
                         $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->update(['cycle_status'=>2]);
                         $ivfFirstVisitData = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
                         //set EDD date and lmpdate from second visit
@@ -700,7 +701,7 @@ class IVFController extends AdminController
                         }
                         $autoRemark = [];
                         $ancData = $this->ANC;
-                        $autoRemark['remark'] = "Conceived from IVF";
+                        $autoRemark['remark'] = !empty($data['naturally_conceive']) && $data['naturally_conceive'] == 'yes' ? "Naturally conceive" : "Conceived from IVF";
                         $ancData->seen_by = ($request->seen_by) ? $request->seen_by : Auth::user()->id;
                         $ancData->patients_id = $patientsId;
                         $ancData->patients_info = $ivfFirstVisitData->patients_info;
@@ -1410,12 +1411,12 @@ class IVFController extends AdminController
                 case 1:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $pickupCycleNo;
-                        // if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
+                        $value = $pickupCycleNo;
+                        if(!empty($isIvfappointment)){
                             $newCycle = true;
                             $value = $pickupCycleNo + 1;
                             
-                        // }
+                        }
                         if(!$pickupCycleNo){
                             $value = 1;
                         }
@@ -1428,12 +1429,12 @@ class IVFController extends AdminController
                 case 2:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $fetCycleNo;
+                        $value = $fetCycleNo;
                         // // if($lastAppointment->date <= $currentDate || ($ivfReport && $lastAppointment->date <= $currentDate)){
-                        //     if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
+                        if(!empty($isIvfappointment)){
                             $newCycle = true;
                             $value = $fetCycleNo + 1;
-                        // }
+                        }
                         if(!$fetCycleNo){
                             $value = 1;
                         }
@@ -1448,11 +1449,12 @@ class IVFController extends AdminController
                     if($isCycle){
                         
                         $key = $lastCycleId;
-                        // $value = $fetOdCycleNo;
+                        $value = $fetOdCycleNo;
                         // if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
+                        if(!empty($isIvfappointment)){
                             $newCycle = true;
                             $value = $fetOdCycleNo + 1;
-                        // }
+                        }
                         if(!$fetOdCycleNo){
                             $value = 1;
                         }
@@ -1465,11 +1467,12 @@ class IVFController extends AdminController
                 case 4:
                     if($isCycle){
                         $key = $lastCycleId;
-                        // $value = $fetEdCycleNo;
+                        $value = $fetEdCycleNo;
                         // if(!empty($isIvfappointment) && $isIvfappointment->date >= $currentDate){
+                        if(!empty($isIvfappointment)){
                             $newCycle = true;
                             $value = $fetEdCycleNo + 1;
-                        // }
+                        }
                         if(!$fetEdCycleNo){
                             $value = 1;
                         }
@@ -1536,6 +1539,13 @@ class IVFController extends AdminController
             $dataConceiveCycle = $dataForConceiveCycle->mapWithKeys(function($value){
                 return [$value->plan.'_'.$value->cycle_no  => $value->cycle_no];
             })->all();
+            $dataForNaturallyConceive = collect($this->IvfHistory
+                        ->wherePatientsId($id)
+                        ->where('description->naturally_conceive', 'yes')
+                        ->get());
+            $dataNaturallyConceive = $dataForNaturallyConceive->mapWithKeys(function($value){
+            return [$value->plan.'_'.$value->cycle_no  => $value->cycle_no];
+            })->all();
             $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             $complaints = $this->Complaint->pluck('name','name');
             $medicines = $this->Medicine->pluck('name','name');
@@ -1578,6 +1588,7 @@ class IVFController extends AdminController
             $data['dataFailcycle'] = $dataFailcycle;
             $data['dataForSamecycle_value'] = $dataForSamecycle_value;
             $data['dataConceiveCycle'] = $dataConceiveCycle;
+            $data['dataNaturallyConceive'] = $dataNaturallyConceive;
             $data['isIvfappointment'] = !empty($isIvfappointment) ? true : false;
             $data['planManagement'] = $planManagement;
             if($request->ajax()){

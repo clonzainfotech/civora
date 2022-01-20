@@ -4631,7 +4631,8 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <div class="medicine-data"></div>
                         </div>
                     </div>
-                </div>       
+                </div> 
+                
                 <div class="row mt-1">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -5576,6 +5577,23 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                 
                                             </div>
                                             <div class="row child-no-box">
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Naturally Conceive :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("data[naturally_conceive]",'yes','',['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                        <label for="naturally_conceive_yes">
+                                                            Yes
+                                                        </label>
+                                                        {{Form::radio("data[naturally_conceive]",'no','',['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                        <label for="naturally_conceive_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
                                                 {{-- <div class="row"> --}}
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">

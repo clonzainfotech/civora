@@ -482,7 +482,7 @@ class IUIController extends AdminController
                     $iuiFirstVisitData->created_at = Carbon::now()->addSeconds(120)->format('Y-m-d H:i:s');
                     $iuiFirstVisitData->save();
                 }
-                if(!empty($request->data['result']) && $request->data['result'] == 'consive'){
+                if((!empty($request->data['result']) && $request->data['result'] == 'consive') || (isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes')){
                     $ancData = $this->ANC;
                     $autoRemark = [];
                     
@@ -524,7 +524,7 @@ class IUIController extends AdminController
                         $iuiPatientsData->h_o = json_encode($hoData);
                     }
                     $ho_type = ['1'=>'Naturally','2'=>'Medicine','3'=>'IUI'];
-                    $autoRemark['remark'] = "Conceived with ".(isset($request->data['ho_type']) && !empty($request->data['ho_type']) ? $ho_type[$request->data['ho_type']]: '');
+                    $autoRemark['remark'] = isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes' ? 'Conceived Naturally' : "Conceived with ".(isset($request->data['ho_type']) && !empty($request->data['ho_type']) ? $ho_type[$request->data['ho_type']]: '');
                     $ancData->patients_id = $patientsId;
                     $ancData->seen_by = ($seenBy) ? $seenBy : Auth::user()->id;
                     $ancData->patients_info = $iuiPatientsData->patients_info;
@@ -669,7 +669,7 @@ class IUIController extends AdminController
                 if($iuiStatus == 1){
                     $iui->cycle_status = 1;
                 }
-                if(isset($request->data['skip_cycle']) && $request->data['skip_cycle'] == 'yes'){
+                if((isset($request->data['skip_cycle']) && $request->data['skip_cycle'] == 'yes') || (isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes')){
                     $iui->cycle_status = 2;
                 }
                 if(!empty($request->data['ivf']) && $request->data['ivf'] == 'yes'){

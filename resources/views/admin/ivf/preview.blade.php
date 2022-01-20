@@ -3256,7 +3256,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </div> 
                     </div>
                 @endif
-                @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
+                @if(!empty($lastHistoryData->plan) && $lastHistoryData->plan != $plan && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
                     <div class="col-md-12 mt-1 text-left">
                         <span class="visit-lable">Transfer Plan :- </span> 
                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
@@ -3593,7 +3593,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </tbody>
                     </table>
                 </div>
-                @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
+                @if(!empty($lastHistoryData->plan) && $lastHistoryData->plan != $plan && $lastHistory->cycle_status == 2 && (!isset($pt_view) || $pt_view != 1))
                     <div class="col-md-12 mt-1 text-left">
                         <span class="visit-lable">Transfer Plan :- </span> 
                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>

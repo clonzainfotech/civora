@@ -715,6 +715,26 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1">
+                                                        <div class="col-md-2 pr-0">
+                                                            <label class="vertical-form-label pr-0">
+                                                                Naturally Conceive :
+                                                            </label>
+                                                        </div>
+                                                        
+                                                        <div class="col-sm-2">
+                                                            <div class="radio is-conceived">
+                                                                {{Form::radio("data[naturally_conceive]",'yes','',['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                                <label for="naturally_conceive_yes">
+                                                                    Yes
+                                                                </label>
+                                                                {{Form::radio("data[naturally_conceive]",'no','',['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                                <label for="naturally_conceive_no">
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1">
                                                         <div class="col-md-1 pr-0">
                                                             <label class="vertical-form-label pr-0">
                                                                 Hystroscopy :
@@ -1565,15 +1585,13 @@
                                                     </div> --}}
                                                     <br>
                                                 @endif
-                                                
-                                                
                                             </td>
                                         </tr>
                                     </tfoot>
                                     @endif
                             </table>
                         </div>
-                        @if(!empty($lastCycleData->plan) && $cycle[count($cycle)-1]['cycle_status'] == 2)
+                        @if(!empty($lastCycleData->plan) && $lastCycleData->plan != $pStatus && $cycle[count($cycle)-1]['cycle_status'] == 2)
                         <div class="col-md-12 mt-2">
                             <span class="font-bold font-16">Transfer Plan :- </span> 
                             <span class="visit-lable-value">{{isset($planData[$lastCycleData->plan])? $planData[$lastCycleData->plan] : ''}}</span>
@@ -2242,7 +2260,7 @@
                                                     @endif
                                                 @endforeach
                                             
-                                                @if(!empty($lastHistoryData) && $resultValue == 0 && $skipValue == 0 && $isForm == true)
+                                                @if(!empty($lastHistoryData) && $lastHistory->cycle_status != 2)
                                                     @php
                                                         $date = \Carbon\Carbon::parse($lastHistoryData->follow_up)->format('d-m-Y');
                                                         $diff = \Carbon\Carbon::parse(!empty($ivfSecondVisitData->lmp->date) ? $ivfSecondVisitData->lmp->date : $lastHistory->created_at)->diffInDays(\Carbon\Carbon::parse($date));
@@ -2272,7 +2290,7 @@
                                             <tfoot>
                                                 <tr>
                                                 <td colspan="7" class="frozen_table_footer">
-                                                    @if(!empty($lastHistoryData->plan) && $lastHistory->cycle_status == 2)
+                                                    @if(!empty($lastHistoryData->plan) && $lastHistoryData->plan != $pStatus && $lastHistory->cycle_status == 2)
                                                     <div class="mb-2">
                                                         <span class="visit-lable">Transfer Plan :- </span> 
                                                         <span class="visit-lable-value">{{isset($planData[$lastHistoryData->plan])? $planData[$lastHistoryData->plan] : ''}}</span>
@@ -2551,6 +2569,26 @@
                                                                 
                                                             </div>
                                                         @endif
+                                                        <div class="row mt-1">
+                                                            <div class="col-md-2 pr-0">
+                                                                <label class="vertical-form-label pr-0">
+                                                                    Naturally Conceive :
+                                                                </label>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-2">
+                                                                <div class="radio is-conceived">
+                                                                    {{Form::radio("data[naturally_conceive]",'yes','',['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                                    <label for="naturally_conceive_yes">
+                                                                        Yes
+                                                                    </label>
+                                                                    {{Form::radio("data[naturally_conceive]",'no','',['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                                                    <label for="naturally_conceive_no">
+                                                                        No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="row mt-1">
                                                             <div class="col-md-2 pr-0">
                                                                 <label class="vertical-form-label pr-0">
@@ -3490,6 +3528,26 @@
                                         </div>
                                     </div>
                                     @endif
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-2 pr-0">
+                                        <label class="vertical-form-label pr-0">
+                                            Naturally Conceive :
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <div class="radio is-conceived">
+                                            {{Form::radio("data[naturally_conceive]",'yes','',['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                            <label for="naturally_conceive_yes">
+                                                Yes
+                                            </label>
+                                            {{Form::radio("data[naturally_conceive]",'no','',['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive'])}}
+                                            <label for="naturally_conceive_no">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-md-1 pr-0">

@@ -485,6 +485,27 @@
                 </div>
             </div>
         @endif
+        <div class="row mt-1">
+            <div class="col-md-2 pr-0">
+                <label class="vertical-form-label pr-0">
+                    Naturally Conceive :
+                </label>
+            </div>
+            
+            <div class="col-sm-2">
+                <div class="radio is-conceived">
+                    {{Form::radio("data[naturally_conceive]",'yes',isset($ivfData->naturally_conceive) && $ivfData->naturally_conceive == 'yes' ? true : false,['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive','disabled'])}}
+                    <label for="naturally_conceive_yes">
+                        Yes
+                    </label>
+                    {{Form::radio("data[naturally_conceive]",'no',isset($ivfData->naturally_conceive) && $ivfData->naturally_conceive == 'no' ? true : false,['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive','disabled'])}}
+                    <label for="naturally_conceive_no">
+                        No
+                    </label>
+                </div>
+            </div>
+            {{Form::hidden('data[naturally_conceive]',isset($ivfData->naturally_conceive) ? $ivfData->naturally_conceive : null)}}
+        </div>
         @php
             $hystroscopy = !empty($ivf->investigation) && isset(json_decode($ivf->investigation)->hystroscopy) ? json_decode($ivf->investigation)->hystroscopy : null;
             $hystroscopy_detail = !empty($hystroscopy->type) && $hystroscopy->type == 'yes' ? '':'d-none';

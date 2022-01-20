@@ -4754,7 +4754,26 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         <span class="follow-date-msg form-error-msg"></span>
                     </div>
                 </div>
+                
                 <div class="row">
+                    <div class="col-md-2 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            Naturally Conceive :
+                        </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="radio is-conceived">
+                            {{Form::radio("data[naturally_conceive]",'yes',isset($historyData->naturally_conceive) && $historyData->naturally_conceive == 'yes' ? true : false,['id'=>'naturally_conceive_yes','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive','disabled'])}}
+                            <label for="naturally_conceive_yes">
+                                Yes
+                            </label>
+                            {{Form::radio("data[naturally_conceive]",'no',isset($historyData->naturally_conceive) && $historyData->naturally_conceive == 'yes' ? true : false,['id'=>'naturally_conceive_no','class'=>'naturally_conceive iui-yes-no-status','data-type'=>'naturally_conceive','disabled'])}}
+                            <label for="naturally_conceive_no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    {{Form::hidden('data[naturally_conceive]',isset($historyData->naturally_conceive) ? $historyData->naturally_conceive : null)}}
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
                             I.V.F :

@@ -1630,7 +1630,7 @@ class ReportController extends AdminController
                 $procedures = $this->IndoorProcedure->select('id', 'name')->get()->toArray();
                 $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
                 $incomeCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->whereType('1')->whereStatus('1')->pluck('id','id');
-                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->where('is_pediatric','!=',1)->orderBy('id', 'desc');
+                $income = $this->IncomeManager->whereIn('income_category',$incomeCategory)->orderBy('id', 'desc');
                 if($fromdate || $todate){
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
                 }

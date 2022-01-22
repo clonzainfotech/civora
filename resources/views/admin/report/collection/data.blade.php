@@ -697,27 +697,90 @@
         </tbody>
     </table>
 @endif
-<table class="table m-b-0 table-hover grand-total" style="width:40%;">
-    <?php $totalOpd = $totalUsg + $totalHormon + $totalIui + $totalIvf + $incomeGrandTotal + $totalIvfCash + $totalIuiCash + $totalAncCash + $totalIndoorCash + $totalIndoorDepositCash + $totalGynecCash; ?>
-    <tr class="bt-none">
-        <th class="bt-none">OPD Total</th>
-        <th class="bt-none">:</th>
-        <th class="total-upper-border text-right">{{ $totalOpd }}</th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">Total</th>
-        <th class="bt-none">:</th>
-        <th class="top-border-first total-upper-border text-right">{{ $totalOpd }}</th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">Expense Total </th>
-        <th class="bt-none">:</th>
-        <th class="total-upper-border text-right"> {{ $expenseGrandTotal }} </th>
-    </tr>
-    
-    <tr class="bt-none">
-        <th class="bt-none">Grand Total</th>
-        <th class="bt-none">:</th>
-        <th class="top-border-first text-right"> {{ $totalOpd - $expenseGrandTotal}} </th>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+            <?php $totalOpd = $totalUsg + $totalHormon + $totalIui + $totalIvf + $incomeGrandTotal + $totalIvfCash + $totalIuiCash + $totalAncCash + $totalIndoorCash + $totalIndoorDepositCash + $totalGynecCash; ?>
+            <tr class="bt-none">
+                <th class="bt-none">OPD Total</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $totalOpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first total-upper-border text-right">{{ $totalOpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Expense Total </th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right"> {{ $expenseGrandTotal }} </th>
+            </tr>
+            
+            <tr class="bt-none">
+                <th class="bt-none">Grand Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ $totalOpd - $expenseGrandTotal}} </th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-3">
+        <table class="table m-b-0 table-hover all_type_payment grand-total" style="width:40%;">
+            <tr class="bt-none">
+                <th class="bt-none">New Collection Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $totalOpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Pediatric Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $pediatric_income }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Medicare Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $medicare_income }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ $totalOpd + $pediatric_income + $medicare_income}} </th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $expenseGrandTotal + $pediatric_expense + $medicare_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Grand Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{($totalOpd + $pediatric_income + $medicare_income) - ($expenseGrandTotal + $pediatric_expense + $medicare_expense)}} </th>
+            </tr>
+        </table>
+    </div> 
+    <div class="col-md-3">
+        <table class="table m-b-0 table-hover all_type_payment grand-total" style="width:40%;">
+            <tr class="bt-none">
+                <th class="bt-none">New Collection Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $expenseGrandTotal }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Pediatric Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $pediatric_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Medicare Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $medicare_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ $expenseGrandTotal + $pediatric_expense + $medicare_expense}} </th>
+            </tr>
+        </table>
+    </div> 
+</div>

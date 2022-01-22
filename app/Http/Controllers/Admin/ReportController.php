@@ -729,9 +729,7 @@ class ReportController extends AdminController
                         AS payment_mode')
                 )
                     ->orderBy('id', 'desc');
-                if($fromdate || $todate){
-                    $income = $income->whereBetween('date', [$fromdate, $todate]);
-                }
+                
                 // expense
                 $expenceCategory = $this->ExpenseCategory->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereType('2')->whereStatus('1')->pluck('id','id');
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenceCategory)->where('payment_method',$incomePaymentType)->select("*",
@@ -747,12 +745,96 @@ class ReportController extends AdminController
                 )
                     ->orderBy('id', 'desc');
 
+                //pediatric Total income and expense
+                $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->whereStatus('1')->pluck('id','id');
+                $pediatric_income = $this->IncomeManager->whereIn('income_category',$category)->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                    )
+                    ->orderBy('id', 'desc');
+                $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->whereStatus('1')->pluck('id','id');
+                $pediatric_expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory)->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                    )
+                ->orderBy('id', 'desc');
+                $pediatric_indoorBook = $this->IndoorBook->with('getInvoice')->where('is_pediatric_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date');
+                $pediatric_indoorBook = $pediatric_indoorBook->where(function($query) use($paymentType){
+                    $query->whereHas('getInvoice', function($query) use($paymentType) {
+                        $query->where('payment_mode', $paymentType);
+                    });
+                });
+
+                //medicare Total income and expense
+                $category = $this->ExpenseCategory->where('is_medicare',1)->whereType('1')->whereStatus('1')->pluck('id','id');
+                $medicare_income = $this->IncomeManager->whereIn('income_category',$category)->where('payment_method',$incomePaymentType)->select("*",
+                \DB::raw('
+                    (CASE
+                        WHEN payment_method = "1" THEN "Cash"
+                        WHEN payment_method = "2" THEN "Swipe"
+                        WHEN payment_method = "3" THEN "Cheque"
+                        WHEN payment_method = "4" THEN "UPI"
+                        WHEN payment_method = "4" THEN "NEFT"
+                    END)
+                    AS payment_mode')
+                )
+                ->orderBy('id', 'desc');
+                $expenseCategory = $this->ExpenseCategory->where('is_medicare',1)->whereType('2')->whereStatus('1')->pluck('id','id');
+                $medicare_expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory)->where('payment_method',$incomePaymentType)->select("*",
+                    \DB::raw('
+                        (CASE
+                            WHEN payment_method = "1" THEN "Cash"
+                            WHEN payment_method = "2" THEN "Swipe"
+                            WHEN payment_method = "3" THEN "Cheque"
+                            WHEN payment_method = "4" THEN "UPI"
+                            WHEN payment_method = "4" THEN "NEFT"
+                        END)
+                        AS payment_mode')
+                    )
+                ->orderBy('id', 'desc');
+                $medicare_indoorBook = $this->IndoorBook->with('getInvoice')->where('is_medicare_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date');
+                $medicare_indoorBook = $medicare_indoorBook->where(function($query) use($paymentType){
+                    $query->whereHas('getInvoice', function($query) use($paymentType) {
+                        $query->where('payment_mode', $paymentType);
+                    });
+                });
+
                 if($fromdate || $todate){
+                    $income = $income->whereBetween('date', [$fromdate, $todate]);
                     $expense = $expense->whereBetween('date', [$fromdate, $todate]);
+
+                    //pediatric Total income and expense
+                    $pediatric_income = $pediatric_income->whereBetween('date', [$fromdate, $todate]);
+                    $pediatric_expense = $pediatric_expense->whereBetween('date', [$fromdate, $todate]);
+                    $pediatric_indoorBook = $pediatric_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    //medicare Total income and expense
+                    $medicare_income = $medicare_income->whereBetween('date', [$fromdate, $todate]);
+                    $medicare_expense = $medicare_expense->whereBetween('date', [$fromdate, $todate]);
+                    $medicare_indoorBook = $medicare_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                 }
                 // $usgGrandTotal = $usg->sum('usg');
                 $incomeGrandTotal = $income->sum('amount');
                 $expenseGrandTotal = $expense->sum('amount');
+
+                $pediatric_income = $pediatric_income->sum('amount') + $pediatric_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $pediatric_expense = $pediatric_expense->sum('amount');
+
+                $medicare_income = $medicare_income->sum('amount') + $medicare_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $medicare_expense = $medicare_expense->sum('amount');
 
                 if($request->isprint==1){
                     $usg = $usg->get();
@@ -781,7 +863,7 @@ class ReportController extends AdminController
                 $expense = $expense->paginate(100, ['*'], 'expense');
 
                 return response()->json([
-                    View::make('admin.report.collection.data',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard', 'iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
+                    View::make('admin.report.collection.data',compact('pediatric_income','pediatric_expense','medicare_income','medicare_expense','indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard', 'iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
                 ]);
             }
             return view('admin.report.collection.index',compact('referenceDoctor'));

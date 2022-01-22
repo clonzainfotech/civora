@@ -369,7 +369,7 @@
             <tr class="bt-none">
                 <th class="bt-none">Total Income</th>
                 <th class="bt-none">:</th>
-                <th class="top-border-first text-right"> {{ $totalGrandIncome + $pediatric_income + $totalUsg}} </th>
+                <th class="top-border-first text-right"> {{ $totalGrandIncome + $pediatric_income + $medicare_income}} </th>
             </tr>
             <tr class="bt-none">
                 <th class="bt-none">Total Expense</th>
@@ -379,7 +379,7 @@
             <tr class="bt-none">
                 <th class="bt-none">Grand Total</th>
                 <th class="bt-none">:</th>
-                <th class="top-border-first text-right"> {{($totalGrandIncome + $pediatric_income + $totalUsg) - ($totalExpense + $pediatric_expense + $medicare_expense)}} </th>
+                <th class="top-border-first text-right"> {{($totalGrandIncome + $pediatric_income + $medicare_income) - ($totalExpense + $pediatric_expense + $medicare_expense)}} </th>
             </tr>
         </table>
     </div> 

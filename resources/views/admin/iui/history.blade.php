@@ -1122,22 +1122,22 @@
                     $('.lmp-date-msg').text('');
                     $('.lmp-tab').removeClass('show');
                     $('.plan-tab').removeClass('show');
-                    // if($('select.plan-type').val() == ''){
-                    //     $('.plan-type-msg').text('This field is required.');
-                    //     valid = 0;
-                    //     $('.plan-tab').addClass('show');
-                    // }
+                    if($('select.plan-type').val() == ''){
+                        $('.plan-type-msg').text('This field is required.');
+                        valid = 0;
+                        $('.plan-tab').addClass('show');
+                    }
                     if($('.second-visit-lmd-date').val() == ''){
                         $('.lmp-date-msg').text('This field is required.');
                         valid = 0;
                         $('.lmp-tab').addClass('show');
                     }
                     $('.plan-data-error').text('');
-                    // if($('select.plan-data').val() == ''){
-                    //     $('.plan-data-error').text('This field is required.');
-                    //     $('.plan-tab').addClass('show');
-                    //     valid = 0;
-                    // }
+                    if($('select.plan-data').val() == ''){
+                        $('.plan-data-error').text('This field is required.');
+                        $('.plan-tab').addClass('show');
+                        valid = 0;
+                    }
                     if($('select.seen-by-2').val() == ''){
                         $('.seen-by-error-2').text('Please select doctor');
                         $('html, body').animate({

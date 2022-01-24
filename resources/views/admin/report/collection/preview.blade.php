@@ -26,6 +26,7 @@
 .table-footer{
     font-weight: 900;
     color: #01d8da;
+    -webkit-print-color-adjust: exact;
     height: 50px;
     font-size: 20px;
 }
@@ -61,6 +62,7 @@ td {
     line-height: 7px;
     padding-left:12px;
     padding-right:12px;
+    -webkit-print-color-adjust: exact;
 }
 
 .data-font {
@@ -68,6 +70,7 @@ td {
 }
 .seperator {
     border-top: 0.5px solid #dee2e6;
+    -webkit-print-color-adjust: exact;
 }
 
 tr td th {
@@ -697,7 +700,7 @@ tr td th {
         @endif
     </table>
 @endif
-<table class="table m-b-0 table-hover category-report-table-first grand-total"  style="width:40%;" >
+<table class="table m-b-0 table-hover category-report-table-first"  style="width:40%;" >
     <?php
         $totalOpd = $totalUsg+ $totalHormon  + $totalIui + $totalIvf + $incomeGrandTotal  + $totalIvfCash + $totalIuiCash + $totalAncCash  +  $totalIndoorCash + $totalIndoorDepositCash + $totalGynecCash;
     ?>
@@ -729,3 +732,63 @@ tr td th {
         </tr>
     </tbody>
 </table>
+<div class="row" style="display: flex; justify-content:space-between">
+    <div class="col-md-6">
+        <table class="table m-b-0 table-hover category-report-table-first">
+            <tr class="bt-none">
+                <th class="bt-none">New Collection Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $totalOpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Pediatric Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $pediatric_income }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Medicare Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $medicare_income }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Income</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ $totalOpd + $pediatric_income + $medicare_income}} </th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $expenseGrandTotal + $pediatric_expense + $medicare_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Grand Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{($totalOpd + $pediatric_income + $medicare_income) - ($expenseGrandTotal + $pediatric_expense + $medicare_expense)}} </th>
+            </tr>
+        </table>
+    </div> 
+    <div class="col-md-6">
+        <table class="table m-b-0 table-hover category-report-table-first">
+            <tr class="bt-none">
+                <th class="bt-none">New Collection Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $expenseGrandTotal }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Pediatric Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $pediatric_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Medicare Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $medicare_expense }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total Expense</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ $expenseGrandTotal + $pediatric_expense + $medicare_expense}} </th>
+            </tr>
+        </table>
+    </div>
+</div>     

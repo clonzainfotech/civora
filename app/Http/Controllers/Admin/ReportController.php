@@ -848,7 +848,7 @@ class ReportController extends AdminController
                     $reportDatails['count'] = $collectionReport->count();
 
                     return response()->json([
-                        View::make('admin.report.collection.preview',compact('indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard','iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
+                        View::make('admin.report.collection.preview',compact('pediatric_income','pediatric_expense','medicare_income','medicare_expense','indoorNEFT','indoorUPI','indoorCheque','indoorNEFTDeposit','indoorUPIDeposit','indoorCheque','indoorChequeDeposit','ivfNEFT','iuiNEFT','ancNEFT','gynecNEFT','ivfUPI','iuiUPI','ancUPI','gynecUPI','ivfCheque','iuiCheque','ancCheque','gynecCheque','collectionReport','reportDatails', 'expense', 'expenseGrandTotal', 'hormon', 'iui', 'ivf', 'income', 'incomeGrandTotal', 'usg', 'indoorCash', 'indoorCard', 'indoorCaseDeposit','indoorCardDeposit','ivfCash', 'iuiCash', 'ancCash', 'ivfCard','gynecCash','gynecCard','iuiCard', 'ancCard', 'procedures','indoorDebit'))->render()
                     ]);
                 }
                 $collectionReport = $collectionReport->paginate(100);

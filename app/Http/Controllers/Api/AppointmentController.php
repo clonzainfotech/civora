@@ -36,7 +36,7 @@ class AppointmentController extends ApiController
             if(!empty($patientData)){
                 $patientId = $patientData->patients_id;
                 $patients = $this->OpdPatients->find($patientId);
-                $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
+                $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time','is_procedure',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                                         ->where('patients_id', $patientId)
                                         ->orderBy('date','desc')
                                         ->get();
@@ -98,20 +98,29 @@ class AppointmentController extends ApiController
                                     if (((strtotime($value->date.' '.$value->arrival_time) > strtotime($currentDate.' '.$currentTime)) && ($value->is_done == 0)) || (!$value->arrival_time && strtotime($value->date) >= strtotime($currentDate))) {
                                         $status = "Approved";
                                     }
+                                    
                                 } else {
                                     $status = "Visited";
                                 }
+                                // for procedure visit
+                                if($value->is_procedure == 1)
+                                {
+                                    $pickUp = $this->IvfPlanReport->where('patients_id',$patientId)->whereDate('created_at',\Carbon\Carbon::parse($value->date)->format('Y-m-d'))->first();
+                                    if(!empty($pickUp))
+                                    {
+                                        $status = "Visited";
+                                    }
+                                    // $transfer = $this->IvfTransferReport->where('patients_id',$patientId)->whereDate('craeted_at',$value->date)->first();
+                                }
                             }
                             $value->status = $status;
-                            // $value->profile_picture = $lastAppointment['getPatientsDetails']['profile_picture'];
-                            unset($value->is_done,$value->yearKey,$value->categoryDetails,$value->getPatientsDetails,$value->appontment_request_id,$value->is_book,$value->arrival_time,$value->created_by);
+                            unset($value->is_done,$value->is_procedure,$value->yearKey,$value->categoryDetails,$value->getPatientsDetails,$value->appontment_request_id,$value->is_book,$value->arrival_time,$value->created_by);
                         // }
                         $value->profile_picture = $patients->profile_picture;
                         $value->reason = $value->remark;
                         $value->week = $utersWeek;
                        array_push($appointmentData,$value);
                     }
-                    // $appointmentData[][$key] = $aData;
                 // }
                 return $this->sendResponse('Get appointment details successfully', $appointmentData);
             }

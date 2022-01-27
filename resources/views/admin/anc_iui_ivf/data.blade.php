@@ -169,7 +169,7 @@
                             @endif
                         @endif
                         @if($row->date != date('Y-m-d'))
-                            <a href="{{url('emergency-appointment/'.encrypt($row->patients_id))}}"><button class="btn btn-sm emergency-patient" id="{{encrypt($row->patients_id)}}">Emergency</button></a>
+                                <button class="btn btn-sm emergency-patient" id="{{encrypt($row->patients_id)}}">Emergency</button>
                         @endif
                     </td>
                 @endif

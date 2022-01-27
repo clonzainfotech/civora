@@ -370,6 +370,22 @@
                 });
 
         // });
+        $(document).on('click','.emergency-patient',function(){
+            var pID = $(this).attr('id');
+            swal({
+                title: "Emergency Appointment",
+                text: "Are you sure want to Add Appointment?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#00cfd1",
+                confirmButtonText: "Yes!",
+                closeOnConfirm: false,
+                cancelButtonClass: 'btn btn-danger',
+            }, function () {
+                window.location = "{{url('emergency-appointment')}}"+'/'+pID;
+                $('.showSweetAlert').hide();
+            });
+        })
         $(document).on("click", function(event){
             var $trigger = $(".patient_dropdown");
             if($trigger !== event.target && !$trigger.has(event.target).length){

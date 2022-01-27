@@ -178,7 +178,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-6">
                                                     <div class="form-group">
-                                                        {{Form::select('reference_doctor',$referenceDoctor,$patient->reference_doctor_id,[
+                                                        {{Form::select('reference_doctor',$referenceDoctor,!empty($patient->reference_doctor_id) ? $patient->reference_doctor_id : null,[
                                                             'class'=>'form-control select-padding-0 reference_doctor',
                                                             'placeholder'=>'Select Reference Doctor',
                                                             'data-live-search'=>'true',
@@ -212,14 +212,14 @@
                                                 </div>
                                                 <div class="col-md-6 col-sm-6">
                                                     <div class="form-group">
-                                                        {{Form::select('hospital_doctor',$hospitalDoctor,$patient->hospital_doctor_id,['class'=>'form-control select-padding-0 hospital_doctor','placeholder'=>'Select Hospital Doctor','data-live-search'=>'true'])}}
+                                                        {{Form::select('hospital_doctor',$hospitalDoctor,!empty($patient->hospital_doctor_id) ? $patient->hospital_doctor_id : null,['class'=>'form-control select-padding-0 hospital_doctor','placeholder'=>'Select Hospital Doctor','data-live-search'=>'true'])}}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-6">
                                                     <div class="form-group">
-                                                        {{Form::select('pro_reference_doctor',$proReferenceDoctor,$patient->reference_doctor_pro_id,['class'=>'form-control select-padding-0 pro-ref-hospital-doctor','placeholder'=>'Select Pro Reference Doctor','data-live-search'=>'true'])}}
+                                                        {{Form::select('pro_reference_doctor',$proReferenceDoctor,!empty($patient->reference_doctor_pro_id) ? $patient->reference_doctor_pro_id : null,['class'=>'form-control select-padding-0 pro-ref-hospital-doctor','placeholder'=>'Select Pro Reference Doctor','data-live-search'=>'true'])}}
                                                     </div>
                                                 </div>
                                                 <div class=" col-md-6 col-sm-6 ref-pro-doctor-data d-none">

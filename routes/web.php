@@ -55,6 +55,7 @@ Route::get('get-complaint-wise-medicine','Base\Admin\AdminController@getComplain
 Route::get('patient_notification','Base\Admin\AdminController@patient_notification');
 Route::get('remove_notification','Base\Admin\AdminController@remove_notification');
 Route::get('get-category-notification','Base\Admin\AdminController@get_category_notification');
+Route::get('procedures','Admin\ProcedureController@index');
 
  // report status
 Route::get('report/{type}/{patientsId}','Base\Admin\AdminController@patientReport')->middleware('login');

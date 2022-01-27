@@ -151,7 +151,6 @@ class AppointmentController extends AdminController
                     $appointment = $appointment->orderBy('date','asc')
                                                 ->orderBy('time','ASC');
                 }
-                // dd($appointment->get());
                 $appointmentId = $appointment->pluck('id');
 
                 if($request->isprint == 1){

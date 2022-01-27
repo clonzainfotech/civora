@@ -68,7 +68,6 @@ class AppointmentController extends AdminController
                         $query->where('usg_status',0);
                     });
                 }
-                    // ->orderBy('id','DESC');
                 // search text
 
                 $patientId = $request->patient_id;

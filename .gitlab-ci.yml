@@ -4,12 +4,12 @@ deploy:
   stage: deploy
   script:
     - cd /var/www/html
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/app/* /var/www/html/app/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/assets/* /var/www/html/assets/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/database/* /var/www/html/database/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/resources/* /var/www/html/resources/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/routes/* /var/www/html/routes/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/storage/* /var/www/html/storage/
-    - sudo cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/public/* /var/www/html/public/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/app/* /var/www/html/app/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/assets/* /var/www/html/assets/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/database/* /var/www/html/database/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/resources/* /var/www/html/resources/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/routes/* /var/www/html/routes/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/storage/* /var/www/html/storage/
+    - cp -r /var/www/candor/jamyNeZZ/0/unikwork/candorivf-web/public/* /var/www/html/public/
     - php artisan config:clear
     - php artisan view:clear

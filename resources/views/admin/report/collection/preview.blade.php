@@ -12,7 +12,7 @@
 }
 .category-report-table-first tr{
     height: 35px;
-    font-size: 20px;
+    font-size: 16px;
 }
 .doctor-category{
     color: #01d8da;

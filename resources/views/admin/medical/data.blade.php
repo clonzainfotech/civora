@@ -17,7 +17,8 @@
             <td>{{((($patients->currentPage() - 1 ) * $patients->perPage()) + $loop->iteration) . '.'}}</td>
             <td>{{$row->code}}</td>
             <td>{{$row->name}}</td>
-            <td>{{$row->lastDoneAppointmentData['id']}}
+            <td>
+                {{-- {{$row->lastDoneAppointmentData['id']}} --}}
                 {{-- <div class="{{'edit-follow-data edit-follow-'.$iuiHistoryData[count($iuiHistoryData)-1]['id']}}">
                     {{$prevAppointmentDate}}
                         <span class="edit-follow">

@@ -79,7 +79,7 @@
        
         <thead>
             <tr>
-                <th colspan="5">{{strtoupper(config('app.hospitalname1'))}}</th>
+                <th colspan="6">{{strtoupper(config('app.hospitalname1'))}}</th>
             </tr>
             <tr>
                 <th>Medicare Collection Report</th>
@@ -92,6 +92,7 @@
                 <th class="report-header-tr-th">Sr No</th>
                 <th class="report-header-tr-th">Date</th>
                 <th class="report-header-tr-th">Patient</th>
+                <th class="report-header-tr-th">Category</th>
                 <th class="report-header-tr-th">Given For</th>
                 <th class="report-header-tr-th">Note</th>
                 <th class="report-header-tr-th">Added By</th>
@@ -106,7 +107,7 @@
         <tbody>
             @forelse($income as $rowlist => $data)
                 <tr class="refdocdata">
-                    <td colspan="5" class="sub-headline amount">{{ ucWords(strtolower($rowlist))}}</td>
+                    <td colspan="6" class="sub-headline amount">{{ ucWords(strtolower($rowlist))}}</td>
                 </tr>
                 @php
                     $total = 0;
@@ -116,6 +117,7 @@
                         <td class="data-font seperator">{{ ($j++) . '.' }}</td>
                         <td class="data-font seperator">{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
                         <td class="data-font seperator">{{ucWords(strtolower($row->getPatient['name']))}}</td>
+                        <td class="data-font seperator"></td>
                         <td class="data-font seperator">{{$row->given_by}}</td>
                         <td class="data-font seperator">{{$row->note}}</td>
                         <td class="data-font seperator">{{$row->getUser['name']}}</td>
@@ -131,21 +133,38 @@
                     </tr>
                 @endforeach
                 <tr>
-                    <td class="bt-none" colspan="5"></td>
+                    <td class="bt-none" colspan="6"></td>
                     <th class="bt-none" colspan="1">Total :</th>
                     <th class="top-border-first upper-border">{{  $total }}</th>
                 </tr>
             @empty
-                <td colspan="7" class="text-center">No records available</td>
+                <td colspan="8" class="text-center">No records available</td>
             @endforelse
             <tr>
-                <td colspan="5"  class="sub-headline amount">IPD Income</td>
+                <td colspan="6"  class="sub-headline amount">IPD Income</td>
             </tr>
+            @foreach($indoorCaseDeposit as $rowList => $data)
+                <tr>
+                    <td class="data-font seperator">{{$j}}</td>
+                    <td class="data-font seperator">{{\Carbon\Carbon::parse($data->created_at)->format('d-m-Y')}}</td>
+                    <td class="data-font seperator">{{ucWords(strtolower($data->getPatientsDetails['name']))}}</td>
+                    <td class="data-font seperator">{{$data->procedure_name}}</td>
+                    <td class="data-font seperator"></td>
+                    <td class="data-font seperator"></td>
+                    <td class="data-font seperator"></td>
+                    <td class="data-font seperator">{{$data->amount}}</td>
+                </tr>
+                @php
+                    $j++;
+                    $totalIpd += $data->amount;
+                @endphp
+            @endforeach
             @forelse($indoorBook as $rowlist => $data)
                 <tr>
                     <td class="data-font seperator">{{$j}}</td>
                     <td class="data-font seperator">{{\Carbon\Carbon::parse($data->date)->format('d-m-Y')}}</td>
                     <td class="data-font seperator">{{ucWords(strtolower($data->getPatientsDetails['name']))}}</td>
+                    <td class="data-font seperator"></td>
                     <td class="data-font seperator"></td>
                     <td class="data-font seperator"></td>
                     <td class="data-font seperator"></td>
@@ -156,11 +175,11 @@
                     $totalIpd += $data->getInvoice['grand_total_amt'];
                 @endphp  
             @empty
-                <td colspan="7" class="text-center">No records available</td>
+                <td colspan="8" class="text-center">No records available</td>
                 
             @endforelse
             <tr>
-                <td colspan="6"></td>
+                <td colspan="7"></td>
                 <td class="sub-headline upper-border">{{$totalIpd}}</td>
             </tr>
         </tbody>
@@ -186,7 +205,7 @@
         <tbody>
             @forelse($expense as $rowlist => $data)
                 <tr class="refdocdata">
-                    <td colspan="5" class="sub-headline amount">{{ ucWords(strtolower($rowlist))}}</td>
+                    <td colspan="6" class="sub-headline amount">{{ ucWords(strtolower($rowlist))}}</td>
                 </tr>
                
                 @foreach($data as $row)
@@ -214,7 +233,7 @@
                     <th class="top-border-first upper-border">{{  $totalExpense }}</th>
                 </tr>
             @empty
-                <td colspan="7" class="text-center">No records available</td>
+                <td colspan="8" class="text-center">No records available</td>
             @endforelse
             
         </tbody>

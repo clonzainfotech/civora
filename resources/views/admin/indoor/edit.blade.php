@@ -675,7 +675,7 @@
         function checkWeight(value) {
             $('.weight').val(validMobileNumber(value));
         }
-        $(document).on('click','.is_pediatric_patien,.is_medicare_patient',function(){
+        $(document).on('click','.is_pediatric_patient,.is_medicare_patient',function(){
             $(this).val(0);
             if($(this).prop('checked') == true)
             {

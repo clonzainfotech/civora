@@ -528,11 +528,11 @@ class ReportController extends AdminController
                         ->where('payment_mode',$paymentType);
                 })->orderBy('id', 'desc');
                 // Hormon
-                $hormon = $this->IndoorDeposit->where([['charge_type', '=', 1],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                $hormon = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 1],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
                 // IUI
-                $iui = $this->IndoorDeposit->where([['charge_type', '=', 3],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                $iui = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 3],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
                 // IVF
-                $ivf = $this->IndoorDeposit->where([['charge_type', '=', 2],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
+                $ivf = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 2],['case_type', '=', 'Credit'],['payment_type', '=', $paymentType]])->orderBy('id', 'desc');
                 // Main Collection Data Card
                 $mainDataCash = $this->Appointment
                     ->whereHas('getAppointmentCharges', function($query) use($paymentType) {$query->where([
@@ -672,13 +672,12 @@ class ReportController extends AdminController
                     ])
                     ->orderBy('id', 'DESC');
 
-
-                $indoorCaseDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType($paymentType)->with('getPatients')->orderBy('id', 'DESC');
-                $indoorCardDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('1')->with('getPatients')->orderBy('id', 'DESC');
-                $indoorChequeDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('3')->with('getPatients')->orderBy('id', 'DESC');
-                $indoorUPIDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('4')->with('getPatients')->orderBy('id', 'DESC');
-                $indoorNEFTDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('5')->with('getPatients')->orderBy('id', 'DESC');
-                $indoorDebit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType($paymentType)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorCardDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('1')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorChequeDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('3')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorUPIDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('4')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorNEFTDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->wherePaymentType('5')->with('getPatients')->orderBy('id', 'DESC');
+                $indoorDebit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
 
                 if($fromdate || $todate) {
                     $indoor = $indoor->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
@@ -778,6 +777,8 @@ class ReportController extends AdminController
                         $query->where('payment_mode', $paymentType);
                     });
                 });
+                $pediatric_indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric',1)->whereCaseTypeAndChargeType('Credit', 4)->where('payment_type',$paymentType)->with('getPatients')->orderBy('id', 'DESC');
+
 
                 //medicare Total income and expense
                 $category = $this->ExpenseCategory->where('is_medicare',1)->whereType('1')->whereStatus('1')->pluck('id','id');
@@ -812,6 +813,7 @@ class ReportController extends AdminController
                         $query->where('payment_mode', $paymentType);
                     });
                 });
+                $medicare_indoorCaseDeposit = $this->IndoorDeposit->where('is_medicare',1)->whereCaseTypeAndChargeType('Credit', 4)->where('payment_type',$paymentType)->with('getPatients')->orderBy('id', 'DESC');
 
                 if($fromdate || $todate){
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
@@ -821,19 +823,21 @@ class ReportController extends AdminController
                     $pediatric_income = $pediatric_income->whereBetween('date', [$fromdate, $todate]);
                     $pediatric_expense = $pediatric_expense->whereBetween('date', [$fromdate, $todate]);
                     $pediatric_indoorBook = $pediatric_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $pediatric_indoorCaseDeposit = $pediatric_indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     //medicare Total income and expense
                     $medicare_income = $medicare_income->whereBetween('date', [$fromdate, $todate]);
                     $medicare_expense = $medicare_expense->whereBetween('date', [$fromdate, $todate]);
                     $medicare_indoorBook = $medicare_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $medicare_indoorCaseDeposit = $medicare_indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                 }
                 // $usgGrandTotal = $usg->sum('usg');
                 $incomeGrandTotal = $income->sum('amount');
                 $expenseGrandTotal = $expense->sum('amount');
 
-                $pediatric_income = $pediatric_income->sum('amount') + $pediatric_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $pediatric_income = $pediatric_income->sum('amount') + $pediatric_indoorBook->get()->sum('getInvoice.grand_total_amt')+$pediatric_indoorCaseDeposit->sum('amount');
                 $pediatric_expense = $pediatric_expense->sum('amount');
 
-                $medicare_income = $medicare_income->sum('amount') + $medicare_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $medicare_income = $medicare_income->sum('amount') + $medicare_indoorBook->get()->sum('getInvoice.grand_total_amt')+$medicare_indoorCaseDeposit->sum('amount');
                 $medicare_expense = $medicare_expense->sum('amount');
 
                 if($request->isprint==1){
@@ -1646,11 +1650,11 @@ class ReportController extends AdminController
                     $q->where('usg', '!=', null);
                 })->orderBy('id', 'desc');
                 // Hormon
-                $hormon = $this->IndoorDeposit->where([['charge_type', '=', 1],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
+                $hormon = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 1],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
                 // IUI
-                $iui = $this->IndoorDeposit->where([['charge_type', '=', 3],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
+                $iui = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 3],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
                 // IVF
-                $ivf = $this->IndoorDeposit->where([['charge_type', '=', 2],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
+                $ivf = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->where([['charge_type', '=', 2],['case_type', '=', 'Credit']])->orderBy('id', 'desc');
                 // Main Collection Data Card
                 $mainDataCash = $this->Appointment
                     ->whereHas('getAppointmentCharges', function($query) {$query->where([
@@ -1693,8 +1697,8 @@ class ReportController extends AdminController
                     ->orderBy('id', 'DESC');
 
 
-                $indoorCaseDeposit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
-                $indoorDebit = $this->IndoorDeposit->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                $indoorDebit = $this->IndoorDeposit->where('is_pediatric','!=',1)->where('is_medicare','!=',1)->whereCaseTypeAndChargeType('Debit', 4)->with('getPatients')->orderBy('id', 'DESC');
 
                 if($fromdate || $todate) {
                     $indoor = $indoor->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
@@ -1724,6 +1728,7 @@ class ReportController extends AdminController
                 $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->whereStatus('1')->pluck('id','id');
                 $pediatric_expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 $pediatric_indoorBook = $this->IndoorBook->with('getInvoice')->where('is_pediatric_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date');
+                $pediatric_indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
 
                 //medicare Total income and expense
                 $category = $this->ExpenseCategory->where('is_medicare',1)->whereType('1')->whereStatus('1')->pluck('id','id');
@@ -1731,6 +1736,7 @@ class ReportController extends AdminController
                 $expenseCategory = $this->ExpenseCategory->where('is_medicare',1)->whereType('2')->whereStatus('1')->pluck('id','id');
                 $medicare_expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 $medicare_indoorBook = $this->IndoorBook->with('getInvoice')->where('is_medicare_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date');
+                $medicare_indoorCaseDeposit = $this->IndoorDeposit->where('is_medicare',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
 
                 if($fromdate || $todate){
                     $expense = $expense->whereBetween('date', [$fromdate, $todate]);
@@ -1740,20 +1746,22 @@ class ReportController extends AdminController
                     $pediatric_income = $pediatric_income->whereBetween('date', [$fromdate, $todate]);
                     $pediatric_expense = $pediatric_expense->whereBetween('date', [$fromdate, $todate]);
                     $pediatric_indoorBook = $pediatric_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $pediatric_indoorCaseDeposit = $pediatric_indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     //medicare Total income and expense
                     $medicare_income = $medicare_income->whereBetween('date', [$fromdate, $todate]);
                     $medicare_expense = $medicare_expense->whereBetween('date', [$fromdate, $todate]);
                     $medicare_indoorBook = $medicare_indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $medicare_indoorCaseDeposit = $medicare_indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     
                 }
                 // $usgGrandTotal = $usg->sum('usg');
                 $incomeGrandTotal = $income->sum('amount');
                 $expenseGrandTotal = $expense->sum('amount');
 
-                $pediatric_income = $pediatric_income->sum('amount') + $pediatric_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $pediatric_income = $pediatric_income->sum('amount') + $pediatric_indoorBook->get()->sum('getInvoice.grand_total_amt') + $pediatric_indoorCaseDeposit->sum('amount');
                 $pediatric_expense = $pediatric_expense->sum('amount');
 
-                $medicare_income = $medicare_income->sum('amount') + $medicare_indoorBook->get()->sum('getInvoice.grand_total_amt');
+                $medicare_income = $medicare_income->sum('amount') + $medicare_indoorBook->get()->sum('getInvoice.grand_total_amt') + $medicare_indoorCaseDeposit->sum('amount');
                 $medicare_expense = $medicare_expense->sum('amount');
 
                 if($request->isprint==1){
@@ -1862,8 +1870,11 @@ class ReportController extends AdminController
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 //ipd
                 $indoorBook = $this->IndoorBook->with('getInvoice')->where('is_pediatric_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date')->orderBy('id','DESC');
+                $indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                
                 if(!empty($paymentType) || $paymentType != 0)
                 {
+                    $indoorCaseDeposit = $indoorCaseDeposit->where('payment_type',$paymentType);
                     $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
                     $incomePaymentType = $paymentMethodValueData[$paymentType];
                     $income = $this->IncomeManager->whereIn('income_category',$category)->where('payment_method',$incomePaymentType)->select("*",
@@ -1902,6 +1913,8 @@ class ReportController extends AdminController
                     $expense = $expense->whereBetween('date', [$fromdate, $todate]);
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
                     $indoorBook = $indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCaseDeposit = $indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    
                 }
                 $income = collect($income->get())->map(function ($query){
                     $query->income_category = $query->getExpenseCategory['name'];
@@ -1924,14 +1937,24 @@ class ReportController extends AdminController
                         $query->date = $query->final_invoice_date;
                         return $query;
                     });
+                $indoorCaseDeposit = collect($indoorCaseDeposit->get())
+                    ->map(function ($query) {
+                        $procedureName = implode(', ', $this->IndoorProcedure
+                            ->whereIn('id', explode(',', $query->procedure_id))
+                            ->pluck('name')
+                            ->toArray());
+                        $query->procedure_name = $procedureName;
+                        // $query->date = $query->final_invoice_date;
+                        return $query;
+                    });
                 if($request->isprint == 1)
                 {
                     $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook'))->render();
+                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
                     return $data;
                 }
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook'))->render();
+                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
                 return $data;
             }
             return view('admin.report.pediatric.index');
@@ -2004,8 +2027,11 @@ class ReportController extends AdminController
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 //ipd
                 $indoorBook = $this->IndoorBook->with('getInvoice')->where('is_medicare_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date')->orderBy('id','DESC');
+                $indoorCaseDeposit = $this->IndoorDeposit->where('is_medicare',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
+                
                 if(!empty($paymentType) || $paymentType != 0)
                 {
+                    $indoorCaseDeposit = $indoorCaseDeposit->where('payment_type',$paymentType);
                     $paymentMethodValueData = [1=>2,2=>1,3=>3,4=>4,5=>5];
                     $incomePaymentType = $paymentMethodValueData[$paymentType];
                     $income = $this->IncomeManager->whereIn('income_category',$category)->where('payment_method',$incomePaymentType)->select("*",
@@ -2044,6 +2070,7 @@ class ReportController extends AdminController
                     $expense = $expense->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $income = $income->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $indoorBook = $indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
+                    $indoorCaseDeposit = $indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                 }
                 $income = collect($income->get())->map(function ($query){
                     $query->income_category = $query->getExpenseCategory['name'];
@@ -2066,14 +2093,24 @@ class ReportController extends AdminController
                         $query->date = $query->final_invoice_date;
                         return $query;
                     });
+                    $indoorCaseDeposit = collect($indoorCaseDeposit->get())
+                    ->map(function ($query) {
+                        $procedureName = implode(', ', $this->IndoorProcedure
+                            ->whereIn('id', explode(',', $query->procedure_id))
+                            ->pluck('name')
+                            ->toArray());
+                        $query->procedure_name = $procedureName;
+                        // $query->date = $query->final_invoice_date;
+                        return $query;
+                    });
                 if($request->isprint == 1)
                 {
                     $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.medicare.preview',compact('income','expense','indoorBook'))->render();
+                    $data['report_data'] = View::make('admin.report.medicare.preview',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
                     return $data;
                 }
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.medicare.data',compact('income','expense','indoorBook'))->render();
+                $data['report_data'] = View::make('admin.report.medicare.data',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
                 return $data;
             }
             return view('admin.report.medicare.index');

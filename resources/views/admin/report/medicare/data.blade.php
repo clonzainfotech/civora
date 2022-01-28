@@ -4,6 +4,7 @@
             <th>Sr No</th>
             <th>Date</th>
             <th>Patient</th>
+            <th>Category</th>
             <th>Given For</th>
             <th>Note</th>
             <th>Created By</th>
@@ -19,11 +20,11 @@
     ?>
     <tbody>
         <tr>
-            <td colspan="5"  class="sub-headline">OPD Income</td>
+            <td colspan="8"  class="sub-headline">OPD Income</td>
         </tr>
         @forelse($income as $rowlist => $data)
             <tr class="refdocdata">
-                <td colspan="8" class="sub-headline">{{ ucWords(strtolower($rowlist))}}</td>
+                <td colspan="9" class="sub-headline">{{ ucWords(strtolower($rowlist))}}</td>
             </tr>
             @php
                 $total = 0;
@@ -33,6 +34,7 @@
                         <td>{{$j}}</td>
                         <td>{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
                         <td>{{ucWords(strtolower($row->getPatient['name']))}}</td>
+                        <td></td>
                         <td>{{$row->given_by}}</td>
                         <td>{{$row->note}}</td>
                         <td>{{$row->getUser['name']}}</td>
@@ -48,21 +50,38 @@
                 $i++;
             @endphp
             <tr>
-                <td colspan="6"></td>
+                <td colspan="8"></td>
                 <td class="sub-headline upper-border">{{$total}}</td>
 
             </tr>
         @empty
-            <td colspan="7" class="text-center">No records available</td>
+            <td colspan="8" class="text-center">No records available</td>
         @endforelse
         <tr>
-            <td colspan="5"  class="sub-headline">IPD Income</td>
+            <td colspan="8"  class="sub-headline">IPD Income</td>
         </tr>
+        @foreach($indoorCaseDeposit as $rowList => $data)
+            <tr>
+                <td>{{$j}}</td>
+                <td>{{\Carbon\Carbon::parse($data->created_at)->format('d-m-Y')}}</td>
+                <td>{{ucWords(strtolower($data->getPatientsDetails['name']))}}</td>
+                <td>{{$data->procedure_name}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{$data->amount}}</td>
+            </tr>
+            @php
+                $j++;
+                $totalIpd += $data->amount;
+            @endphp
+        @endforeach
         @forelse($indoorBook as $rowlist => $data)
             <tr>
                 <td>{{$j}}</td>
                 <td>{{\Carbon\Carbon::parse($data->date)->format('d-m-Y')}}</td>
                 <td>{{ucWords(strtolower($data->getPatientsDetails['name']))}}</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -73,11 +92,11 @@
                 $totalIpd += $data->getInvoice['grand_total_amt'];
             @endphp
         @empty
-            <td colspan="7" class="text-center">No records available</td>
+            <td colspan="8" class="text-center">No records available</td>
 
         @endforelse
         <tr>
-            <td colspan="6"></td>
+            <td colspan="7"></td>
             <td class="sub-headline upper-border">{{$totalIpd}}</td>
         </tr>
     </tbody>
@@ -129,11 +148,11 @@
                 $i++;
             @endphp
             <tr>
-                <td colspan="6"></td>
+                <td colspan="7"></td>
                 <td class="sub-headline upper-border">{{$total}}</td>
             </tr>
         @empty
-            <td colspan="7" class="text-center">No records available</td>
+            <td colspan="8" class="text-center">No records available</td>
         @endforelse
     </tbody>
 </table>

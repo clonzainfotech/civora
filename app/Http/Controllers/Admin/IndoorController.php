@@ -1318,7 +1318,8 @@ class IndoorController extends AdminController
                         'deposite' => $deposite,
                         'patientname' => $patientname,
                         'depositData' => $depositData,
-                        'procedure_id' => $procedure
+                        'procedure_id' => $procedure,
+                        'indoorBook' =>$indoorBook
                     ];
                 }
             }
@@ -1352,6 +1353,7 @@ class IndoorController extends AdminController
                 ]);
             }
             $lastTotal = $this->IndoorDeposit->wherePatientIdAndChargeType($id, 4)->orderBy('id', 'DESC')->value('total');
+            $indoorBook = $this->IndoorBook->wherePatientIdAndProcedureId($id,$request->procedure_id)->orderBy('id', 'DESC')->first();
             if ($lastTotal != null && $request->current_deposit != $lastTotal) {
 
                 return response()->json([
@@ -1419,11 +1421,14 @@ class IndoorController extends AdminController
                     $deposit->total = $totalAmount;
                     $deposit->payment_type = $request->payment_type;
                     $deposit->case_type = $caseType;
+                    $deposit->is_pediatric = !empty($indoorBook) && !empty($indoorBook->is_pediatric_patients) ? $indoorBook->is_pediatric_patients : 0;
+                    $deposit->is_medicare = !empty($indoorBook) && !empty($indoorBook->is_pediatric_patients) ? $indoorBook->is_medicare_patients : 0;
                     $deposit->save();
                     $patientDepositData = $deposit;
                 }
                 $patientDepositData = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($id, 4)->orderBy('id','DESC')->first();
             }else{
+
                 $patientDepositData = $this->IndoorDeposit;
                 $patientDepositData->patient_id = $id;
                 $patientDepositData->amount = $request->deposit_amount;
@@ -1437,6 +1442,8 @@ class IndoorController extends AdminController
                 $patientDepositData->charge_type = 4;
                 $patientDepositData->procedure_id = $request->procedure_id;
                 $patientDepositData->comment = $request->comment;
+                $patientDepositData->is_pediatric = !empty($indoorBook) && !empty($indoorBook->is_pediatric_patients) ? $indoorBook->is_pediatric_patients : 0;
+                $patientDepositData->is_medicare = !empty($indoorBook) && !empty($indoorBook->is_pediatric_patients) ? $indoorBook->is_medicare_patients : 0;
                 $patientDepositData->payment_type = $request->payment_type;
             }
 
@@ -1469,6 +1476,7 @@ class IndoorController extends AdminController
             ]);
 
         }catch(Exception $e){
+            log::Debug($e);
            abort(500);
         }
     }
@@ -2090,13 +2098,4 @@ class IndoorController extends AdminController
         }
     }
 
-    /**
-    * Upload Birth Certificate
-    * @param  \Illuminate\Http\Request $id
-    * @return \Illuminate\Http\Response
-    */
-    public function uploadBirthCertificate(Request $request)
-    {
-        dd($request);
-    }
 }

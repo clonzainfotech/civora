@@ -301,9 +301,9 @@ class IUIController extends AdminController
                     $iui->husband_factor = json_encode($request->h_factor);
                     $iui->o_e = json_encode($request->oe);
                     $iui->o_h = json_encode($request->oh);
-                    if($iuiStatus == 1){
+                    // if($iuiStatus == 1){
                         $iui->plan_management = json_encode($request->plan_of_management);
-                    }
+                    // }
                     $iui->possible_case_of_infertility = json_encode($request->possible_case_of_infertility);
                 }
                 if($ancStatus == 1){

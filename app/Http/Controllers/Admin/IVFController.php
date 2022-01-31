@@ -293,7 +293,7 @@ class IVFController extends AdminController
     */
     public function store(Request $request){
         try{
-
+            // dd($request);
             $isProcudure = 0;
             $appointmentTime = null;
             if($request->appointment_time){
@@ -477,9 +477,9 @@ class IVFController extends AdminController
                     $ivf->investigation = json_encode($investigationData);
                     $ivf->husband_factor = json_encode($request->h_factor);
                     $ivf->o_e = json_encode($request->oe);
-                    if($ivfStatus == 1){
+                    // if($ivfStatus == 1){
                         $ivf->plan_management = json_encode($request->plan_of_management);
-                    }
+                    // }
                     $ivf->possible_case_of_infertility = json_encode($request->possible_case_of_infertility);
                 }
                 if($iuiStatus == 1){

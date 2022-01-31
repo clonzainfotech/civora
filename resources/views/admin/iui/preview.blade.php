@@ -1456,6 +1456,15 @@
                                     </td>
                                 </tr>
                                 @if (isset($planManagement->plan_of_management_data))
+                                    {{-- for converting IUI to IVF --}}
+                                    @if (in_array('ivf', $planManagement->plan_of_management_data))
+                                        <tr>
+                                            <th>
+                                                <span class="ivf-label"> IVF</span>
+                                                {{!empty($planManagement->ivf_details) && !empty($planManagement->is_print) ? $planManagement->ivf_details : '-' }}
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (in_array('counceling', $planManagement->plan_of_management_data))
                                         <tr>
                                             <th>
@@ -1561,20 +1570,30 @@
                                                 {{ !empty($planManagement->ivf_details) ? $planManagement->ivf_details : '-' }}
                                             </td>
                                             @if (!empty($planManagement->ivf_data))
+                                            @php
+                                                $ivfData = [];
+                                            @endphp
                                                 <td >
                                                     @foreach($planManagement->ivf_data as $key => $value)
                                                         @switch($value)
                                                             @case('1')
-                                                                Self <br />
+                                                                @php
+                                                                    $ivfData[] = 'SELF';
+                                                                @endphp
                                                                 @break
                                                             @case('2')
-                                                                OD <br />
+                                                                @php
+                                                                    $ivfData[] = 'OD';
+                                                                @endphp
                                                                 @break
                                                             @case('3')
-                                                                ED <br />
+                                                                @php
+                                                                    $ivfData[] = 'ED';
+                                                                @endphp
                                                             @break
                                                         @endswitch
                                                     @endforeach
+                                                    {{implode(',',$ivfData)}}
                                                 </td>
                                             @endif
                                         </tr>
@@ -1619,6 +1638,30 @@
                                             </td>
                                         </tr>
                                     @endif
+                                @endif
+                                {{-- for converting IUI to IVF --}}
+                                @if(isset($planManagement->plan) && !empty($planManagement->plan))
+                                    <tr>
+                                        <th>
+                                            <span class="ivf-label"> Plan</span>
+                                            @if (isset($planManagement->plan) && !empty($planManagement->plan))
+                                                @switch($planManagement->plan)
+                                                    @case('1')
+                                                        IVF Self
+                                                        @break
+                                                    @case('2')
+                                                        FET Self
+                                                        @break
+                                                    @case('3')
+                                                        FET-OD
+                                                        @break
+                                                    @case('4')
+                                                        FET-ED
+                                                        @break
+                                                @endswitch
+                                            @endif
+                                        </th>
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>

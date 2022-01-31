@@ -954,7 +954,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @endif
                                 </tr>
                             @endif
-                            @if($hoRx->ivf->status == 'yes')
+                            @if($hoRx->ivf->status == 'yes' && isset($hoRx->ivf->status))
                                 <tr>
                                     @if(isset($hoRx->ivf->status) && ($hoRx->ivf->status == 'yes') && isset($hoRx->ivf->how_much_no) && $hoRx->ivf->how_much_no > 0)
                                         <tr>

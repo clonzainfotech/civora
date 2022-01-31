@@ -1042,9 +1042,10 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
             </div>
         </div>
         <div class="col-md-4">
-            <script src="http://127.0.0.1/ycandorivf/public/js/record/recorder.js"></script>
-            <script src="http://127.0.0.1/ycandorivf/public/js/record/Fr.voice.js"></script>
-            <script src="http://127.0.0.1/ycandorivf/public/js/record/recordapp.js"></script>
+            <input type="hidden" id="saverecordname" value="{{\Carbon\Carbon::now()->format('d-m-Y').", ".ucwords($ancPatients->name).""}}">
+            <script src="{{asset('public/js/record/recorder.js')}}" defer></script>
+            <script src="{{asset('public/js/record/Fr.voice.js')}}" defer></script>
+            <script src="{{asset('public/js/record/recordapp.js')}}" defer></script>
             <a class="btn btn-danger btn-sm text-white" id="record" data-action="start">Start Recording</a>
             <input type="hidden" id="saverecurl" value="{{URL::to("saverec")}}">
         </div>

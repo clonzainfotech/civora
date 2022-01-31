@@ -36,7 +36,7 @@ class AppointmentController extends ApiController
             if(!empty($patientData)){
                 $patientId = $patientData->patients_id;
                 $patients = $this->OpdPatients->find($patientId);
-                $appointmentData = $this->Appointment::select('id','date','created_by','is_done','category_id','appontment_request_id','arrival_time','is_procedure',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
+                $appointmentData = $this->Appointment::select('id','date','time','created_by','is_done','category_id','appontment_request_id','arrival_time','is_procedure',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                                         ->where('patients_id', $patientId)
                                         ->orderBy('date','desc')
                                         ->get();
@@ -85,6 +85,7 @@ class AppointmentController extends ApiController
                             $status = $book == 0 ? 'Pending' : 'Rejected';
                             $value->reason = $value->remark;
                             $value->oldDate = $oldDate;
+                            $value->time = \Carbon\Carbon::parse($value->time)->format('g:i A');
                             if($value->created_by){
                                 // if (strtotime($value->date) < strtotime($currentDate) && $value->is_done == 0) {
                                 //     $status = "Nsot Visited";

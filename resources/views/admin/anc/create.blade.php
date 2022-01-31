@@ -33,6 +33,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                         }
                     @endphp
                     <h2><strong class="text-secondary">{{ucwords($ancPatients->name)}}</strong>{{' care of '.$careof}}</h2>
+                    <input type="hidden" id="saverecordname" value="{{\Carbon\Carbon::now()->format('d-m-Y').", ".ucwords($ancPatients->name).", ".$ancPatients->mobile_number}}">
                 </div>
             </div>
         </div>
@@ -101,6 +102,14 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                     <div class="form-group">
                                         {{Form::select('rmo_doctor',$rmoDoctor,'',['class'=>'form-control select-padding-0','placeholder'=>'Select RMO Doctor'])}}
                                     </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="hidden" id="saverecordname" value="{{\Carbon\Carbon::now()->format('d-m-Y').", ".ucwords($ancPatients->name).""}}">
+                                    <script src="{{asset('public/js/record/recorder.js')}}" defer></script>
+                                    <script src="{{asset('public/js/record/Fr.voice.js')}}" defer></script>
+                                    <script src="{{asset('public/js/record/recordapp.js')}}" defer></script>
+                                    <a class="btn btn-danger btn-sm text-white" id="record" data-action="start">Start Recording</a>
+                                    <input type="hidden" id="saverecurl" value="{{URL::to("saverec")}}">
                                 </div>
                             </div>
 

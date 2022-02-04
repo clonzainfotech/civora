@@ -85,7 +85,7 @@ class AppointmentController extends ApiController
                             $status = $book == 0 ? 'Pending' : 'Rejected';
                             $value->reason = $value->remark;
                             $value->oldDate = $oldDate;
-                            $value->time = \Carbon\Carbon::parse($value->time)->format('g:i A');
+                            $value->time = \Carbon\Carbon::parse($value->time)->format('g:i').' '.(strtotime(\Carbon\Carbon::parse($value->time)->format('g:i')) > strtotime('9:00') &&   strtotime(\Carbon\Carbon::parse($value->time)->format('g:i')) < strtotime('12:00') ? 'AM' : 'PM');
                             if($value->created_by){
                                 // if (strtotime($value->date) < strtotime($currentDate) && $value->is_done == 0) {
                                 //     $status = "Nsot Visited";
@@ -684,7 +684,8 @@ class AppointmentController extends ApiController
                             $this->AppointmentRequest
                                 ->find($lastAppointment->id)
                                 ->update([
-                                    'appointment_date' => $request->date
+                                    'appointment_date' => $request->date,
+                                    'appointment_time' => $request->time,
                                 ]);
                             $msg = "Your appointment is in pending";
                         }

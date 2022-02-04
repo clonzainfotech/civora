@@ -17,4 +17,7 @@ class IuiHistory extends BaseModel
     public function getPatientsDetails(){
         return $this->belongsTo('App\Models\OpdPatients','patients_id');
     }
+    public function lastAppointmentData(){
+        return $this->hasOne('App\Models\Appointment','patients_id','patients_id')->orderBy('id','DESC');
+    }
 }

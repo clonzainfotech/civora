@@ -1970,33 +1970,110 @@ class ReportController extends AdminController
             if($request->ajax())
             {
                 $data = [];
-                $data['total'] = $this->OpdPatients->where(function($query) {
-                        $query->whereHas('getAppointments', function($query) {
-                            return $query->whereCategoryId(3);
-                        });
-                    })->count();
-                $data['oldinf'] = $this->OpdPatients->where(function($query) {
-                        $query->whereHas('getAppointments', function($query) {
-                            return $query->whereCategoryId(4);
-                        });
-                    })->count();
-                $data ['newinf'] = $data['total'] - $data['oldinf'];
-                $data ['drop'] = $this->IuiHistory::where('visit', '<', 4 )->where('created_at', '<', (new \Carbon\Carbon)->submonths(2))->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
-                $data ['continue'] = $data ['total'] - $data ['drop'];
+                $data_total = $this->IUI->groupBy('patients_id')->whereHas('getPatientsDetails');
+                $data_oldinf = $this->IuiHistory->groupBy('patients_id')->whereHas('getPatientsDetails');
+                // $data_drop = $this->IuiHistory::where('visit', '<', 4 )->where('created_at', '<', (new \Carbon\Carbon)->submonths(2))->groupBy('patients_id')->orderBy('id','DESC')->pluck('patients_id','patients_id')->toArray();
+                $data_drop = $this->Appointment->whereHas('getPatientsDetails')->whereIn('category_id',[3,4])->where('date', '<', (new \Carbon\Carbon)->submonths(1))->groupBy('patients_id')->orderBy('id','DESC');
                 $clomiphene = "Clomiphene Citrate";
-                $data ['cc'] = $this->IuiHistory::where('visit', 2 )->where('description','like', '%'.$clomiphene.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $data_cc = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails')->where('description','like', '%'.$clomiphene.'%')->groupBy('patients_id')->orderBy('id','DESC');
                 $ltz= "ltz";
-                $data ['ltz'] = $this->IuiHistory::where('visit', 2 )->where('description','like', '%'.$ltz.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $data_ltz = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails')->where('description','like', '%'.$ltz.'%')->groupBy('patients_id')->orderBy('id','DESC');
                 $consive = "consive";
-                $data ['consive'] = $this->IuiHistory::where('visit', 4 )->where('description','like', '%'.$consive.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
+                $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description','like', '%'.$consive.'%')->groupBy('patients_id')->orderBy('id','DESC');
                 $fail = "fail";
-                $data ['fail'] = $this->IuiHistory::where('visit', 4 )->where('description','like', '%'.$fail.'%')->groupBy('patients_id')->orderBy('id','DESC')->get()->count();
-
-                $data['patients'] = $this->OpdPatients->where(function($query) {
-                    $query->whereHas('getAppointments', function($query) {
-                        return $query->where('category_id',4);
+                $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description','like', '%'.$fail.'%')->groupBy('patients_id')->orderBy('id','DESC');
+                $data_skip = $this->IuiHistory->whereHas('getPatientsDetails')->where('description->skip_cycle','yes')->where(function($query){
+                    $query->whereHas('lastAppointmentData', function($query) {
+                        return $query->whereCategoryId(4);
                     });
-                })->get();
+                })->groupBy('patients_id')->orderBy('id','DESC');
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate){
+                    $fromdate = $fromdate;
+                    $todate = $todate;
+                    // $injManager = $injManager->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_total = $data_total->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_oldinf = $data_oldinf->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
+                    $data_cc = $data_cc->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_ltz = $data_ltz->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_fail = $data_fail->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                }
+                $data_total = $data_total->pluck('patients_id','patients_id')->toArray();
+                $data_oldinf = $data_oldinf->pluck('patients_id','patients_id')->toArray();
+                $data_drop = $data_drop->pluck('patients_id','patients_id')->toArray();
+                $data_cc = $data_cc->get()->pluck('patients_id','patients_id')->toArray();
+                $data_ltz = $data_ltz->pluck('patients_id','patients_id')->toArray();
+                $data_consive = $data_consive->get()->pluck('patients_id','patients_id')->toArray();
+                $data_fail = $data_fail->pluck('patients_id','patients_id')->toArray();
+                $data_skip = $data_skip->pluck('patients_id','patients_id')->toArray();
+                
+                $data['total'] = count($data_total);
+                $data['oldinf'] = count($data_oldinf);
+                $data ['newinf'] = ($data['total'] - $data['oldinf']) > 0 ? $data['total'] - $data['oldinf'] : 0;
+                $data ['drop'] = count($data_drop);
+                $data ['continue'] = ($data['total'] - $data['drop']) > 0 ? $data['total'] - $data['drop'] : 0;
+                $data ['cc'] = count($data_cc);
+                $data ['ltz'] = count($data_ltz);
+                $data ['consive'] = count($data_consive);
+                $data ['fail'] = count($data_fail);
+                $data ['skip'] = count($data_skip);
+                $patients = $this->OpdPatients;
+                
+                $key = $request->key;
+                if($key == 'total')
+                {
+                    $patients = $patients->whereIn('id',$data_total);
+                }
+                if($key == 'new-inf')
+                {
+                    $new_inf_ids = array_diff($data_total,$data_oldinf);
+                    $patients = $patients->whereIn('id',$new_inf_ids);
+                }
+                if($key == 'old-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_oldinf);
+                }
+                if($key == 'continue-inf')
+                {
+                    $continue_ids = ($data['total'] - $data['drop']) > 0 ? array_diff($data_total,$data_drop) : [];
+                    $patients = $patients->whereIn('id',$continue_ids);
+                }
+                if($key == 'drop-inf')
+                {
+                    // $continue_ids = array_diff($data_total,$data_drop);
+                    $patients = $patients->whereIn('id',$data_drop);
+                }
+                if($key == 'cc-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_cc);
+                }
+                if($key == 'ltz-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_ltz);
+                }
+                if($key == 'consive-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_consive);
+                }
+                if($key == 'fail-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_fail);
+                }
+                if($key == 'skip-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_skip);
+                }
+                if(!empty($request->search))
+                {
+                    $search = $request->search;
+                    $patients = $patients->where('name','LIKE',$search.'%')->orWhere('mobile_number','LIKE',$search.'%');
+                }
+                
+                $data['patients'] = $patients->get();
                 $data['status'] = 1;
                 $data['report_data'] = View::make('admin.report.analysis.data',compact('data'))->render();
                 return $data;

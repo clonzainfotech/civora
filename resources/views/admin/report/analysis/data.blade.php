@@ -1,7 +1,7 @@
 
 <div class="row m-0 clearfix dashboard">
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='total'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='new-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='old-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='continue-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='drop-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -61,7 +61,19 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='skip-inf'>
+            <div class="body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-muted">Skip</p>
+                        <h4 class="number mt-0 mb-0">{{ $data['skip'] }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card iui-box" data-key='cc-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -73,7 +85,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='ltz-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -85,7 +97,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='consive-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -97,7 +109,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card">
+        <div class="card iui-box" data-key='fail-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -109,36 +121,41 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <input type="text" name="" class="form-control mb-3" value="" id="myInput" placeholder="Search by name and mobile">
-    </div>
-</div>
+
 <table class="table" id="myTable">
     <thead>
         <tr>
-            <th>
-                No
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Mobile
-            </th>
+            <th>No</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-    @foreach($data['patients'] as $index => $patient)
+        <td class="reportdata-loader" colspan="3">
+            <div class="row">
+                <div class="page-loader-wrapper medicine-loader report-loader">
+                    <div class="loader">
+                        <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    @forelse($data['patients'] as $index => $patient)
         <tr>
             <td>{{$index+1}}</td>
-            <td>{{$patient->name}}</td>
-            <td> {{$patient->mobile_number}}</td>
+            <td>{{$patient->code}}</td>
+            <td>{{ucWords($patient->name)}}</td>
+            <td>{{$patient->mobile_number}}</td>
+            <td><a href="{{URL::to('patient-history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary">View History</a></td>
         </tr>
-    @endforeach
+     @empty
+        <td colspan='4' class="text-center reportdata">No records available</td>
+        @endforelse
     </tbody>
 </table>
-<script>
+{{-- <script>
     $(document).ready(function(){
         $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -147,4 +164,4 @@
             });
         });
     });
-</script>
+</script> --}}

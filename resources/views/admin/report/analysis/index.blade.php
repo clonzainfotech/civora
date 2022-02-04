@@ -4,6 +4,13 @@
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <style>
+    .box-border
+    {
+        border: 2px solid #1e5f63 !important;
+    }
+    </style>
+
 @stop
 @section('content')
     <div class="row clearfix report">
@@ -15,30 +22,31 @@
                 <div class="body">
                     <!-- Nav tabs -->
                     <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-12">
-{{--                                    <div class="form-group daterange">--}}
-{{--                                        {{ Form::text('daterange', '',  [--}}
-{{--                                            'id' => 'daterange',--}}
-{{--                                            'class' => 'form-control',--}}
-{{--                                            'placeholder' => 'Select Date',--}}
-{{--                                            'data-date-container' => '#myModalId',--}}
-{{--                                            'data-provide'=> 'datepicker',--}}
-{{--                                            'autocomplete'=>'off'--}}
-{{--                                        ]) }}--}}
-{{--                                    </div>--}}
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="form-group daterange">
+                                    <form method="post" autocomplete="off" action="">
+                                    {{ Form::text('daterange', '',  [
+                                        'id' => 'daterange',
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Select Date',
+                                        'data-date-container' => '#myModalId',
+                                        'data-provide'=> 'datepicker',
+                                        'autocomplete'=>'off'
+                                    ]) }}
+                                    </form>
                                 </div>
-
                             </div>
+                            <div class="col-md-3">
+                                <form method="post" autocomplete="off" action="">
+                                    <input type="text" name="" class="form-control mb-3" value="" id="myInput" placeholder="Search by name and mobile">
+                                </form>
+                            </div>
+                        </div>
                         </div>
                     <div class="tab-content m-t-10">
-                        <div class="row">
-                            <div class="page-loader-wrapper medicine-loader report-loader">
-                                <div class="loader">
-                                    <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
-                                </div>
-                            </div>
-                        </div>
+                        
+                        
                         <div class="analysis-report-data table-responsive active">
                             <!-- table data here include -->
                         </div>
@@ -53,13 +61,23 @@
         var page = '';
         var fromdate = moment(new Date()).format('YYYY-MM-DD');
         var todate = moment(new Date()).format('YYYY-MM-DD');
-
-        var qstring = '?fromdate=' + fromdate + '&todate=' + todate;
+        var search = '';
+        var key = 'total';
+        var currentTime = new Date();
+        // First Date Of the month 
+        var startDateFrom = new Date(currentTime.getFullYear(),currentTime.getMonth(),1);
+        // Last Date Of the Month 
+        var startDateTo = new Date();
+        var currentData = 'total';
+        var qstring = '?fromdate=' + fromdate + '&todate=' + todate + '&search='+search+ '&key='+key;
 
         $(document).ready(function () {
 
             $('input[name="daterange"]').daterangepicker({
+                startDate: startDateFrom,
+                endDate: startDateTo,
                 locale: {
+                    
                     direction: 'drop-down-date-range',
                     cancelLabel: 'Clear',
                     format: 'D/M/Y',
@@ -70,8 +88,8 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate;
-                getPedReportData(qstring);
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+                getAnalysisData(qstring);
 
             });
             $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
@@ -81,41 +99,36 @@
                 // Destroy and rebuild daterangepicker to clear data
                 fromdate = '';
                 todate = '';
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate;
-                getPedReportData(qstring);
-
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+                getAnalysisData(qstring);
             });
-
-            getPedReportData(qstring);
+            getAnalysisData(qstring);
         });
-
-        $(document).on('click', '.print-pedia-report', function () {
-
-                    var isprint = 1;
-                    qstring = '?fromdate=' + fromdate + '&todate=' + todate;
-                    $.ajax({
-                        url: "{{URL::to('pediatric-report')}}" + qstring,
-                        data: {isprint : isprint},
-                        dataType: 'json',
-                    }).done(function (data) {
-                        w = window.open(window.location.href, "_blank");
-                        w.document.open();
-                        w.document.write(data.report_data);
-                        w.document.close();
-                        w.window.print();
-                    });
-
+        
+        $(document).on("keyup",'#myInput', function() {
+            search = $(this).val();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+            getAnalysisData(qstring)
         });
-
+        $(document).on('click','.card.iui-box',function(){
+            $('.card.iui-box').removeClass('box-border');
+            currentData = $(this).data("key");
+            key = $(this).data('key');
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+            getAnalysisData(qstring)
+            // $(this).addClass('box-border');
+        });
         // get all collection report data
-        function getPedReportData(qstring) {
-            $('.report-loader').css('display','block');
+        function getAnalysisData(qstring) {
+            $('.reportdata-loader').removeClass('d-none');
             $.ajax({
                 url: "{{URL::to('analysis-report')}}" + qstring,
                 dataType: 'json',
             }).done(function (data) {
-                $('.report-loader').css('display','none');
+                console.log(currentData);
                 $('.analysis-report-data').html(data.report_data);
+                $('.reportdata-loader').addClass('d-none');
+                $("div[data-key='" + currentData + "']").addClass("box-border");
             }).fail(function () {
 
             });

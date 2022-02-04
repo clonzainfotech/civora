@@ -38,7 +38,7 @@
                     <td>{{ ((($categoryReport->currentPage() - 1 ) * $categoryReport->perPage() ) + $loop->iteration) . '.' }}</td>
                     <td>{{ $row->getAppointment->getPatientsDetails['code']}}</td>
                     <td>{{strtoupper($row->getAppointment->getPatientsDetails['name'])}}</td>
-                    <td>{{$row->getAppointment->getPatientsDetails['mobile_number']}}</td>
+                    <td>{{$row->getAppointment->getPatientsDetails['mobile_number'].', '.$row->getAppointment->getPatientsDetails['other_mobile_number']}}</td>
                     <td>{{ucfirst($row->getAppointment->categoryDetails['name'])}}</td>
                     <td>
                         <div class="amount">

@@ -3471,8 +3471,6 @@ class IVFController extends AdminController
                         return View::make('admin.ivf.transfer_report', compact('transferReport','pt_view','printPreview'))->render();
                     }
                 }
-                
-                
             }
             if($preview <= 1)
             {
@@ -3480,13 +3478,38 @@ class IVFController extends AdminController
             }
         }
     }
-    
+    /**
+     * return Ivf Result review list
+     * 
+     */
+    public function getIvfResultReview(Request $request)
+    {
+        try
+        {
+            $patients = $this->getPatients();
+            if($request->ajax()) 
+            {
+               
+                $ivfResultReview = $this->IvfResultReview;
+                $ivfResultReview = $ivfResultReview->paginate(100);
+                $data['status'] = 1;
+                $data['data'] = View::make('admin.ivf_result_review.data',compact('ivfResultReview'))->render();
+                return $data; 
+            }  
+            
+            return view('admin.ivf_result_review.index',compact('patients'));
+        }
+        catch(Exception $e)
+        {
+            log::Debug($e);
+        }
+    }
     /**
      * return Ivf Result Review related Detail
      * @return  view
      * @param 
      */
-    public function getIvfResultReviewDetail(Request $request , $pId,$plan,$cycle_no)
+    public function getIvfResultReviewDetail(Request $request ,$pId,$plan,$cycle_no)
     {
         try
         {

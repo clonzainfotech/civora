@@ -18,7 +18,7 @@
                     <button class="btn btn-neutral candor-color btn-primary delete-html" data-id="{{encrypt($row->id)}}">Delete
                     </button>
                 </a>
-                <a href="#" class="a-color">
+                <a href="#" class="a-color" target="_blank">
                     <button class="btn btn-primary btn-neutral candor-color view-html" data-id="{{$row->slug}}">View
                     </button>
                 </a>

@@ -110,7 +110,9 @@
                 var slug = $(this).data('id');
                 if(typeof(slug) !== 'undefined'){
                     var url = 'html-page/view/'+slug;
-                    window.location.href = url;
+                    window.open(url, '_blank');
+                    // w = window.open(window.location.href, "_blank");
+                    // window.location.href = url;
                 }
             });
             $(document).on('keyup','.search',function(){

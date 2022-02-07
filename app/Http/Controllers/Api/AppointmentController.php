@@ -687,7 +687,7 @@ class AppointmentController extends ApiController
                                     'appointment_date' => $request->date,
                                     'appointment_time' => $request->time
                                 ]);
-                            $msg = "Your appointment is in pending";
+                            $msg = "Approval for appointment is pending, Sorry for inconvenience. We will reply soon.";
                         }
                         if($lastAppointment->is_book == 1) {
                             $appointment = $this->Appointment->where('date', $lastAppointment->appointment_date)->orderBy('id','DESC')->first();
@@ -704,7 +704,7 @@ class AppointmentController extends ApiController
                                         $appointmentRequest->appointment_time = $request->time;
                                         $appointmentRequest->seen_by = $request->doctor_id;
                                         $appointmentRequest->save();
-                                        $msg = "Your appointment is in pending";
+                                        $msg = "Approval for appointment is pending, Sorry for inconvenience. We will reply soon.";
                                     // }
                                 } else {
                                     $msg = "Your appointment is already aprooved";
@@ -719,7 +719,7 @@ class AppointmentController extends ApiController
                                 $appointmentRequest->appointment_time = $request->time;
                                 $appointmentRequest->seen_by = $request->doctor_id;
                                 $appointmentRequest->save();
-                                return $this->sendResponse("Your appointment is in pending");
+                                return $this->sendResponse("Approval for appointment is pending, Sorry for inconvenience. We will reply soon.");
                             // }
                         }
                         return $this->sendResponse($msg);

@@ -111,7 +111,7 @@
                                             </div>
                                             <div class="col-md-12 pr-0">
                                                 <label class="vertical-form-label pr-0">
-                                                    <b>Type Of Infertility : </b>{{!empty($o_h) && isset($o_h->type_of_infertility) && !empty($o_h->type_of_infertility) ? $typeOfData[$o_h->type_of_infertility] : 'Primary'}} / {{!empty($o_h->first_marriage_life) ? $o_h->first_marriage_life.' years' : null}} {{!empty($o_h->second_marriage_details) ? $o_h->second_marriage_details.' years' : null}}
+                                                    <b>Type Of Infertility : </b>{{!empty($o_h) && isset($o_h->type_of_infertility) && !empty($o_h->type_of_infertility) ? $typeOfData[$o_h->type_of_infertility] : 'Primary'}} / {{!empty($o_h->first_marriage_life) ? $o_h->first_marriage_life.' years' : (!empty($o_h->second_marriage_details) ? $o_h->second_marriage_details.' years' : null)}}
                                                 </label>
                                             </div>
                                             <div class="col-md-12 pr-0">

@@ -144,7 +144,7 @@
                     <td><span class="candor-color font-bold">Age : </span>{{!empty($ivfResultReview->getPatients['age']) ? $ivfResultReview->getPatients['age'].' Years' : ''}}</td>
                 </tr>
                 <tr>
-                    <td><span class="candor-color font-bold">Type Of Infertility : </span>{{!empty($o_h) && isset($o_h->type_of_infertility) && !empty($o_h->type_of_infertility) ? $typeOfData[$o_h->type_of_infertility] : 'Primary'}} / {{!empty($o_h->first_marriage_life) ? $o_h->first_marriage_life.' years' : null}} {{!empty($o_h->second_marriage_details) ? $o_h->second_marriage_details.' years' : null}}</td>
+                    <td><span class="candor-color font-bold">Type Of Infertility : </span>{{!empty($o_h) && isset($o_h->type_of_infertility) && !empty($o_h->type_of_infertility) ? $typeOfData[$o_h->type_of_infertility] : 'Primary'}} / {{!empty($o_h->first_marriage_life) ? $o_h->first_marriage_life.' years' : (!empty($o_h->second_marriage_details) ? $o_h->second_marriage_details.' years' : null)}}</td>
                 </tr>
                 <tr>
                     <td><span class="candor-color font-bold">Previous history of Abortions and reason for abortion : </span>{{!empty($total_abortion) ? 'Total '.$total_abortion.' Abortion' : ''}}  {{count($abortion_reason) > 0 ? ' / Reason : '.implode(' , ',$abortion_reason) : ''}}</td>

@@ -97,8 +97,10 @@
     function getOnlineAppointmentCount()
     {
         $now = date('Y-m-d');
-        $onlineAppointmentCount = AppointmentRequest::whereHas('getPatients')->where('is_book',0)->whereDate('appointment_date','>=',$now)->count();
-        
+        $onlineAppointmentCount = AppointmentRequest::where('is_book',0)->whereDate('appointment_date','>=',$now);
+        $onlineAppointmentCount = $onlineAppointmentCount->WhereHas('getPatients', function ($query) {
+            $query->where('is_approved', 1);
+        })->count();
         return $onlineAppointmentCount;
     }
 

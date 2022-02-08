@@ -641,7 +641,7 @@ class AppointmentController extends ApiController
     public function bookAppointment(Request $request) {
 
         $rule = [
-            'date' => 'required',
+            'date' => 'required|after_or_equal:today',
             'time' => 'required',
             'doctor_id'=>'required'
         ];

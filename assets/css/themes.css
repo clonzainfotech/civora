@@ -2933,9 +2933,15 @@ a.ui-state-default:hover, a.ui-datepicker-prev.ui-corner-all:hover ,a.ui-datepic
     color: red;
     font-weight: 900;
   }
-  
+  nav li .blink_me:hover{
+      background-color: white !important;
+      pointer-events: none !important;
+  }
   @keyframes blinker {
     50% {
       opacity: 0;
     }
   }
+  .navbar ul li:nth-child(10) a:hover {
+    background-color: transparent !important;
+}

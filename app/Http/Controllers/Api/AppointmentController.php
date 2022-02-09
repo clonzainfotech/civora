@@ -35,11 +35,11 @@ class AppointmentController extends ApiController
             $patientData = $this->PatientToken->where('token', $token)->first();
             if(!empty($patientData)){
                 $patientId = $patientData->patients_id;
-                $patients = $this->OpdPatients->where('is_approved',1)->where('id',$patientId)->first();
-                if(empty($patients))
-                {
-                    return $this->sendError('Patient is not approved');
-                }
+                $patients = $this->OpdPatients->where('id',$patientId)->first();
+                // if(empty($patients))
+                // {
+                //     return $this->sendError('Patient is not approved');
+                // }
                 $appointmentData = $this->Appointment::select('id','date','time','created_by','is_done','category_id','appontment_request_id','arrival_time','is_procedure',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                                         ->where('patients_id', $patientId)
                                         ->orderBy('date','desc')
@@ -81,8 +81,8 @@ class AppointmentController extends ApiController
                             }
                         }   
                         $utersWeek =  \Carbon\Carbon::parse(!empty($oldDate) ? $oldDate : date('Y-m-d'))->diffInWeeks(\Carbon\Carbon::parse($value->date)->format('Y-m-d')); 
-                            $value->category = $categoryData ? $lastAppointment['categoryDetails']['name'] : null; 
-                            $value->category_id = $categoryData;
+                            $value->category = !empty($lastAppointment) && $categoryData ? $lastAppointment['categoryDetails']['name'] : null; 
+                            $value->category_id = !empty($lastAppointment) ? $categoryData : null;
                             $currentDate = \Carbon\Carbon::now()->format('d-m-Y');
                             $currentTime = \Carbon\Carbon::now()->format('H:i:s');
                             $book = $value->is_book;
@@ -662,10 +662,11 @@ class AppointmentController extends ApiController
 
         if($token) {
             $patientId = $this->PatientToken->where('token', $token)->pluck('patients_id')->first();
+            $patient = $this->OpdPatients->find($patientId);
 
             $lastAppointment = $this->AppointmentRequest->where('patients_id', $patientId)->orderBy('id','DESC')->first();
 
-            if(!empty($patientId)) 
+            if(!empty($patient))  
             {
                 $absence_doctor = $this->User->where('id',$request->doctor_id)->whereRole('3')->whereStatus('1')->whereRaw("find_in_set('".\Carbon\Carbon::parse($request->date)->format('m/d/Y')."',absence_dates)")->first();
                 if($absence_doctor)
@@ -679,7 +680,7 @@ class AppointmentController extends ApiController
                 $totalappointment = $request->doctor_id == 11 ? 3 : 2; // for jaydev sir, set 3 appointment in 15 min and for shivani ma'am ,set 2 appointmment
                 if(count($checkTotalAppointment) == $totalappointment) 
                 {
-                    return $this->sendResponse('Appointmnet already booked on this time. Please Choose other sloat or change Doctor');
+                    return $this->sendResponse('Appointmnet already booked on this time. Please Choose other sloat or change Doctor' );
                 }
 
                 if ($request->date >= $currentDate || $request->time > $currentTime) {
@@ -691,7 +692,7 @@ class AppointmentController extends ApiController
                                     'appointment_date' => \Carbon\Carbon::parse($request->date)->format('Y-m-d'),
                                     'appointment_time' => $request->time
                                 ]);
-                            $msg = "Approval for appointment is pending, Sorry for inconvenience. We will reply soon.";
+                            $msg = $patient->is_approval == 1 ? "Approval for appointment is pending, Sorry for inconvenience. We will reply soon." : "Your appointment is pending. Please contact to Radha Candor IVF Hospital for Approve your Request";
                         }
                         if($lastAppointment->is_book == 1) {
                             $appointment = $this->Appointment->where('date', $lastAppointment->appointment_date)->orderBy('id','DESC')->first();
@@ -723,7 +724,7 @@ class AppointmentController extends ApiController
                                 $appointmentRequest->appointment_time = $request->time;
                                 $appointmentRequest->seen_by = $request->doctor_id;
                                 $appointmentRequest->save();
-                                return $this->sendResponse("Approval for appointment is pending, Sorry for inconvenience. We will reply soon.");
+                                return $this->sendResponse($patient->is_approval == 1 ? "Approval for appointment is pending, Sorry for inconvenience. We will reply soon." : "Your appointment is pending. Please contact to Radha Candor IVF Hospital for Approve your Request");
                             // }
                         }
                         return $this->sendResponse($msg);
@@ -734,7 +735,7 @@ class AppointmentController extends ApiController
                         $appointmentRequest->appointment_time = $request->time;
                         $appointmentRequest->seen_by = $request->doctor_id;
                         $appointmentRequest->save();
-                        return $this->sendResponse('Your requested appointment is now in pending. we will inform you after approve it');
+                        return $this->sendResponse($patient->is_approval == 1 ? 'Your requested appointment is now in pending. we will inform you after approve it' : "Your appointment is pending. Please contact to Radha Candor IVF Hospital for Approve your Request");
                     }
                 } else {
                     return $this->sendError('Please enter valid date and time');

@@ -688,7 +688,7 @@ class AppointmentController extends ApiController
                             $this->AppointmentRequest
                                 ->find($lastAppointment->id)
                                 ->update([
-                                    'appointment_date' => $request->date,
+                                    'appointment_date' => \Carbon\Carbon::parse($request->date)->format('Y-m-d'),
                                     'appointment_time' => $request->time
                                 ]);
                             $msg = "Approval for appointment is pending, Sorry for inconvenience. We will reply soon.";
@@ -704,7 +704,7 @@ class AppointmentController extends ApiController
                                     // if($appointment->is_done == 0){
                                         $appointmentRequest = $this->AppointmentRequest;
                                         $appointmentRequest->patients_id = $patientId;
-                                        $appointmentRequest->appointment_date = $request->date;
+                                        $appointmentRequest->appointment_date = \Carbon\Carbon::parse($request->date)->format('Y-m-d');
                                         $appointmentRequest->appointment_time = $request->time;
                                         $appointmentRequest->seen_by = $request->doctor_id;
                                         $appointmentRequest->save();
@@ -719,7 +719,7 @@ class AppointmentController extends ApiController
                             // if($lastAppointment->appointment_date <= $currentDate){
                                 $appointmentRequest = $this->AppointmentRequest;
                                 $appointmentRequest->patients_id = $patientId;
-                                $appointmentRequest->appointment_date = $request->date;
+                                $appointmentRequest->appointment_date = \Carbon\Carbon::parse($request->date)->format('Y-m-d');
                                 $appointmentRequest->appointment_time = $request->time;
                                 $appointmentRequest->seen_by = $request->doctor_id;
                                 $appointmentRequest->save();
@@ -730,7 +730,7 @@ class AppointmentController extends ApiController
                     } else {
                         $appointmentRequest = $this->AppointmentRequest;
                         $appointmentRequest->patients_id = $patientId;
-                        $appointmentRequest->appointment_date = $request->date;
+                        $appointmentRequest->appointment_date = \Carbon\Carbon::parse($request->date)->format('Y-m-d');
                         $appointmentRequest->appointment_time = $request->time;
                         $appointmentRequest->seen_by = $request->doctor_id;
                         $appointmentRequest->save();

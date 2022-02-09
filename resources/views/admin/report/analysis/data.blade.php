@@ -73,18 +73,18 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card iui-box" data-key='cc-inf'>
+        <div class="card" data-key='plan-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">
-                        <p class="text-muted">CC</p>
-                        <h4 class="number mt-0 mb-0">{{ $data['cc'] }}</h4>
+                        <p class="text-muted plan-type">Plan</p>
+                        <h4 class="number mt-0 mb-0">{{$data['plan_type']}}</h4>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-2">
+    {{-- <div class="col-sm-2">
         <div class="card iui-box" data-key='ltz-inf'>
             <div class="body">
                 <div class="row">
@@ -95,7 +95,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="col-sm-2">
         <div class="card iui-box" data-key='consive-inf'>
             <div class="body">

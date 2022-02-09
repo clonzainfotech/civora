@@ -42,6 +42,14 @@
                                     <input type="text" name="" class="form-control mb-3" value="" id="myInput" placeholder="Search by name and mobile">
                                 </form>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <form method="post" autocomplete="off" action="">
+                                        {{Form::select("plan_type",$planType,null,['class'=>'form-control select-padding-0 plan-type','placeholder'=>'Select Plan Type','data-live-search'=>"true"])}}
+
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         </div>
                     <div class="tab-content m-t-10">
@@ -69,7 +77,8 @@
         // Last Date Of the Month 
         var startDateTo = new Date();
         var currentData = 'total';
-        var qstring = '?fromdate=' + fromdate + '&todate=' + todate + '&search='+search+ '&key='+key;
+        var plan_type = '';
+        var qstring = '?fromdate=' + fromdate + '&todate=' + todate + '&search='+search+ '&key='+key+'&plan_type='+plan_type;
 
         $(document).ready(function () {
 
@@ -88,7 +97,7 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
                 getAnalysisData(qstring);
 
             });
@@ -99,7 +108,7 @@
                 // Destroy and rebuild daterangepicker to clear data
                 fromdate = '';
                 todate = '';
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
                 getAnalysisData(qstring);
             });
             getAnalysisData(qstring);
@@ -107,14 +116,20 @@
         
         $(document).on("keyup",'#myInput', function() {
             search = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+            getAnalysisData(qstring)
+            // $(this).addClass('box-border');
+        });
+        $(document).on('change','select.plan-type',function(){
+            plan_type = $(this).val();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type;
             getAnalysisData(qstring)
             // $(this).addClass('box-border');
         });

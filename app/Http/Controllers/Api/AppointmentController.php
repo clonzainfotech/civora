@@ -759,16 +759,9 @@ class AppointmentController extends ApiController
         $result = [];
         if($token) 
         {
-            $doctors = $this->User->whereIn('id',[11,42,62])->whereRole('3')->whereStatus('1')->get();
-            foreach($doctors as $doctor)
-            {
-                $data['doctor_id'] = $doctor->id;
-                $data['name'] = $doctor->name;
-                array_push($result,$data);
-            }
-
+            $doctors = $this->User->select('*','id as doctor_id')->whereIn('id',[11,42,62])->whereRole('3')->whereStatus('1')->get();
         }
-        return $this->sendResponse('Get Doctor list successfully',$result);
+        return $this->sendResponse('Get Doctor list successfully',$doctors);
     }
    
     /**
@@ -788,7 +781,8 @@ class AppointmentController extends ApiController
         }
         $result = [];
         $doctor = $this->User->where('role',3)->where('id',$request->doctor_id)->first();
-        $absence_doctor = $this->User->where('id',$request->doctor_id)->whereRole('3')->whereStatus('1')->whereRaw("find_in_set('".\Carbon\Carbon::parse($request->date)->format('m/d/Y')."',absence_dates)")->first();
+        // $absence_doctor = $this->User->where('id',$request->doctor_id)->whereRole('3')->whereStatus('1')->whereRaw("find_in_set('".' '.\Carbon\Carbon::parse($request->date)->format('m/d/Y')."',absence_dates)")->first();
+        $absence_doctor = $this->User->where('id',$request->doctor_id)->whereRole('3')->whereStatus('1')->where('absence_dates','like','%'.\Carbon\Carbon::parse($request->date)->format('m/d/Y').'%')->first();
         if($absence_doctor)
         {
             // return $this->sendResponse($absence_doctor->name.' is not available on '.\Carbon\Carbon::parse($request->date)->format('d M Y').'. Please Select other Date');

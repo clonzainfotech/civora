@@ -116,14 +116,14 @@
         
         $(document).on("keyup",'#myInput', function() {
             search = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
             getAnalysisData(qstring)
             // $(this).addClass('box-border');
         });

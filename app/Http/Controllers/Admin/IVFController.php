@@ -1192,6 +1192,7 @@ class IVFController extends AdminController
                     }
                 }
             }
+            $ivfFirstVisitData = $this->IVF->wherePatientsId($patientsId)->orderBy('id','DESC')->first();
             // end send sms
             if($request->isprint){
                 if($gynecStatus == 1){
@@ -1248,7 +1249,7 @@ class IVFController extends AdminController
                 return response()->json([
                     'status' => 1,
                     'id' => $ivfId,
-                    'data' => View::make('admin.ivf.preview', compact('investigationReport','ivf','ivfCycleData', 'historyData', 'isIvfHistory','isTableView','doseData','remark','transferDate','currentdate','lastAppointmentData','ivfSecondVisitData','ohData'))->render()
+                    'data' => View::make('admin.ivf.preview', compact('ivfFirstVisitData','investigationReport','ivf','ivfCycleData', 'historyData', 'isIvfHistory','isTableView','doseData','remark','transferDate','currentdate','lastAppointmentData','ivfSecondVisitData','ohData'))->render()
                 ]);
             }
             if($request->is_ivf_report_print){
@@ -2751,7 +2752,7 @@ class IVFController extends AdminController
             if($request->ajax()){
                 $patientId = decrypt($request->patient_id);
                 $lastAppointmentData = $this->Appointment->wherePatientsId($patientId)->orderBy('id','DESC')->first();
-                
+                $ivfFirstVisitData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
                 $isIvfHistory = '1';
                 $plan = $request->plan;
                 $cycleNo = $request->cycle_no;
@@ -2824,7 +2825,7 @@ class IVFController extends AdminController
                             $doseData = $this->Dose->pluck('name','name');
                         }
                         $visitNumber[] = $isIvfHistory;
-                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
+                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
                             // $viewAllVisit,$preview);
                         $dateValue[] = $visitDate;
                         $extraVisit[] = 0;
@@ -2912,7 +2913,7 @@ class IVFController extends AdminController
                                 foreach($ivfExtra as $ivfExtraVisit)
                                 {
                                     $isExtraVisit = 1; 
-                                    $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
+                                    $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
                                     $dateValue[] = $ivfExtraVisit->created_at;
                                     $extraVisit[] = 1;
                                     $encIvfId[] = null;
@@ -2934,7 +2935,7 @@ class IVFController extends AdminController
                                 foreach($ivfExtra as $ivfExtraVisit)
                                 {
                                     $isExtraVisit = 1; 
-                                    $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
+                                    $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
                                     $dateValue[] = $ivfExtraVisit->created_at;
                                     $extraVisit[] = 1;
                                     $encIvfId[] = null;
@@ -3002,7 +3003,7 @@ class IVFController extends AdminController
                             }
                             if($preview <= 1)
                             {
-                                $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfSecondVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isAppointmentView'))->render();
+                                $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isAppointmentView'))->render();
                                 // $viewAllVisit,$preview);
                                 $cycleArray[] = $ivf->cycle_no;
                                 $planArray[] = isset($planData[$ivf->plan]) ? $planData[$ivf->plan] : '';
@@ -3072,6 +3073,8 @@ class IVFController extends AdminController
                     $ivfData = $this->IVF->where('patients_id',$patientId)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$historyDate)->first();
                     $isIvfHistory = '1';
                     $ivfSecondVisitData = null;
+                    $ivfFirstVisitData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
+
                     
                     if((!$ivfData || $request->is_history == 1) && (!isset($request->is_extraVisit) || $request->is_extraVisit == 0)){
                         $cycle_no = decrypt($request->cycle_no);
@@ -3110,7 +3113,7 @@ class IVFController extends AdminController
                     $ivf = $ivfData;
                     $printPreview = 1;
                     
-                    return view('admin.ivf.preview', compact('investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData','ivfPatients','ivfExtraVisit','isExtraVisit'));
+                    return view('admin.ivf.preview', compact('ivfFirstVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData','ivfPatients','ivfExtraVisit','isExtraVisit'));
                 }
                 
             }
@@ -3426,10 +3429,12 @@ class IVFController extends AdminController
             $doseData = $this->Dose->pluck('name','name');
         }
         $ivfExtraVisit = $this->IvfExtraVisit->where('patient_id',$patientId)->where('cycle_no',$cycleNo)->where('created_at',$historyDate)->first();
+        $ivfFirstVisitData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
+
         if(!empty($ivfExtraVisit))
         {
             $isExtraVisit = 1; 
-            return View::make('admin.ivf.preview', compact('ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
+            return View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isExtraVisit','ivfExtraVisit','ivfPatients','isAppointmentView'))->render();
         }
         //ivf and ivf-history visit
         if($ivf)
@@ -3472,9 +3477,10 @@ class IVFController extends AdminController
                     }
                 }
             }
+            $ivfFirstVisitData = $this->IVF->wherePatientsId($patientId)->orderBy('id','DESC')->first();
             if($preview <= 1)
             {
-                return View::make('admin.ivf.preview', compact('ivfSecondVisitData','preview','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isAppointmentView'))->render();
+                return View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','preview','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','isAppointmentView'))->render();
             }
         }
     }

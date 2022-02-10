@@ -38,6 +38,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
     $dataa = !empty($historyData->collected) ? $historyData->collected : [];
     $plan=$ivf->plan;
     $cycle=$ivf->cycle_no;
+    if(isset($ivfFirstVisitData) && !empty($ivfFirstVisitData))
+    {
+        $ohData = !empty($ivfFirstVisitData->o_h) ? json_decode($ivfFirstVisitData->o_h) : null;
+    }
 }
     $contraceptionData = ['barrier_method'=>'Barrier Method','cu_t'=>'Cu - T','tl_done'=>'TL Done ','occipill'=>'Occipill','other_contraception'=>'Other'];
     $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
@@ -3088,7 +3092,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                     <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
-                            <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null}} {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : null}}</span>
+                            <span class="visit-lable-value">{{!empty($ohData) && !empty($ohData->second_marriage_details) ? 'Secondary' : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
                     </div>
                     <div class="">
                             <span class="visit-lable">L.M.P :- </span> 
@@ -3096,8 +3100,8 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                     <div class="">
                         <span class="visit-lable">Weight :- </span> 
-                        <span class="visit-lable-value">{{isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : ''}}</span>
-                </div>
+                        <span class="visit-lable-value">{{isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : $ivf->getPatientsDetails['weight'].' kg'}}</span>
+                    </div>
                 </div>
                 <div class="col-md-5 col-sm-5 follicular_div_2">
                     <div class="">
@@ -3596,11 +3600,11 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                     <div class="">
                             <span class="visit-lable">Age / Weight :- </span> 
-                            <span class="visit-lable-value">{{$ivf->getPatientsDetails['age'].' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : '')}}</span>
+                            <span class="visit-lable-value">{{$ivf->getPatientsDetails['age'].' Year'.' / '.(isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : $ivf->getPatientsDetails['weight'].' kg')}}</span>
                     </div>
                     <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
-                            <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null}} {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : null}}</span>
+                            <span class="visit-lable-value">{{!empty($ohData) && !empty($ohData->second_marriage_details) ? 'Secondary' : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
                     </div>
                     <div class="">
                             <span class="visit-lable">L.M.P :- </span> 

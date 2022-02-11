@@ -120,6 +120,8 @@
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
+            $('select.plan-type').val('');
+            $('.plan-type').selectpicker('refresh');
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');

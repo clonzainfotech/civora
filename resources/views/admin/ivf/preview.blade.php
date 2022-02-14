@@ -441,6 +441,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             if($isBracket == 1){
                                                 $firstAbortionData .= ')';
                                             }
+                                            if(isset($value->reason) && !empty($value->reason))
+                                            {
+                                                $firstAbortionData .= ' Due to '.$value->reason;
+                                            }
                                         @endphp
                                         <td>
                                             {{$firstAbortionData}}
@@ -677,6 +681,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 }
                                                 if($isBracket == 1){
                                                     $secondAbortionData .= ')';
+                                                }
+                                                if(isset($value->reason) && !empty($value->reason))
+                                                {
+                                                    $secondAbortionData .= ' Due to '.$value->reason;
                                                 }
                                             @endphp
                                             <td>

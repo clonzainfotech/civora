@@ -137,7 +137,7 @@
                     @endif
 
                     {{--medical--}}
-                    @if(in_array(Auth::user()->role,[1,5]))
+                    @if(in_array(Auth::user()->role,[1,3,5]))
                     <li class="{{ Request::segment('1') == 'medical' || Request::segment(1) === 'get-medicine'? 'sub active open' : null }}">
                         <a href="{{URL::to('medical')}}">
                             <span>Medical</span>

@@ -1308,7 +1308,7 @@ class IndoorController extends AdminController
             if ($patientId > 0) {
                 $procedure = $this->IndoorBook->whereId($bookingId)->orderBy('id')->value('procedure_id');
                 $indoorBook = $this->IndoorBook->whereId($bookingId)->first();
-                $deposite = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($patientId, 4)->orderBy('id','DESC')->first();
+                $deposite = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($patientId, 4)->whereProcedureId($procedure)->orderBy('id','DESC')->first();
                 // $deposite = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($patientId, 4)->latest()->first();
                 $depositData = $this->IndoorDeposit->wherePatientIdAndChargeType($patientId, 4)->whereProcedureId($procedure)->whereDate('created_at','>=',$indoorBook->doa_date)->get();
                 $patientname = ucwords(strtolower($this->OpdPatients->where('id',$patientId)->value('name')));
@@ -1352,7 +1352,7 @@ class IndoorController extends AdminController
                     'errors' => $validator->errors()->first()
                 ]);
             }
-            $lastTotal = $this->IndoorDeposit->wherePatientIdAndChargeType($id, 4)->orderBy('id', 'DESC')->value('total');
+            $lastTotal = $this->IndoorDeposit->wherePatientIdAndChargeType($id, 4)->where('procedure_id',$request->procedure_id)->orderBy('id', 'DESC')->value('total');
             $indoorBook = $this->IndoorBook->wherePatientIdAndProcedureId($id,$request->procedure_id)->orderBy('id', 'DESC')->first();
             if ($lastTotal != null && $request->current_deposit != $lastTotal) {
 
@@ -1361,7 +1361,7 @@ class IndoorController extends AdminController
                     'message' => 'Something went wrong.'
                 ]);
             }
-            $deposit = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($id, 4)->orderBy('id','DESC')->first();
+            $deposit = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($id, 4)->where('procedure_id',$request->procedure_id)->orderBy('id','DESC')->first();
             if($deposit){
                 $lastDate = Carbon::parse($deposit->created_at)->format('Y-m-d');
             }
@@ -1426,7 +1426,7 @@ class IndoorController extends AdminController
                     $deposit->save();
                     $patientDepositData = $deposit;
                 }
-                $patientDepositData = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($id, 4)->orderBy('id','DESC')->first();
+                $patientDepositData = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($id, 4)->where('procedure_id',$request->procedure_id)->orderBy('id','DESC')->first();
             }else{
 
                 $patientDepositData = $this->IndoorDeposit;

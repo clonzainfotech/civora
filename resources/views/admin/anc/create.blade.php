@@ -446,6 +446,23 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                                     </label>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-2">
+                                                <div class="radio is-conceived">
+                                                    {{Form::radio("p_obstratics[child][child_data][1][child_type]",'full','',['id'=>'child_type_single'])}}
+                                                    <label for="child_type_single">
+                                                        Single
+                                                    </label>
+
+                                                    {{Form::radio("p_obstratics[child][child_data][1][child_type]",'pre','',['id'=>'child_type_twins'])}}
+                                                    <label for="child_type_twins">
+                                                        Twins
+                                                    </label>
+                                                    {{Form::radio("p_obstratics[child][child_data][1][child_type]",'pre','',['id'=>'child_type_triple'])}}
+                                                    <label for="child_type_triple">
+                                                        Triple
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <div class="col-md-3">
                                                 {{Form::text("p_obstratics[child][child_data][1][ho_term_details]", '', [
                                                     'placeholder' => 'Term Details',

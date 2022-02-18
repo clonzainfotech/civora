@@ -2046,6 +2046,7 @@ class IVFController extends AdminController
     */
      
      public function ivfPaymentStoreNewUi(Request $request){
+        //  dd($request);
         $patientsId = decrypt($request->patients_id);
         $no_cycle = 1;
         if($request->no_cycle>1) {
@@ -2070,6 +2071,7 @@ class IVFController extends AdminController
         }else{
                 $ivfPayment->donor_charge = null;
         }
+
         $ivfPayment->patients_id = $patientsId;
         $ivfPayment->patient_name = $request->p_name;
         $ivfPayment->husband_name = $request->h_name;
@@ -2118,7 +2120,23 @@ class IVFController extends AdminController
         $ivfPayment->cycle_no = $no_cycle;
         
         $ivfPayment->remark = $request->remark;
-        
+        // dd($request->patient_relative_sign);
+        if(!empty($request->patient_relative_sign))
+        {
+            foreach($request->patient_relative_sign as $key=>$row){
+                $name = $this->uploadImage($row, 'public/upload/ivf/other/');
+                $bloodReport = 'public/upload/ivf/other/' . $name;
+            }
+            $ivfPayment->patient_relative_sign_image = $bloodReport;
+        }
+        if(!empty($request->patient_sign))
+        {
+            foreach($request->patient_sign as $key=>$row){
+                $name = $this->uploadImage($row, 'public/upload/ivf/other/');
+                $bloodReport = 'public/upload/ivf/other/' . $name;
+            }
+            $ivfPayment->patient_sign_image = $bloodReport;
+        }
         $ivfPayment->save();  
         $indoorDeposit = $this->IndoorDeposit->where('patient_id',$patientsId)->where('ivf_payment_id',$ivfPayment->id)->update(['package'=>$ivfPayment->package]);
         // Add ivf payment reminder

@@ -139,19 +139,24 @@ class AppointmentController extends AdminController
                 }
                 if($request->date && $startDate == $nowDate && $endDate == $nowDate){
                     $appointment = $appointment
-                    // ->orderBy(DB::raw('ISNULL(arrival_time), arrival_time'), 'ASC')
-                    // // ->orderBy('arrival_time','ASC')
-                    // ->orderBy('date','asc')
-                    // ->orderBy(DB::raw('ISNULL(time), time'), 'ASC')
-                    // // ->orderBy('time','asc')
-                    // ->orderBy('is_done','ASC');
-                                            ->orderBy(DB::raw('ISNULL(arrival_time), is_done'), 'DESC')
-                                            ->orderBy(DB::raw('ISNULL(duration),time,duration'),'asc')
-                                            // ->orderBy((DB::raw("IF(ISNULL(duration),duration > 5, time, duration)"), request('', 'ASC'))
+                    ->orderBy(DB::raw('ISNULL(arrival_time), arrival_time'), 'ASC')
+                    // ->orderBy('arrival_time','ASC')
+                    ->orderBy('date','asc')
+                    ->orderBy(DB::raw('ISNULL(time), time'), 'ASC')
+                    // ->orderBy(DB::raw('ISNULL(duration),duration'),'asc')
 
-                                            ->orderBy(DB::raw('ISNULL(arrival_time), arrival_time'), 'ASC')
-                                            // ->orderBy('is_done','ASC')
-                                            ->orderBy('date','ASC');
+                    // ->orderBy('time','asc')
+                    ->orderBy('is_done','DESC')
+                    ->orderBy(DB::raw('ISNULL(duration),duration'),'asc');
+                                            // ->orderBy(DB::raw('ISNULL(arrival_time), is_done'), 'DESC')
+                                            // // ->orderBy(DB::raw('ISNULL(duration),time,duration'),'asc')
+                                            // // ->orderBy((DB::raw("IF(ISNULL(duration),duration > 5, time, duration)"), request('', 'ASC'))
+
+                                            // // ->orderBy(DB::raw('ISNULL(arrival_time), arrival_time'), 'ASC')
+                                            // ->orderBy(DB::raw('ISNULL(time), time'), 'ASC')
+
+                                            // // ->orderBy('is_done','ASC')
+                                            // ->orderBy('date','ASC');
 
                 }else{
                     $appointment = $appointment->orderBy('date','asc')

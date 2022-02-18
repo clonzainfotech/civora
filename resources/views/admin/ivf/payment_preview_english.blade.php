@@ -733,15 +733,15 @@
                 If you have to go to another hospital for treatment, the cost will be different.
             </div>
            
-            <div class="row p-2 m-2">
+            <div class="row p-2">
                 Remark:- {{$ivfPayment->remark}}
             </div>
 
-            <div class="row p-2 m-2">
+            <div class="row p-2">
                 Payment Condition:- {{$ivfPayment->condition}}
             </div>
             
-            <div class="row p-2 m-2">              
+            <div class="row p-2">              
                 Patient's signature :- _______________________
             </div>
             <div class="row p-2">

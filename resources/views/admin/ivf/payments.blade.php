@@ -3,6 +3,7 @@
 @section('title', 'IVF')
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+    <link href="{{URL::to('public/css/image-uploader.css')}}" rel="stylesheet">
     <style>
         .payment-form{
             padding: 5px 0px 1px 10px !important;
@@ -26,6 +27,22 @@
         .row{
             margin-bottom: -17px;
         }
+        .simple_unik_img_inpt_upd,.unik_img_inpt_upd {
+            display: block;
+        }
+    .unik_img_disp_img {
+        max-height: 75px;
+        padding: 0px;
+        cursor: pointer;
+        border-radius: 3px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
+    .span_pt_sign {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+    }
+    
     </style>
 @stop
 @section('content')
@@ -69,7 +86,7 @@
                                 </span>
                             </button>
                         </div> 
-                    {{Form::open(['class'=>'form-inline','id'=>'ivf-payment-form','name' => 'form'])}}
+                    {{Form::open(['class'=>'form-inline','id'=>'ivf-payment-form','name' => 'form','files'=>true])}}
                     {{csrf_field()}}
                     {{Form::hidden('ivf_pkg_id',isset($ivfPaymentHistory) ? encrypt($ivfPaymentHistory->id) : '')}}
                     @php
@@ -716,7 +733,7 @@
                             </div>
                             
                             <div class="row">
-                                 <div class="col-md-3">
+                                <div class="col-md-3">
                                       <!--   <td class="input-group form-padding"><input type="text" name="package" id="sum" name="package">0</span></td> -->
                                     <div class="input-group form-padding">
                                         <span class="input-group-addon payment-form" id="">Total : &nbsp;</span>
@@ -795,7 +812,28 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <span class="form-padding">Patient Sign Image: &nbsp;</span>
+                                    @if(!empty($ivfPaymentHistory->patient_sign_image))
+                                        <img src="{{url($ivfPaymentHistory->patient_sign_image)}}" style="width: 100px; height:60px;">
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <span class="form-padding">Patient's relative Sign Image: &nbsp;</span>
+                                    @if(!empty($ivfPaymentHistory->patient_relative_sign_image))
+                                        <img src="{{url($ivfPaymentHistory->patient_relative_sign_image)}}" style="width: 100px; height:60px;">
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-padding patient_sign"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-padding patient_relative_sign"></div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group form-padding">Net Amount:<span id="net_amount" class="sum"></span></div>
@@ -832,7 +870,7 @@
                             <!-- {{Form::hidden('patients_id','',['class'=>'patients-id'])}} -->
                             <input type="hidden" name="patients_id" id="patients_id" value="{{$patientsId}}">
                             </div>
-                        
+                           
                         <!-- footer -->
                         <!-- <div class="modal-footer"> -->
                         <div class="form-padding">
@@ -852,10 +890,49 @@
     
 @stop
 @section('page-script')
-<script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
+<script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script> 
+<script src="{{URL::to('public/js/image-uploader.js')}}"></script>
+
     <script type="text/javascript">
 
     $(document).ready(function(){
+    });
+    // $(document).on('click','#pt_sign',function(){ 
+    //     $('.patient_signup_file').click();
+    // });
+    $('.patient_sign').imageUploader({
+        imagesInputName: 'patient_sign',
+        maxFiles:1,
+    });
+    $('.patient_relative_sign').imageUploader({
+        imagesInputName: 'patient_relative_sign',
+        maxFiles:1,
+
+    });
+    $(document).ready(function() {
+        if (window.File && window.FileList && window.FileReader) {
+            $(".patient_signup_file").on("change", function(e) {
+                $('.span_pt_sign').remove();
+                var product_upd_images = e.target.files;
+                var filesLength = product_upd_images.length;
+                for (var i = 0; i < filesLength; i++) {
+                    var unikImg = product_upd_images[i];
+                    var fileReader = new FileReader();
+                    fileReader.onload = (function(e) {
+                        var file = e.target;
+                        $("<span class='span_pt_sign'>" +
+                            "<img class='unik_img_disp_img' src='" + e.target.result + "' title='" + file.name + "'/>" +
+                            "<input type='hidden' value='" + e.target.result + "' name='simple_product[]'/>" +
+                            "</span>").insertAfter("#simple_unik_img_inpt_upd");
+                        
+                    });
+                    fileReader.readAsDataURL(unikImg);
+                }
+            });
+        } else {
+
+        }
+
     });
     $('.datetimepicker').bootstrapMaterialDatePicker({
         format: 'dddd DD MMMM YYYY',
@@ -1546,16 +1623,20 @@
         $(document).ready(function(){            
             $(document).on('click','.ivf-payment-submit',function(e){
                 e.preventDefault();
-                var paymentData = $('#ivf-payment-form').serialize();
+                var paymentData = new FormData($("#ivf-payment-form")[0]);
                 if('#Multiple:checked')
                 {
                     var cycle_no = $('select.multiple_no_cycle').val();
-                    paymentData = paymentData + '&multiple_cycle='+cycle_no;
+                    paymentData.append('multiple_cycle',cycle_no);
                 }
                 var cycle_no = $('select.payment-method').val();
-                    paymentData = paymentData + '&payment_type='+cycle_no;
+                    // paymentData = paymentData + '&payment_type='+cycle_no;
+                    paymentData.append('payment_type',cycle_no);
+
                 if(this.value == 1) {
-                    paymentData = paymentData + '&isprint=1';
+                    paymentData.append('isprint',1);
+
+                    // paymentData = paymentData + '&isprint=1';
                 }
                 storeIvfPayment(paymentData);
             });
@@ -1594,10 +1675,17 @@
             }
             // return false;
             $.ajax({
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                 url: "{{URL::to('ivf-store-payment_newui')}}",
                 dataType: 'json',
                 type:"POST",
-                data:data
+                data:data,
+                cache: false,
+                contentType: false,
+                processData: false,
+
             }).done(function(data) {
                 if(data.status == 1){    
                     w = window.open(window.location.href, "_blank");
@@ -1606,7 +1694,7 @@
                     w.document.close();
                     setTimeout(function() {
                         w.window.print();
-                    }, 50);
+                    }, 800);
                         // $('#ivf_history_id').val(data.id);
                 }else if(data.status == 'true'){
                     $('.ivf-payment-msg').removeClass('d-none');

@@ -976,17 +976,18 @@
                 If you have to go to another hospital for treatment, the cost will be different.
             </div> -->
            
-            <div class="row p-2 m-2">
+            <div class="row p-2">
                 Remark:- {{$ivfPayment->remark}}
             </div>
-            <div class="row p-2 m-2">
+            <div class="row p-2">
                 Payment Condition:- {{$ivfPayment->condition}}
             </div>
-            <div class="row p-2 m-2">              
-                Patient's signature :- _______________________
+            <div class="row p-2">              
+                Patient's signature :- 
+                <img src="{{!empty($ivfPayment->patient_sign_image) ? url($ivfPayment->patient_sign_image) : ''}}" style="width: 100px; height:40px;">
             </div>
             <div class="row p-2">
-                Signature of the patient's relative :- _______________________
+                Signature of the patient's relative :-<img src="{{!empty($ivfPayment->patient_relative_sign_image) ? url($ivfPayment->patient_relative_sign_image) : ''}}" style="width: 100px; height:40px;">
             </div>
      @endif
 

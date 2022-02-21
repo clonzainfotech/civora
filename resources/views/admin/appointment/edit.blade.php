@@ -122,7 +122,9 @@
                                                             {{$errors->first('category')}}
                                                         </span>
                                                     </div>
-                                                    {{Form::hidden('category',$appointment->category_id,['class'=>'form-control'])}}
+                                                    @if($appointment->category_id == 7 || $appointment->is_done == 1)
+                                                        {{Form::hidden('category',$appointment->category_id,['class'=>'form-control'])}}
+                                                    @endif
                                                 @endif
                                                 @if ($appointment->category_id == 7)
                                                     <div class="col-md-3 col-sm-12">

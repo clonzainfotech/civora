@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card" data-key='plan-inf'>
+        <div class="card iui-box" data-key='plan-inf'>
             <div class="body">
                 <div class="row">
                     <div class="col-12">

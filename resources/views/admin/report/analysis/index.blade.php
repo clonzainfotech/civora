@@ -120,18 +120,18 @@
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
-            $('select.plan-type').val('');
-            $('.plan-type').selectpicker('refresh');
+            // $('select.plan-type').val('');
+            // $('.plan-type').selectpicker('refresh');
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
             getAnalysisData(qstring)
             // $(this).addClass('box-border');
         });
         $(document).on('change','select.plan-type',function(){
             plan_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
             getAnalysisData(qstring)
             // $(this).addClass('box-border');
         });

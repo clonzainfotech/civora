@@ -1307,7 +1307,7 @@ function childData(childNo){
             "<div class='col-md-2'>"+
             "<div class='form-group'>"+
             // "<label class='vertical-form-label pr-0'>H/O :</label>"+
-            '<select name="p_obstratics[child][child_data]['+i+'][ho_gender]" class="form-control select-padding-0 p-ho-type" title="Select Child Gender" multiple>'+
+            '<select name="p_obstratics[child][child_data]['+i+'][ho_gender][]" class="form-control select-padding-0 p-ho-type" title="Select Child Gender" multiple>'+
             '<option value="male">Male</option>'+
             '<option value="female">Female</option>'+
             '</select>'+
@@ -1740,7 +1740,7 @@ function secondChildData(childNo){
             "</div>" +
             "<div class='col-md-2'>"+
             "<div class='form-group'>"+
-            '<select name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="" title="Select Child Gender" multiple>'+
+            '<select name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender][]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="" title="Select Child Gender" multiple>'+
             '<option value="male">Male</option>'+
             '<option value="female">Female</option>'+
             '</select>'+

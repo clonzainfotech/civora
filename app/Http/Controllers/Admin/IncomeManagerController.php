@@ -23,6 +23,7 @@ class IncomeManagerController extends AdminController
     */
     public function index(Request $request){
         try{
+            $referenceDoctor = ['other' => 'Other'] + $this->ReferenceDoctor->pluck('name','id')->toArray();
             if($request->ajax()){
                 $income = $this->IncomeManager
                     ->select("*",
@@ -51,7 +52,15 @@ class IncomeManagerController extends AdminController
                         $query->where('income_category',$categoryId);
                     });
                 }
-
+                $reference_dr = $request->reference_dr;
+                if($reference_dr){
+                    $income = $income->where(function($query) use($reference_dr) {
+                        $query
+                        ->orWhereHas('getPatient', function($query) use($reference_dr) {
+                            $query->where('reference_doctor_id','LIKE',$reference_dr.'%');
+                        });
+                    });
+                }
                 // search text
                 $search = $request->search;
                 if($search){
@@ -69,7 +78,7 @@ class IncomeManagerController extends AdminController
                 ]);
             }
             $expensecategory = $this->ExpenseCategory->where('type','=','1')->whereStatus(1)->pluck('name','id');
-            return view('admin.income_manager.index',compact('expensecategory'));
+            return view('admin.income_manager.index',compact('expensecategory','referenceDoctor'));
         }catch(Exception $e){
             abort(500);
         }

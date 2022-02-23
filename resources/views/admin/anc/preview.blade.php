@@ -867,7 +867,7 @@
                                                 if(!empty($row->ho_gender)){
                                                     if(is_array($row->ho_gender))
                                                     {
-                                                        $hoValue.= ' '.implode(',',array_map("ucfirst", $row->ho_gender));
+                                                        $hoValue.= ' '.implode(',',array_filter(array_map("ucfirst", $row->ho_gender)));
                                                     }
                                                     else
                                                     {
@@ -1119,7 +1119,7 @@
                                                 if(!empty($row->ho_gender)){
                                                     if(is_array($row->ho_gender))
                                                     {
-                                                        $secondHoValue.= ' '.implode(',',array_map("ucfirst", $row->ho_gender));
+                                                        $secondHoValue.= ' '.implode(',',array_filter(array_map("ucfirst", $row->ho_gender)));
                                                     }
                                                     else
                                                     {

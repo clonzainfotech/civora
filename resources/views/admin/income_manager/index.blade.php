@@ -60,6 +60,9 @@
                                         </ul>
                                     </form>
                                 </div>
+                                <div class="col-lg-3 col-md-6 col-sm-6">
+                                    {{Form::select('reference_dr',$referenceDoctor,'',['class'=>'form-control select-padding-0 reference_dr','placeholder'=>'Select Reference Doctor','data-live-search' => 'true'])}}
+                                </div>
                             </div>
                         </div>
                     <!-- Tab panes -->
@@ -98,6 +101,7 @@
         var fromdate = moment(new Date()).format('YYYY-MM-DD');
         var todate = moment(new Date()).format('YYYY-MM-DD');
         var qstring = 'fromdate=' + fromdate + '&todate=' + todate;
+        var reference_dr = '';
 
         $(document).ready(function(){
              $('.daterange').daterangepicker({
@@ -111,26 +115,26 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+'&categoryId='+category;;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+'&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             $('.daterange').on('cancel.daterangepicker', function(ev, picker) {
                 $(".daterange").val('');
                 fromdate = '';
                 todate = '';
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             getIncomeData(qstring);
             $('.date').change(function(){
                 date = $('.date').val();
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             $(document).on('click', '.pagination a',function(event){
                 event.preventDefault();
                 page=$(this).attr('href').split('page=')[1];
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             $(document).on('click','.delete-income',function(){
@@ -139,19 +143,25 @@
             });
             $(document).on('keyup','.search',function(){
                 search = $(this).val();
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             $(document).on('change','select.payment-method',function(e){
                 e.preventDefault();
                 payment_method = $(this).val();
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
             $(document).on('change','select.category',function(e){
                 e.preventDefault();
                 category = $(this).val();
-                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category;
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
+                getIncomeData(qstring);
+            });
+            $(document).on('change', 'select.reference_dr',function(e){
+                e.preventDefault();
+                reference_dr = $(this).val();
+                qstring = 'page='+page+'&search='+search+'&fromdate='+fromdate+ '&todate=' + todate + '&payment_method='+payment_method+ '&categoryId='+category+'&reference_dr='+reference_dr;
                 getIncomeData(qstring);
             });
         });

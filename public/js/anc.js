@@ -1294,6 +1294,13 @@ function childData(childNo){
             '<input type=radio name="p_obstratics[child][child_data][' + i + '][ho_term]" value="pre" id="pre_' + i + '"><label for="pre_' + i + '">Preterm</label>' +
             "</div>" +
             "</div>" +
+            "<div class='col-md-2'>"+
+            "<div class='radio is-conceived'>"+
+            '<input type=radio name="p_obstratics[child][child_data]['+i+'][child_type]" value="single" id="child_type_single_'+i+'"><label for="child_type_single_'+i+'">Single</label>'+
+            '<input type=radio name="p_obstratics[child][child_data][' + i + '][child_type]" value="twins" id="child_type_twins_' + i + '"><label for="child_type_twins_' + i + '">Twins</label>' +
+            '<input type=radio name="p_obstratics[child][child_data][' + i + '][child_type]" value="triple" id="child_type_triple_' + i + '"><label for="child_type_triple_' + i + '">Triple</label>' +
+            "</div>" +
+            "</div>" +
             "<div class='col-md-3'>" +
             '<input type=text name="p_obstratics[child][child_data][' + i + '][ho_term_details]" id="term_details_' + i + '" class="form-control" placeholder="Term Details">' +
             "</div>"+
@@ -1302,14 +1309,23 @@ function childData(childNo){
             '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_type_value]" value="cesarean" id="cesarean_' + i + '"><label for="cesarean_' + i + '">Cesarean</label>' +
             '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_type_value]" value="instrumental" id="instrumental_'+i+'"><label for="instrumental_'+i+'">Instrumental</label>'+
             "</div></div>"+
-            "<div class='col-md-3'><div class='radio is-conceived'>"+
-            '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_gender]" value="male" id="ho_male_'+i+'"><label for="ho_male_'+i+'">Male</label>'+
-            '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_gender]" value="female" id="ho_female_'+i+'"><label for="ho_female_'+i+'">Female</label>'+
-            "</div></div></div>" +
+            // "<div class='col-md-3'><div class='radio is-conceived'>"+
+            // '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_gender]" value="male" id="ho_male_'+i+'"><label for="ho_male_'+i+'">Male</label>'+
+            // '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_gender]" value="female" id="ho_female_'+i+'"><label for="ho_female_'+i+'">Female</label>'+
+            // "</div>"+
+            "</div></div>" +
             "<br />" +
             "<div class='row child-data-parent'>" +
             "<div class='col-sm-1'>" +
             "</div>" +
+            "<div class='col-md-2'>"+
+            "<div class='form-group'>"+
+            '<select name="p_obstratics[child][child_data]['+i+'][ho_gender]" class="form-control select-padding-0 child-ho-type p-ho-type" data-id="" multiple>'+
+            '<option value="male">Male</option>'+
+            '<option value="female">Female</option>'+
+            '</select>'+
+            "</div>"+
+            "</div>"+
             "<div class='col-md-3'><div class='radio is-conceived'>"+
             '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_birth_type]" value="live_health" id="live_health_'+i+'" class="health-type" data-id="'+i+'"><label for="live_health_'+i+'">Live Health</label>'+
             '<input type=radio name="p_obstratics[child][child_data]['+i+'][ho_birth_type]" value="stil_birth" id="stil_birth_'+i+'" class="health-type" data-id="'+i+'"><label for="stil_birth_'+i+'">Stil Birth</label>'+
@@ -1709,6 +1725,13 @@ function secondChildData(childNo){
             '<input type=radio name="p_obstratics[second_marriage][child][child_data][' + i + '][ho_term]" value="pre" id="second_pre_' + i + '"><label for="second_pre_' + i + '">Preterm</label>' +
             "</div>" +
             "</div>" +
+            "<div class='col-md-2'>"+
+            "<div class='radio is-conceived'>"+
+            '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][child_type]" value="single" id="child_type_single_'+i+'"><label for="child_type_single_'+i+'">Single</label>'+
+            '<input type=radio name="p_obstratics[second_marriage][child][child_data][' + i + '][child_type]" value="twins" id="child_type_twins_' + i + '"><label for="child_type_twins_' + i + '">Twins</label>' +
+            '<input type=radio name="p_obstratics[second_marriage][child][child_data][' + i + '][child_type]" value="triple" id="child_type_triple_' + i + '"><label for="child_type_triple_' + i + '">Triple</label>' +
+            "</div>" +
+            "</div>" +
             "<div class='col-md-3'>" +
             '<input type=text name="p_obstratics[second_marriage][child][child_data][' + i + '][ho_term_details]" id="term_details_' + i + '" class="form-control" placeholder="Term Details">' +
             "</div>"+
@@ -1717,14 +1740,23 @@ function secondChildData(childNo){
             '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_type_value]" value="cesarean" id="second_cesarean_' + i + '"><label for="second_cesarean_' + i + '">Cesarean</label>' +
             '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_type_value]" value="instrumental" id="second_instrumental_'+i+'"><label for="second_instrumental_'+i+'">Instrumental</label>'+
             "</div></div>"+
-            "<div class='col-md-3'><div class='radio is-conceived'>"+
-            '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" value="male" id="second_ho_male_'+i+'"><label for="second_ho_male_'+i+'">Male</label>'+
-            '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" value="female" id="second_ho_female_'+i+'"><label for="second_ho_female_'+i+'">Female</label>'+
-            "</div></div></div>" +
+            // "<div class='col-md-3'><div class='radio is-conceived'>"+
+            // '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" value="male" id="second_ho_male_'+i+'"><label for="second_ho_male_'+i+'">Male</label>'+
+            // '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" value="female" id="second_ho_female_'+i+'"><label for="second_ho_female_'+i+'">Female</label>'+
+            // "</div></div>"+
+            "</div>" +
             "<br />" +
             "<div class='row second-marriage-life-data'>" +
             "<div class='col-sm-1'>" +
             "</div>" +
+            "<div class='col-md-2'>"+
+            "<div class='form-group'>"+
+            '<select name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_gender]" class="form-control select-padding-0 child-ho-type second-p-ho-type" data-id="" multiple>'+
+            '<option value="male">Male</option>'+
+            '<option value="female">Female</option>'+
+            '</select>'+
+            "</div>"+
+            "</div>"+
             "<div class='col-md-3'><div class='radio is-conceived'>"+
             '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_birth_type]" value="live_health" id="second_live_health_'+i+'" class="health-type" data-id="second'+i+'"><label for="second_live_health_'+i+'">Live Health</label>'+
             '<input type=radio name="p_obstratics[second_marriage][child][child_data]['+i+'][ho_birth_type]" value="stil_birth" id="second_stil_birth_'+i+'" class="health-type" data-id="second'+i+'"><label for="second_stil_birth_'+i+'">Stil Birth</label>'+

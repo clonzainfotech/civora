@@ -471,7 +471,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                {{Form::select("p_obstratics[child][child_data][1][ho_gender][]",[''=>'Select Child Gender','male'=>'Male','female'=>'Female'],'',['class'=>'form-control select-child-type','data-id'=>'','multiple'])}}
+                                                {{Form::select("p_obstratics[child][child_data][1][ho_gender][]",['male'=>'Male','female'=>'Female'],'',['class'=>'form-control','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
                                                 {{-- <div class="radio is-conceived">
                                                     {{Form::radio("p_obstratics[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
                                                     <label for="ho_male">
@@ -485,6 +485,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                                 </div> --}}
                                             </div>
                                         </div>
+                                        <br />
                                         <div class="row child-data-parent d-none">
                                             <div class="col-md-1"></div>
                                             <div class="col-sm-3">
@@ -797,7 +798,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                {{Form::select("p_obstratics[second_marriage][child][child_data][1][ho_gender][]",['male'=>'Male','female'=>'Female'],'',['class'=>'form-control ','data-id'=>'','multiple'])}}
+                                                {{Form::select("p_obstratics[second_marriage][child][child_data][1][ho_gender][]",['male'=>'Male','female'=>'Female'],'',['class'=>'form-control ','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
                                                 {{-- <div class="radio is-conceived">
                                                     {{Form::radio("p_obstratics[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
                                                     <label for="ho_male">
@@ -3663,8 +3664,6 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
             $(document).on('click','.blighted-ovum',function(){
                 checkGynec();
             });
-            console.log($('select.select-child-type option:first').text());
-            $('select.select-child-type option:first').prop("disabled",true);
         });
 
         function ancFormData(data,next=null){

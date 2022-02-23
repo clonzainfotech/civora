@@ -1449,7 +1449,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    {{Form::select("p_obstratics[child][child_data][".$key."][ho_gender][]",[''=>'Select Child Gender','male'=>'Male','female'=>'Female'],isset($row->ho_gender)  ? (is_array($row->ho_gender) ? array_filter($row->ho_gender) : array($row->ho_gender)) : '',['class'=>'form-control select-padding-0','data-id'=>'','multiple'])}}
+                                    {{Form::select("p_obstratics[child][child_data][".$key."][ho_gender][]",['male'=>'Male','female'=>'Female'],isset($row->ho_gender)  ? (is_array($row->ho_gender) ? array_filter($row->ho_gender) : array($row->ho_gender)) : '',['class'=>'form-control select-padding-0','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
                                     {{-- <div class="radio is-conceived">
                                         {{Form::radio("p_obstratics[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
                                         <label for="ho_male">
@@ -1862,7 +1862,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    {{Form::select("p_obstratics[second_marriage][child][child_data][".$key."][ho_gender][]",[''=>'Select Child Gender','male'=>'Male','female'=>'Female'],isset($row->ho_gender)  ? (is_array($row->ho_gender) ? array_filter($row->ho_gender) : array($row->ho_gender)) : '',['class'=>'form-control select-padding-0','data-id'=>'','multiple'])}}
+                                    {{Form::select("p_obstratics[second_marriage][child][child_data][".$key."][ho_gender][]",['male'=>'Male','female'=>'Female'],isset($row->ho_gender)  ? (is_array($row->ho_gender) ? array_filter($row->ho_gender) : array($row->ho_gender)) : '',['class'=>'form-control select-padding-0','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
                                     {{-- <div class="radio is-conceived">
                                         {{Form::radio("p_obstratics[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
                                         <label for="ho_male">

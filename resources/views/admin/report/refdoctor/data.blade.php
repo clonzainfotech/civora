@@ -36,7 +36,7 @@
             @php $totalNetAmount = 0; @endphp
             @foreach ($rowList as $row)
                 @php
-                    $totalNetAmount += ($row->charge_type == 3) ? $row->amount : (($row->is_final_invoice == 1) ? $row->getInvoice['grand_total_amt'] : $row->netamount);
+                    $totalNetAmount += ($row->charge_type == 3) ? $row->amount : (($row->is_final_invoice == 1) ? $row->getInvoice['grand_total_amt'] + $row->getInvoice['deposit_amt'] : $row->netamount);
 
                     // $totalNetAmount += ($row->charge_type == 3) ? $row->amount : $row->netamount;
                 @endphp
@@ -97,7 +97,7 @@
                             @if ($row->charge_type == 3)
                                 {{$row->amount}}
                             @elseif($row->is_final_invoice == 1)
-                                {{(!empty($row->getInvoice['grand_total_amt']) ) ?  $row->getInvoice['grand_total_amt'] : 0}}
+                                {{(!empty($row->getInvoice['grand_total_amt']) ) ?  $row->getInvoice['grand_total_amt'] + $row->getInvoice['deposit_amt'] : 0}}
                             @else
                                 {{$row->netamount}}
                             @endif

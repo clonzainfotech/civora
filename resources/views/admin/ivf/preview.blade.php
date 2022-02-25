@@ -304,14 +304,25 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                     }
                                                 }
                                                 if(!empty($row->ho_gender)){
-                                                    $hoValue.= $row->ho_gender == 'female' ? ' Female' : ' Male';
+                                                    if(is_array($row->ho_gender))
+                                                    {
+                                                        $hoValue.= ' '.implode(',',array_filter(array_map("ucfirst", $row->ho_gender)));
+                                                    }
+                                                    else
+                                                    {
+                                                        $hoValue.= $row->ho_gender == 'female' ? ' Female' : ' Male';
+                                                    }
+                                                }
+                                                if(isset($row->child_type) && !empty($row->child_type))
+                                                {
+                                                    $hoValue.= '('.$row->child_type.') ';
                                                 }
                                                 if(!empty($row->ho_birth_type)){
                                                     if($row->ho_birth_type == 'live_health'){
                                                         $hoValue.= '/Live';
                                                     }
                                                     if($row->ho_birth_type == 'stil_birth'){
-                                                        $hoValue.= '/Stil Birth';
+                                                        $hoValue.= '/Still Birth';
                                                     }
                                                     if($row->ho_birth_type == 'expired'){
                                                         $hoValue.= '/Expired';
@@ -523,14 +534,25 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                     }
                                                 }
                                                 if(!empty($row->ho_gender)){
-                                                    $secondHoValue.= $row->ho_gender == 'female' ? ' Female' : ' Male';
+                                                    if(is_array($row->ho_gender))
+                                                    {
+                                                        $secondHoValue.= ' '.implode(',',array_filter(array_map("ucfirst", $row->ho_gender)));
+                                                    }
+                                                    else
+                                                    {
+                                                        $secondHoValue.= $row->ho_gender == 'female' ? ' Female' : ' Male';
+                                                    }
+                                                }
+                                                if(isset($row->child_type) && !empty($row->child_type))
+                                                {
+                                                    $secondHoValue.= '('.$row->child_type.') ';
                                                 }
                                                 if(!empty($row->ho_birth_type)){
                                                     if($row->ho_birth_type == 'live_health'){
                                                         $secondHoValue.= '/Live';
                                                     }
                                                     if($row->ho_birth_type == 'stil_birth'){
-                                                        $secondHoValue.= '/Stil Birth';
+                                                        $secondHoValue.= '/Still Birth';
                                                     }
                                                     if($row->ho_birth_type == 'expired'){
                                                         $secondHoValue.= '/Expired';

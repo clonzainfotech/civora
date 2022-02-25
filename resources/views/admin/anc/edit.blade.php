@@ -1876,19 +1876,6 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     </div> --}}
                                 </div>
                                 
-                                {{-- <div class="col-sm-3">
-                                    <div class="radio is-conceived">
-                                        {{Form::radio("p_obstratics[second_marriage][child][child_data][".$key."][ho_gender]",'male',!empty($row->ho_gender) && $row->ho_gender == 'male' ? true : false,['id'=>'second_ho_male_'.$key])}}
-                                        <label for={{'second_ho_male_'.$key}}>
-                                            Male
-                                        </label>
-
-                                        {{Form::radio("p_obstratics[second_marriage][child][child_data][".$key."][ho_gender]",'female',!empty($row->ho_gender) && $row->ho_gender == 'female' ? true : false,['id'=>'second_ho_female_'.$key])}}
-                                        <label for={{'second_ho_female_'.$key}}>
-                                            Female
-                                        </label>
-                                    </div>
-                                </div> --}}
                             </div>
                             <br />
                             <div class="row second-marriage-life-data child-data-parent">

@@ -669,6 +669,40 @@
                                                         'id'=>'term_details'
                                                     ])}}
                                                 </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'single','',['id'=>'child_type_single'])}}
+                                                        <label for="child_type_single">
+                                                            Single
+                                                        </label>
+    
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'twins','',['id'=>'child_type_twins'])}}
+                                                        <label for="child_type_twins">
+                                                            Twins
+                                                        </label>
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'triple','',['id'=>'child_type_triple'])}}
+                                                        <label for="child_type_triple">
+                                                            Triple
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    {{Form::select("oh[child][child_data][1][ho_gender][]",['male'=>'Male','female'=>'Female'],'',['class'=>'form-control','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
+                                                    {{-- <div class="radio is-conceived">
+                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
+                                                        <label for="ho_male">
+                                                            Male
+                                                        </label>
+    
+                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'female','',['id'=>'ho_female'])}}
+                                                        <label for="ho_female">
+                                                            Female
+                                                        </label>
+                                                    </div> --}}
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row child-data-parent d-none">
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
                                                         {{Form::radio("oh[child][child_data][1][ho_type_value]",'normal',true,['id'=>'normal'])}}
@@ -687,22 +721,6 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
-                                                        <label for="ho_male">
-                                                            Male
-                                                        </label>
-
-                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'female','',['id'=>'ho_female'])}}
-                                                        <label for="ho_female">
-                                                            Female
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br />
-                                            <div class="row child-data-parent d-none">
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
                                                         {{Form::radio("oh[child][child_data][1][ho_birth_type]",'live_health','',['id'=>'live_health','class'=>'health-type','data-id'=>1])}}
@@ -731,7 +749,7 @@
                                                         {{Form::text("oh[child][child_data][1][expired_year]",'',['class'=>'form-control','placeholder'=>'Expired Year'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Live Health Year : &nbsp;</span>
                                                         {{Form::text("oh[child][child_data][1][live_health_year]",'',['class'=>'form-control'])}}
@@ -1033,6 +1051,41 @@
                                                         'id'=>'second_merriage_term_details'
                                                     ])}}
                                                 </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'single','',['id'=>'child_type_single'])}}
+                                                        <label for="child_type_single">
+                                                            Single
+                                                        </label>
+    
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'twins','',['id'=>'child_type_twins'])}}
+                                                        <label for="child_type_twins">
+                                                            Twins
+                                                        </label>
+                                                        {{Form::radio("oh[child][child_data][1][child_type]",'triple','',['id'=>'child_type_triple'])}}
+                                                        <label for="child_type_triple">
+                                                            Triple
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    {{Form::select("oh[child][child_data][1][ho_gender][]",['male'=>'Male','female'=>'Female'],'',['class'=>'form-control','data-id'=>'','multiple','title'=>'Select Child Gender'])}}
+                                                    {{-- <div class="radio is-conceived">
+                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'male','',['id'=>'ho_male'])}}
+                                                        <label for="ho_male">
+                                                            Male
+                                                        </label>
+    
+                                                        {{Form::radio("oh[child][child_data][1][ho_gender]",'female','',['id'=>'ho_female'])}}
+                                                        <label for="ho_female">
+                                                            Female
+                                                        </label>
+                                                    </div> --}}
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                            <div class="row second-marriage-life-data second-child-data-parent d-none">
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
                                                         {{Form::radio("oh[second_marriage][child][child_data][1][ho_type_value]",'normal',true,['id'=>'second_normal'])}}
@@ -1051,20 +1104,6 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_gender]",'male','',['id'=>'second_ho_male'])}}
-                                                        <label for="second_ho_male">
-                                                            Male
-                                                        </label>
-                                                        {{Form::radio("oh[second_marriage][child][child_data][1][ho_gender]",'female','',['id'=>'second_ho_female'])}}
-                                                        <label for="second_ho_female">
-                                                            Female
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row second-marriage-life-data second-child-data-parent d-none">
                                                 <div class="col-sm-3">
                                                     <div class="radio is-conceived">
                                                         {{Form::radio("oh[second_marriage][child][child_data][1][ho_birth_type]",'live_health','',['id'=>'second_live_health','class'=>'health-type','data-id'=>'second1'])}}
@@ -1093,7 +1132,7 @@
                                                         {{Form::text("oh[second_marriage][child][child_data][1][expired_reason]",'',['class'=>'form-control','placeholder'=>'Reason'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-2">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Live Health Year : &nbsp;</span>
                                                         {{Form::text("oh[second_marriage][child][child_data][1][live_health_year]",'',['class'=>'form-control'])}}

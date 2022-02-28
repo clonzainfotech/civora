@@ -33,4 +33,14 @@ class IvfResultReview extends BaseModel
         ])->whereJsonContains('description',['collection' => 'transfer'])->first();
         return !empty($ivf) ? json_decode($ivf->description,true) : null;
     }
+    public function getResultValue()
+    {
+        $ivf = null;
+        $ivf = IvfHistory::where([
+            'cycle_no' => $this->cycle_no,
+            'patients_id' => $this->patients_id,
+            'plan' => $this->plan,
+        ])->whereJsonContains('description',['is_transfer' => 'yes'])->orderBy('id','desc')->first();
+        return !empty($ivf) ? json_decode($ivf->description,true) : null;
+    }
 }

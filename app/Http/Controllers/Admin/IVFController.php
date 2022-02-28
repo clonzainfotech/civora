@@ -3624,6 +3624,8 @@ class IVFController extends AdminController
                 $ivfResultReview = collect($ivfResultReview->get())->map(function ($query){
                     $query->transfer_date = !empty($query->getTransferDate()) ? $query->getTransferDate() : '';
                     $query->result_date = !empty($query->getResult()) ? Carbon::parse($query->getResult()['follow_up'])->format('d-M-Y') : (!empty($query->getTransferDate()) ? Carbon::parse($query->getTransferDate())->addDays(14)->format('d-M-Y') : null);
+                    // dd(!empty($query->getResultValue()) ? $query->getResultValue()['transfer']['result_type']  : null);
+                    $query->result = !empty($query->getResultValue() && isset($query->getResultValue()['transfer']['result_type'])) ? $query->getResultValue()['transfer']['result_type']  : '';
                     return $query;
                 })->sortByDesc('transfer_date');
                 $data['status'] = 1;

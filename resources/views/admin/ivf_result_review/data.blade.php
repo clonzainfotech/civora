@@ -13,6 +13,7 @@ $i = 1;
         <th>Mobile Number</th>
         <th>Transfer Date</th>
         <th>Result Date</th>
+        <th>Result</th>
         <th>Action</th>
     </tr>
     </thead>
@@ -28,6 +29,7 @@ $i = 1;
             <td>{{ $row->getPatients->mobile_number.', '.$row->getPatients->other_mobile_number}}</td>
             <td>{{ $row->transfer_date}}</td>
             <td>{{ $row->result_date}}</td>
+            <td>{{ ucWords($row->result) }}</td>
             <td><a href="{{URL::to('ivf-result-review/'.encrypt($row->patients_id).'/'.$row->plan.'/'.$row->cycle_no)}}" target="_blank" class="btn btn-primary mr-1 btn-sm">view</a></td>
         </tr>
         @php

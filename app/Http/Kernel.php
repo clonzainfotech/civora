@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'login' => \App\Http\Middleware\Login::class,
         'adminAccess' => \App\Http\Middleware\AdminAccess::class,
         'APIToken' => \App\Http\Middleware\APIToken::class,
+        'checkDB' => \App\Http\Middleware\ConfigureDatabase::class,
     ];
 
     /**

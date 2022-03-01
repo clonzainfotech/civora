@@ -890,7 +890,7 @@
     
 @stop
 @section('page-script')
-<script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script> 
+<script src="{{url('assets/js/pages/ui/notifications.js')}}"></script> 
 <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
 
     <script type="text/javascript">

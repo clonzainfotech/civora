@@ -706,11 +706,11 @@
 </div>
 @stop
 @section('page-script')
-    <script src="{{asset('public/js/iui.js')}}"></script>
+    <script src="{{url('public/js/iui.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-    <script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-    <script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
+    <script src="{{url('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+    <script src="{{url('assets/js/pages/ui/notifications.js')}}"></script>
     <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
     $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
     <script src="{{URL::to('public/js/image-uploader.js')}}"></script>

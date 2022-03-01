@@ -50,7 +50,7 @@
     </div>
 @stop
 @push('after-scripts')
-<script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+<script src="{{url('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
 <script type="text/javascript">
      function loginvalidation() {
             document.getElementById('email_error').innerHTML="";

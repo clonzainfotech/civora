@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 @section('page-style')
     <link rel="stylesheet"
-          href="{{asset('assets/plugins/morrisjs/morris.min.css')}}" />
+          href="{{url('assets/plugins/morrisjs/morris.min.css')}}" />
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.min.css">
       <link href="https://fonts.googleapis.com/css?family=Wendy+One" rel="stylesheet" type="text/css">

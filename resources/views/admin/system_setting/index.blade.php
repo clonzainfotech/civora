@@ -472,5 +472,5 @@
 </div>
 @stop
 @section('page-script')
-	<script src="{{asset('public/js/system_setting.js')}}"></script>
+	<script src="{{url('public/js/system_setting.js')}}"></script>
 @stop

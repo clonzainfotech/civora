@@ -1,6 +1,6 @@
 
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
 <style>
     .print-header {
     width: 100%;
@@ -39,7 +39,7 @@
         <tr>
             <td rowspan="3">
                 <div class="print-logo">
-                <img src="{{asset('public/images/candor-logo.jpg')}}" class="logo-image">
+                <img src="{{url('public/images/candor-logo.jpg')}}" class="logo-image">
             </td>
             <td class="font text-center">{{strtoupper(config('app.hospitalname2')) }}</td>
             <td class="doctor">

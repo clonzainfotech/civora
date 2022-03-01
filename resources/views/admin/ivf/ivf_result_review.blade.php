@@ -375,7 +375,7 @@
 
 @stop
 @section('page-script')
-<script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
+<script src="{{url('assets/js/pages/ui/notifications.js')}}"></script>
     <script type="text/javascript">
         $('.datetimepicker').bootstrapMaterialDatePicker({
             format: 'dddd DD MMMM YYYY',

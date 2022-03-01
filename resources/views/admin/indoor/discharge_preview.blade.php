@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
 <style type="text/css">
     .print-discharge-table, .discharge-header, .invoice-receipt, .discharge-data {
         font-family: 'Montserrat', Arial, Tahoma, sans-serif;

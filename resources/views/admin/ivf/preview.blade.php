@@ -1,6 +1,6 @@
 
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" > --}}
+{{-- <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}" > --}}
 @php
     use App\Models\IvfExtraVisit;
 
@@ -3090,7 +3090,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
             @page { margin-top : 200px; margin-bottom : 80px;}
         </style>
         @if(!isset($printPreview) && (!isset($isAppointmentView) || $isAppointmentView == false))
-            <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
+            <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
         @endif
         @if($isTableView == '1' && $plan == 1)
             <?php

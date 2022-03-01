@@ -1,6 +1,6 @@
 @extends(isset($printPreview) && $printPreview == 1 ? 'layouts.printpreview' : 'layouts.printPreviewBlank')
 @if(!isset($printPreview))
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
 
 @endif
 <style>
@@ -330,7 +330,7 @@ h4{
         {{-- </div> --}}
         @php
             $erImageArray = ['good','medium','poor','gv','m1'];
-            $baseUrl = asset('assets/images');
+            $baseUrl = url('assets/images');
             // echo $baseUrl;
         @endphp
         <div class="row  er-image-div">
@@ -343,7 +343,7 @@ h4{
                         {{-- <div class="input-group"> --}}
                             <span class="mt-5 er_image_name"><strong>{{ucwords($erImage)}}</strong></span>
                             <br>
-                            <img src="{{asset('assets/images/'.$erImage.'.jpg')}}" class="er_image">
+                            <img src="{{url('assets/images/'.$erImage.'.jpg')}}" class="er_image">
                             
                             
                             <br>

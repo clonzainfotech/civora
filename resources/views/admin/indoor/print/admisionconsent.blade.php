@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
 <style type="text/css">
     .logo {
         text-align: center
@@ -32,7 +32,7 @@
 <div class="addmission-form">
 <div class="admision-consent-form">
     <div class="pb-2 logo">
-        {{-- <img src="{{asset('public/images/candor-logo.jpg')}}" class="logo-image"> --}}
+        {{-- <img src="{{url('public/images/candor-logo.jpg')}}" class="logo-image"> --}}
         <h5 class="font-weight-bold">{{config('app.hospitalname2')}}</h5>
     </div>
     @php

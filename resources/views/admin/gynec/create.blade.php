@@ -2980,5 +2980,5 @@
         sortField: 'text'
     });
 </script>
-    <script src="{{asset('public/js/gynec.js')}}"></script>
+    <script src="{{url('public/js/gynec.js')}}"></script>
 @stop

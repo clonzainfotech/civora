@@ -4,7 +4,7 @@
 @section('page-style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" integrity="sha256-ibvTNlNAB4VMqE5uFlnBME6hlparj5sEr1ovZ3B/bNA=" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/date_picker.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url('assets/css/date_picker.css')}}">
     <style>
         .ui-widget-content
         {
@@ -564,7 +564,7 @@
 @stop
 
 @section('page-script')
-<script type="text/javascript" src="{{asset('assets/js/jquery.date-dropdowns.js')}}"></script>
+<script type="text/javascript" src="{{url('assets/js/jquery.date-dropdowns.js')}}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>

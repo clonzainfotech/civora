@@ -5,20 +5,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"> <!-- Favicon-->
+        <link rel="icon" href="{{ url('favicon.ico') }}" type="image/x-icon"> <!-- Favicon-->
         <title>@yield('title') - {{ config('app.name') }}</title>
         <meta name="description" content="@yield('meta_description', config('app.name'))">
         <meta name="author" content="@yield('meta_author', config('app.name'))">
         @yield('meta')
         {{-- See https://laravel.com/docs/5.5/blade#stacks for usage --}}
         @stack('before-styles')
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Custom Css -->
-        <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/css/authentication.css') }}">
-        <link rel="stylesheet" href="{{asset('assets/css/color_skins.css') }}">
-        <link rel="stylesheet" href="{{asset('assets/css/themes.css') }}">
+        <link rel="stylesheet" href="{{url('assets/css/main.css')}}">
+        <link rel="stylesheet" href="{{url('assets/css/authentication.css') }}">
+        <link rel="stylesheet" href="{{url('assets/css/color_skins.css') }}">
+        <link rel="stylesheet" href="{{url('assets/css/themes.css') }}">
         @stack('after-styles')
     </head>
     <?php 
@@ -79,8 +79,8 @@
         </div>
         <!-- Scripts -->
         @stack('before-scripts')
-        <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>    
-        <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
+        <script src="{{ url('assets/bundles/libscripts.bundle.js') }}"></script>    
+        <script src="{{ url('assets/bundles/vendorscripts.bundle.js') }}"></script>
         
         @stack('after-scripts')
     </body>

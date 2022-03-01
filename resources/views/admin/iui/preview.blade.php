@@ -2923,7 +2923,7 @@
     </div>
 @elseif(!empty($iui->study_report))
     @if(!isset($printPreview) && (!isset($isAppointmentView) || $isAppointmentView == false))
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
+        <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}" >
     @endif
         @php
             $hTime = !empty($hcg->time) ? $hcg->time : null;

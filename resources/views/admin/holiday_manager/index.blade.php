@@ -2,7 +2,7 @@
 @section('parentPageTitle', 'Holiday Manager')
 @section('title', 'Holiday Manager')
 @section('page-style')
-    <link rel="stylesheet" href="{{asset('assets/plugins/fullcalendar/fullcalendar.min.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/plugins/fullcalendar/fullcalendar.min.css')}}" />
 @stop
 @section('content')
     <div class="row clearfix holiday">
@@ -72,8 +72,8 @@
     @stop
 @stop
 @section('page-script')
-<script src="{{asset('assets/bundles/fullcalendarscripts.bundle.js')}}"></script>
-    {{--<script src="{{asset('assets/js/pages/calendar/calendar.js')}}"></script>--}}
+<script src="{{url('assets/bundles/fullcalendarscripts.bundle.js')}}"></script>
+    {{--<script src="{{url('assets/js/pages/calendar/calendar.js')}}"></script>--}}
     <script type="text/javascript">
 
         $(document).ready(function () {

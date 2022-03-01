@@ -247,7 +247,7 @@
     </div>
 @stop
 @section('page-script')
-    <script src="{{asset('public/js/validation.js')}}"></script>
+    <script src="{{url('public/js/validation.js')}}"></script>
     <script>
         var roleValue = '';
 

@@ -22,19 +22,19 @@
         {{-- See https://laravel.com/docs/5.5/blade#stacks for usage --}}
         @stack('before-styles')
         <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
         @if (trim($__env->yieldContent('page-style')))
             @yield('page-style')
         @endif
         <!-- Custom Css -->
-        <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+        <link rel="stylesheet" href="{{url('assets/css/main.css')}}">
+        <link rel="stylesheet" href="{{url('assets/css/color_skins.css')}}">
         @stack('after-styles')
-        <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" />
+        <link rel="stylesheet" href="{{url('assets/plugins/sweetalert/sweetalert.css')}}"/>
+        <link rel="stylesheet" href="{{url('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
+        <link rel="stylesheet" href="{{url('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+        <link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
         <style type="text/css">
             .imgstyle{
                 width: 100px;
@@ -1577,18 +1577,18 @@
         </section>
         @yield('modal')
         @stack('before-scripts')
-        <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>
-        <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
-        <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
-        <script src="{{asset('assets/js/raphael-min.js')}}"></script>
-        <script src="{{asset('assets/js/morris.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+        <script src="{{ url('assets/bundles/libscripts.bundle.js') }}"></script>
+        <script src="{{ url('assets/bundles/vendorscripts.bundle.js') }}"></script>
+        <script src="{{ url('assets/bundles/mainscripts.bundle.js') }}"></script>
+        <script src="{{url('assets/js/raphael-min.js')}}"></script>
+        <script src="{{url('assets/js/morris.min.js')}}"></script>
+        <script src="{{url('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
-        <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
-        <script src="{{asset('assets/js/theme.js')}}"></script>
+        <script src="{{url('assets/plugins/momentjs/moment.js')}}"></script>
+        <script src="{{url('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
+        <script src="{{url('assets/js/theme.js')}}"></script>
         @stack('after-scripts')
         @if (trim($__env->yieldContent('page-script')))
             @yield('page-script')

@@ -504,7 +504,7 @@ foreach($ivf as $ivf)
                 </div>
                 @php
                     $erImageArray = ['good','medium','poor','gv','m1'];
-                    $baseUrl = asset('assets/images');
+                    $baseUrl = url('assets/images');
                 @endphp
                 <div class="row mb-2">
                     @foreach($erImageArray as $erImage)
@@ -512,7 +512,7 @@ foreach($ivf as $ivf)
                         @if(getimagesize($baseUrl.'/'.$erImage.'.jpg'))
                             <div class="col-md-2 text-center">
                                 {{-- <div class="input-group"> --}}
-                                    <img src="{{asset('assets/images/'.$erImage.'.jpg')}}" class="er_image mb-1">
+                                    <img src="{{url('assets/images/'.$erImage.'.jpg')}}" class="er_image mb-1">
                                     <br>
                                     <span class="er_image_name">{{ucwords($erImage)}}</span>
                                     {{Form::text('data[er]['.$erImage.']',isset($ivfReportData->er->$erImage) && !empty($ivfReportData->er->$erImage) ? $ivfReportData->er->$erImage : null,['class'=>'form-control good'])}}
@@ -565,7 +565,7 @@ foreach($ivf as $ivf)
 @stop
 
 @section('page-script')
-    <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
+    <script src="{{url('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
     $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>

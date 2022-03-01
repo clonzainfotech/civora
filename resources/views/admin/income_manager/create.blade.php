@@ -109,7 +109,7 @@
     </div>
 @stop
 @section('page-script')
-    <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
+    <script src="{{url('assets/plugins/momentjs/moment.js')}}"></script>
     <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
         $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
     <script type="text/javascript">

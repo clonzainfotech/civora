@@ -127,7 +127,7 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
 
 @stop
 @section('page-script')
-<script src="{{asset('public/js/anc.js')}}"></script>
+<script src="{{url('public/js/anc.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
 $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>

@@ -69,9 +69,9 @@
         padding: 12px 12px;
     }
     </style>
-    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/main.css')}}">
     <table class="table m-b-0 table-hover review-list" id="review-table" cellspacing="0">
         <thead>
             <tr>

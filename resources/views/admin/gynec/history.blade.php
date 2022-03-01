@@ -114,7 +114,7 @@
         </div>
     </div>
 @section('page-script')
-<script src="{{asset('public/js/gynec.js')}}"></script>
+<script src="{{url('public/js/gynec.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>    $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
 $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>

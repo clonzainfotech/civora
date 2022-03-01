@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
 <style type="text/css">
     .seperator {
         border-top: 0.5px solid #dee2e6;

@@ -3690,7 +3690,7 @@
     @endsection
 @stop
 @section('page-script')
-<script src="{{asset('public/js/ivf.js')}}"></script>
+<script src="{{url('public/js/ivf.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
 <script type="text/javascript">

@@ -119,10 +119,10 @@
                                                         }
 													@endphp
 													@if($imageType == "application/pdf" && !empty($imageType))     
-													<li data-responsive="{{asset($image)}}" data-iframe="true" data-src="{{asset($image)}}"
+													<li data-responsive="{{url($image)}}" data-iframe="true" data-src="{{url($image)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
-														<a href="{{asset($image)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{asset('public/images/default-pdf.png')}}">
+														<a href="{{url($image)}}" class="mb-1" target="_blank">
+															<img class="img-responsive" src="{{url('public/images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -131,10 +131,10 @@
 													</li>
 													@endif
 													@if($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" && !empty($imageType))     
-														<li data-responsive="{{asset($image)}}" data-src="{{asset($image)}}"
+														<li data-responsive="{{url($image)}}" data-src="{{url($image)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{asset($image)}}">
+																<img class="img-responsive" src="{{url($image)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -211,10 +211,10 @@
                                                         }
 													@endphp
 													@if($imageType == "application/pdf" && !empty($imageType))     
-													<li data-responsive="{{asset($image)}}" data-iframe="true" data-src="{{asset($image)}}"
+													<li data-responsive="{{url($image)}}" data-iframe="true" data-src="{{url($image)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
-														<a href="{{asset($image)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{asset('public/images/default-pdf.png')}}">
+														<a href="{{url($image)}}" class="mb-1" target="_blank">
+															<img class="img-responsive" src="{{url('public/images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -223,10 +223,10 @@
 													</li>
 													@endif
 													@if(($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" )&& !empty($imageType))     
-														<li data-responsive="{{asset($image)}}" data-src="{{asset($image)}}"
+														<li data-responsive="{{url($image)}}" data-src="{{url($image)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{asset($image)}}">
+																<img class="img-responsive" src="{{url($image)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -303,10 +303,10 @@
                                                         }
 													@endphp
 													@if($imageType == "application/pdf" && !empty($imageType))     
-													<li data-responsive="{{asset($image)}}" data-iframe="true" data-src="{{asset($image)}}"
+													<li data-responsive="{{url($image)}}" data-iframe="true" data-src="{{url($image)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
-														<a href="{{asset($image)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{asset('public/images/default-pdf.png')}}">
+														<a href="{{url($image)}}" class="mb-1" target="_blank">
+															<img class="img-responsive" src="{{url('public/images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -315,10 +315,10 @@
 													</li>
 													@endif
 													@if(($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" )&& !empty($imageType))     
-														<li data-responsive="{{asset($image)}}" data-src="{{asset($image)}}"
+														<li data-responsive="{{url($image)}}" data-src="{{url($image)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{asset($image)}}">
+																<img class="img-responsive" src="{{url($image)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -380,10 +380,10 @@
                                                         }
 													@endphp
 													@if($imageType == "application/pdf" && !empty($imageType))     
-													<li data-responsive="{{asset($image)}}" data-iframe="true" data-src="{{asset($image)}}"
+													<li data-responsive="{{url($image)}}" data-iframe="true" data-src="{{url($image)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
-														<a href="{{asset($image)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{asset('public/images/default-pdf.png')}}">
+														<a href="{{url($image)}}" class="mb-1" target="_blank">
+															<img class="img-responsive" src="{{url('public/images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -392,10 +392,10 @@
 													</li>
 													@endif
 													@if(($imageType == "image/png" || $imageType == "image/jpg" || $imageType == "image/jpeg" )&& !empty($imageType))     
-														<li data-responsive="{{asset($image)}}" data-src="{{asset($image)}}"
+														<li data-responsive="{{url($image)}}" data-src="{{url($image)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{asset($image)}}">
+																<img class="img-responsive" src="{{url($image)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>

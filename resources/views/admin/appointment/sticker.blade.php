@@ -105,7 +105,7 @@ td{
 
 </style>
 @if(isset($is_label) && $is_label == 1)
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
 <div class="label-table">
     @php
         $namePart = explode(' ',$label_name);

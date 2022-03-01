@@ -68,21 +68,21 @@ $water_mark = isset($systemSetting->water_mark) && !empty($systemSetting->water_
     <meta name="author" content="@yield('meta_author', config('app.name'))">
     @yield('meta')
     @stack('before-styles')
-    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
     @if (trim($__env->yieldContent('page-style')))
         @yield('page-style')
     @endif
 
 <!-- Custom Css -->
-    <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/main.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/color_skins.css')}}">
     @stack('after-styles')
-    <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
-    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/plugins/sweetalert/sweetalert.css')}}"/>
+    <link rel="stylesheet" href="{{url('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{asset('assets/css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/themes.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/themes.css')}}">
     <link rel="stylesheet" type="text/css" href="{{URL::to('public/css/bootstrap-notifications.min.css')}}">
     
 
@@ -130,19 +130,19 @@ $menu = "";
 @yield('modal')
 @include('admin.collection_password_modal')
 @stack('before-scripts')
-<script src="{{asset('assets/bundles/libscripts.bundle.js') }}"></script>
-<script src="{{asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
-<script src="{{asset('assets/bundles/mainscripts.bundle.js') }}"></script>
-<script src="{{asset('assets/js/raphael-min.js')}}"></script>
-<script src="{{asset('assets/js/morris.min.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{url('assets/bundles/libscripts.bundle.js') }}"></script>
+<script src="{{url('assets/bundles/vendorscripts.bundle.js') }}"></script>
+<script src="{{url('assets/bundles/mainscripts.bundle.js') }}"></script>
+<script src="{{url('assets/js/raphael-min.js')}}"></script>
+<script src="{{url('assets/js/morris.min.js')}}"></script>
+<script src="{{url('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
-<script src="{{asset('assets/js/select2.min.js')}}"></script>
-<script src="{{asset('assets/js/theme.js')}}"></script>
+<script src="{{url('assets/plugins/momentjs/moment.js')}}"></script>
+<script src="{{url('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
+<script src="{{url('assets/js/select2.min.js')}}"></script>
+<script src="{{url('assets/js/theme.js')}}"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.js"></script>
 <link href="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.css" rel="stylesheet"/>

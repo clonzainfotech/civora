@@ -414,9 +414,9 @@
 @stop
 
 @section('page-script')
-    <script src="{{asset('public/js/indoorprint.js')}}"></script>
-    <script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-    <script src="{{asset('assets/js/pages/ui/notifications.js')}}"></script>
+    <script src="{{url('public/js/indoorprint.js')}}"></script>
+    <script src="{{url('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+    <script src="{{url('assets/js/pages/ui/notifications.js')}}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
     <script type="text/javascript">
         $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -742,7 +742,7 @@
         }
         // $(document).on('click','.indoor-print',function(){
         // //     w=window.open('Print_Page', 'scrollbars=yes');        
-        // //     var myStyle = '<link rel="stylesheet" href="{{asset("assets/css/follicular_report.css")}}" />';
+        // //     var myStyle = '<link rel="stylesheet" href="{{url("assets/css/follicular_report.css")}}" />';
         // //    console.log(myStyle);
         // //     w.document.write(myStyle + jQuery('.follicular_table_print').html());
         // //     w.document.close();
@@ -750,7 +750,7 @@
         // var divContents = $('.indoor_detail').html();  
         //     var printWindow = window.open('', '');  
         //     printWindow.document.write('<html><head><title></title>');  
-        //     // printWindow.document.write('<link rel="stylesheet" href="{{asset("assets/css/follicular_report.css")}}" />');  
+        //     // printWindow.document.write('<link rel="stylesheet" href="{{url("assets/css/follicular_report.css")}}" />');  
         //     printWindow.document.write('<style type="text/css">');
         //     var follicular_css =  '.sticker-modal-width{width: 350px !important;} .do-not-print{display:none !important;}'+
         //     '.sticker-modal-footer{display: block !important;text-align: center !important;}.patient-room{cursor: pointer;}.p-name{color: #F96332 !important;}'+

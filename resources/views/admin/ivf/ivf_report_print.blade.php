@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
 <style>
     .patient-info {
         margin-bottom: 20px;

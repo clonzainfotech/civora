@@ -16,6 +16,7 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                         <input type="text" class="form-control daterange anc-date" data-id="anc-date" placeholder="Select Date">
                     </div>
                 </div>
+                
                 @if(!empty($ancData) && count($ancData) != 0)
                     @php
                         $mStatus = [1=>'જમ્યા પછી',2=>'જમ્યા પહેલાં',3=>'માસિકની જગ્યાએ મુકવી'];
@@ -28,7 +29,25 @@ $medqty = ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5];
                             unset($treatment->medicinedata);
                         @endphp<br>
                         <div class="row">
-                            <div class="col-md-5 ml-2">Appointment Date :- <span class="font-weight-bold">{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s')}}</span></div>
+                            <div class="col-md-5 ml-2"><span class="font-weight-bold">Appointment Date : </span><span class="font-weight-bold">{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s')}}</span></div>
+                        </div>
+                        <div class="row"> 
+                            <div class="col-md-12 ml-2">
+                                
+                                <div class="{{'edit-remark-data edit-remark-'.$row->getAppointment()['id']}}">
+                                    <span class="font-weight-bold">Medical Note : </span>
+                                    @if(!empty($row->getAppointment()['medical_note']))
+                                        <span class="text-danger">{{$row->getAppointment()['medical_note']}}</span>
+                                        <span class="edit-remark">
+                                            <i class="material-icons edit-remark-icon pencil-icon" data-value="{{$row->getAppointment()['medical_note']}}" data-id="{{$row->getAppointment()['id']}}">edit</i>
+                                        </span>
+                                    @else
+                                        <span class="edit-remark">
+                                            <i class="material-icons edit-remark-icon" data-value="" data-id="{{$row->getAppointment()['id']}}">add</i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                         <br>
                         <div class="medicines-table">

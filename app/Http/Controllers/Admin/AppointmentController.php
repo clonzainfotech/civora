@@ -1618,4 +1618,23 @@ class AppointmentController extends AdminController
             log::Debug($e);
         }
     }
+    /**
+    * Update Medical Remark
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function updateMedicalRemark(Request $request){
+        try{
+            $appointmentId = $request->appointmet_id;
+            $appointmentData = $this->Appointment->find($appointmentId);
+            $appointmentData->medical_note = $request->note;
+            $appointmentData->save();
+            return ['status'=>true];
+        }catch(Exception $e){
+            return [
+                'status' => false,
+                'message' => 'Internal server error'
+            ];
+        }
+    }
 }

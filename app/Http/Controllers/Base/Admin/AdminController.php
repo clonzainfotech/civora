@@ -87,9 +87,11 @@ class AdminController extends BaseController
      * @return array
      */
     public function nextAppointmentData($data){
+        // dd('gdfg');
         $isProcedure = !empty($data['is_procedure']) ? 1 : 0;
         $appointmentId = decrypt($data['appointmentId']);
         $appointmentData = $this->Appointment->where('id',$appointmentId)->first();
+        $lastAppointment = $this->Appointment->where('patients_id',$appointmentData->patients_id)->where('is_done',1)->orderBy('id','desc')->first();
         $date = Carbon::parse($data['date'])->format('Y-m-d');
         if($appointmentData['date'] > date('Y-m-d') && $appointmentData->usg_status == 0){
             $appointmentData->date = $date;
@@ -101,7 +103,9 @@ class AdminController extends BaseController
             $appointmentData->is_procedure = $isProcedure;
             $appointmentData->category_id = !empty($data['category']) ? $data['category'] : $appointmentData->category_id;
             $appointmentData->updated_by = Auth::user()->id;
+            $appointmentData->medical_note = !empty($lastAppointment) ? $lastAppointment->medical_note : '';
             $appointmentData->save();
+            dd('sf');
         }else{
             
 
@@ -143,6 +147,9 @@ class AdminController extends BaseController
                 $appointment->seen_by = !empty($appointmentData->getPatientsDetails['hospital_doctor_id']) ? $appointmentData->getPatientsDetails['hospital_doctor_id'] : 0;
                 $appointment->usg_status = !empty($data['usg_status']) ? $data['usg_status'] : 0;
                 $appointment->patients_id = $appointmentData->patients_id;
+                $appointment->medical_note = !empty($lastAppointment) ? $lastAppointment->medical_note : '';
+                // dd($appointment->medical_note);
+
                 $appointment->save();
                 $date = Carbon::parse($appointment->date)->format('d/m/Y');
             }

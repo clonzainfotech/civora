@@ -103,6 +103,7 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('update-appointment-time','AppointmentController@updateTime');
         Route::get('update-appointment-date-time','AppointmentController@updateAppointmentDateAndTime');
         Route::get('get-appointment-popup-Detail','AppointmentController@getAppointmentPopUpDetail');
+        Route::get('appointment-update-medicalRemark','AppointmentController@updateMedicalRemark');
 
 
         //Donor

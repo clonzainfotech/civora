@@ -21,12 +21,6 @@
                             Print
                         </button>
                     </a>
-                    <a href="#">
-                        <button class="{{'btn btn-primary medicine-note'}}">
-                            Add Note
-                        </button>
-                    </a>
-                
                     <a href="{{URL::to('medical')}}">
                         <button class="btn btn-primary">
                             Back
@@ -56,7 +50,8 @@
     </div>
 @stop
 @section('page-script')
-<script src="{{url('assets/js/pages/ui/notifications.js')}}"></script>
+<script src="{{url('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+    <script src="{{url('assets/js/pages/ui/notifications.js')}}"></script>
     <script type="text/javascript">
         var qstring = '';
         var lastCId = '';
@@ -98,7 +93,51 @@
                     window.location.href=url;
                 }
             });
-            
+            $(document).on('click','.edit-remark-icon',function(e){
+                e.preventDefault();
+                var dId = $(this).data('id');
+                var value = $(this).data('value');
+                if($('.remark-data').hasClass('remark-val')){
+                    var previousId = $('.remark-val').data('id');
+                    var previousRemark = $('.remark-val').data('value');
+                    var data = "<div class='edit-remark-data edit-remark-'"+previousId+"'>"+
+                        wordwrap(""+previousRemark+"", 100,'<br>\n')+
+                        "<span class='edit-remark'>"+
+                            "<i class='material-icons edit-remark-icon' data-value="+previousRemark+" data-id="+previousId+">edit</i>"+
+                        "</span>"+
+                    "</div>";
+                    $('.edit-remark-'+previousId).html(data);
+                }
+                var remarkData = "<input type ='text' name='total' value='"+value+"' class='form-control remark-val remark-data remark-value-"+dId+"' data-value='"+value+"' data-id="+dId+" autocomplete='off'>";
+                $('.edit-remark-'+dId).html(remarkData);
+            });
+            function wordwrap( str, width, brk, cut){
+                brk = brk || '\n';
+                width = width || 75;
+                cut = cut || false;
+
+                if (!str) { return str; }
+
+                var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+
+                return str.match( RegExp(regex, 'g') ).join( brk );
+            }
+            $(document).on('blur','.remark-data',function(){
+                var remark = $(this).val();
+                var appointmentId = $(this).data('id');
+                var remarkValue = 'note='+remark+'&appointmet_id='+appointmentId;
+                updateMedicalRemark(remarkValue,'blur');
+            });
+
+            $(document).on('keyup','.remark-data',function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                    var remark = $(this).val();
+                    var appointmentId = $(this).data('id');
+                    var remarkValue = 'note='+remark+'&appointmet_id='+appointmentId;
+                    updateMedicalRemark(remarkValue,'keyup');
+                }
+            });
         });
 
         // get appointment data
@@ -138,6 +177,20 @@
                     w.document.close();
                     w.window.print();
                 }
+            }).fail(function() {
+
+            });
+        }
+        //update medical note
+        function updateMedicalRemark(remarkValue,type){
+            $.ajax({
+                url: "{{URL::to('appointment-update-medicalRemark')}}?"+remarkValue,
+                dataType: 'json',
+            }).done(function(data) {
+                if(type == 'blur'){
+                    showNotification('bg-blue', 'Medical note changed successfully.', 'bottom', 'right', "", "");
+                }
+                getMedicineData();
             }).fail(function() {
 
             });

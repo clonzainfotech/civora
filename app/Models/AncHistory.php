@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Base\BaseModel;
 use App\ANC;
+use App\Models\Appointment;
+
 
 class AncHistory extends BaseModel
 {
@@ -19,5 +21,12 @@ class AncHistory extends BaseModel
 
     public function getUser() {
         return $this->belongsTo('App\User','created_by');
+    }
+    public function getAppointment() {
+        $anc = Appointment::where('patients_id',$this->patients_id)
+                    ->whereDate('date','=',$this->created_at)
+                    ->first();
+        return $anc;
+
     }
 }

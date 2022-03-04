@@ -80,6 +80,7 @@ class MedicalController extends AdminController
     */
     public function getMedicines(Request $request,$patientsId){
         try{
+            // dd(decrypt($patientsId));
             $pId = decrypt($patientsId);
             $categoryData = [];
             $ancData = [];
@@ -224,6 +225,7 @@ class MedicalController extends AdminController
                 $data['lastType'] = $lastType;
                 $data['gynecDate'] = $gynecDate;
                 $data['stichDate'] = $stichDate;
+                $data['patientsId'] = $patientsId;
                 if($request->is_print){
                     $ancHistory = $this->AncHistory->where('patients_id',$pId)->orderBy('id','DESC');
                     $anc = $this->ANC->where('patients_id',$pId)->orderBy('id','DESC');

@@ -78,7 +78,7 @@
         var todate = new Date();
         var currentData = 'total';
         var plan_type = '';
-        var qstring = '?fromdate=' + fromdate + '&todate=' + todate + '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+        var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type;
 
         $(document).ready(function () {
 
@@ -115,28 +115,29 @@
         });
         
         $(document).on("keyup",'#myInput', function() {
+            
             search = $(this).val();
             qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
-            // $('select.plan-type').val('');
-            // $('.plan-type').selectpicker('refresh');
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
             qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
             getAnalysisData(qstring)
-            // $(this).addClass('box-border');
+            
         });
         $(document).on('change','select.plan-type',function(){
+            
             plan_type = $(this).val();
             qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
             getAnalysisData(qstring)
-            // $(this).addClass('box-border');
         });
         // get all collection report data
         function getAnalysisData(qstring) {
+            fromdate = moment(fromdate).format('YYYY-MM-DD');
+            todate =  moment(todate).format('YYYY-MM-DD');
             $('.reportdata-loader').removeClass('d-none');
             $.ajax({
                 url: "{{URL::to('analysis-report')}}" + qstring,

@@ -2166,15 +2166,26 @@ class ReportController extends AdminController
             if($request->ajax())
             {
                 $data_plan_type = [];
+                $plan_type = '';
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
                 $data_total = $this->IUI->groupBy('patients_id')->whereHas('getPatientsDetails')->pluck('patients_id','patients_id')->toArray();
                 $data_newIvf = $this->Appointment->whereHas('getAppointmentCharges')->where('is_done',1)->whereIn('category_id',[3])->groupBy('patients_id')->orderBy('id','DESC');
                 $data_oldinf = $this->IuiHistory->groupBy('patients_id')->whereHas('getPatientsDetails');
                 $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC');
+                $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->groupBy('patients_id')->orderBy('id','DESC');
+                $data_dropIds = $this->Appointment->select('*',\DB::raw('max(id) as appointment_id'))->where('is_done',1)->groupBy('patients_id')->orderBy('id','DESC')->pluck('appointment_id','appointment_id')->toArray();
+                $data_drop = $this->Appointment->whereIn('id',$data_dropIds)->where('date', '<', (new \Carbon\Carbon)->submonths(1))->whereIn('category_id',[3,4]);
+                // $data_continue = $this->Appointment->whereIn('category_id',[3,4])->where('is_done',0)->groupBy('patients_id')->orderBy('id','DESC');
+                // $data_continue = $this->IuiHistory->groupBy('patients_id')->orderBy('id','DESC');
+                $data_continue = $this->IuiHistory->whereHas('getPatientsDetails')->where(function($query){
+                    $query->whereHas('lastAppointmentData', function($query) {
+                        return $query->whereIn('category_id',[3,4]);
+                    });
+                })->groupBy('patients_id')->orderBy('id','DESC');
                 if(!empty($request->plan_type))
                 {
-                    $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('type');
+                    $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('name');
                     $data_plan_type = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails')->where('description','like', '%'.$plan_type.'%')->groupBy('patients_id')->orderBy('id','DESC');
                     if($fromdate || $todate)
                     {
@@ -2183,33 +2194,46 @@ class ReportController extends AdminController
                         $data_plan_type = $data_plan_type->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     }
                     $data_plan_type = $data_plan_type->pluck('patients_id','patients_id')->toArray();
-                    $data_fail = $data_fail->where(function($query) {
-                        $query->orWhereHas('getIuiSecondVisit', function($query) use($search) {
-                            $query->where('description','like', '%'.$plan_type.'%');
-                        });
-                    });
                 }
 
-                
                 if($fromdate || $todate){
                     $fromdate = $fromdate;
                     $todate = $todate;
                     $data_newIvf = $data_newIvf->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
                     $data_oldinf = $data_oldinf->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                //     $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
-                //     $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
+                    $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $data_fail = $data_fail->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                 //     $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                //     $data_continue = $data_continue->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
+                    $data_continue = $data_continue->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     
                 }
-                // if(!empty($plan_type))
-                // {
-                //     $data_fail = collection
-                // }
+                if(!empty($plan_type))
+                {
+                    $data_fail_Id = collect($data_fail->get())->map(function($value) use($plan_type){
+                            return !empty($value->getIuiSecondVisitCycleWise()) && $value->getIuiSecondVisitCycleWise()['plan']['agenet'][0] == $plan_type  ? $value : [];
+                    })->pluck('patients_id','patients_id');
+                    $data_fail = $data_fail->whereIn('patients_id',$data_fail_Id);
+
+                    $data_consive_Id = collect($data_consive->get())->map(function($value) use($plan_type){
+                        return !empty($value->getIuiSecondVisitCycleWise()) && $value->getIuiSecondVisitCycleWise()['plan']['agenet'][0] == $plan_type ? $value : [];
+                    })->pluck('patients_id','patients_id');
+                    $data_consive = $data_consive->whereIn('patients_id',$data_consive_Id);
+
+                //     $data_drop_Id = collect($data_fail->get())->map(function($value) use($plan_type){
+                //         return !empty($value->getIuiSecondVisit()) && $value->getIuiSecondVisit()['plan']['agenet'][0] == $plan_type ? $value : [];
+                // })->pluck('patients_id','patients_id');
+                    $data_continue_Id = collect($data_continue->get())->map(function($value) use($plan_type){
+                        return !empty($value->getIuiSecondVisitCycleWise()) && $value->getIuiSecondVisitCycleWise()['plan']['agenet'][0] == $plan_type ? $value : [];
+                    })->pluck('patients_id','patients_id');
+                    $data_continue = $data_continue->whereIn('patients_id',$data_continue_Id);
+                }
                 $data_newIvf = $data_newIvf->pluck('patients_id','patients_id')->toArray();
                 $data_oldinf = $data_oldinf->pluck('patients_id','patients_id')->toArray();
                 $data_fail = $data_fail->pluck('patients_id','patients_id')->toArray();
+                $data_drop = $data_drop->pluck('patients_id','patients_id')->toArray();
+                $data_consive = $data_consive->pluck('patients_id','patients_id')->toArray();
+                $data_continue = $data_continue->pluck('patients_id','patients_id')->toArray();
                 $patients = $this->OpdPatients;
                 $key = $request->key;
                 if($key == 'total')
@@ -2232,12 +2256,28 @@ class ReportController extends AdminController
                 {
                     $patients = $patients->whereIn('id',$data_plan_type);
                 }
+                if($key == 'drop-inf')
+                {
+                    // $continue_ids = array_diff($data_total,$data_drop);
+                    $patients = $patients->whereIn('id',$data_drop);
+                }
+                if($key == 'consive-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_consive);
+                }
+                if($key == 'continue-inf')
+                {
+                    // $continue_ids = ($data['total'] - $data['drop']) > 0 ? array_diff($data_total,$data_drop) : [];
+                    $patients = $patients->whereIn('id',$data_continue);
+                }
                 $data['total'] = count($data_total);
                 $data['newinf'] = count($data_newIvf);
                 $data['oldinf'] = count($data_oldinf);
                 $data ['fail'] = count($data_fail);
                 $data ['plan_type'] = count($data_plan_type);
-
+                $data ['drop'] = count($data_drop);
+                $data ['consive'] = count($data_consive);
+                $data ['continue'] = count($data_continue);
                 $data['patients'] = $patients->get();
                 $data['status'] = 1;
                 $data['report_data'] = View::make('admin.report.analysis.data',compact('data'))->render();

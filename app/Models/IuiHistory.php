@@ -20,4 +20,13 @@ class IuiHistory extends BaseModel
     public function lastAppointmentData(){
         return $this->hasOne('App\Models\Appointment','patients_id','patients_id')->orderBy('id','DESC');
     }
+    public function getIuiSecondVisitCycleWise(){
+        // return $this->belongsTo('App\Models\IuiHistory','patients_id','patients_id')->where('cycle_no',$this->cycle_no)->where('visit',2);
+        $iui = IuiHistory::where([
+            'cycle_no' => $this->cycle_no,
+            'patients_id' => $this->patients_id,
+            'visit' => 2
+        ])->first();
+        return !empty($iui) ? json_decode($iui->description,true) : null;
+    }
 }

@@ -377,9 +377,35 @@
                                             </div>
                                             
                                         </div>
+                                        <div class="row treatment-data" id="t_data_1">
+                                            <div class="col-md-2 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    Select Medicine :
+                                                </label>
+                                            </div>
+                                            <div class="col-md-9 complain-multi medicine-picker">
+                                                {{-- {{Form::select("treatment[medicinedata][]",$medicines,'',['id'=>'treatment-medicine','class'=>'form-control medicine','multiple'=>true,])}} --}}
+                                                {{Form::select('treatment[medicinedata][]',$medicines, null,[
+                                                    'class'=>'form-control select-padding-0 medicine',
+                                                    'id' => 'treatment-medicine',
+                                                    'placeholder'=>'Rx(Treatment)',
+                                                ])}}
+                                            </div>
+                                        </div>
+                                        <div class="page-loader-wrapper medicine-loader d-none">
+                                            <div class="loader">
+                                                <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                            </div>
+                                        </div>
+                                        <div class="medicine-data">
 
+                                        </div>
+                                        {{Form::hidden('old_medicine_data',null,['class'=>'old-medicine-data'])}}
+                                        {{-- <span class="form-error-msg">
+                                            {{$errors->first('rxtreatment')}}
+                                            </span> --}}
                                         <div class="row clearfix">
-                                            <div class="col-md-6 complain-mulit">
+                                            {{-- <div class="col-md-6 complain-mulit">
                                                 <div class="form-group">
                                                 </div>
                                                 {{Form::select('treatment[medicinedata][]',$medicines,'',[
@@ -388,10 +414,8 @@
                                                     'multiple'=>true,'
                                                     required'
                                                     ])}}
-                                                <span class="form-error-msg">
-                                                {{$errors->first('rxtreatment')}}
-                                                </span>
-                                            </div>
+                                                
+                                            </div> --}}
                                             <div class="col-md-6 complain-mulit">
                                                 <div class="form-group">
                                                 </div>
@@ -607,6 +631,7 @@
         $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';
     </script>
     <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
+    <script src="{{URL::to('public/js/anc.js')}}"></script>
     <script>
         var bookingId = '';
 

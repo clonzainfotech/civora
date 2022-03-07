@@ -26,6 +26,10 @@
                             @php
                                 $birthCertificate = !empty($dischargedata->birth_certificate) ? json_decode($dischargedata->birth_certificate): null;
                                 $birth_image = !empty($birthCertificate) ? $birthCertificate->image : null;
+                                $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
+                                $medicine_status = ['' => 'Select Medicine Status','1'=>'જમ્યા પછી','2'=>'જમ્યા પહેલાં','3'=>'માસિકની જગ્યાએ મુકવી'];
+                                $medicine_time = ['1'=>'IV','2'=>'IM','3'=>'SC',"4"=>'Oral',"5"=>'P/V',"6"=>"P/A"];
+                                $dose = ['' => 'Select Dose',"1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"SOS","6"=>"Alternate Day","7"=>"6 hourly","8"=>"8 hourly","9"=>"12 hourly","10"=>"24 hourly"];
                             @endphp
                             @if(!empty($birth_image) && in_array($dischargedata->getIndoorBook->getprocedure['id'],[1,2,11]))
                             <a href="{{URl::to($birth_image)}}" target="_blank">
@@ -356,8 +360,110 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row treatment-data" id="t_data_1">
+                                            <div class="col-md-2 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    Select Medicine :
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="col-md-8 complain-multi mb-3 medicine-picker">
+                                                {{Form::select('treatment[medicinedata][]',$medicines,null,[
+                                                    'class'=>'form-control select-padding-0 medicine',
+                                                    'id' => 'treatment-medicine',
+                                                    'placeholder'=>'Enter medicine name',
+                                                ])}}
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="page-loader-wrapper medicine-loader d-none">
+                                            <div class="loader">
+                                                <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+                                            </div>
+                                        </div>
+                                        <div class="medicine-data">
+                                            @php
+                                                
+                                                $treatmentData = json_decode($treatmentData);
+                                                unset($treatmentData->medicinedata);
+                                            @endphp
+                                            @if(!empty($treatmentData))
+                                                
+                                                @foreach($treatmentData as $key=>$row)
+                                                    <?php
+                                                    $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
+                                                    $firstCharacter = substr($mId, 0, 3);
+                                                    $notinject = "";
+                                                    if($firstCharacter=="inj" || $firstCharacter=="INJ") {
+                                                        $notinject = "is-inj";
+                                                        $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week",'4'=>"Stat",'5'=>"SOS",'6'=>"Alternate Day",'7'=>"6 hourly",'8'=>"8 hourly",'9'=>"12 hourly",'10'=>"24 hourly"];
+                        
+                                                    }
+                                                    $till_follow_up = (isset($medicinesDays[$row->medicine]) && empty($medicinesDays[$row->medicine])) ? 'till-follow-up' : '';
+                                                    ?>
+                                                    <div class="{{'row '.$notinject}}" data-id="{{$mId}}">
+                                                        <div class='col-md-2'>
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>M : </span>
+                                                                {{Form::text('treatment['.$mId.'][medicine]',ucwords($row->medicine),['class'=>'form-control','readonly'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][quantity]',$medqty,$row->quantity,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][quantity_2]',$medqty,@$row->quantity_2,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][quantity_3]',$medqty,@$row->quantity_3,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][quantity_4]',$medqty,@$row->quantity_4,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2 notinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][medicine_status]',$medicine_status,$row->medicine_status,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2 isinject'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][medicine_time]',$medicine_time,@$row->medicine_time,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2'>
+                                                            <div class='form-group'>
+                                                                {{Form::select('treatment['.$mId.'][dose]',$dose,$row->dose,['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-2'>
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>Day :</span>
+                                                                {{Form::number('treatment['.$mId.'][no]',$row->no,['class'=>'form-control '.$till_follow_up])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='form-group'>
+                                                                <!-- <span class='input-group-addon'>Day :</span> -->
+                                                                {{Form::number('treatment['.$mId.'][note]',isset($row->note) ? $row->note : '',['class'=>'form-control','placeholder'=>'Note'])}}
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-1 medicine-data-remove'>
+                                                            <span class=""><i class="material-icons">close</i></span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
                                         <div class="row clearfix">
-                                            <div class="col-md-6 complain-mulit">
+                                            {{-- <div class="col-md-6 complain-mulit">
                                                 {{Form::select('treatment[medicinedata][]',$medicines, !empty($treatmentData) ? $treatmentData : null,[
                                                     'class'=>'form-control co-value co_value_data',
                                                     'placeholder'=> 'Rx(Treatment)',
@@ -367,7 +473,7 @@
                                                 <span class="form-error-msg">
                                                     {{$errors->first('rxtreatment')}}
                                                 </span>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-md-6 complain-mulit">
                                                 <div class="form-group">
                                                 </div>
@@ -379,6 +485,7 @@
                                                 ])}}
                                             </div>
                                         </div>
+                                        {{Form::hidden('old_medicine_data',null,['class'=>'old-medicine-data'])}}
                                         <div class="row clearfix mt-4">
                                             <div class="col-md-6">
                                                 <div class="row">
@@ -607,6 +714,7 @@
         $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';
     </script>
     <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
+    <script src="{{URL::to('public/js/anc.js')}}"></script>
 
     <script>
         var dischargeId = '';

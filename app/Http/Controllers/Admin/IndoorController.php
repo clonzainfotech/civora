@@ -564,7 +564,7 @@ class IndoorController extends AdminController
     public function dischargeStore($id, Request $request) {
         try {
             $bookingId = decrypt($id);
-            $this->medicineData2($request->treatment);
+            // $this->medicineData2($request->treatment);
             $this->giventratment($request->treatments);
             $this->diagnosisData($request->diagnosis);
             $dischargeData = $this->IndoorDischargeCard;
@@ -600,21 +600,21 @@ class IndoorController extends AdminController
             $dischargeData->treatment_given = $given_treatment;
             $dischargeData->hpe = $request->hpe;
             $rx_treatment = null;
-            $rxtreatment = $request->treatment;
-            if(is_array($rxtreatment))
-            {
-                if(is_array($rxtreatment['medicinedata']))
-                {
-                    $treatmentArray = array_values($rxtreatment['medicinedata']);
-                    $rx_treatment = implode(',', $treatmentArray);
-                }
-            }
+            // $rxtreatment = !empty($request->treatment)? json_decode($request->treatment) : null;
+            // if(is_array($rxtreatment))
+            // {
+            //     if(is_array($rxtreatment['medicinedata']))
+            //     {
+            //         $treatmentArray = array_values($rxtreatment['medicinedata']);
+            //         $rx_treatment = implode(',', $treatmentArray);
+            //     }
+            // }
             $complaintData = null;
             if(!empty($request->complaints)){
                 $complaintData = implode(',',$request->complaints);
                 $this->storeDischargeComplaint($request->complaints);
             }
-            $dischargeData->rx_treatment = $rx_treatment;
+            $dischargeData->rx_treatment = !empty($request->treatment)? json_encode($request->treatment) : null;
             $dischargeData->admission_vitals = $request->vitals;
             $dischargeData->clinical_summary = $request->clinicalsummary;
             $dischargeData->vital_on_discharge = $request->dischargevital;
@@ -715,8 +715,9 @@ class IndoorController extends AdminController
             $giventreatmentData = explode(",",$discharge['treatment_given']);
             $givenTreatment = $this->GivenTreatments->pluck('name','name');
             $surgicalNotes = $this->SurgicalNote->pluck('name','name');
-            $dischargedata['rx_treatment'] = $dischargedata->rx_treatment;
-            $treatmentData = explode(",",$dischargedata['rx_treatment']);
+            // $dischargedata['rx_treatment'] = $dischargedata->rx_treatment;
+            // $treatmentData = explode(",",$dischargedata['rx_treatment']);
+            $treatmentData = $dischargedata->rx_treatment;
             $medicines = $this->Medicine->pluck('name','name');
             $complaint = $this->DischargeComplaint->where('status',1)->pluck('name','name')->toArray();
             $doctor = $this->getDoctor();
@@ -752,7 +753,7 @@ class IndoorController extends AdminController
     */
     public function dischargeUpdate($id,Request $request) {
         try {
-            $this->medicineData2($request->treatment);
+            // $this->medicineData2($request->treatment);
             $this->giventratment($request->treatments);
             $this->diagnosisData($request->diagnosis);
 
@@ -789,22 +790,22 @@ class IndoorController extends AdminController
 
             $discarddata->treatment_given = $given_treatment;
             $discarddata->hpe = $request->hpe;
-            $rxtreatment = $request->treatment;
-            if(is_array($rxtreatment))
-            {
-                if(is_array($rxtreatment['medicinedata']))
-                {
-                    $treatmentArray = array_values($rxtreatment['medicinedata']);
-                    $rx_treatment = implode(',', $treatmentArray);
-                }
-            }
+            // $rxtreatment = $request->treatment;
+            // if(is_array($rxtreatment))
+            // {
+            //     if(is_array($rxtreatment['medicinedata']))
+            //     {
+            //         $treatmentArray = array_values($rxtreatment['medicinedata']);
+            //         $rx_treatment = implode(',', $treatmentArray);
+            //     }
+            // }
             $complaintData = null;
             if(!empty($request->complaints)){
                 $complaintData = implode(',',$request->complaints);
                 $this->storeDischargeComplaint($request->complaints);
             }
             $discarddata->created_by = Auth::user()->id;
-            $discarddata->rx_treatment = $rx_treatment;
+            $discarddata->rx_treatment = !empty($request->treatment) ? json_encode($request->treatment) : null;
             $discarddata->admission_vitals = $request->vitals;
             $discarddata->clinical_summary = $request->clinicalsummary;
             $discarddata->vital_on_discharge = $request->dischargevital;

@@ -2183,6 +2183,11 @@ class ReportController extends AdminController
                         return $query->whereIn('category_id',[3,4]);
                     });
                 })->groupBy('patients_id')->orderBy('id','DESC');
+                $data_skip = $this->IuiHistory->whereHas('getPatientsDetails')->where('description->skip_cycle','yes')->where(function($query){
+                    $query->whereHas('lastAppointmentData', function($query) {
+                        return $query->whereCategoryId(4);
+                    });
+                })->groupBy('patients_id')->orderBy('id','DESC');
                 if(!empty($request->plan_type))
                 {
                     $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('name');
@@ -2204,7 +2209,7 @@ class ReportController extends AdminController
                     $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
                     $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $data_fail = $data_fail->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                //     $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $data_continue = $data_continue->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     
                 }
@@ -2234,6 +2239,7 @@ class ReportController extends AdminController
                 $data_drop = $data_drop->pluck('patients_id','patients_id')->toArray();
                 $data_consive = $data_consive->pluck('patients_id','patients_id')->toArray();
                 $data_continue = $data_continue->pluck('patients_id','patients_id')->toArray();
+                $data_skip = $data_skip->pluck('patients_id','patients_id')->toArray();
                 $patients = $this->OpdPatients;
                 $key = $request->key;
                 if($key == 'total')
@@ -2270,6 +2276,15 @@ class ReportController extends AdminController
                     // $continue_ids = ($data['total'] - $data['drop']) > 0 ? array_diff($data_total,$data_drop) : [];
                     $patients = $patients->whereIn('id',$data_continue);
                 }
+                if($key == 'skip-inf')
+                {
+                    $patients = $patients->whereIn('id',$data_skip);
+                }
+                if(!empty($request->search))
+                {
+                    $search = $request->search;
+                    $patients = $patients->where('name','LIKE',$search.'%')->orWhere('mobile_number','LIKE',$search.'%');
+                }
                 $data['total'] = count($data_total);
                 $data['newinf'] = count($data_newIvf);
                 $data['oldinf'] = count($data_oldinf);
@@ -2278,6 +2293,7 @@ class ReportController extends AdminController
                 $data ['drop'] = count($data_drop);
                 $data ['consive'] = count($data_consive);
                 $data ['continue'] = count($data_continue);
+                $data ['skip'] = count($data_skip);
                 $data['patients'] = $patients->get();
                 $data['status'] = 1;
                 $data['report_data'] = View::make('admin.report.analysis.data',compact('data'))->render();

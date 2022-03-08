@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="col-sm-2">
+    <div class="col-sm-2">
         <div class="card iui-box" data-key='continue-inf'>
             <div class="body">
                 <div class="row">
@@ -47,8 +47,8 @@
                 </div>
             </div>
         </div>
-    </div> --}}
-    {{-- <div class="col-sm-2">
+    </div>
+    <div class="col-sm-2">
         <div class="card iui-box" data-key='drop-inf'>
             <div class="body">
                 <div class="row">
@@ -59,8 +59,8 @@
                 </div>
             </div>
         </div>
-    </div> --}}
-    {{-- <div class="col-sm-2">
+    </div>
+    <div class="col-sm-2">
         <div class="card iui-box" data-key='skip-inf'>
             <div class="body">
                 <div class="row">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <div class="col-sm-2">
         <div class="card iui-box" data-key='plan-inf'>
             <div class="body">
@@ -96,7 +96,7 @@
             </div>
         </div>
     </div> --}}
-    {{-- <div class="col-sm-2">
+    <div class="col-sm-2">
         <div class="card iui-box" data-key='consive-inf'>
             <div class="body">
                 <div class="row">
@@ -107,7 +107,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <div class="col-sm-2">
         <div class="card iui-box" data-key='fail-inf'>
             <div class="body">

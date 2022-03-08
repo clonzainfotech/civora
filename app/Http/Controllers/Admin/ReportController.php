@@ -2232,6 +2232,11 @@ class ReportController extends AdminController
                         return !empty($value->getIuiSecondVisitCycleWise()) && $value->getIuiSecondVisitCycleWise()['plan']['agenet'][0] == $plan_type ? $value : [];
                     })->pluck('patients_id','patients_id');
                     $data_continue = $data_continue->whereIn('patients_id',$data_continue_Id);
+
+                    $data_skip_Id = collect($data_skip->get())->map(function($value) use($plan_type){
+                        return !empty($value->getIuiSecondVisitCycleWise()) && $value->getIuiSecondVisitCycleWise()['plan']['agenet'][0] == $plan_type ? $value : [];
+                    })->pluck('patients_id','patients_id');
+                    $data_skip = $data_skip->whereIn('patients_id',$data_skip_Id);
                 }
                 $data_newIvf = $data_newIvf->pluck('patients_id','patients_id')->toArray();
                 $data_oldinf = $data_oldinf->pluck('patients_id','patients_id')->toArray();

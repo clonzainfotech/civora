@@ -1698,7 +1698,7 @@
                                     <tbody>
                                         <tr>
                                             <td>{{$visitDate}}</td>
-                                            <td>{{$planData[$lastCycleData->plan]}}</td>
+                                            <td>{{isset($planData[$lastCycleData->plan]) ? $planData[$lastCycleData->plan] : ''}}</td>
                                             <td>{{$lastCycleData->skip_reason}}</td>
                                         </tr>
                                     </tbody>
@@ -2769,7 +2769,7 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>{{$visitDate}}</td>
-                                                                    <td>{{$planData[$lastHistoryData->plan]}}</td>
+                                                                    <td>{{isset($planData[$lastHistoryData->plan]) ? $planData[$lastHistoryData->plan] : ''}}</td>
                                                                     <td>{{$lastHistoryData->skip_reason}}</td>
                                                                 </tr>
                                                             </tbody>

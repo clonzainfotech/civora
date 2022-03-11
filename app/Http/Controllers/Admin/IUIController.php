@@ -674,399 +674,8 @@ class IUIController extends AdminController
                 if(!empty($request->data['ivf']) && $request->data['ivf'] == 'yes' && !empty($request->data['ivf_plan']))
                 {
                     $data['remark'] = !empty($request->data['remark']) ? $request->data['remark'].', Transfer in IVF' : 'Transfer in IVF';
-                    $lastIUIHistory = null;
-                    $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
-                    $lastIui = $this->IUI->wherePatientsIdAndCycleNo($patientsId, $request->cycle_no)->first();
-                    $lastIUIHistory = $this->IuiHistory->wherePatientsIdAndCycleNo($patientsId, $request->cycle_no)->get();
-                    $iuiSecondVisit = $this->IuiHistory->where('patients_id',$patientsId)->whereCycleNo($request->cycle_no)->where('visit',2)->first();
-                    $iuiSecondVisitData = !empty($iuiSecondVisit) ? json_decode($iuiSecondVisit->description) : null;
+                    $iui->cycle_status = 2;
                     
-                    $checkIvf = $this->IVF->wherePatientsId($lastIui->patients_id)->first();
-                    $ivf = (empty($checkIvf)) ? $this->IVF : $this->IVF->wherePatientsId($lastIui->patients_id)->first();
-                    $ivf->patients_id = $lastIui->patients_id;
-                    $ivf->created_by = $lastIui->created_by;
-                    $ivf->patients_info = $lastIui->patients_info;
-                    $ivf->h_o = $lastIui->h_o;
-                    $ivf->c_o = $lastIui->c_o;
-                    $ivf->o_h = $lastIui->o_h;
-                    $ivf->m_h = $lastIui->m_h;
-                    $ivf->ho_rx = $lastIui->ho_rx;
-                    $ivf->investigation = $lastIui->investigation;
-                    $ivf->husband_factor = $lastIui->husband_factor;
-                    $ivf->patients_details_ho = $lastIui->patients_details_ho;
-                    $ivf->o_e = $lastIui->o_e;
-                    $ivf->plan_management = $lastIui->plan_management;
-                    $ivf->possible_case_of_infertility = $lastIui->possible_case_of_infertility;
-                    $ivf->treatment = $lastIui->treatment;
-                    $ivf->lmp_date = !empty($iuiSecondVisitData->lmp->date) ? Carbon::parse($iuiSecondVisitData->lmp->date)->format('Y-m-d') : Carbon::parse(!empty($request->data['lmp']['date']) ? $request->data['lmp']['date'] : date('y-m-d'))->format('Y-m-d');
-                    $ivf->save();
-                    
-                    if(count($lastIUIHistory) > 0 )//coverting from 3rd visit to IVF
-                    {
-                        $inducingInjectionData = $this->inducingInjection()['inj'];
-                        $injectionData = ['1'=>'Only HMG','2'=>'Only FSH','3'=>'FSH + HMG','4'=>'Lupride','5'=>'Letrozole + HMG','6'=>'Letrozole + FSH','7'=>'Clomiphene Citrate + HMG','8'=>'Clomiphene Citrate + FSH','9'=>'Antagonist'];
-                        $lastivfHistory = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request->data['ivf_plan'])->orderBy('id','desc')->first();
-                        // $lastivfHistory = $lastCycleNo->last();
-                        $ivfVisit = 2;
-                        $third_visit_Skey = 1;
-                        $ivfHistorydata = [];
-                        foreach($lastIUIHistory as $iuiHistory)
-                        {
-                            $iuiData = json_decode($iuiHistory->description);
-                            $dateAndInjectionData = [];
-                            $inducingDateArray = [];
-                            if(!empty($iuiData) && $request->data['ivf_plan'] == 1)
-                            {
-                                $lmpDate = \Carbon\Carbon::parse($iuiData->lmp->date)->format('d-m-Y');
-                                $createdAt = \Carbon\Carbon::parse($iuiHistory->created_at)->format('d-m-Y');
-                                $diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::parse($createdAt));
-                                $diff = $diff + 1;
-                                $agentData = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
-                                $s_key = 1;
-                                $protocol_key = 1;
-                                if($iuiHistory->visit == 2){
-                                    $appointmentDate = \Carbon\Carbon::parse($iuiHistory->created_at)->format('d-m-Y');
-                                    $agentData = !empty($iuiData->plan->agenet) ? $iuiData->plan->agenet: [];
-                                }
-                                if(!empty($iuiData->inducing)){
-                                    
-                                    $agentDataValue = [];
-                                    foreach($iuiData->inducing as $key => $value) {
-                                        $inducingDateArray[] = \Carbon\Carbon::parse($value->date)->format('d-m-Y');
-                                        $agentDataValue = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
-                                        $value->injection = $agentDataValue;
-                                    }
-                                    $dateAndInjectionData[] = (array)$iuiData->inducing;
-                                    // $dateAnd[] = (array)$data->inducing;
-                                }
-                                if($iuiHistory->visit == 2 && !in_array($appointmentDate,$inducingDateArray))
-                                {
-                                    $protocol[$protocol_key]['day'] = $diff;
-                                    $protocol[$protocol_key]['s_day'] = $s_key;
-                                    $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($appointmentDate)->format('D d M Y');
-                                    $protocol[$protocol_key]['injection'] = null;
-                                    $protocol[$protocol_key]['hmg'] = null;
-                                    $protocol[$protocol_key]['hmg_brand_name'] = null;
-                                    $protocol[$protocol_key]['fsh'] = null;
-                                    $protocol[$protocol_key]['fsh_brand_name'] = null;
-                                    $protocol[$protocol_key]['antagonist'] = null;
-                                    $protocol[$protocol_key]['time'] = null;
-                                    $s_key++;
-                                    $third_visit_Skey = $s_key;
-                                    
-                                    $iuiData->protocol = $protocol;
-                                    $iuiData->le = $iuiData->lmp->le;
-                                   
-                                    $iuiData->is_transfer = "no";
-                                    $iuiData->is_transfer_print = "no";
-                                    $iuiData->skip_reason = null;
-                                    $iuiData->plan = null;
-                                    $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                    
-                                }
-                                if(!empty($dateAndInjectionData) && $iuiHistory->visit == 2)
-                                {
-                                    foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)
-                                    {
-                                        $protocol = [];
-                                        $date = \Carbon\Carbon::parse($valueData->date)->format('d-m-Y');
-                                        $inducing_diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::parse($valueData->date));
-                                        $inducing_diff = $inducing_diff + 1;
-                                        if($iuiHistory->visit == 2)
-                                        {
-                                            $inducingAgentDataValue = [];
-                                            if(!empty($agentData))
-                                            {
-                                                foreach($agentData as $injection)
-                                                {
-                                                    if((!empty($injection)) && strpos($injection,'+') !== false)
-                                                    {
-                                                        $injection_name = explode('+',$injection)[1];
-                                                        $spilt_from = (strpos($injection_name,'on') !== false) ? 'on' : '-';
-                                                        $inj_name = explode($spilt_from,$injection_name)[0];
-                                                        $inducingAgentDataValue[] = $inj_name;
-                                                    }
-                                                    else {
-                                                        $inducingAgentDataValue[] = $injection;
-                                                    }
-                                                }
-                                            }
-                                            $inducing_agent = !empty($inducingAgentDataValue) ? implode(',',$inducingAgentDataValue) : '';
-                                            if(!empty($inducing_agent) && (!empty($valueData->date)))
-                                            {
-                                                $protocol[$protocol_key]['day'] = $inducing_diff;
-                                                $protocol[$protocol_key]['s_day'] = $s_key;
-                                                $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($date)->format('D d M Y');
-                                                
-                                                $injection = '';
-                                                $inducing_agent = trim($inducing_agent);
-                                                $dose = explode(' ', $inducing_agent);
-                                                
-                                                $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
-                                                $protocol[$protocol_key]['injection'] = null;
-                                                $protocol[$protocol_key]['hmg'] = null;
-                                                $protocol[$protocol_key]['hmg_brand_name'] = null;
-                                                $protocol[$protocol_key]['fsh'] = null;
-                                                $protocol[$protocol_key]['fsh_brand_name'] = null;
-                                                if(strpos($inducing_agent,'HMG') !== false) 
-                                                {
-                                                    $injection = 1;
-                                                    // $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
-                                                    $protocol[$protocol_key]['injection'] = $injection;
-                                                    $protocol[$protocol_key]['hmg'] = array_pop($dose);
-                                                    $protocol[$protocol_key]['hmg_brand_name'] = $brand_name;
-                                                }
-                                                elseif(strpos($inducing_agent,'FSH') !== false)
-                                                {
-                                                    $injection = 2;
-                                                    $protocol[$protocol_key]['injection'] = $injection;
-                                                    $protocol[$protocol_key]['fsh'] = array_pop($dose);
-                                                    $protocol[$protocol_key]['fsh_brand_name'] = $brand_name;
-                                                }
-                                                $protocol[$protocol_key]['antagonist'] = null;
-                                                $protocol[$protocol_key]['time'] = null;
-                                                $iuiData->protocol = $protocol;
-                                                $iuiData->le = $iuiData->lmp->le;
-                                                $iuiData->is_transfer = "no";
-                                                $iuiData->is_transfer_print = "no";
-                                                $iuiData->skip_reason = null;
-                                                $iuiData->plan = null;
-                                                $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                                $createdAt = $valueData->date;
-                                                $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                                                $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
-                                                $ivfHistorydata[] = [
-                                                    "patients_id" => $iuiHistory->patients_id,
-                                                    "seen_by" => $iuiHistory->seen_by,
-                                                    "rmo_doctor" => $iuiHistory->rmo_doctor,
-                                                    "created_by" => Auth::user()->id,
-                                                    "plan" => $request->data['ivf_plan'],
-                                                    'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
-                                                    'visit' =>$ivfVisit,
-                                                    'cycle_status' => 1,
-                                                    'description' => $iuiHistory->description,
-                                                    'investigation' => null,
-                                                    'trigger_date' => null,
-                                                    'trigger_time' => null,
-                                                    'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
-                                                    'updated_at'=>date('Y-m-d H:i:s')
-                                                ];
-                                            }
-                                        }
-                                        $third_visit_Skey = $s_key;
-                                        $s_key++;
-                                    }
-                                }
-                                if($iuiHistory->visit == 3)
-                                {
-                                    $agentData = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
-                                    $InjectionData = '';
-                                    if(!empty($agentData))
-                                    {
-                                        $ivfVisit++;
-                                        $protocol = [];
-                                        foreach($agentData as $agentData)
-                                        {
-                                            $third_visit_Skey++;
-                                            $protocol[$protocol_key]['day'] = $diff;
-                                            $protocol[$protocol_key]['s_day'] = $third_visit_Skey;
-                                            $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($iuiHistory->created_at)->format('D d M Y');
-                                            $injection = '';
-                                            $inducingInjection = $inducingInjectionData[$agentData];
-                                            $inducing_agent = trim($inducingInjection);
-                                            preg_match_all('!\d+!', $inducing_agent, $dose);
-                                            $brand_name = $this->string_between_two_string($inducingInjection,'(',')');
-                                            $protocol[$protocol_key]['injection'] = null;
-                                            $protocol[$protocol_key]['hmg'] = null;
-                                            $protocol[$protocol_key]['hmg_brand_name'] = null;
-                                            $protocol[$protocol_key]['fsh'] = null;
-                                            $protocol[$protocol_key]['fsh_brand_name'] = null;
-                                            if(strpos($inducingInjection,'HMG') !== false) 
-                                            {
-                                                $injection = 1;
-                                                // $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
-                                                $protocol[$protocol_key]['injection'] = $injection;
-                                                $protocol[$protocol_key]['hmg'] = array_pop($dose)[0];
-                                                $protocol[$protocol_key]['hmg_brand_name'] = $brand_name;
-                                            }
-                                            elseif(strpos($inducingInjection,'FSH') !== false)
-                                            {
-                                                $injection = 2;
-                                                $protocol[$protocol_key]['injection'] = $injection;
-                                                $protocol[$protocol_key]['fsh'] = array_pop($dose)[0];
-                                                $protocol[$protocol_key]['fsh_brand_name'] = $brand_name;
-                                            }
-                                        
-                                            // $protocol[$protocol_key]['injection'] = $inducingInjectionData[$agentData];
-                                            
-                                            $protocol[$protocol_key]['antagonist'] = null;
-                                            $protocol[$protocol_key]['time'] = null;
-                                            // dd($protocol);
-                                            $protocol_key++;
-                                            
-                                        }
-                                        $iuiData->protocol = $protocol;
-                                        $iuiData->is_transfer = "no";
-                                        $iuiData->is_transfer_print = "no";
-                                        $iuiData->skip_reason = null;
-                                        $iuiData->plan = null;
-                                        $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                        $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                                        $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
-                                        $ivfHistorydata[] = [
-                                            "patients_id" => $iuiHistory->patients_id,
-                                            "seen_by" => $iuiHistory->seen_by,
-                                            "rmo_doctor" => $iuiHistory->rmo_doctor,
-                                            "created_by" => Auth::user()->id,
-                                            "plan" => $request->data['ivf_plan'],
-                                            'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
-                                            'visit' =>$ivfVisit,
-                                            'cycle_status' => 1,
-                                            'description' => $iuiHistory->description,
-                                            'investigation' => null,
-                                            'trigger_date' => null,
-                                            'trigger_time' => null,
-                                            'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
-                                            'updated_at'=>date('Y-m-d H:i:s')
-                                        ];
-                                    }
-                                    else
-                                    {
-                                        $ivfVisit++;
-                                        $third_visit_Skey++;
-                                        $protocol = [];
-                                        $protocol[$protocol_key]['day'] = $diff;
-                                        $protocol[$protocol_key]['s_day'] = $third_visit_Skey;
-                                        $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($iuiHistory->created_at)->format('D d M Y');
-                                        $protocol[$protocol_key]['injection'] = null;
-                                        $protocol[$protocol_key]['hmg'] = null;
-                                        $protocol[$protocol_key]['hmg_brand_name'] = null;
-                                        $protocol[$protocol_key]['fsh'] = null;
-                                        $protocol[$protocol_key]['fsh_brand_name'] = null;
-                                        $protocol[$protocol_key]['antagonist'] = null;
-                                        $protocol[$protocol_key]['time'] = null;
-                                        $protocol_key++;
-                                        $iuiData->protocol = $protocol;
-                                        $iuiData->is_transfer = "no";
-                                        $iuiData->is_transfer_print = "no";
-                                        $iuiData->skip_reason = null;
-                                        $iuiData->plan = null;
-                                        $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                        $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                                        $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
-                                        $ivfHistorydata[] = [
-                                            "patients_id" => $iuiHistory->patients_id,
-                                            "seen_by" => $iuiHistory->seen_by,
-                                            "rmo_doctor" => $iuiHistory->rmo_doctor,
-                                            "created_by" => Auth::user()->id,
-                                            "plan" => $request->data['ivf_plan'],
-                                            'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
-                                            'visit' =>$ivfVisit,
-                                            'cycle_status' => 1,
-                                            'description' => $iuiHistory->description,
-                                            'investigation' => null,
-                                            'trigger_date' => null,
-                                            'trigger_time' => null,
-                                            'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
-                                            'updated_at'=>date('Y-m-d H:i:s')
-                                        ];
-
-                                    }
-                                }
-                            }
-                            if(!empty($iuiData) && ($request->data['ivf_plan'] == 2 || $request->data['ivf_plan'] == 3 || $request->data['ivf_plan'] == 4))
-                            {
-                                $ivfVisit++;
-                                $iuiData->oe->endometrial_cavity->size = isset($iuiData->endometrial->type) ? $iuiData->endometrial->type : '';
-                                if($iuiHistory->visit == 2)
-                                {
-                                    $iuiData->le = $iuiData->lmp->le;
-                                    $ivfVisit = 2;
-                                    $iuiData->oe->endometrial_cavity->size = $iuiData->oe->endometrial_cavity->size;
-                                    $iuiData->oe->endometrial_cavity->size = $iuiData->oe->endometrial_cavity->size;
-                                }
-                                // $iuiData->oe->endometrial_cavity->size = $iuiData->endometrial->type;
-                                $iuiData->is_transfer = "no";
-                                $iuiData->is_transfer_print = "no";
-                                $iuiData->skip_reason = null;
-                                $iuiData->plan = null;
-                                $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                $createdAt = $iuiHistory->created_at;
-                                $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                                $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
-                                $ivfHistorydata[] = [
-                                    "patients_id" => $iuiHistory->patients_id,
-                                    "seen_by" => $iuiHistory->seen_by,
-                                    "rmo_doctor" => $iuiHistory->rmo_doctor,
-                                    "created_by" => Auth::user()->id,
-                                    "plan" => $request->data['ivf_plan'],
-                                    'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
-                                    'visit' =>$ivfVisit,
-                                    'cycle_status' => 1,
-                                    'description' => $iuiHistory->description,
-                                    'investigation' => null,
-                                    'trigger_date' => null,
-                                    'trigger_time' => null,
-                                    'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
-                                    'updated_at'=>date('Y-m-d H:i:s')
-                                ];
-                            }
-                            
-                        }
-                        // dd($ivfHistorydata);
-                        $this->IvfHistory->insert($ivfHistorydata);
-                        $iui->cycle_status = 2;
-                    }
-                    else//coverting from 2nd visit to IVF
-                    {
-                        $description = $request->data;
-                        $lastIvfHistory = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request->data['ivf_plan'])->orderBy('id','desc')->first();
-                        if($request->data['ivf_plan'] == 1)
-                        {
-                            
-                            $lmpDate = \Carbon\Carbon::parse($description['lmp']['date'])->format('d-m-Y');
-                            $diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::now());
-                            $protocol = [];
-                            $followUp_diff = \Carbon\Carbon::parse($followupDate)->diffInDays(\Carbon\Carbon::now());
-                            for($i = 1; $i<=($followUp_diff+1); $i++)
-                            {
-                                $diff = $diff + 1;
-                                $protocol[$i]['day'] = $diff;
-                                $protocol[$i]['s_day'] = $i;
-                                $protocol[$i]['date'] = \Carbon\Carbon::parse($lmpDate)->addDays($i)->format('D d M Y');
-                                $protocol[$i]['injection'] = null;
-                                $protocol[$i]['hmg'] = null;
-                                $protocol[$i]['hmg_brand_name'] = null;
-                                $protocol[$i]['fsh'] = null;
-                                $protocol[$i]['fsh_brand_name'] = null;
-                                $protocol[$i]['antagonist'] = null;
-                                $protocol[$i]['time'] = null;
-                            }
-                            $description['protocol'] = $protocol;
-                        }
-                        
-                        $newIvfHistory = $this->IvfHistory;
-                        $newIvfHistory->patients_id = $patientsId;
-                        $newIvfHistory->seen_by = ($seenBy) ? $seenBy : Auth::user()->id;
-                        $newIvfHistory->rmo_doctor = $request->rmo_doctor;
-                        $description['le'] = $description['lmp']['le'];
-                        $description['is_transfer'] = "no";
-                        $description['is_transfer_print'] = "no";
-                        $description['skip_reason'] = null;
-                        $description['remark'] = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                        $description['plan'] = null;
-                        $description['follow_up'] = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                        $newIvfHistory->description = json_encode($description);
-                        $newIvfHistory->created_by = Auth::user()->id;
-                        $newIvfHistory->plan = $request->data['ivf_plan'];
-                        $newIvfHistory->visit = 2;
-                        $newIvfHistory->cycle_no = !empty($lastIvfHistory) ? $lastIvfHistory->cycle_no + 1 : 1;
-                        $newIvfHistory->investigation = null;
-                        $newIvfHistory->trigger_date = null;
-                        $newIvfHistory->trigger_time = null;
-                        $newIvfHistory->save();
-                        $iui->cycle_status = 2;
-                    }
                 }
             }
             
@@ -1097,6 +706,401 @@ class IUIController extends AdminController
                 $iui->husband_factor = isset($request['h_factor']) ? json_encode($request['h_factor']) : null;
             $iui->created_at = !empty($iui->created_at) ? $iui->created_at : Carbon::now()->format('Y-m-d H:i:s');
             $iui->created_by = Auth::user()->id;
+            $iui->save();
+            //tranfer in IVF
+            if($request->visit != 1)
+            {
+                $lastIUIHistory = null;
+                $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
+                $lastIui = $this->IUI->wherePatientsIdAndCycleNo($patientsId, $request->cycle_no)->first();
+                $lastIUIHistory = $this->IuiHistory->wherePatientsIdAndCycleNo($patientsId, $request->cycle_no)->get();
+                $iuiSecondVisit = $this->IuiHistory->where('patients_id',$patientsId)->whereCycleNo($request->cycle_no)->where('visit',2)->first();
+                $iuiSecondVisitData = !empty($iuiSecondVisit) ? json_decode($iuiSecondVisit->description) : null;
+                
+                $checkIvf = $this->IVF->wherePatientsId($lastIui->patients_id)->first();
+                $ivf = (empty($checkIvf)) ? $this->IVF : $this->IVF->wherePatientsId($lastIui->patients_id)->first();
+                $ivf->patients_id = $lastIui->patients_id;
+                $ivf->created_by = $lastIui->created_by;
+                $ivf->patients_info = $lastIui->patients_info;
+                $ivf->h_o = $lastIui->h_o;
+                $ivf->c_o = $lastIui->c_o;
+                $ivf->o_h = $lastIui->o_h;
+                $ivf->m_h = $lastIui->m_h;
+                $ivf->ho_rx = $lastIui->ho_rx;
+                $ivf->investigation = $lastIui->investigation;
+                $ivf->husband_factor = $lastIui->husband_factor;
+                $ivf->patients_details_ho = $lastIui->patients_details_ho;
+                $ivf->o_e = $lastIui->o_e;
+                $ivf->plan_management = $lastIui->plan_management;
+                $ivf->possible_case_of_infertility = $lastIui->possible_case_of_infertility;
+                $ivf->treatment = $lastIui->treatment;
+                $ivf->lmp_date = !empty($iuiSecondVisitData->lmp->date) ? Carbon::parse($iuiSecondVisitData->lmp->date)->format('Y-m-d') : Carbon::parse(!empty($request->data['lmp']['date']) ? $request->data['lmp']['date'] : date('y-m-d'))->format('Y-m-d');
+                $ivf->save();
+                
+                if(count($lastIUIHistory) > 0 )//coverting from 3rd visit to IVF
+                {
+                    $inducingInjectionData = $this->inducingInjection()['inj'];
+                    $injectionData = ['1'=>'Only HMG','2'=>'Only FSH','3'=>'FSH + HMG','4'=>'Lupride','5'=>'Letrozole + HMG','6'=>'Letrozole + FSH','7'=>'Clomiphene Citrate + HMG','8'=>'Clomiphene Citrate + FSH','9'=>'Antagonist'];
+                    $lastivfHistory = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request->data['ivf_plan'])->orderBy('id','desc')->first();
+                    // $lastivfHistory = $lastCycleNo->last();
+                    $ivfVisit = 2;
+                    $third_visit_Skey = 1;
+                    $ivfHistorydata = [];
+                    foreach($lastIUIHistory as $iuiHistory)
+                    {
+                        $iuiData = json_decode($iuiHistory->description);
+                        $dateAndInjectionData = [];
+                        $inducingDateArray = [];
+                        if(!empty($iuiData) && $request->data['ivf_plan'] == 1)
+                        {
+                            $lmpDate = \Carbon\Carbon::parse($iuiData->lmp->date)->format('d-m-Y');
+                            $createdAt = \Carbon\Carbon::parse($iuiHistory->created_at)->format('d-m-Y');
+                            $diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::parse($createdAt));
+                            $diff = $diff + 1;
+                            $agentData = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
+                            $s_key = 1;
+                            $protocol_key = 1;
+                            if($iuiHistory->visit == 2){
+                                $appointmentDate = \Carbon\Carbon::parse($iuiHistory->created_at)->format('d-m-Y');
+                                $agentData = !empty($iuiData->plan->agenet) ? $iuiData->plan->agenet: [];
+                            }
+                            if(!empty($iuiData->inducing)){
+                                
+                                $agentDataValue = [];
+                                foreach($iuiData->inducing as $key => $value) {
+                                    $inducingDateArray[] = \Carbon\Carbon::parse($value->date)->format('d-m-Y');
+                                    $agentDataValue = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
+                                    $value->injection = $agentDataValue;
+                                }
+                                $dateAndInjectionData[] = (array)$iuiData->inducing;
+                                // $dateAnd[] = (array)$data->inducing;
+                            }
+                            if($iuiHistory->visit == 2 && !in_array($appointmentDate,$inducingDateArray))
+                            {
+                                $protocol[$protocol_key]['day'] = $diff;
+                                $protocol[$protocol_key]['s_day'] = $s_key;
+                                $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($appointmentDate)->format('D d M Y');
+                                $protocol[$protocol_key]['injection'] = null;
+                                $protocol[$protocol_key]['hmg'] = null;
+                                $protocol[$protocol_key]['hmg_brand_name'] = null;
+                                $protocol[$protocol_key]['fsh'] = null;
+                                $protocol[$protocol_key]['fsh_brand_name'] = null;
+                                $protocol[$protocol_key]['antagonist'] = null;
+                                $protocol[$protocol_key]['time'] = null;
+                                $s_key++;
+                                $third_visit_Skey = $s_key;
+                                
+                                $iuiData->protocol = $protocol;
+                                $iuiData->le = $iuiData->lmp->le;
+                               
+                                $iuiData->is_transfer = "no";
+                                $iuiData->is_transfer_print = "no";
+                                $iuiData->skip_reason = null;
+                                $iuiData->plan = null;
+                                $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                                
+                            }
+                            if(!empty($dateAndInjectionData) && $iuiHistory->visit == 2)
+                            {
+                                $protocol = [];
+                                foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)
+                                {
+                                    
+                                    $date = \Carbon\Carbon::parse($valueData->date)->format('d-m-Y');
+                                    $inducing_diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::parse($valueData->date));
+                                    $inducing_diff = $inducing_diff + 1;
+                                    if($iuiHistory->visit == 2)
+                                    {
+                                        $inducingAgentDataValue = [];
+                                        if(!empty($agentData))
+                                        {
+                                            foreach($agentData as $injection)
+                                            {
+                                                if((!empty($injection)) && strpos($injection,'+') !== false)
+                                                {
+                                                    $injection_name = explode('+',$injection)[1];
+                                                    $spilt_from = (strpos($injection_name,'on') !== false) ? 'on' : '-';
+                                                    $inj_name = explode($spilt_from,$injection_name)[0];
+                                                    $inducingAgentDataValue[] = $inj_name;
+                                                }
+                                                else {
+                                                    $inducingAgentDataValue[] = $injection;
+                                                }
+                                            }
+                                        }
+                                        $inducing_agent = !empty($inducingAgentDataValue) ? implode(',',$inducingAgentDataValue) : '';
+                                        if(!empty($inducing_agent) && (!empty($valueData->date)))
+                                        {
+                                            $protocol[$protocol_key]['day'] = $inducing_diff;
+                                            $protocol[$protocol_key]['s_day'] = $s_key;
+                                            $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($date)->format('D d M Y');
+                                            
+                                            $injection = '';
+                                            $inducing_agent = trim($inducing_agent);
+                                            $dose = explode(' ', $inducing_agent);
+                                            
+                                            $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
+                                            $protocol[$protocol_key]['injection'] = null;
+                                            $protocol[$protocol_key]['hmg'] = null;
+                                            $protocol[$protocol_key]['hmg_brand_name'] = null;
+                                            $protocol[$protocol_key]['fsh'] = null;
+                                            $protocol[$protocol_key]['fsh_brand_name'] = null;
+                                            if(strpos($inducing_agent,'HMG') !== false) 
+                                            {
+                                                $injection = 1;
+                                                // $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
+                                                $protocol[$protocol_key]['injection'] = $injection;
+                                                $protocol[$protocol_key]['hmg'] = array_pop($dose);
+                                                $protocol[$protocol_key]['hmg_brand_name'] = $brand_name;
+                                            }
+                                            elseif(strpos($inducing_agent,'FSH') !== false)
+                                            {
+                                                $injection = 2;
+                                                $protocol[$protocol_key]['injection'] = $injection;
+                                                $protocol[$protocol_key]['fsh'] = array_pop($dose);
+                                                $protocol[$protocol_key]['fsh_brand_name'] = $brand_name;
+                                            }
+                                            $protocol[$protocol_key]['antagonist'] = null;
+                                            $protocol[$protocol_key]['time'] = null;
+                                        }
+                                    }
+                                    $protocol_key++;
+                                    $third_visit_Skey = $s_key;
+                                    $s_key++;
+                                }
+                                $iuiData->protocol = $protocol;
+                                $iuiData->le = $iuiData->lmp->le;
+                                $iuiData->is_transfer = "no";
+                                $iuiData->is_transfer_print = "no";
+                                $iuiData->skip_reason = null;
+                                $iuiData->plan = null;
+                                $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                                $createdAt = $valueData->date;
+                                $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                $ivfHistorydata[] = [
+                                    "patients_id" => $iuiHistory->patients_id,
+                                    "seen_by" => $iuiHistory->seen_by,
+                                    "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                    "created_by" => Auth::user()->id,
+                                    "plan" => $request->data['ivf_plan'],
+                                    'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                    'visit' =>$ivfVisit,
+                                    'cycle_status' => 1,
+                                    'description' => $iuiHistory->description,
+                                    'investigation' => null,
+                                    'trigger_date' => null,
+                                    'trigger_time' => null,
+                                    'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                    'updated_at'=>date('Y-m-d H:i:s')
+                                ];
+                            }
+                            if($iuiHistory->visit == 3)
+                            {
+                                $agentData = !empty($iuiData->plan->inducing_agent) ? $iuiData->plan->inducing_agent : [];
+                                $InjectionData = '';
+                                if(!empty($agentData))
+                                {
+                                    $ivfVisit++;
+                                    $protocol = [];
+                                    foreach($agentData as $agentData)
+                                    {
+                                        $third_visit_Skey++;
+                                        $protocol[$protocol_key]['day'] = $diff;
+                                        $protocol[$protocol_key]['s_day'] = $third_visit_Skey;
+                                        $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($iuiHistory->created_at)->format('D d M Y');
+                                        $injection = '';
+                                        $inducingInjection = $inducingInjectionData[$agentData];
+                                        $inducing_agent = trim($inducingInjection);
+                                        preg_match_all('!\d+!', $inducing_agent, $dose);
+                                        $brand_name = $this->string_between_two_string($inducingInjection,'(',')');
+                                        $protocol[$protocol_key]['injection'] = null;
+                                        $protocol[$protocol_key]['hmg'] = null;
+                                        $protocol[$protocol_key]['hmg_brand_name'] = null;
+                                        $protocol[$protocol_key]['fsh'] = null;
+                                        $protocol[$protocol_key]['fsh_brand_name'] = null;
+                                        if(strpos($inducingInjection,'HMG') !== false) 
+                                        {
+                                            $injection = 1;
+                                            // $brand_name = $this->string_between_two_string($inducing_agent,'(',')');
+                                            $protocol[$protocol_key]['injection'] = $injection;
+                                            $protocol[$protocol_key]['hmg'] = array_pop($dose)[0];
+                                            $protocol[$protocol_key]['hmg_brand_name'] = $brand_name;
+                                        }
+                                        elseif(strpos($inducingInjection,'FSH') !== false)
+                                        {
+                                            $injection = 2;
+                                            $protocol[$protocol_key]['injection'] = $injection;
+                                            $protocol[$protocol_key]['fsh'] = array_pop($dose)[0];
+                                            $protocol[$protocol_key]['fsh_brand_name'] = $brand_name;
+                                        }
+                                    
+                                        // $protocol[$protocol_key]['injection'] = $inducingInjectionData[$agentData];
+                                        
+                                        $protocol[$protocol_key]['antagonist'] = null;
+                                        $protocol[$protocol_key]['time'] = null;
+                                        // dd($protocol);
+                                        $protocol_key++;
+                                        
+                                    }
+                                    $iuiData->protocol = $protocol;
+                                    $iuiData->is_transfer = "no";
+                                    $iuiData->is_transfer_print = "no";
+                                    $iuiData->skip_reason = null;
+                                    $iuiData->plan = null;
+                                    $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                                    $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                    $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                    $ivfHistorydata[] = [
+                                        "patients_id" => $iuiHistory->patients_id,
+                                        "seen_by" => $iuiHistory->seen_by,
+                                        "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                        "created_by" => Auth::user()->id,
+                                        "plan" => $request->data['ivf_plan'],
+                                        'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                        'visit' =>$ivfVisit,
+                                        'cycle_status' => 1,
+                                        'description' => $iuiHistory->description,
+                                        'investigation' => null,
+                                        'trigger_date' => null,
+                                        'trigger_time' => null,
+                                        'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                        'updated_at'=>date('Y-m-d H:i:s')
+                                    ];
+                                }
+                                else
+                                {
+                                    $ivfVisit++;
+                                    $third_visit_Skey++;
+                                    $protocol = [];
+                                    $protocol[$protocol_key]['day'] = $diff;
+                                    $protocol[$protocol_key]['s_day'] = $third_visit_Skey;
+                                    $protocol[$protocol_key]['date'] = \Carbon\Carbon::parse($iuiHistory->created_at)->format('D d M Y');
+                                    $protocol[$protocol_key]['injection'] = null;
+                                    $protocol[$protocol_key]['hmg'] = null;
+                                    $protocol[$protocol_key]['hmg_brand_name'] = null;
+                                    $protocol[$protocol_key]['fsh'] = null;
+                                    $protocol[$protocol_key]['fsh_brand_name'] = null;
+                                    $protocol[$protocol_key]['antagonist'] = null;
+                                    $protocol[$protocol_key]['time'] = null;
+                                    $protocol_key++;
+                                    $iuiData->protocol = $protocol;
+                                    $iuiData->is_transfer = "no";
+                                    $iuiData->is_transfer_print = "no";
+                                    $iuiData->skip_reason = null;
+                                    $iuiData->plan = null;
+                                    $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                                    $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                    $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                    $ivfHistorydata[] = [
+                                        "patients_id" => $iuiHistory->patients_id,
+                                        "seen_by" => $iuiHistory->seen_by,
+                                        "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                        "created_by" => Auth::user()->id,
+                                        "plan" => $request->data['ivf_plan'],
+                                        'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                        'visit' =>$ivfVisit,
+                                        'cycle_status' => 1,
+                                        'description' => $iuiHistory->description,
+                                        'investigation' => null,
+                                        'trigger_date' => null,
+                                        'trigger_time' => null,
+                                        'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                        'updated_at'=>date('Y-m-d H:i:s')
+                                    ];
+
+                                }
+                            }
+                        }
+                        if(!empty($iuiData) && ($request->data['ivf_plan'] == 2 || $request->data['ivf_plan'] == 3 || $request->data['ivf_plan'] == 4))
+                        {
+                            $ivfVisit++;
+                            $iuiData->oe->endometrial_cavity->size = isset($iuiData->endometrial->type) ? $iuiData->endometrial->type : '';
+                            if($iuiHistory->visit == 2)
+                            {
+                                $iuiData->le = $iuiData->lmp->le;
+                                $ivfVisit = 2;
+                                $iuiData->oe->endometrial_cavity->size = $iuiData->oe->endometrial_cavity->size;
+                                $iuiData->oe->endometrial_cavity->size = $iuiData->oe->endometrial_cavity->size;
+                            }
+                            // $iuiData->oe->endometrial_cavity->size = $iuiData->endometrial->type;
+                            $iuiData->is_transfer = "no";
+                            $iuiData->is_transfer_print = "no";
+                            $iuiData->skip_reason = null;
+                            $iuiData->plan = null;
+                            $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                            $createdAt = $iuiHistory->created_at;
+                            $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                            $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                            $ivfHistorydata[] = [
+                                "patients_id" => $iuiHistory->patients_id,
+                                "seen_by" => $iuiHistory->seen_by,
+                                "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                "created_by" => Auth::user()->id,
+                                "plan" => $request->data['ivf_plan'],
+                                'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                'visit' =>$ivfVisit,
+                                'cycle_status' => 1,
+                                'description' => $iuiHistory->description,
+                                'investigation' => null,
+                                'trigger_date' => null,
+                                'trigger_time' => null,
+                                'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                'updated_at'=>date('Y-m-d H:i:s')
+                            ];
+                        }
+                    }
+                    $this->IvfHistory->insert($ivfHistorydata);
+                }
+                // else//coverting from 2nd visit to IVF
+                // {
+                //     $description = $request->data;
+                //     $lastIvfHistory = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request->data['ivf_plan'])->orderBy('id','desc')->first();
+                //     if($request->data['ivf_plan'] == 1)
+                //     {
+                        
+                //         $lmpDate = \Carbon\Carbon::parse($description['lmp']['date'])->format('d-m-Y');
+                //         $diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::now());
+                //         $protocol = [];
+                //         $followUp_diff = \Carbon\Carbon::parse($followupDate)->diffInDays(\Carbon\Carbon::now());
+                //         for($i = 1; $i<=($followUp_diff+1); $i++)
+                //         {
+                //             $diff = $diff + 1;
+                //             $protocol[$i]['day'] = $diff;
+                //             $protocol[$i]['s_day'] = $i;
+                //             $protocol[$i]['date'] = \Carbon\Carbon::parse($lmpDate)->addDays($i)->format('D d M Y');
+                //             $protocol[$i]['injection'] = null;
+                //             $protocol[$i]['hmg'] = null;
+                //             $protocol[$i]['hmg_brand_name'] = null;
+                //             $protocol[$i]['fsh'] = null;
+                //             $protocol[$i]['fsh_brand_name'] = null;
+                //             $protocol[$i]['antagonist'] = null;
+                //             $protocol[$i]['time'] = null;
+                //         }
+                //         $description['protocol'] = $protocol;
+                //     }
+                //     $newIvfHistory = $this->IvfHistory;
+                //     $newIvfHistory->patients_id = $patientsId;
+                //     $newIvfHistory->seen_by = ($seenBy) ? $seenBy : Auth::user()->id;
+                //     $newIvfHistory->rmo_doctor = $request->rmo_doctor;
+                //     $description['le'] = $description['lmp']['le'];
+                //     $description['is_transfer'] = "no";
+                //     $description['is_transfer_print'] = "no";
+                //     $description['skip_reason'] = null;
+                //     $description['remark'] = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                //     $description['plan'] = null;
+                //     $description['follow_up'] = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                //     $newIvfHistory->description = json_encode($description);
+                //     $newIvfHistory->created_by = Auth::user()->id;
+                //     $newIvfHistory->plan = $request->data['ivf_plan'];
+                //     $newIvfHistory->visit = 2;
+                //     $newIvfHistory->cycle_no = !empty($lastIvfHistory) ? $lastIvfHistory->cycle_no + 1 : 1;
+                //     $newIvfHistory->investigation = null;
+                //     $newIvfHistory->trigger_date = null;
+                //     $newIvfHistory->trigger_time = null;
+                //     $newIvfHistory->save();
+                // }
+            }
             if($request->iui_history_id)
             {
                 $editIvf = $this->IuiHistory->find($request->iui_history_id);
@@ -1128,7 +1132,6 @@ class IUIController extends AdminController
                     }
                 }
             }
-            $iui->save();
             $now = Carbon::now()->format('Y-m-d');
             if(!$request->iui_history_id && !$request->iui_id)
             {
@@ -1299,7 +1302,7 @@ class IUIController extends AdminController
         try{
             $id = decrypt($patientsId);
             //if pt in iui and currently take tretment in ivf then transfer again in iui or cuurently take tretment and now start iui then auto fill first visit 
-            $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->whereIn('category_id',[1,2])->orderBy('id', 'DESC')->first();
+            $lastAppointment = $this->Appointment->where('patients_id',$id)->where('is_done',1)->whereIn('category_id',[1,2])->whereDate('date','!=',Carbon::now()->format('Y-m-d'))->orderBy('id', 'DESC')->first();
             //if patient is currently in anc or ivf now convert in inf then fillup first visit auto
             $firstIuiVisit = $this->IUI->where('patients_id',$id)->orderBy('created_at','desc')->first();
             if($lastAppointment)

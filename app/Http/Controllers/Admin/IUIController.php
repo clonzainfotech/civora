@@ -651,8 +651,7 @@ class IUIController extends AdminController
                     $data['hsa_report']['images'] = $hsaOldImages;
                 }
                
-                $iui->description = json_encode($data);
-                $iui->husband_factor = isset($request['h_factor']) ? json_encode($request['h_factor']) : null;
+                
                 if(!empty($request->data['oe']['ovary']['right']['details']) || !empty($request->data['oe']['ovary']['left']['details'])){
                     $rightData = !empty($request->data['oe']['ovary']['right']['details']) ? $request->data['oe']['ovary']['right']['details'] : [];
                     $leftData = !empty($request->data['oe']['ovary']['left']['details']) ? $request->data['oe']['ovary']['left']['details'] : [];
@@ -674,6 +673,7 @@ class IUIController extends AdminController
                 }
                 if(!empty($request->data['ivf']) && $request->data['ivf'] == 'yes' && !empty($request->data['ivf_plan']))
                 {
+                    $data['remark'] = !empty($request->data['remark']) ? $request->data['remark'].', Transfer in IVF' : 'Transfer in IVF';
                     $lastIUIHistory = null;
                     $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
                     $lastIui = $this->IUI->wherePatientsIdAndCycleNo($patientsId, $request->cycle_no)->first();
@@ -825,7 +825,6 @@ class IUIController extends AdminController
                                                 }
                                                 $protocol[$protocol_key]['antagonist'] = null;
                                                 $protocol[$protocol_key]['time'] = null;
-                                                $ivfVisit++;
                                                 $iuiData->protocol = $protocol;
                                                 $iuiData->le = $iuiData->lmp->le;
                                                 $iuiData->is_transfer = "no";
@@ -834,6 +833,24 @@ class IUIController extends AdminController
                                                 $iuiData->plan = null;
                                                 $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
                                                 $createdAt = $valueData->date;
+                                                $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                                $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                                $ivfHistorydata[] = [
+                                                    "patients_id" => $iuiHistory->patients_id,
+                                                    "seen_by" => $iuiHistory->seen_by,
+                                                    "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                                    "created_by" => Auth::user()->id,
+                                                    "plan" => $request->data['ivf_plan'],
+                                                    'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                                    'visit' =>$ivfVisit,
+                                                    'cycle_status' => 1,
+                                                    'description' => $iuiHistory->description,
+                                                    'investigation' => null,
+                                                    'trigger_date' => null,
+                                                    'trigger_time' => null,
+                                                    'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                                    'updated_at'=>date('Y-m-d H:i:s')
+                                                ];
                                             }
                                         }
                                         $third_visit_Skey = $s_key;
@@ -894,6 +911,24 @@ class IUIController extends AdminController
                                         $iuiData->skip_reason = null;
                                         $iuiData->plan = null;
                                         $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
+                                        $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                        $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                        $ivfHistorydata[] = [
+                                            "patients_id" => $iuiHistory->patients_id,
+                                            "seen_by" => $iuiHistory->seen_by,
+                                            "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                            "created_by" => Auth::user()->id,
+                                            "plan" => $request->data['ivf_plan'],
+                                            'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                            'visit' =>$ivfVisit,
+                                            'cycle_status' => 1,
+                                            'description' => $iuiHistory->description,
+                                            'investigation' => null,
+                                            'trigger_date' => null,
+                                            'trigger_time' => null,
+                                            'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                            'updated_at'=>date('Y-m-d H:i:s')
+                                        ];
                                     }
                                     else
                                     {
@@ -917,8 +952,24 @@ class IUIController extends AdminController
                                         $iuiData->skip_reason = null;
                                         $iuiData->plan = null;
                                         $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                                        
-                                        
+                                        $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                        $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                        $ivfHistorydata[] = [
+                                            "patients_id" => $iuiHistory->patients_id,
+                                            "seen_by" => $iuiHistory->seen_by,
+                                            "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                            "created_by" => Auth::user()->id,
+                                            "plan" => $request->data['ivf_plan'],
+                                            'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                            'visit' =>$ivfVisit,
+                                            'cycle_status' => 1,
+                                            'description' => $iuiHistory->description,
+                                            'investigation' => null,
+                                            'trigger_date' => null,
+                                            'trigger_time' => null,
+                                            'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                            'updated_at'=>date('Y-m-d H:i:s')
+                                        ];
 
                                     }
                                 }
@@ -941,25 +992,26 @@ class IUIController extends AdminController
                                 $iuiData->plan = null;
                                 $iuiData->follow_up = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
                                 $createdAt = $iuiHistory->created_at;
+                                $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
+                                $iuiHistory->description = stripslashes(json_encode($iuiData,JSON_UNESCAPED_SLASHES));
+                                $ivfHistorydata[] = [
+                                    "patients_id" => $iuiHistory->patients_id,
+                                    "seen_by" => $iuiHistory->seen_by,
+                                    "rmo_doctor" => $iuiHistory->rmo_doctor,
+                                    "created_by" => Auth::user()->id,
+                                    "plan" => $request->data['ivf_plan'],
+                                    'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
+                                    'visit' =>$ivfVisit,
+                                    'cycle_status' => 1,
+                                    'description' => $iuiHistory->description,
+                                    'investigation' => null,
+                                    'trigger_date' => null,
+                                    'trigger_time' => null,
+                                    'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
+                                    'updated_at'=>date('Y-m-d H:i:s')
+                                ];
                             }
-                            $iuiData->remark = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                            $iuiHistory->description = json_encode($iuiData);
-                            $ivfHistorydata[] = [
-                                "patients_id" => $iuiHistory->patients_id,
-                                "seen_by" => $iuiHistory->seen_by,
-                                "rmo_doctor" => $iuiHistory->rmo_doctor,
-                                "created_by" => Auth::user()->id,
-                                "plan" => $request->data['ivf_plan'],
-                                'cycle_no' => !empty($lastivfHistory) ? $lastivfHistory->cycle_no + 1 : 1,
-                                'visit' =>$ivfVisit,
-                                'cycle_status' => 1,
-                                'description' => stripslashes($iuiHistory->description),
-                                'investigation' => null,
-                                'trigger_date' => null,
-                                'trigger_time' => null,
-                                'created_at'=>\Carbon\Carbon::parse($createdAt)->format('Y-m-d H:i:s'),
-                                'updated_at'=>date('Y-m-d H:i:s')
-                            ];
+                            
                         }
                         // dd($ivfHistorydata);
                         $this->IvfHistory->insert($ivfHistorydata);
@@ -1041,6 +1093,8 @@ class IUIController extends AdminController
             {
                 $iui->vascularity_of_endo = !empty($request->data['vascularity_of_endo']) ? $request->data['vascularity_of_endo'] : 0;
             }
+            $iui->description = json_encode($data);
+                $iui->husband_factor = isset($request['h_factor']) ? json_encode($request['h_factor']) : null;
             $iui->created_at = !empty($iui->created_at) ? $iui->created_at : Carbon::now()->format('Y-m-d H:i:s');
             $iui->created_by = Auth::user()->id;
             if($request->iui_history_id)

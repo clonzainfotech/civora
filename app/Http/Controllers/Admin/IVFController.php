@@ -1376,7 +1376,6 @@ class IVFController extends AdminController
                             $ivf->possible_case_of_infertility = $firstVisit->possible_case_of_infertility;
                             $ivf->treatment = $firstVisit->treatment;
                             $ivf->lmp_date = $firstVisit->lmp_date;
-                            // dd($ivf);
                             $ivf->save();
                             // $view = redirect('iui/history/'.encrypt($id));
                         }
@@ -1638,6 +1637,15 @@ class IVFController extends AdminController
             $dataNaturallyConceive = $dataForNaturallyConceive->mapWithKeys(function($value){
             return [$value->plan.'_'.$value->cycle_no  => $value->cycle_no];
             })->all();
+
+            // $dataForTransferCycle = collect($this->IvfHistory
+            //             ->wherePatientsId($id)
+            //             ->whereNotNull('description->plan')
+            //             ->get());
+            // $dataTransferCycle = $dataForTransferCycle->mapWithKeys(function($value){
+            // return [$value->plan.'_'.$value->cycle_no  => $value->cycle_no];
+            // })->all();
+            // dd($dataTransferCycle);
             $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             $complaints = $this->Complaint->pluck('name','name');
             $medicines = $this->Medicine->pluck('name','name');

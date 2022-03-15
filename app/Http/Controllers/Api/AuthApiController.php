@@ -215,7 +215,8 @@ class AuthApiController extends ApiController
         $user = PatientToken::where('token', $token)->first();
         if ($user) { 
             $postArray = ['token' => null, 'is_verify' => 0];
-            $logout = $this->OpdPatients->where('id', $user->patients_id)->update($postArray);
+            $user->delete();
+            // $logout = $this->OpdPatients->where('id', $user->patients_id)->update($postArray);
             if ($logout) {
                 return $this->sendResponse('User has been logged out');
             }

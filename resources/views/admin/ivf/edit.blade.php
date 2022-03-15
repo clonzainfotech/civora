@@ -2858,6 +2858,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-1 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    USG Report :
+                                                </label>
+                                            </div>
+                                            <div class="col-md-8 pr-0 usg-type">
+                                                <div class="usg-images"></div>
+                                            </div>
+                                            
+                                        </div>
                                             @php
                                                 $bloodReportClass = !empty($investigation->blood_report) && !empty($investigation->blood_report->type) && $investigation->blood_report->type == 'yes' ? true : false;
                                                 $bloodReportClassName = $bloodReportClass ? '' : 'd-none';
@@ -3746,6 +3757,10 @@
         $('.blood-images').imageUploader({
             imagesInputName: 'investigation[blood_report][image]',
         });
+        $('.usg-images').imageUploader({
+            imagesInputName: 'investigation[usg][images]',
+        });
+
         $('.hsa-images').imageUploader({
             imagesInputName: 'investigation[hsa_report][images]',
         });
@@ -3754,6 +3769,7 @@
         var laproscopyImages = @json($laproscopyImagesData);
         var bloodReportImages = @json($bloodReportImagesData);
         var hsaReportImages = @json($hsaReportImagesData);
+        var usgImages = @json($usgImagesData);
         $(document).ready(function(){
             if(hystroscopyImages != 'null') {
                 $('.hystroscopy-images').imageUploader({
@@ -3781,6 +3797,13 @@
                     preloaded: jQuery.parseJSON(bloodReportImages),
                     imagesInputName: 'investigation[blood_report][image]',
                     preloadedInputName: 'blood_report_old'
+                });
+            }
+            if(usgImages != 'null') {
+                $('.usg-images').imageUploader({
+                    preloaded: jQuery.parseJSON(usgImages),
+                    imagesInputName: 'investigation[usg][images]',
+                    preloadedInputName: 'usg_old'
                 });
             }
             if(hsaReportImages != 'null') {
@@ -3842,6 +3865,10 @@
             var file_data = $('input[name="investigation[hsa_report][images][]"]')[0].files;
             for (var i = 0; i < file_data.length; i++) {
                 data.append("investigation[hsa_report][images][]", file_data[i]);
+            }
+            var file_data = $('input[name="investigation[usg][images][]"]')[0].files;
+            for (var i = 0; i < file_data.length; i++) {
+                data.append("investigation[usg][images][]", file_data[i]);
             }
             
             $('.seen-by-error').text('');

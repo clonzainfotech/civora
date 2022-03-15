@@ -464,6 +464,7 @@ class PatientsController extends AdminController
                 $IVFReports[$reportDate]['hcg'] = !empty($investigationReport['hcg']['images']) ? $investigationReport['hcg']['images'] : [];
                 $IVFReports[$reportDate]['blood_report'] = !empty($investigationReport['blood_report']['image']) ? $investigationReport['blood_report']['image'] : [];
                 $IVFReports[$reportDate]['hsa_report'] = !empty($investigationReport['hsa_report']['images']) ? $investigationReport['hsa_report']['images'] : [];
+                $IVFReports[$reportDate]['usg_report'] = !empty($investigationReport['usg']['images']) ? $investigationReport['usg']['images'] : [];
 
             }
         }
@@ -512,6 +513,7 @@ class PatientsController extends AdminController
                 $IUIReports[$reportDate]['hcg'] = !empty($investigationReport['hcg']['images']) ? $investigationReport['hcg']['images'] : [];
                 $IUIReports[$reportDate]['blood_report'] = !empty($investigationReport['blood_report']['image']) ? $investigationReport['blood_report']['image'] : [];
                 $IUIReports[$reportDate]['hsa_report'] = !empty($investigationReport['hsa_report']['images']) ? $investigationReport['hsa_report']['images'] : [];
+                $IUIReports[$reportDate]['usg_report'] = !empty($investigationReport['usg']['images']) ? $investigationReport['usg']['images'] : [];
 
             }
         }

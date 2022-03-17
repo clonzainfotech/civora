@@ -29,4 +29,7 @@ class IuiHistory extends BaseModel
         ])->first();
         return !empty($iui) ? json_decode($iui->description,true) : null;
     }
+    public function getSeenBy(){
+        return $this->belongsTo('App\user','seen_by','id');
+    }
 }

@@ -201,6 +201,7 @@
                                 $gender = ($patients->gender == 2) ? 'F' : 'M';
                             @endphp
                             <br>Age: {{$patients->age.' | '.$gender}}
+                            <br>Seen By: {{isset($ancData->getSeenBy->name) ? $ancData->getSeenBy->name : ''}}
                         </th>
                         <th style="padding-bottom: 30px;text-align: justify;float: right;">Visit Date: {{\Carbon\Carbon::parse($ancData->created_at)->format('d-m-Y') }}
                             <br>Weight: {{ $weight." kg." }}</th>

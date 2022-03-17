@@ -19,4 +19,7 @@ class ANC extends BaseModel
                 ->first();
         return $anc;
     }
+    public function getSeenBy(){
+        return $this->belongsTo('App\user','seen_by','id');
+    }
 }

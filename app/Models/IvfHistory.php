@@ -14,5 +14,8 @@ class IvfHistory extends BaseModel {
     public function getPatientsDetails(){
         return $this->belongsTo('App\Models\OpdPatients','patients_id');
     }
+    public function getSeenBy(){
+        return $this->belongsTo('App\user','seen_by','id');
+    }
     
 }

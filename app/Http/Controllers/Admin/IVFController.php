@@ -2999,6 +2999,7 @@ class IVFController extends AdminController
                     $displayPlan = 0;
                     $displayCycle = 0;
                     $isAppointmentView = true; // for bootstrap file duplication
+                    $ivfSecondVisitData = null;
                     foreach($ivfVisitDate as $key => $date)
                     {
                         $ivf = $this->IVF->where('patients_id',$patientId)->where('created_at',$key)->first();

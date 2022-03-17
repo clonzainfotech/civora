@@ -180,6 +180,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <tr>
                             <th>
                                 <span class="pb-1 font-bold ivf-label">Name : {{ ucwords(strtolower($ivf->getPatientsDetails['name'])) . ' / ' . $ivf->getPatientsDetails['age']. ' years' }}</span>
+                                <br><span class="iui-label">Seen By : </span>{{ ucwords(strtolower(isset($ivf->getSeenBy->name) ? $ivf->getSeenBy->name : '')) }}
                             </th>
                             <th>
                             <th class="pb-1 float-right font-bold ivf-label">Visit Date:  {{Carbon\Carbon::parse($ivf->created_at)->format('d/m/Y')}}
@@ -1583,7 +1584,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </tbody>
                         </table>
                     @endif
-                    @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' || (!empty($investigation->laproscopy) && $investigation->laproscopy->type == 'yes') || (!empty($investigation->hcg) && $investigation->hcg->type == 'yes') || isset($investigation->investigation_extra) && !empty($investigation->investigation_extra)))
+                    {{-- @if($investigation && (!empty($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' || (!empty($investigation->laproscopy) && $investigation->laproscopy->type == 'yes') || (!empty($investigation->hcg) && $investigation->hcg->type == 'yes') || isset($investigation->investigation_extra) && !empty($investigation->investigation_extra))) --}}
                         <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
@@ -1907,7 +1908,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                 @endif
                             </tbody>
                         </table>
-                    @endif
+                    {{-- @endif --}}
                 </div>
                 <?php
                 unset($treatment->medicinedata);
@@ -2028,6 +2029,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             <tr>
                                 <th>
                                     <span class="ivf-label">Name : </span>{{ ucwords(strtolower($ivf->getPatientsDetails['name']))}}
+                                    <br><span class="ivf-label">Seen By : </span>{{ ucwords(strtolower(isset($ivf->getSeenBy->name) ? $ivf->getSeenBy->name : '')) }}
                                         @php
                                             $gender = ($ivf->getPatientsDetails['gender'] == 2) ? 'F' : 'M';
                                         @endphp
@@ -3132,6 +3134,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <span class="visit-lable">Weight :- </span> 
                         <span class="visit-lable-value">{{isset($lastHistoryData->weight) && !empty($lastHistoryData->weight) ? $lastHistoryData->weight.' kg' : $ivf->getPatientsDetails['weight'].' kg'}}</span>
                     </div>
+                    <div class="">
+                        <span class="visit-lable">Last Seen :- </span> 
+                        <span class="visit-lable-value">{{!empty($lastHistory->getSeenBy->name) ? $lastHistory->getSeenBy->name : null}}</span>
+                    </div>
                 </div>
                 <div class="col-md-5 col-sm-5 follicular_div_2">
                     <div class="">
@@ -3647,6 +3653,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             {{-- <span class="visit-lable-value">{{$historySemenFreezing}}</span> --}}
                         </div>
                     @endif
+                    <div class="">
+                        <span class="visit-lable">Last Seen :- </span> 
+                        <span class="visit-lable-value">{{!empty($lastHistory->getSeenBy->name) ? $lastHistory->getSeenBy->name : null}}</span>
+                    </div>
                 </div>
                 <div class="col-md-5 col-sm-5 follicular_div_2">
                     <div class="">
@@ -3978,6 +3988,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <tr>
                             <th>
                                 <span class="ivf-label">Name : </span>{{ ucwords(strtolower($ivfPatients->name))}}
+                                <br><span class="ivf-label">Seen By : </span>{{ ucwords(strtolower(isset($ivfExtraVisit->getSeenBy->name) ? $ivfExtraVisit->getSeenBy->name : '')) }}
+
+                                
                                     @php
                                         $gender = ($ivfPatients->gender == 2) ? 'F' : 'M';
                                     @endphp

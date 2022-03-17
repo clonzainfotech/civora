@@ -205,8 +205,8 @@
                             <tr>
                                 <th>
                                     <span class="iui-label" style="padding-bottom: 30px;">Name : </span>{{ ucwords(strtolower(isset($iui->getPatientsInfoData) ? $iui->getPatientsInfoData->name : $iui->getPatientsInfo->name)) . ' / ' . $patientsInfo->age.' years' }}
+                                    <br><span class="iui-label" style="padding-bottom: 30px;">Seen By : </span>{{ ucwords(strtolower(isset($iui->getSeenBy->name) ? $iui->getSeenBy->name : '')) }}
                                 </th>
-                                <td>
                                 <th style="padding-bottom: 30px;text-align: right"><span class="iui-label">Visit Date:  </span>{{Carbon\Carbon::parse($iui->created_at)->format('d/m/Y')}}
                                     @if(isset($iui->getPatientsInfoData))
                                     <br>Weight: {{$iui->getPatientsInfoData->weight.' kg'}}
@@ -2973,6 +2973,10 @@
                             <span class="visit-lable">Induction With :- </span> 
                             <span class="visit-lable-value">{{(isset($agentData[0])) ? $agentData[0] : null}}</span>
                     </div>
+                    <div class="">
+                        <span class="visit-lable">Last Seen :- </span> 
+                        <span class="visit-lable-value">{{(isset($iuiHistoryData[count($iuiHistoryData)-1]->getSeenBy->name)) ? $iuiHistoryData[count($iuiHistoryData)-1]->getSeenBy->name : null}}</span>
+                </div>
                 </div>
                 <div class="col-md-6 col-sm-6 follicular_div_2 text-left">
                     <div class="">
@@ -3548,6 +3552,8 @@
                 <tr>
                     <th class="pb-1">
                         <span class="iui-label" style="">Name : </span>{{ ucwords(strtolower($iuiPatients->name)) . ' / ' . $iuiPatients->age. ' years' }}
+                        <br><span class="iui-label">Seen By : </span>{{ ucwords(strtolower(isset($iuiExtraVisit->getSeenBy->name) ? $iuiExtraVisit->getSeenBy->name : '')) }}
+
                     </th>
                     <th style=""><span class="iui-label">Visit Date:  </span>{{Carbon\Carbon::parse($iuiExtraVisit->created_at)->format('d/m/Y')}}
                         @if($iuiPatients->weight)
@@ -3825,6 +3831,5 @@
     </div>
 @endif
 @if(isset($printPreview) && $printPreview != 0)
-
     @endsection
 @endif

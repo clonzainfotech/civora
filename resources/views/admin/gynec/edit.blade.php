@@ -1811,6 +1811,26 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         {{Form::select('plan_of_management[surgically_details][]',$surgicallyData,!empty($planOfManagement->surgically_details) ? $planOfManagement->surgically_details : null,['class'=>'form-control co-value co_value_data','placeholder'=>'Surgically Type','multiple'=>true])}}
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="{{'col-md-4 surgically-details '.$surgicallyDataStatus}}">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Admission Date : &nbsp;
+                            </span>
+                            {{Form::text("plan_of_management[surgically_date]",isset($planOfManagement->surgically_date) && !empty($planOfManagement->surgically_date) ? \Carbon\Carbon::parse($planOfManagement->surgically_date)->format('D d M Y') : null,['class'=>'form-control datetimepicker surgically_date'])}}
+                        </div>
+                        <span class="surgically-date-error form-error-msg"></span>
+                    </div>
+                    <div class="{{'col-md-4 surgically-details '.$surgicallyDataStatus}}">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Admission Time : &nbsp;
+                            </span>
+                            {{Form::text("plan_of_management[surgically_time]",isset($planOfManagement->surgically_time) && !empty($planOfManagement->surgically_time) ? \Carbon\Carbon::parse($planOfManagement->surgically_time)->format('g:i a') : null,['class'=>'form-control timepicker surgically_time'])}}
+                        </div>
+                        <span class="surgically-time-error form-error-msg"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1850,7 +1870,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </label>
                     </div>
                     @php
-                        $hystroscopyClass = !empty($investigation) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' ? true : false;
+                        $hystroscopyClass = !empty($investigation) && isset($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes' ? true : false;
                     @endphp
                     <div class="col-sm-2">
                         <div class="radio is-conceived">
@@ -1858,7 +1878,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <label for="hystroscopy_type_yes">
                                 Yes
                             </label>
-                            {{Form::radio("investigation[hystroscopy][type]",'no',!empty($investigation) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'no' ? true : false,['id'=>'hystroscopy_type_no','class'=>'hystroscopy-type gynec-yes-no-status','data-type'=>'hystroscopy-type'])}}
+                            {{Form::radio("investigation[hystroscopy][type]",'no',!empty($investigation) && isset($investigation->hystroscopy) && !empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'no' ? true : false,['id'=>'hystroscopy_type_no','class'=>'hystroscopy-type gynec-yes-no-status','data-type'=>'hystroscopy-type'])}}
                             <label for="hystroscopy_type_no">
                                 No
                             </label>
@@ -1874,15 +1894,15 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="{{'col-md-3 hystroscopy-type '.$hystroscopyClassName}}">
                         <div class="form-group">
-                            {{Form::select("investigation[hystroscopy][finding_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) ? $investigation->hystroscopy->finding_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'finding-type'])}}
+                            {{Form::select("investigation[hystroscopy][finding_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) && isset($investigation->hystroscopy) ? $investigation->hystroscopy->finding_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'finding-type'])}}
                         </div>
                     </div>
                     @php
-                        $fType = !empty($investigation) && $investigation->hystroscopy->finding_type == '1' ? 'd-none' : '';
+                        $fType = !empty($investigation) && isset($investigation->hystroscopy) && $investigation->hystroscopy->finding_type == '1' ? 'd-none' : '';
                     @endphp
                     <div class="{{'col-sm-3 finding-type hystroscopy-type-abnormal '.$fType.' '.$hystroscopyClassName}}">
                         <div class="form-group">
-                            {{Form::text("investigation[hystroscopy][abnormal_details]",!empty($investigation) ? $investigation->hystroscopy->abnormal_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
+                            {{Form::text("investigation[hystroscopy][abnormal_details]",!empty($investigation) && isset($investigation->hystroscopy) ? $investigation->hystroscopy->abnormal_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                         </div>
                     </div>
                 </div>
@@ -1898,12 +1918,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <span class="input-group-addon">
                                 Date : &nbsp;
                             </span>
-                            {{Form::text("investigation[hystroscopy][finding_date]",!empty($investigation) ? \Carbon\Carbon::parse($investigation->hystroscopy->finding_date)->format('D d M Y') : null,['class'=>'form-control datetimepicker date'])}}
+                            {{Form::text("investigation[hystroscopy][finding_date]",!empty($investigation) && isset($investigation->hystroscopy) ? \Carbon\Carbon::parse($investigation->hystroscopy->finding_date)->format('D d M Y') : null,['class'=>'form-control datetimepicker date'])}}
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            {{Form::text("investigation[hystroscopy][finding_details]",!empty($investigation) ? $investigation->hystroscopy->finding_details : null,['class'=>'form-control date','placeholder'=>'Details'])}}
+                            {{Form::text("investigation[hystroscopy][finding_details]",!empty($investigation) && isset($investigation->hystroscopy) ? $investigation->hystroscopy->finding_details : null,['class'=>'form-control date','placeholder'=>'Details'])}}
                         </div>
                     </div>
                 </div>
@@ -1921,11 +1941,11 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <span class="input-group-addon">
                                 Date : &nbsp;
                             </span>
-                            {{Form::text("investigation[laproscopy][finding_date]",!empty($investigation) ? \Carbon\Carbon::parse($investigation->laproscopy->finding_date)->format('D d M Y') : null,['class'=>'form-control datetimepicker date'])}}
+                            {{Form::text("investigation[laproscopy][finding_date]",!empty($investigation) && isset($investigation->laproscopy) ? \Carbon\Carbon::parse($investigation->laproscopy->finding_date)->format('D d M Y') : null,['class'=>'form-control datetimepicker date'])}}
                         </div>
                     </div>
                     @php
-                        $investigationType = !empty($investigation) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes' ? true : false;
+                        $investigationType = !empty($investigation) && isset($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes' ? true : false;
                     @endphp
                     <div class="col-sm-2">
                         <div class="radio is-conceived">
@@ -1934,7 +1954,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 Yes
                             </label>
 
-                            {{Form::radio("investigation[laproscopy][type]",'no',!empty($investigation) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'no' ?  true : false,['id'=>'laproscopy_type_no','class'=>'gynec-yes-no-status','data-type'=>'laproscopy-status-type'])}}
+                            {{Form::radio("investigation[laproscopy][type]",'no',!empty($investigation) && isset($investigation->laproscopy) && !empty($investigation->laproscopy->type) && $investigation->laproscopy->type == 'no' ?  true : false,['id'=>'laproscopy_type_no','class'=>'gynec-yes-no-status','data-type'=>'laproscopy-status-type'])}}
                             <label for="laproscopy_type_no">
                                 No
                             </label>
@@ -1945,16 +1965,16 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     @endphp
                     <div class="{{'col-md-4 laproscopy-status-type '.$investigationTypeClass}}">
                         <div class="form-group">
-                            {{Form::select("investigation[laproscopy][laproscopy_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) ? $investigation->laproscopy->laproscopy_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'laproscopy-type'])}}
+                            {{Form::select("investigation[laproscopy][laproscopy_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) && isset($investigation->laproscopy) ? $investigation->laproscopy->laproscopy_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'laproscopy-type'])}}
                         </div>
                     </div>
                 </div>
                 @php
                     // laproscopy
-                    $laproscopyType = !empty($investigation) && $investigation->laproscopy->laproscopy_type == 2 ? '' : 'd-none';
-                    $lrtTube =  !empty($investigation) && $investigation->laproscopy->rt_tube_type == 2 ? '' : 'd-none';
-                    $luterus  = !empty($investigation) && $investigation->laproscopy->uterus_type == 2 ? '' : 'd-none';
-                    $llttube  = !empty($investigation) && $investigation->laproscopy->lt_tube_type == 2 ? '' : 'd-none';
+                    $laproscopyType = !empty($investigation) && isset($investigation->laproscopy) && $investigation->laproscopy->laproscopy_type == 2 ? '' : 'd-none';
+                    $lrtTube =  !empty($investigation) && isset($investigation->laproscopy) && $investigation->laproscopy->rt_tube_type == 2 ? '' : 'd-none';
+                    $luterus  = !empty($investigation) && isset($investigation->laproscopy) && $investigation->laproscopy->uterus_type == 2 ? '' : 'd-none';
+                    $llttube  = !empty($investigation) && isset($investigation->laproscopy) && $investigation->laproscopy->lt_tube_type == 2 ? '' : 'd-none';
                     // // hcg data
                     // $hcgStatus = !empty($investigation) && !empty($investigation->hcg->type) && $investigation->hcg->type == 'yes' ? true : false;
                     // $hStatus =  $hcgStatus ? '' : 'd-none';
@@ -1972,12 +1992,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            {{Form::select("investigation[laproscopy][rt_tube_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) ? $investigation->laproscopy->rt_tube_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'rt-tube-type'])}}
+                            {{Form::select("investigation[laproscopy][rt_tube_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) && isset($investigation->laproscopy) ? $investigation->laproscopy->rt_tube_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'rt-tube-type'])}}
                         </div>
                     </div>
                     <div class="{{'col-sm-4 rt-tube-type '.$lrtTube}}">
                         <div class="form-group">
-                            {{Form::text("investigation[laproscopy][rt_tube_details]",!empty($investigation->laproscopy->rt_tube_details) ? $investigation->laproscopy->rt_tube_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
+                            {{Form::text("investigation[laproscopy][rt_tube_details]",isset($investigation->laproscopy) &&!empty($investigation->laproscopy->rt_tube_details) ? $investigation->laproscopy->rt_tube_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                         </div>
                     </div>
                 </div>
@@ -1990,12 +2010,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            {{Form::select("investigation[laproscopy][uterus_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) ? $investigation->laproscopy->uterus_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'uterus-type'])}}
+                            {{Form::select("investigation[laproscopy][uterus_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) && isset($investigation->laproscopy) ? $investigation->laproscopy->uterus_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'uterus-type'])}}
                         </div>
                     </div>
                     <div class="{{'col-sm-4 uterus-type '.$luterus}}">
                         <div class="form-group">
-                            {{Form::text("investigation[laproscopy][uterus_details]",!empty($investigation->laproscopy->uterus_details) ? $investigation->laproscopy->uterus_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
+                            {{Form::text("investigation[laproscopy][uterus_details]",isset($investigation->laproscopy) && !empty($investigation->laproscopy->uterus_details) ? $investigation->laproscopy->uterus_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                         </div>
                     </div>
                 </div>
@@ -2008,12 +2028,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            {{Form::select("investigation[laproscopy][lt_tube_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) ? $investigation->laproscopy->lt_tube_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'lt-tube-type'])}}
+                            {{Form::select("investigation[laproscopy][lt_tube_type]",['1'=>'Normal','2'=>"Abnormal"],!empty($investigation) && isset($investigation->laproscopy) ? $investigation->laproscopy->lt_tube_type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'lt-tube-type'])}}
                         </div>
                     </div>
                     <div class="{{'col-sm-4 lt-tube-type '.$llttube}}">
                         <div class="form-group">
-                            {{Form::text("investigation[laproscopy][lt_tube_details]",!empty($investigation->laproscopy->lt_tube_details) ? $investigation->laproscopy->lt_tube_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
+                            {{Form::text("investigation[laproscopy][lt_tube_details]",isset($investigation->laproscopy) && !empty($investigation->laproscopy->lt_tube_details) ? $investigation->laproscopy->lt_tube_details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                         </div>
                     </div>
                 </div>
@@ -2024,7 +2044,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <span class="input-group-addon">
                                 Other : &nbsp;
                             </span>
-                            {{Form::text("investigation[laproscopy][other]",!empty($investigation->laproscopy->other) ? $investigation->laproscopy->other : null,['class'=>'form-control'])}}
+                            {{Form::text("investigation[laproscopy][other]",!empty($investigation->laproscopy->other) && isset($investigation->laproscopy) ? $investigation->laproscopy->other : null,['class'=>'form-control'])}}
                         </div>
                     </div>
                 </div>

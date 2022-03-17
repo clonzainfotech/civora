@@ -77,6 +77,7 @@
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     {{-- <a class="btn btn-primary next-appointment text-white">Save & Next Appointment</a> --}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>
+                                    <button type="submit" class="btn btn-primary submit" value="2">Admission Print</button>
                                     <a href="{{URL::to('anc-iui-ivf')}}" class="btn btn-default">Cancel</a>
                                 </div>
                             {{Form::close()}}
@@ -125,6 +126,12 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
     var patientsId = $('.patients-id').val();
     var date = '';
     var qstring = '';
+    $('.timepicker').bootstrapMaterialDatePicker({
+        date: false,
+        shortTime: true,
+        format: 'hh:mm a',
+        switchOnClick: true
+    });
     $(document).ready(function(){
         $(window).keydown(function(event){
             if(event.keyCode == 13) {
@@ -139,6 +146,9 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             var formData = new FormData($("#gynec-form")[0]);
             if(this.value==1){
                 formData.append('is_print', 1);
+            }
+            if(this.value==2){
+                formData.append('is_print', 2);
             }
             gynecFormData(formData);
         });
@@ -226,12 +236,26 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
         //     return false;
         // }
         $('.seen-by-error').text('');
+        $('.surgically-date-error').text('');
+        $('.surgically-time-error').text('');
         if($('select.seen-by').val() == ''){
             $('.seen-by-error').text('Please select doctor');
             $('html, body').animate({
                 scrollTop: ($('.seen-by').offset().top - 150)
             }, 1000);
             return false;
+        }
+        if($('#surgically-type').prop('checked') == true){
+           if($('.surgically_date').val() == '' )
+           {
+               $('.surgically-date-error').text('This field Required');
+               return false;
+           }
+           if($('.surgically_time').val() == '' )
+           {
+               $('.surgically-time-error').text('This field Required');
+               return false;
+           }
         }
         var url = "{{URL::to('anc-iui-ivf')}}";
         $.ajax({

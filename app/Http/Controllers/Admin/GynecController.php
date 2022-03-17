@@ -150,7 +150,18 @@ class GynecController extends AdminController
 
             Session::flash('msg','Record has been successfully added.');
             if(isset($request->plan_of_management['plan_of_management_data']) && in_array('surgically', $request->plan_of_management['plan_of_management_data'])){
+
                 $isProcudure = 1;
+                $procedureList = $this->ProcedureList->where('patients_id',$pId)->first();
+                    if(empty($procedureList))
+                    {
+                        $procedureList = $this->ProcedureList;
+                    }
+                    $procedureList->patients_id = $pId;
+                    $procedureList->date = Carbon::parse($request->plan_of_management['surgically_date'])->format('Y-m-d');
+                    $procedureList->procedure = 'Coming for '.(!empty(implode(', ',$request->plan_of_management['surgically_details'])) ? implode(', ',$request->plan_of_management['surgically_details']) : 'surgical');
+                    $procedureList->description = 'Time : '.Carbon::parse($request->plan_of_management['surgically_time'])->format('h:i');
+                    $procedureList->save();
             }
             if(!empty($request->ho['follow_up'])){
                 $followupDate = $request->ho['follow_up'];
@@ -186,14 +197,15 @@ class GynecController extends AdminController
                 $this->SmsManager::sendReferenceDoctor('Advise Gynec',$seenBy->name,$followDate,$pId);
             }
 
-            if($request->is_print == 1){
+            if($request->is_print == 1 || $request->is_print == 2){
+                $surgical_print = ($request->is_print == 2) ? 1 : 0;
                 $surgicallyData = $this->surgicallyType()['data'];
                 $investigationReport = $this->allInvestigationReport();
                 $isGynec = $request->is_gynec;
                 return response()->json([
                     'status'=>1,
                     'id' => encrypt($gynec->id),
-                    'data' => View::make('admin.gynec.preview', compact('investigationReport','gynec','surgicallyData','isGynec'))->render()
+                    'data' => View::make('admin.gynec.preview', compact('investigationReport','gynec','surgicallyData','isGynec','surgical_print'))->render()
                 ]);
             }
             return ['status'=>'true'];
@@ -207,6 +219,7 @@ class GynecController extends AdminController
     // here this function is use for fetch of all visit data of gynec module via gynec visit date wise
     public function gynecHistory(Request $request,$patientsId,$appointmentId = null){
         try{
+            // dd('fddfg');
             $data = [];
             $ancImagesData = [];
             $isIvfHistory = null;
@@ -218,7 +231,15 @@ class GynecController extends AdminController
             $date = $this->Gynec->where('patients_id',$pId)->pluck('created_at','created_at')->toArray();
             $checkGynec = $this->Gynec->where('patients_id',$pId)->orderBy('id','DESC')->first();
             $isGynec = 0;
-            if($checkGynec){
+            if($checkGynec)
+            {
+                $lastDate = Carbon::parse($checkGynec->created_at)->format('Y-m-d');
+                $diff = Carbon::parse($lastDate)->diffInMonths(Carbon::now()->format('Y-m-d'));
+                if($diff > 2) // after 2 month convert in gynec
+                {
+                    $checkGynec->is_gynec = 0;
+                    $checkGynec->save();
+                }
                 $isGynec = $checkGynec->is_gynec;
             }
             $gynec = null;
@@ -295,7 +316,7 @@ class GynecController extends AdminController
                 $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
                 $surgicallyData = $this->surgicallyType()['data'];
                 // 
-                
+                // $isGynec = 0;
                 $data['personalData'] = $personalData;
                 $data['familyData'] = $familyData;
                 $data['pastData'] = $pastData;

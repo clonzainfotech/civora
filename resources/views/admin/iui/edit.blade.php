@@ -5070,7 +5070,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                     }
                                                     @endphp
                                                     @if($row->visit == 2)
-                                                        {{!empty($iuiSecondVisitData->oe->ovary->right->afcs) ? $iuiSecondVisitData->oe->ovary->right->afcs : null}}
+                                                        {{!empty($iuiSecondVisitData->oe->ovary->right->afcs) ? 'AFCS : '.$iuiSecondVisitData->oe->ovary->right->afcs : null}}
                                                         <!-- {{!empty($iuiSecondVisitData->oe->ovary->right->details) ? implode(',',$iuiSecondVisitData->oe->ovary->right->details) : null}} -->
                                                         {{!empty($iuiSecondVisitData->oe->ovary->right->residual_follicale) ? '/ RF : '.$iuiSecondVisitData->oe->ovary->right->residual_follicale : null}}
                                                     @else
@@ -5080,7 +5080,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                             </td>
                                             <td class="{{$left_class_name}}">
                                                 @if($row->visit == 2)
-                                                    {{!empty($iuiSecondVisitData->oe->ovary->left->afcs) ? $iuiSecondVisitData->oe->ovary->left->afcs : null}}
+                                                    {{!empty($iuiSecondVisitData->oe->ovary->left->afcs) ? 'AFCS : '.$iuiSecondVisitData->oe->ovary->left->afcs : null}}
                                                     {{!empty($iuiSecondVisitData->oe->ovary->left->residual_follicale) ? ' / RF : '.$iuiSecondVisitData->oe->ovary->left->residual_follicale : null}}
                                                 @else 
                                                     {{!empty($data->ovary->ovary_type->left->details) ? $data->ovary->ovary_type->left->details : ''}}

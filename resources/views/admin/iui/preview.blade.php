@@ -1338,12 +1338,13 @@
                                         </td>
                                     </tr>
                                     @if(!empty($husbandFactor->occupation) || !empty($husbandFactor->seman_analysis) || !empty($husbandFactor->age) || !empty($husbandFactor->habbit))
-                                            @if(!empty($husbandFactor->occupation))
                                             <tr>
                                                 <th>
-                                                    <span class="iui-label">Occupation:  </span>
-                                                    {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
-                                                    <br>
+                                                    @if(!empty($husbandFactor->occupation))
+                                                        <span class="iui-label">Occupation:  </span>
+                                                        {{ !empty($husbandFactor->occupation) ? $husbandFactor->occupation : '-' }}
+                                                        <br>
+                                                    @endif
                                                     @if(!empty($husbandFactor->age))
                                                         <span class="iui-label">Age:  </span>
                                                         {{ !empty($husbandFactor->age) ? $husbandFactor->age : '-' }}
@@ -1355,7 +1356,7 @@
                                                     @endif
                                                 </th>
                                             </tr>
-                                            @endif
+                                            
                                             <tr>
                                                 <th>
                                                     @if (!empty($husbandFactor->seman_analysis))

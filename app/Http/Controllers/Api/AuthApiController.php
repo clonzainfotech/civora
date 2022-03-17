@@ -163,10 +163,10 @@ class AuthApiController extends ApiController
             'first_name' => 'required',
             'last_name' => 'required',
             'surname' => 'required',
-            'dob' => 'required',
+            // 'dob' => 'required',
             'mobile_number' => 'nullable|numeric|unique:patients|digits:10',
             'other_mobile_number' => 'nullable|numeric|unique:patients|digits:10',
-            'gender' => 'required',
+            // 'gender' => 'required',
             'residence' => 'required',
             'main_area' => 'required',
             'city' =>'required',
@@ -182,11 +182,11 @@ class AuthApiController extends ApiController
         $patient = $this->OpdPatients;
         $patient->name = trim($request->first_name).' '.trim($request->last_name).' '.trim($request->surname);
 
-        $patient->dob = Carbon::parse($request->dob)->format('Y-m-d');
+        $patient->dob = isset($request->dob) ? Carbon::parse($request->dob)->format('Y-m-d') : null;
         $patient->residence = $request->residence;
         $patient->mobile_number = $request->mobile_number;
         $patient->other_mobile_number = $request->other_mobile_number;
-        $patient->gender = $request->gender;
+        $patient->gender = isset($request->gender) ? $request->gender : null;
         $patient->main_area = $request->main_area;
         $patient->city = $request->city;
         $patient->state = $request->state;

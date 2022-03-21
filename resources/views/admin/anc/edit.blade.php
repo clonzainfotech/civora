@@ -1761,6 +1761,104 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                         {{Form::text("p_obstratics[abortion][abortion_data][".$key."][when_where]",!empty($value->when_where) ? $value->when_where : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
+                                <div class='col-md-4'>
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Abortion Reason : &nbsp;</span>
+                                        {{Form::text("p_obstratics[abortion][abortion_data][".$key."][reason]",!empty($value->reason) ? $value->reason : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <!-- for ectopic -->
+                <div class="row mt-3">
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">Ectopic : &nbsp;</span>
+                            {{Form::number("p_obstratics[ectopic_no]",!empty($patientsObstratics->ectopic_no) ? $patientsObstratics->ectopic_no : 0,['class'=>'form-control abortion-no','min'=>'1','max'=>'12','onwheel'=>"this.blur()",'data-type'=>'1'])}}
+                        </div>
+                        <span class="form-error-msg">
+                            {{$errors->first('ectopic')}}
+                        </span>
+                    </div>
+                    @php
+                        $ectopicNaturally = !empty($patientsObstratics->ectopic_no) && $patientsObstratics->ectopic_no != 0 ? '' : 'd-none';
+                    @endphp
+                </div>
+                {{-- for ectopic data --}}
+                <div class="ectopic-data">
+                    @if(!empty($patientsObstratics && ($patientsObstratics->ectopic_no != null && $patientsObstratics->ectopic_no != 0 )))
+                        @foreach($patientsObstratics->ectopic->ectopic_data as $key=>$value)
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="vertical-form-label pr-0">
+                                        Spontaneous Ectopic :
+                                    </label>
+                                </div>
+                                
+                                <div class="{{'row col-md-8 ectopic-visible-'.$key}}">
+                                    <div class="col-sm-3">
+                                        <div class="radio is-conceived">
+                                            {{Form::radio("p_obstratics[ectopic][ectopic_data][".$key."][spontancous_ectopic_type]",'medically',!empty($value->spontancous_ectopic_type) && $value->spontancous_ectopic_type == 'medically' ? true : false,['id'=>'spontancous_ectopic_medically_'.$key])}}
+                                            <label for="{{'spontancous_ectopic_medically_'.$key}}">
+                                                Medically
+                                            </label>
+                                            {{Form::radio("p_obstratics[ectopic][ectopic_data][".$key."][spontancous_ectopic_type]",'surgically',!empty($value->spontancous_ectopic_type) && $value->spontancous_ectopic_type== 'surgically' ? true : false,['id'=>'spontancous_ectopic_surgically_'.$key])}}
+                                            <label for="{{'spontancous_ectopic_surgically_'.$key}}">
+                                                Surgically
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Before&nbsp;</span>
+                                            {{Form::text("p_obstratics[ectopic][ectopic_data][".$key."][spontancous_ectopic_before]",!empty($value->spontancous_ectopic_before) ? $value->spontancous_ectopic_before : null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data][1][tube][]','right',in_array('right',$value->tube) ? true : false,['id'=>'right_tube_'.$key])}}
+                                            <label for="{{'right_tube_'.$key}}">
+                                                Right Tube
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data][1][tube][]','left',in_array('left',$value->tube) ? true : false,['id'=>'left_tube_'.$key])}}
+                                            <label for="{{'left_tube_'.$key}}">
+                                                Left Tube
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="{{'col-md-4 ectopic-naturally '.$ectopicNaturally}}">
+                                    <div class="form-group">
+                                        {{Form::select("p_obstratics[ectopic][ectopic_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 ectopic-ho-type p-ho-type','data-id'=>'ectopic-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
+                                    </div>
+                                </div>
+                                @php
+                                    $dNone = '';
+                                    if(!empty($patientsObstratics->ectopic) && !empty($value->ho_type) && !in_array($value->ho_type,$hoType)){
+                                        $dNone = 'd-none';
+                                    }
+                                @endphp
+
+                                <div class="{{'col-md-4 ectopic-when-where-'.$key.' '.$dNone}}">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">When / Where : &nbsp;</span>
+                                        {{Form::text("p_obstratics[ectopic][ectopic_data][".$key."][when_where]",!empty($value->when_where) ? $value->when_where : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class='col-md-4'>
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Ectopic Detail : &nbsp;</span>
+                                        {{Form::text("p_obstratics[ectopic][ectopic_data][".$key."][detail]",!empty($value->detail) ? $value->detail : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     @endif
@@ -2173,10 +2271,107 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                         {{Form::text("p_obstratics[second_marriage][abortion][abortion_data][".$key."][when_where]",!empty($value->when_where) ? $value->when_where : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
+                                <div class='col-md-4 second-marriage-life-data'>
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Abortion Reason : &nbsp;</span>
+                                        {{Form::text("p_obstratics[second_marriage][abortion][abortion_data][".$key."][reason]",!empty($value->reason) ? $value->reason : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     @endif
                 </div>
+                 <!-- for Ectopic -->
+                 <div class="{{'second-marriage-life row mt-3 ' . $secondMerrageStatus}}">
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">Ectopic : &nbsp;</span>
+                            {{Form::number("p_obstratics[second_marriage][ectopic_no]",!empty($patientsObstratics->second_marriage->ectopic_no) ? $patientsObstratics->second_marriage->ectopic_no : 0,['class'=>'form-control second-ectopic-no','min'=>'1','max'=>'12','onwheel'=>"this.blur()",'data-type'=>'1'])}}
+                        </div>
+                        <span class="form-error-msg">
+                            {{$errors->first('ectopic')}}
+                        </span>
+                    </div>
+                    @php
+                        $abortionNaturally = !empty($patientsObstratics->second_marriage->ectopic_no) && $patientsObstratics->second_marriage->ectopic_no != 0 ? '' : 'd-none';
+                    @endphp
+                </div>
+                {{-- for ectopic data --}}
+                <div class="{{'second-marriage-life second-ectopic-data ' . $secondMerrageStatus }}">
+                    @if(!empty($patientsObstratics && isset($patientsObstratics->second_marriage) && ($patientsObstratics->second_marriage->ectopic_no != null && $patientsObstratics->second_marriage->ectopic_no != 0 )))
+                        @foreach($patientsObstratics->second_marriage->ectopic->ectopic_data as $key=>$value)
+                            <div class="row second-marriage-life-data">
+                                <div class="col-md-2">
+                                    <label class="vertical-form-label pr-0">
+                                        Spontaneous Ectopic :
+                                    </label>
+                                </div>
+                                <div class="{{'row second-marriage-life-data col-md-8 second-ectopic-visible-'.$key}}">
+                                    <div class="col-sm-3">
+                                        <div class="radio is-conceived">
+                                            {{Form::radio("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][spontancous_ectopic_type]",'medically',!empty($value->spontancous_ectopic_type) && $value->spontancous_ectopic_type == 'medically' ? true : false,['id'=>'second_spontancous_ectopic_medically_'.$key])}}
+                                            <label for="{{'second_spontancous_ectopic_medically_'.$key}}">
+                                                Medically
+                                            </label>
+                                            {{Form::radio("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][spontancous_ectopic_type]",'surgically',!empty($value->spontancous_ectopic_type) && $value->spontancous_ectopic_type== 'surgically' ? true : false,['id'=>'second_spontancous_ectopic_surgically_'.$key])}}
+                                            <label for="{{'second_spontancous_ectopic_surgically_'.$key}}">
+                                                Surgically
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Before &nbsp;</span>
+                                            {{Form::text("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][spontancous_ectopic_before]",!empty($value->spontancous_ectopic_before) ? $value->spontancous_ectopic_before : null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('p_obstratics[second_marriage][ectopic][ectopic_data]['.$key.'][tube][]','right',isset($value->tube) && in_array('right',$value->tube) ? true : false,['id'=>'second_right_tube_'.$key])}}
+                                            <label for="{{'second_right_tube_'.$key}}">
+                                                Right Tube
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="checkbox">
+                                            {{Form::checkbox('p_obstratics[second_marriage][ectopic][ectopic_data]['.$key.'][tube][]','left',isset($value->tube) && in_array('left',$value->tube) ? true : false,['id'=>'second_left_tube_'.$key])}}
+                                            <label for="{{'second_left_tube_'.$key}}">
+                                                Left Tube
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row second-marriage-life-data">
+                                <div class="{{'col-md-4 second-marriage-life-data second-ectopic-naturally '.$ectopicNaturally}}">
+                                    <div class="form-group">
+                                        {{Form::select("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][ho_type]",['1'=>'Naturally','2'=>'Medicine','3'=>'IUI','4'=>'IVF'],!empty($value->ho_type) ? $value->ho_type : null,['class'=>'form-control select-padding-0 ectopic-ho-type second-p-ho-type','data-id'=>'second-ectopic-when-where-'.$key,'placeholder'=>'Select Conceived By'])}}
+                                    </div>
+                                </div>
+                                @php
+                                    $dNone = 'd-none';
+                                    if(!empty($patientsObstratics->second_marriage->ectopic) && !empty($value->ho_type) && in_array($value->ho_type,$hoType)){
+                                        $dNone = '';
+                                    }
+                                @endphp
+                                <div class="{{'col-md-4 second-marriage-life-data second-ectopic-when-where-'.$key.' '.$dNone.' '.$ectopicNaturally}}">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">When / Where: &nbsp;</span>
+                                        {{Form::text("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][when_where]",!empty($value->when_where) ? $value->when_where : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <div class='col-md-4'>
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Ectopic Detail : &nbsp;</span>
+                                        {{Form::text("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][detail]",!empty($value->detail) ? $value->detail : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">

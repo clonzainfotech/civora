@@ -1788,7 +1788,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                 </div>
                 {{-- for ectopic data --}}
                 <div class="ectopic-data">
-                    @if(!empty($patientsObstratics && ($patientsObstratics->ectopic_no != null && $patientsObstratics->ectopic_no != 0 )))
+                    @if(!empty($patientsObstratics && isset($patientsObstratics->ectopic_no) &&  ($patientsObstratics->ectopic_no != null && $patientsObstratics->ectopic_no != 0 )))
                         @foreach($patientsObstratics->ectopic->ectopic_data as $key=>$value)
                             <div class="row">
                                 <div class="col-md-2">
@@ -2298,7 +2298,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                 </div>
                 {{-- for ectopic data --}}
                 <div class="{{'second-marriage-life second-ectopic-data ' . $secondMerrageStatus }}">
-                    @if(!empty($patientsObstratics && isset($patientsObstratics->second_marriage) && ($patientsObstratics->second_marriage->ectopic_no != null && $patientsObstratics->second_marriage->ectopic_no != 0 )))
+                    @if(!empty($patientsObstratics && isset($patientsObstratics->second_marriage) && isset($patientsObstratics->second_marriage->ectopic_no) && ($patientsObstratics->second_marriage->ectopic_no != null && $patientsObstratics->second_marriage->ectopic_no != 0 )))
                         @foreach($patientsObstratics->second_marriage->ectopic->ectopic_data as $key=>$value)
                             <div class="row second-marriage-life-data">
                                 <div class="col-md-2">

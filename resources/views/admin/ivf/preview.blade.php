@@ -469,7 +469,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                 @endphp
                             @endif
 
-                            @if(empty($oh->ectopic_no) && isset($oh->ectopic_no))
+                            @if(empty($oh->ectopic_no) && !isset($oh->ectopic_no))
                                 @php
                                     $noValueData[] = ' Ectopic';
                                 @endphp

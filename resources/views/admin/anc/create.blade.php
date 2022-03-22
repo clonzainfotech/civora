@@ -732,7 +732,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                         <div class="row ectopic-data-parent d-none">
                                             <div class="col-md-2">
                                                 <label class="vertical-form-label pr-0">
-                                                    Spontancous Ectopic :
+                                                    Ectopic :
                                                 </label>
                                             </div>
                                             
@@ -1139,7 +1139,7 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                         <div class="row second-marriage-life-data second-ectopic-data-parent d-none">
                                             <div class="col-md-2">
                                                 <label class="vertical-form-label pr-0">
-                                                    Spontancous Ectopic :
+                                                    Ectopic :
                                                 </label>
                                             </div>
                                             

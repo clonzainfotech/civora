@@ -1744,7 +1744,7 @@ function ectopicData(ectopicNo){
     for (i = j; i <= ectopicNo; i++) {
         ectopicData +=
             "<div class='row'>"+
-            "<div class='col-md-2'><label class='vertical-form-label pr-0'>Spontancous Ectopic :</label></div>"+
+            "<div class='col-md-2'><label class='vertical-form-label pr-0'>Ectopic :</label></div>"+
             
             "<div class='row col-md-8 ectopic-visible-"+i+"'>"+
             "<div class='col-md-3'>"+
@@ -1826,7 +1826,7 @@ function secondEctopicData(secondEctopicnNo)
     for (i = j; i <= secondEctopicnNo; i++) {
         secondEctopicData +=
             "<div class='row second-marriage-life-data'>"+
-            "<div class='col-md-2'><label class='vertical-form-label pr-0'>Spontancous Ectopic :</label></div>"+
+            "<div class='col-md-2'><label class='vertical-form-label pr-0'>Ectopic :</label></div>"+
 
             "<div class='row col-md-8 second-ectopic-visible-"+i+"'>"+
             "<div class='col-md-3'>"+

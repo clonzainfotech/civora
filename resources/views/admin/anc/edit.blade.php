@@ -1793,7 +1793,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             <div class="row">
                                 <div class="col-md-2">
                                     <label class="vertical-form-label pr-0">
-                                        Spontaneous Ectopic :
+                                        Ectopic :
                                     </label>
                                 </div>
                                 
@@ -1818,7 +1818,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="checkbox">
-                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data][1][tube][]','right',in_array('right',$value->tube) ? true : false,['id'=>'right_tube_'.$key])}}
+                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data]['.$key.'][tube][]','right',isset($value->tube) && in_array('right',$value->tube) ? true : false,['id'=>'right_tube_'.$key])}}
                                             <label for="{{'right_tube_'.$key}}">
                                                 Right Tube
                                             </label>
@@ -1826,7 +1826,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="checkbox">
-                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data][1][tube][]','left',in_array('left',$value->tube) ? true : false,['id'=>'left_tube_'.$key])}}
+                                            {{Form::checkbox('p_obstratics[ectopic][ectopic_data]['.$key.'][tube][]','left',isset($value->tube) && in_array('left',$value->tube) ? true : false,['id'=>'left_tube_'.$key])}}
                                             <label for="{{'left_tube_'.$key}}">
                                                 Left Tube
                                             </label>
@@ -2303,7 +2303,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             <div class="row second-marriage-life-data">
                                 <div class="col-md-2">
                                     <label class="vertical-form-label pr-0">
-                                        Spontaneous Ectopic :
+                                        Ectopic :
                                     </label>
                                 </div>
                                 <div class="{{'row second-marriage-life-data col-md-8 second-ectopic-visible-'.$key}}">
@@ -2322,7 +2322,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                     <div class="col-sm-4">
                                         <div class="input-group">
                                             <span class="input-group-addon">Before &nbsp;</span>
-                                            {{Form::text("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][spontancous_ectopic_before]",!empty($value->spontancous_ectopic_before) ? $value->spontancous_ectopic_before : null,['class'=>'form-control'])}}
+                                            {{Form::text("p_obstratics[second_marriage][ectopic][ectopic_data][".$key."][spontancous_ectopic_before]",isset($value->spontancous_ectopic_before) && !empty($value->spontancous_ectopic_before) ? $value->spontancous_ectopic_before : null,['class'=>'form-control'])}}
                                         </div>
                                     </div>
                                     <div class="col-sm-2">

@@ -1776,7 +1776,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                     <div class="col-md-2">
                         <div class="input-group">
                             <span class="input-group-addon">Ectopic : &nbsp;</span>
-                            {{Form::number("p_obstratics[ectopic_no]",isset($patientsObstratics->ectopic_no) && !empty($patientsObstratics->ectopic_no) ? $patientsObstratics->ectopic_no : 0,['class'=>'form-control abortion-no','min'=>'1','max'=>'12','onwheel'=>"this.blur()",'data-type'=>'1'])}}
+                            {{Form::number("p_obstratics[ectopic_no]",isset($patientsObstratics->ectopic_no) && !empty($patientsObstratics->ectopic_no) ? $patientsObstratics->ectopic_no : 0,['class'=>'form-control ectopic-no','min'=>'1','max'=>'12','onwheel'=>"this.blur()",'data-type'=>'1'])}}
                         </div>
                         <span class="form-error-msg">
                             {{$errors->first('ectopic')}}

@@ -808,8 +808,8 @@
                                                 </div>
                                             </div>
                                             {{-- end contraception --}}
-                                             {{-- ectopic data --}}
-                                             <div class="row mt-3">
+                                            {{-- ectopic data --}}
+                                            <div class="row mt-3">
                                                 <div class="col-md-2">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Ectopic : &nbsp;</span>

@@ -124,6 +124,8 @@ Route::group(['middleware'=>'checkDB'],function(){
 
             //Patient's report
             Route::post('add-patient-report','PatientController@addPatientsReport');
+            // Route::get('get-patient-report','PatientController@getPatientsReport');
+            Route::delete('delete-patient-report/{id}','PatientController@deletePatientsReport');
 
 
         });

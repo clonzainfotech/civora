@@ -170,6 +170,14 @@ class PatientController extends ApiController
                 $data = [];
                 $ancAllVisit = $this->ANC->where('patients_id',$patients)->get();
                 $ancAllHistoryVisit = $this->AncHistory->where('patients_id',$patients)->get();
+                $patient_report = $this->PatientReport->where('patients_id',$user->id)->get();
+                $ivfAllVisit = $this->IVF->where('patients_id', $patients)->get();
+                $ivfAllHistoryVisit = $this->IvfHistory->where('patients_id',$patients)->get();
+                $ivfAllExtraVisit = $this->IvfExtraVisit->where('patient_id',$patients)->get();
+                $iuiAllVisit = $this->IUI->where('patients_id', $patients)->get();
+                $iuiAllHistoryVisit = $this->IuiHistory->where('patients_id',$patients)->get();
+                $iuiAllExtraVisit = $this->IuiExtraVisit->where('patient_id',$patients)->get();
+                $gynecAllVisit = $this->Gynec->where('patients_id', $patients)->get();
                 if($ancAllVisit)
                 {
                     foreach($ancAllVisit as $ancVisit)
@@ -228,9 +236,7 @@ class PatientController extends ApiController
                         }
                     }
                 }
-                $ivfAllVisit = $this->IVF->where('patients_id', $patients)->get();
-                $ivfAllHistoryVisit = $this->IvfHistory->where('patients_id',$patients)->get();
-                $ivfAllExtraVisit = $this->IvfExtraVisit->where('patient_id',$patients)->get();
+                
                 if($ivfAllVisit)
                 {
                     foreach($ivfAllVisit as $ivfVisit)
@@ -302,10 +308,6 @@ class PatientController extends ApiController
                         }
                     }
                 }
-                $iuiAllVisit = $this->IUI->where('patients_id', $patients)->get();
-                $iuiAllHistoryVisit = $this->IuiHistory->where('patients_id',$patients)->get();
-                $iuiAllExtraVisit = $this->IuiExtraVisit->where('patient_id',$patients)->get();
-                
                 if($iuiAllVisit)
                 {
                     foreach($iuiAllVisit as $iuiVisit)
@@ -366,7 +368,6 @@ class PatientController extends ApiController
                         }
                     }
                 }
-                $gynecAllVisit = $this->Gynec->where('patients_id', $patients)->get();
                 if($gynecAllVisit)
                 {
                     foreach($gynecAllVisit as $gynecVisit)
@@ -380,8 +381,16 @@ class PatientController extends ApiController
                         // $GynecReports[$reportDate]['report'] = !empty($investigationReport['report']['images']) ? $investigationReport['report']['images'] : [];
                     }
                 }
+                if($patient_report)
+                {
+                    foreach($patient_report as $patientReport)
+                    {
+                        $reportDate = Carbon::parse($patientReport->created_at)->format('Y-m-d H:i:s');
+                        $data[] = array('date' => $reportDate,"category"=> 'OTHER',"report_type" => 'OTHER','url' => [$patientReport['report']]);
+                    }
+                }
 
-                usort($data, array( $this, 'cmp' ));//dort array in desc date wise
+                usort($data, array( $this, 'cmp' ));//sort array in desc date wise
                 return $this->sendResponse('get User Report Successfully',$data);
             } 
             else 
@@ -807,7 +816,7 @@ class PatientController extends ApiController
             'report' => [
                 'required' => 'This filed required',
                 // 'image' => 'The achievement must be an image',
-                'max'   => 'The achievement files should be less than 1 MB'
+                'max'   => 'The achievement files should be less than 2 MB'
             ]
         ];
         $validator = Validator::make($request->all(),$rule,$message);
@@ -823,15 +832,76 @@ class PatientController extends ApiController
                     foreach($request->report as $file)
                     {
                         $report = $this->uploadImage($file, 'public/upload/patient/report');
-                        $patient_report= url('public/upload/patient/report/'.$report);
+                        $patient_report= 'public/upload/patient/report/'.$report;
                         $data[] = ['patients_id'=>$user->id,'report'=>$patient_report,'created_at'=>Carbon::now()->format('Y-m-d H:i:s'),'updated_at'=>Carbon::now()->format('Y-m-d H:i:s')];
                     }
                     $report = $this->PatientReport;
                     $report->insert($data);
                 }
-                $patient_report = $this->PatientReport->where('patients_id',$user->id)->get();
+                $patient_report = $this->PatientReport->where('patients_id',$user->id)->orderBy('created_at', 'DESC')->get();
                 
                 return $this->sendResponse('Add Report Successfully',$patient_report);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+
+    /**
+    * Get patients report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function getPatientsReport(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_report = $this->PatientReport->where('patients_id',$user->id)->orderBy('id','desc')->get();
+                
+                return $this->sendResponse('Get Report Successfully',$patient_report);
+            } 
+            else 
+            {
+                return $this->sendError('User is not found');
+            }
+        }else{
+            return $this->sendError(__('auth.failed'), 401);
+        }
+    }
+    
+    /**
+    * Get patients report
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function deletePatientsReport(Request $request, $id)
+    {
+        $token = $request->header('Authorization');
+        $get_token = $this->PatientToken->where('token', $token)->first();
+        if ($get_token) 
+        {
+            $user = OpdPatients::where('id', $get_token->patients_id)->first();
+            if ($user && !empty($user->code)) 
+            {   
+                $patient_report = $this->PatientReport->where('id',$id)->where('patients_id',$user->id)->first();
+                if(!empty($patient_report)){
+                    $patient_report->delete();
+                    $patient_report_remain = $this->PatientReport->where('patients_id',$user->id)->orderBy('id','desc')->get();
+                    return $this->sendResponse('Report Deleted Successfully', $patient_report_remain);
+                }
+                else{
+                    $patient_report_remain = $this->PatientReport->where('patients_id',$user->id)->orderBy('id','desc')->get();
+                    return $this->sendResponse('No such report', $patient_report_remain);
+                }
             } 
             else 
             {

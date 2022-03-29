@@ -80,7 +80,7 @@ class LoginController extends ApiController
             ->where('is_done','=',1)
             ->get()
             ->count();
-            $appointmentdata =['Today-Appointment'=>$totalApp,'Completed-Appointment'=>$completeApp, 'Upcoming-Appointment'=>$upcomingApp, 'Cancell-Appointment'=>$cancellApp];
+            $appointmentdata =['today_appointment'=>$totalApp,'completed_appointment'=>$completeApp, 'upcoming_appointment'=>$upcomingApp, 'cancell_appointment'=>$cancellApp];
             return $this->sendResponse('Successfully', $appointmentdata);
         }
         return $this->sendError(__('auth.failed'), 401);
@@ -92,10 +92,9 @@ class LoginController extends ApiController
         $UserData = $this->UserToken->where('token', $token)->first();
         if($token && $UserData) {
             $appointmentList = collect($this->Appointment->select('id','patients_id','category_id','date','time')->get())->map(function($q){
-                // $q->status = date('Y-m-d') >= $q->date ? 1 : 0;
                 $q->profile_picture = $q->getPatientsDetails['profile_picture'];
+                $q->patient_name = $q->getPatientsDetails['name'];
                 $q->category = $q->categoryDetails['name'];
-                // $q->category_id = $q->categoryDetails['id'];
                 unset($q->categoryDetails,$q->getPatientsDetails);
                 return $q;
             });
@@ -118,34 +117,27 @@ class LoginController extends ApiController
         return $this->sendError(__('auth.failed'), 401);
     }
 
-    public function profile(Request $request)
+    public function doctorprofile(Request $request)
     {
         $token = $request->header('Authorization');
-        $UserData = $this->UserToken->where('token', $token)->first();
-        if($token && $UserData) {
-            $user_id = $UserData->user_id;
-            $totalApp =Appointment::where('is_procedure', '=', 0)
-            ->where('seen_by', '=', $user_id )
-            ->where('date', Carbon::now()->format('Y-m-d'))
-            ->get()
-            ->count();
-
-            $completeApp = Appointment::where('is_done', '=', 1)
-            ->get()
-            ->count();
-
-            $upcomingApp = Appointment::where('is_procedure', '=', 0)
-            ->where('seen_by', '=', $user_id )
-            ->where('date','>', Carbon::now()->format('Y-m-d'))
-            ->get()
-            ->count();
-
-            $cancellApp = Appointment::where('arrival_time', '=', null)
-            ->where('is_done','=',1)
-            ->get()
-            ->count();
-            $appointmentdata =['Today-Appointment'=>$totalApp,'Completed-Appointment'=>$completeApp, 'Upcoming-Appointment'=>$upcomingApp, 'Cancell-Appointment'=>$cancellApp];
-            return $this->sendResponse('Successfully', $appointmentdata);
+        $userData = $this->UserToken->where('token', $token)->first();
+        if($token && $userData) {
+            $profileData = User::where('id', $userData->user_id)->first();
+            // $data['name'] = $profileData->name;
+            // $data['email'] = $profileData->email;
+            // $data['password'] = $profileData->password;
+            // $data['role'] = $profileData->role;
+            // $data['birth_date'] = $profileData->dob_date;
+            // $data['designation'] = $profileData->designation;
+            // $data['degree'] = $profileData->degree;
+            // $data['specialist'] = $profileData->specialist;
+            // $data['achievement'] = $profileData->achievement;
+            // $data['description'] = $profileData->description;
+            // $data['profile_picture'] = $profileData->profile_picture;
+            // $data['mobile_number'] = $profileData->mobile_number;
+            // $data['status'] = $profileData->status;
+            // dd($data);
+            return $this->sendResponse('Your DoctorProfile successfully get',$profileData);
         }
         return $this->sendError(__('auth.failed'), 401);
     }

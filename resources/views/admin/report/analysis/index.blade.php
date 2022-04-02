@@ -21,6 +21,44 @@
                 </div>
                 <div class="body">
                     <!-- Nav tabs -->
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="card iui-box">
+                                    <div class="body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h5 class="text-muted">Total IUI</h5>
+                                                <h4 class="number mt-0 mb-0">{{$total_IUI}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="card iui-box">
+                                    <div class="body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h5 class="text-muted">Total Conceived</h5>
+                                                <h4 class="number mt-0 mb-0">{{$total_consive}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="card iui-box">
+                                    <div class="body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h5 class="text-muted">Total Fail</h5>
+                                                <h4 class="number mt-0 mb-0">{{$total_fail}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -50,6 +88,14 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <form method="post" autocomplete="off" action="">
+                                        {{Form::select("injection_type", $planData, null,['class'=>'form-control select-padding-0 injection-type ','title'=>'Select Plan','data-live-search'=>"true"])}}
+                                    </form>
+                                </div>
+                                <span class="plan-data-error form-error-msg"></span>
+                            </div>
                         </div>
                         </div>
                     <div class="tab-content m-t-10">
@@ -70,15 +116,16 @@
         // var fromdate = moment(new Date()).format('YYYY-MM-DD');
         // var todate = moment(new Date()).format('YYYY-MM-DD');
         var search = '';
-        var key = 'total';
+        var key = 'new-inf';
         var currentTime = new Date();
         // First Date Of the month 
         var fromdate = new Date(currentTime.getFullYear(),currentTime.getMonth(),1);
         // Last Date Of the Month 
         var todate = new Date();
-        var currentData = 'total';
+        var currentData = 'new-inf';
         var plan_type = '';
-        var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+        var injection_type = '';
+        var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
 
         $(document).ready(function () {
 
@@ -97,10 +144,11 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
                 getAnalysisData(qstring);
 
             });
+            
             $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
                 // Reset values
                 $('#daterange #input-text').html('<span class="text-muted">Filter op datum..</span>');
@@ -108,7 +156,7 @@
                 // Destroy and rebuild daterangepicker to clear data
                 fromdate = '';
                 todate = '';
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
                 getAnalysisData(qstring);
             });
             getAnalysisData(qstring);
@@ -117,22 +165,29 @@
         $(document).on("keyup",'#myInput', function() {
             
             search = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
             getAnalysisData(qstring)
             
         });
         $(document).on('change','select.plan-type',function(){
             
             plan_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key;
-            getAnalysisData(qstring)
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            getPlanData(plan_type);
+            getAnalysisData(qstring);
+        });
+        $(document).on('change','select.injection-type',function(){
+            
+            injection_type = $(this).val();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            getAnalysisData(qstring);
         });
         // get all collection report data
         function getAnalysisData(qstring) {
@@ -148,6 +203,22 @@
                 $('.reportdata-loader').addClass('d-none');
                 $("div[data-key='" + currentData + "']").addClass("box-border");
             }).fail(function () {
+
+            });
+        }
+        function getPlanData(type){
+            $.ajax({
+                url: "{{URL::to('get-plandata')}}"+'/'+type,
+                dataType: 'json',
+                type:'GET',
+            }).done(function(data){
+                var planDataWithIds = [];
+                $.each(data.planDataWithIds, function(key, value) {
+                    planDataWithIds +=  '<option value="' + key + '">'+value+'</option>';
+                });
+                $('select.injection-type').html(planDataWithIds);
+                $('.injection-type').selectpicker('refresh');
+            }).fail(function(error){
 
             });
         }

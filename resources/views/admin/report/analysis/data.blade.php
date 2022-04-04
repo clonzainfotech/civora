@@ -128,6 +128,7 @@
             <th>No</th>
             <th>Code</th>
             <th>Name</th>
+            <th>Age</th>
             <th>Mobile</th>
             <th>Action</th>
         </tr>
@@ -147,6 +148,7 @@
             <td>{{$index+1}}</td>
             <td>{{$patient->code}}</td>
             <td>{{ucWords($patient->name)}}</td>
+            <td>{{$patient->age.' Year'}}</td>
             <td>{{$patient->mobile_number}}</td>
             <td><a href="{{URL::to('patient-history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary">View History</a></td>
         </tr>

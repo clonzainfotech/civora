@@ -3269,7 +3269,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                     <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
-                            <span class="visit-lable-value">{{!empty($ohData) && !empty($ohData->second_marriage_details) ? 'Secondary' : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
+                            <span class="visit-lable-value">{{!empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
                     </div>
                     <div class="">
                             <span class="visit-lable">L.M.P :- </span> 
@@ -3785,7 +3785,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     </div>
                     <div class="">
                             <span class="visit-lable">Type & Year of infertility :- </span> 
-                            <span class="visit-lable-value">{{!empty($ohData) && !empty($ohData->second_marriage_details) ? 'Secondary' : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
+                            <span class="visit-lable-value">{{!empty($ohData) && !empty($ohData->type_of_infertility) ? $typeOfData[$ohData->type_of_infertility] : 'Primary'}} / {{!empty($ohData->second_marriage_details) ? $ohData->second_marriage_details.' years' : (!empty($ohData->first_marriage_life) ? $ohData->first_marriage_life.' years' : null)}}</span>
                     </div>
                     <div class="">
                             <span class="visit-lable">L.M.P :- </span> 

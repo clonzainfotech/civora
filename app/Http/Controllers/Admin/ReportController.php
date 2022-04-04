@@ -2022,38 +2022,45 @@ class ReportController extends AdminController
                 $injection_type = '';         
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
-                
-                
-                    $data_newIUI = $this->Appointment->whereHas('getAppointmentCharges')->where('is_done',1)->whereIn('category_id',[3])->groupBy('patients_id')->orderBy('id','DESC');
-                    $data_oldinf = $this->IuiHistory->groupBy('patients_id')->whereHas('getPatientsDetails');
-                    $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC');
-                    $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->groupBy('patients_id')->orderBy('id','DESC');
-                    // $data_dropIds = $this->Appointment->select('*',\DB::raw('max(id) as appointment_id'))->where('is_done',1)->groupBy('patients_id')->orderBy('id','DESC')->pluck('appointment_id','appointment_id')->toArray();
-                    $data_dropIds = $this->Appointment->orderBy('created_at','desc')->where('is_done',1)->get()->unique('patients_id')->pluck('appointment_id','appointment_id')->toArray();
-                    $data_drop = $this->Appointment->whereIn('id',$data_dropIds)->where('date', '<', (new \Carbon\Carbon)->submonths(1))->whereIn('category_id',[3,4]);
-                    $data_continue = $this->IuiHistory->orderBy('created_at','desc')->where(function($query){
-                        $query->whereHas('lastAppointmentData', function($query) {
-                                    return $query->whereIn('category_id',[3,4]);
-                                });
-                    })->get()->unique('patients_id');
-                    $data_skip = $this->IuiHistory->whereHas('getPatientsDetails')->where('description->skip_cycle','yes')->where(function($query){
-                        $query->whereHas('lastAppointmentData', function($query) {
-                            return $query->whereCategoryId(4);
-                        });
-                    })->groupBy('patients_id')->orderBy('id','DESC');
-                if(!empty($request->injection_type) || !empty($request->injection_type))
+            
+            
+                $data_newIUI = $this->Appointment->whereHas('getAppointmentCharges')->where('is_done',1)->whereIn('category_id',[3])->groupBy('patients_id')->orderBy('id','DESC');
+                $data_oldinf = $this->IuiHistory->groupBy('patients_id')->whereHas('getPatientsDetails');
+                $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC');
+                $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->groupBy('patients_id')->orderBy('id','DESC');
+                // $data_dropIds = $this->Appointment->select('*',\DB::raw('max(id) as appointment_id'))->where('is_done',1)->groupBy('patients_id')->orderBy('id','DESC')->pluck('appointment_id','appointment_id')->toArray();
+                $data_dropIds = $this->Appointment->orderBy('created_at','desc')->where('is_done',1)->get()->unique('patients_id')->pluck('appointment_id','appointment_id')->toArray();
+                $data_drop = $this->Appointment->whereIn('id',$data_dropIds)->where('date', '<', (new \Carbon\Carbon)->submonths(1))->whereIn('category_id',[3,4]);
+                $data_continue = $this->IuiHistory->orderBy('created_at','desc')->where(function($query){
+                    $query->whereHas('lastAppointmentData', function($query) {
+                                return $query->whereIn('category_id',[3,4]);
+                            });
+                })->get()->unique('patients_id');
+                $data_skip = $this->IuiHistory->whereHas('getPatientsDetails')->where('description->skip_cycle','yes')->where(function($query){
+                    $query->whereHas('lastAppointmentData', function($query) {
+                        return $query->whereCategoryId(4);
+                    });
+                })->groupBy('patients_id')->orderBy('id','DESC');
+                if(!empty($request->injection_type) || !empty($request->plan_type))
                 {
-                    $injection_type = $this->Injection->where('category',1)->where('id',$request->injection_type)->value('name');
-                    $data_plan_type = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails')->where('description','like', '%'.$injection_type.'%')->groupBy('patients_id')->orderBy('id','DESC');
+                    $data_plan_type = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails');
+                    if(!empty($request->injection_type))
+                    {
+                        $injection_type = $this->Injection->where('category',1)->where('id',$request->injection_type)->value('name');
+                        $data_plan_type = $data_plan_type->where('description','like', '%'.$injection_type.'%');
+                    }
+                    if(!empty($request->plan_type))
+                    {
+                        $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('type');
+                        $data_plan_type = $data_plan_type->where('description','like', '%'.$plan_type.'%');
+                    }
                     if($fromdate || $todate)
                     {
                         $fromdate = $fromdate;
                         $todate = $todate;
                         $data_plan_type = $data_plan_type->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     }
-                    $data_plan_type = $data_plan_type->pluck('patients_id','patients_id')->toArray();
-                    
-                    // $data_fail = $this->IuiHistory::where('visit', 4 )->whereIn('patients_id',$data_plan_type)->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC');
+                    $data_plan_type = $data_plan_type->groupBy('patients_id')->orderBy('id','DESC')->pluck('patients_id','patients_id')->toArray();
                 }
                 
                 if($fromdate || $todate){
@@ -2073,13 +2080,15 @@ class ReportController extends AdminController
                     // $data_continue = $data_continue->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                 }
                 
-                if(!empty($request->injection_type))
+                if(!empty($request->injection_type) || !empty($request->plan_type))
                 {
                     $injection_type = $this->Injection->where('category',1)->where('id',$request->injection_type)->value('name');
+                    $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('type');
                      // plan is given in january  then consider result(conceive/fail/skip) in january
-                     $data_fail_Id = collect($data_fail->get())->map(function($value) use($injection_type,$fromdate,$todate){
+                     $data_fail_Id = collect($data_fail->get())->map(function($value) use($injection_type,$fromdate,$todate,$plan_type){
                         $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
                         $plan_given_date = !empty($value->getIuiSecondVisitCycleWise()->created_at) && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') >= $fromdate && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') <= $todate ? 1 : 0;
+                        
                         return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
                     })->pluck('patients_id','patients_id');
                     $data_fail = $data_fail->whereIn('patients_id',$data_fail_Id);
@@ -2166,6 +2175,15 @@ class ReportController extends AdminController
                     $search = $request->search;
                     $patients = $patients->where('name','LIKE',$search.'%')->orWhere('mobile_number','LIKE',$search.'%');
                 }
+                if(!empty($request->age))
+                {
+                    // $age = $request->age;
+                    $age = explode("-",$request->age);
+                    $startAge = $age[0];
+                    $endAge = $age[1];
+                    // $endDate = Carbon::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d');
+                    $patients = $patients->whereBetween('age', [$startAge, $endAge]);
+                }
                 $data['newinf'] = count($data_newIUI);
                 $data['oldinf'] =  count(array_diff($data_oldinf,$data_newIUI));
                 $data ['fail'] = count($data_fail);
@@ -2183,7 +2201,7 @@ class ReportController extends AdminController
             $total_consive = count($total_consive);
             $total_fail = count($total_fail);
 
-            $planType = $this->Injection->where('category',1)->pluck('type','type');
+            $planType = $this->Injection->where('category',1)->groupBy('type')->pluck('type','id');
             $planData = $this->Injection->where('category',1)->pluck('name','id');
 
             return view('admin.report.analysis.index',compact('planType','planData','total_IUI','total_consive','total_fail'));

@@ -91,16 +91,20 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <form method="post" autocomplete="off" action="">
-                                        {{Form::select("injection_type", $planData, null,['class'=>'form-control select-padding-0 injection-type ','title'=>'Select Plan','data-live-search'=>"true"])}}
+                                        {{Form::select("injection_type", $planData, null,['class'=>'form-control select-padding-0 injection-type','title'=>'Select Plan','data-live-search'=>"true"])}}
                                     </form>
                                 </div>
-                                <span class="plan-data-error form-error-msg"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <form method="post" autocomplete="off" action="">
+                                        {{Form::select("age",['20-25'=>'20-25','26-30'=>'26-30','31-35'=>'31-35','36-40'=>'36-40','41-45'=>'41-45','46-50'=>'46-50','51-55'=>'51-55','56-60'=>'56-60'], null,['class'=>'form-control select-padding-0 age','title'=>'Select Age','data-live-search'=>"true"])}}
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div class="tab-content m-t-10">
-                        
-                        
                         <div class="analysis-report-data table-responsive active">
                             <!-- table data here include -->
                         </div>
@@ -125,7 +129,8 @@
         var currentData = 'new-inf';
         var plan_type = '';
         var injection_type = '';
-        var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
+        var age = '';
+        var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
 
         $(document).ready(function () {
 
@@ -144,7 +149,7 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
                 getAnalysisData(qstring);
 
             });
@@ -156,7 +161,7 @@
                 // Destroy and rebuild daterangepicker to clear data
                 fromdate = '';
                 todate = '';
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
                 getAnalysisData(qstring);
             });
             getAnalysisData(qstring);
@@ -165,28 +170,34 @@
         $(document).on("keyup",'#myInput', function() {
             
             search = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
             getAnalysisData(qstring)
             
         });
         $(document).on('change','select.plan-type',function(){
             
-            plan_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            var plan_type = $("select.plan-type option:selected").html();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
             getPlanData(plan_type);
             getAnalysisData(qstring);
         });
         $(document).on('change','select.injection-type',function(){
             
             injection_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+            getAnalysisData(qstring);
+        });
+        $(document).on('change','select.age',function(){
+            // alert($(this).val());
+            age = $(this).val();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
             getAnalysisData(qstring);
         });
         // get all collection report data

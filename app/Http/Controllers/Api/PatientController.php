@@ -168,6 +168,7 @@ class PatientController extends ApiController
                 $IVFReports = [];
                 $IUIReports = [];
                 $data = [];
+                $dateWiseReport = [];
                 $ancAllVisit = $this->ANC->where('patients_id',$patients)->get();
                 $ancAllHistoryVisit = $this->AncHistory->where('patients_id',$patients)->get();
                 $patient_report = $this->PatientReport->where('patients_id',$user->id)->get();
@@ -183,8 +184,13 @@ class PatientController extends ApiController
                     foreach($ancAllVisit as $ancVisit)
                     {
                         $reportDate = Carbon::parse($ancVisit->created_at)->format('Y-m-d H:i:s');
+                        $date = Carbon::parse($ancVisit->created_at)->format('Y-m-d');
                         $investigationReport = !empty($ancVisit->investigation) ? json_decode($ancVisit->investigation,true) : '';
                         $usgReport = !empty($ancVisit->usg) ? json_decode($ancVisit->usg,true) : '';
+                        if(!isset($datewiseReport[$date]))
+                        {
+                            $datewiseReport[$date] = [];
+                        }
                         if(!empty($investigationReport['investigation_early_scan_type']['images']))
                         {
                             $data[] = array('date' => $reportDate,"category"=> 'ANC',"report_type" => 'Early Scan','url' => $investigationReport['investigation_early_scan_type']['images']);
@@ -391,7 +397,21 @@ class PatientController extends ApiController
                 }
 
                 usort($data, array( $this, 'cmp' ));//sort array in desc date wise
-                return $this->sendResponse('get User Report Successfully',$data);
+                $patientsReport = [];
+                foreach($data as $record)
+                {
+                    $date = Carbon::parse($record['date'])->format('Y-m-d');
+                    if(!isset($patientsReport[$date]))
+                    {
+                        $patientsReport[$date] = [];
+                        array_push($patientsReport[$date],$record);
+                    }
+                    else
+                    {
+                        array_push($patientsReport[$date],$record);
+                    }
+                }
+                return $this->sendResponse('get User Report Successfully',$patientsReport);
             } 
             else 
             {

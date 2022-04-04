@@ -97,7 +97,7 @@
                                                 <div class="col-md-3">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Age : &nbsp;</span>
-                                                        {{Form::number("p_info[age]",$patient->age,['class'=>'form-control age'])}}
+                                                        {{Form::number("p_info[age]",!empty($patient->age) ? $patient->age : (!empty($patient->dob) ? \Carbon\Carbon::parse($patient->dob)->age : null),['class'=>'form-control age'])}}
                                                     </div>
                                                     <span class="form-error-msg">
                                                         {{$errors->first('age')}}
@@ -114,10 +114,8 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                @php
-                                                    $classData = !empty($appointmentData) ? '3' : '6';
-                                                @endphp
-                                                <div class="{{'col-md-'.$classData}}">
+                                               
+                                                <div class="{{'col-md-6'}}">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Mobile : &nbsp;</span>
                                                         {{Form::number('mobile_number',$patient->mobile_number,['class'=>'form-control mobile_number'])}}

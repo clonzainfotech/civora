@@ -183,9 +183,9 @@
         });
         $(document).on('change','select.plan-type',function(){
             
-            var plan_type = $("select.plan-type option:selected").html();
+            plan_type = $(this).val();
             qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
-            getPlanData(plan_type);
+            getPlanData($("select.plan-type option:selected").html());
             getAnalysisData(qstring);
         });
         $(document).on('change','select.injection-type',function(){

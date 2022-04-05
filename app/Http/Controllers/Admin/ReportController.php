@@ -2085,41 +2085,78 @@ class ReportController extends AdminController
                     $injection_type = $this->Injection->where('category',1)->where('id',$request->injection_type)->value('name');
                     $plan_type = $this->Injection->where('category',1)->where('id',$request->plan_type)->value('type');
                      // plan is given in january  then consider result(conceive/fail/skip) in january
-                     $data_fail_Id = collect($data_fail->get())->map(function($value) use($injection_type,$fromdate,$todate,$plan_type){
+                    $data_fail_Id = collect($data_fail->get())->map(function($value) use($injection_type,$fromdate,$todate,$plan_type){
                         $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
                         $plan_given_date = !empty($value->getIuiSecondVisitCycleWise()->created_at) && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') >= $fromdate && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') <= $todate ? 1 : 0;
+                        if(!empty($injection_type) && empty($plan_type))
+                        {
+                            return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(!empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
                         
-                        return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
                     })->pluck('patients_id','patients_id');
-                    $data_fail = $data_fail->whereIn('patients_id',$data_fail_Id);
+                    $data_fail = $data_fail->whereIn('patients_id',$data_fail_Id);  
 
                     $data_consive_Id = collect($data_consive->get())->map(function($value) use($injection_type,$fromdate,$todate){
                         $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
                         $plan_given_date = !empty($value->getIuiSecondVisitCycleWise()->created_at) && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') >= $fromdate && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') <= $todate ? 1 : 0;
-                        return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        if(!empty($injection_type) && empty($plan_type))
+                        {
+                            return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(!empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
                     })->pluck('patients_id','patients_id');
                     $data_consive = $data_consive->whereIn('patients_id',$data_consive_Id);
                     
                     //continue with selected plan(not skip and not fillup result visit)
-                    $data_continue_Id = collect($data_continue)->map(function($value) use($injection_type,$fromdate,$todate){
+                    $data_continue_Id = collect($data_continue)->map(function($value) use($injection_type,$fromdate,$todate,$plan_type){
                         $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
-                        return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type && empty($value->getIuiForthVisitCycleWise()) && empty($value->checkIuiHistorySkip()) ? $value : [];
+                        if(!empty($injection_type) && empty($plan_type))
+                        {
+                            return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type && empty($value->getIuiForthVisitCycleWise()) && empty($value->checkIuiHistorySkip()) ? $value : [];
+                        }
+                        if(!empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type && empty($value->getIuiForthVisitCycleWise()) && empty($value->checkIuiHistorySkip()) ? $value : [];
+                        }
+                        if(!empty($injection_type) && !empty($plan_type))
+                        {
+                            return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type && empty($value->getIuiForthVisitCycleWise()) && empty($value->checkIuiHistorySkip()) ? $value : [];
+                        }
                     })->pluck('patients_id','patients_id');
                     $data_continue = $this->IuiHistory->whereIn('patients_id',$data_continue_Id);
-                    // dd($data_continue_Id);
 
                     $data_skip_Id = collect($data_skip->get())->map(function($value) use($injection_type,$fromdate,$todate){
                         $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
                         $plan_given_date = !empty($value->getIuiSecondVisitCycleWise()->created_at) && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') >= $fromdate && carbon::parse($value->getIuiSecondVisitCycleWise()->created_at)->format('Y-m-d') <= $todate ? 1 : 0;
-                        return !empty($description)&& isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        if(!empty($injection_type) && empty($plan_type))
+                        {
+                            return !empty($description)&& isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(!empty($plan_type) && empty($injection_type))
+                        {
+                            return !empty($description) && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $injection_type &&  $plan_given_date == 1 ? $value : [];
+                        }
+                        if(!empty($injection_type) && !empty($plan_type))
+                        {
+                            return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type && isset($description['plan']['plan_type']) && $description['plan']['plan_type'] == $plan_type && $plan_given_date == 1  ? $value : [];
+                        }
                     })->pluck('patients_id','patients_id');
-                    $data_skip = $data_skip->whereIn('patients_id',$data_skip_Id);
-
-                    // $data_drop_Id = collect($data_drop->get())->map(function($value) use($injection_type){
-                    //     $description = !empty($value->getIuiSecondVisitCycleWise()) && !empty($value->getIuiSecondVisitCycleWise()->description) ? json_decode($value->getIuiSecondVisitCycleWise()->description,true) : null;
-                    //     return !empty($description) && isset($description['plan']['agenet'][0]) && $description['plan']['agenet'][0] == $injection_type ? $value : [];
-                    // })->pluck('patients_id','patients_id');
-                    // $data_drop = $data_drop->whereIn('patients_id',$data_drop_Id);
+                    $data_skip = $data_skip->whereIn('patients_id',$data_skip_Id); 
                 }
                 $data_newIUI = $data_newIUI->pluck('patients_id','patients_id')->toArray();
                 $data_oldinf = $data_oldinf->pluck('patients_id','patients_id')->toArray();

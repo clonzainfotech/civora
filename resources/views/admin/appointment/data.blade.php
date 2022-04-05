@@ -98,9 +98,9 @@
                 <td class="{{"patient_dropdown ".$className}}">&nbsp;
                     @php
                         $isBirthDay = 0;
-                        $row->getPatientsDetails['dob'] != "" ? (\Carbon\Carbon::parse($row->getPatientsDetails['dob'])->format('d-m') == \Carbon\Carbon::now()->format('d-m') ? $isBirthDay=1 : $isBirthDay=0) : "";
+                        $isBirthDay =   \Carbon\Carbon::parse($row->getPatientsDetails['dob'])->format('d-m') == \Carbon\Carbon::now()->format('d-m') ? 1 : 0;
                     @endphp
-                    @if($isBirthDay != 0)
+                    @if($isBirthDay == 1)
                         <i class="zmdi zmdi-card-giftcard candor-color" title="Birthday"></i>
                     @endif
                     {{ ucwords(strtolower($row->getPatientsDetails['name'])).' '.($row->getChildNumber() ? '('.$row->getChildNumber().')' : '')}}

@@ -471,6 +471,10 @@ Route::group(['middleware'=>'checkDB'],function(){
 
         //report advice list
         Route::get('advice-report-list','PatientsController@getAdviceReportList');
+        
+        //procedure remark update
+        Route::get('procedure-update-remark','ProcedureController@updateRemark');
+
 
         Route::get('print-preview','SystemSettingController@printpreview');
 

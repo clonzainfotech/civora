@@ -862,7 +862,10 @@
                 $('.pregnant').selectpicker('refresh');
                 $('.main_area').val(data['patients']['main_area']);
                 $('.occupation').val(data['patients']['occupation']);
-                $('.dob').val(moment(data['patients']['dob']).format('DD-MM-YYYY'));
+                if(data['patients']['dob'] != null)
+                {
+                    $('.dob').val(moment(data['patients']['dob']).format('DD-MM-YYYY'));
+                }
 
             } else {
                 $( "#patient-name" ).val('').trigger('change');

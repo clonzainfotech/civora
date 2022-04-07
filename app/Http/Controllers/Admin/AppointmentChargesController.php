@@ -89,6 +89,7 @@ class AppointmentChargesController extends AdminController
             return ['status'=>true];
             
         }catch(Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }

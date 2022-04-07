@@ -64,7 +64,7 @@ class SmsManager extends BaseModel
         $smsData['templateid'] = '';
         $smsData['message'] = '';
 
-        // $template = self::getTemplate($module);
+        $template = self::getTemplate($module);
         $smsData['templateid'] = 0;
         $smsData['message'] = config('app.'.$smsData['module']);
         if(is_array($template))

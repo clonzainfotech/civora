@@ -646,13 +646,15 @@ class IVFController extends AdminController
                     $data['medicinedata'] = !empty($data['medicinedata']) ? $data['medicinedata'] : (!empty($data['old_medicine']) ? $data['old_medicine'] : []);
                     $ivfHistory->cycle_status = 1;
                     $skip = false;
-                    if((!empty($data['plan']) || !empty($data['skip_cycle']) && $data['skip_cycle'] == 'yes') || (isset($data['transfer']['result_type']) && !empty($data['transfer']['result_type']))){
+                    if(((!empty($data['plan']) && $data['plan'] != $request->plan_type) || !empty($data['skip_cycle']) && $data['skip_cycle'] == 'yes') || (isset($data['transfer']['result_type']) && !empty($data['transfer']['result_type']))){
                         $ivfHistory->cycle_status = 2;
                         $this->IvfHistory->where('patients_id',$patientsId)->where('plan',!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->update(['cycle_status'=>2]);
                         $skip = true;
                     }
                     $isSkip = false;
                     if(!empty($data['skip_cycle']) && $data['skip_cycle'] == 'yes'){
+                        // when skip cycle then remove procedure
+                        $procedureList = $this->ProcedureList->where('patients_id',$patientsId)->delete();
                         $isSkip = true;
                     }
                     $skipCycle = $this->IvfHistory->wherePatientsId($patientsId)->wherePlan(!empty($data['plan']) ? $data['plan'] : $request['plan_type'])->where('cycle_status',2)->orderBy('id','DESC')->first();

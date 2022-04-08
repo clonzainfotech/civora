@@ -213,13 +213,13 @@ class MedicalController extends AdminController
 
             $ivfHistory = $ivfHistory->get();
             $ivfExtraVisit = $ivfExtraVisit->get();
-            $ancData = $ancHistory->merge($anc);
+            $ancData = $ancHistory->merge($anc)->sortbyDesc('created_at');
 
             $ivfData = $ivfHistory->merge($ivf);
-            $ivfData = $ivfExtraVisit->merge($ivfData);
+            $ivfData = $ivfExtraVisit->merge($ivfData)->sortbyDesc('created_at');
 
             $iuiData = $iuiHistory->merge($iui);
-            $iuiData = $iuiExtraVisit->merge($iuiData);
+            $iuiData = $iuiExtraVisit->merge($iuiData)->sortbyDesc('created_at');
             $data['mData'] = $mData;
             if($request->ajax()){
                 $data['status'] = 1;

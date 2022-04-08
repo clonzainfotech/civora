@@ -9,4 +9,10 @@ class IvfExtraVisit extends BaseModel
     public function getSeenBy(){
         return $this->belongsTo('App\user','seen_by','id');
     }
+    public function getAppointment() {
+        $anc = Appointment::where('patients_id',$this->patient_id)
+                ->whereDate('date','=',$this->created_at)
+                ->first();
+        return $anc;
+    }
 }

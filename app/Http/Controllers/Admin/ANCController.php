@@ -1916,6 +1916,8 @@ class ANCController extends AdminController
         $patients = $this->OpdPatients->find($pID);
         $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
         $ancHistory = $this->AncHistory->where('patients_id',$pID)->where('anc_id',$ancId)->get();
+        $anc = $this->ANC->where('patients_id',$pID)->where('id',$ancId)->first();
+        $description = json_decode($anc->m_h,true);
         // $blood_report = [];
         $blood_report['hb'] = [];
         $blood_report['blood_group'] = [];
@@ -1927,89 +1929,43 @@ class ANCController extends AdminController
         $blood_report['fbs'] = [];
         $blood_report['ppbs'] = [];
         $otherDetails = [];
+        $investigation_date = [];
+        $rows = [];
         foreach($ancHistory as $anc)
         {
             $date = Carbon::parse($anc->created_at)->format('d-m-Y');
             $investigation = json_decode($anc->investigation,true);
             $injection = json_decode($anc->injection,true);
             $usg = json_decode($anc->usg,true);
-            if(isset($investigation['investigation_details']['31']) && !empty($investigation['investigation_details']['31']))
-            {
-                array_push($blood_report['hb'],($investigation['investigation_details']['31'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['12']) && !empty($investigation['investigation_details']['12']))
-            {
-                array_push($blood_report['blood_group'],($investigation['investigation_details']['12'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['3']) && !empty($investigation['investigation_details']['3']))
-            {
-                array_push($blood_report['urine'],($investigation['investigation_details']['3'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['6']) && !empty($investigation['investigation_details']['6']))
-            {
-                array_push($blood_report['rbs'],($investigation['investigation_details']['6'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['10']) && !empty($investigation['investigation_details']['10']))
-            {
-                array_push($blood_report['hiv'],($investigation['investigation_details']['10'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['8']) && !empty($investigation['investigation_details']['8']))
-            {
-                array_push($blood_report['hbsag'],($investigation['investigation_details']['8'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['14']) && !empty($investigation['investigation_details']['14']))
-            {
-                array_push($blood_report['tsh'],($investigation['investigation_details']['14'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['2']) && !empty($investigation['investigation_details']['2']))
-            {
-                array_push($blood_report['fbs'],($investigation['investigation_details']['2'].'('.$date.')'));
-            }
-            if(isset($investigation['investigation_details']['4']) && !empty($investigation['investigation_details']['4']))
-            {
-                array_push($blood_report['ppbs'],($investigation['investigation_details']['4'].'('.$date.')'));
-            }
-            if(!empty($injection['tt1']))
-            {
-                $otherDetails['tt1'] = $injection['tt1'];
-            }
-            if(!empty($injection['tt2']))
-            {
-                $otherDetails['tt2'] = $injection['tt2'];
-            }
-            if(!empty($injection['betnasol_1']))
-            {
-                $otherDetails['betnasol_1'] = $injection['betnasol_1'];
-            }
-            if(!empty($injection['betnasol_2']))
-            {
-                $otherDetails['betnasol_2'] = $injection['betnasol_2'];
-            }
-            if(!empty($injection['nt_scan']))
-            {
-                $otherDetails['nt_scan'] = $injection['nt_scan'];
-            }
-            if(!empty($injection['anomalies_miles']))
-            {
-                $otherDetails['anomalies_miles'] = $injection['anomalies_miles'];
-            }
-            if(isset($investigation['d_m_date']) && !empty($investigation['d_m_date']))
-            {
-                $otherDetails['d_m_date'] = $investigation['d_m_date'];
-            }
+            $data = array($date => 
+                        array(
+                            'HB'=> isset($investigation['investigation_details']['31']) ? $investigation['investigation_details']['31'] : '',
+                            'Blood Grp' => isset($investigation['investigation_details']['12']) ? $investigation['investigation_details']['12'] : '',
+                            'Urine' => isset($investigation['investigation_details']['3']) ? $investigation['investigation_details']['3'] : '',
+                            'RBS' => isset($investigation['investigation_details']['6']) ? $investigation['investigation_details']['6'] : '',
+                            'HIV' => isset($investigation['investigation_details']['10']) ? $investigation['investigation_details']['10'] : '',
+                            'HbSag' => isset($investigation['investigation_details']['8']) ? $investigation['investigation_details']['8'] : '',
+                            'TSH' => isset($investigation['investigation_details']['14']) ? $investigation['investigation_details']['14'] : '',
+                            'FBS' => isset($investigation['investigation_details']['2']) ? $investigation['investigation_details']['2'] : '',
+                            'PPBS' => isset($investigation['investigation_details']['4']) ? $investigation['investigation_details']['4'] : ''
+                        )
+                    );
+            $data = array_filter(array_map('array_filter', $data));
+            array_push($rows,$data);
             
-
-            // $blood_report['hb'][$date] = isset($investigation['investigation_details']['31']) ? $investigation['investigation_details']['31'] : '';
-            // $blood_report['blood_group'][$date] = isset($investigation['investigation_details']['12']) ? $investigation['investigation_details']['12'] : '';
-            // $blood_report['urine'][$date] = isset($investigation['investigation_details']['3']) ? $investigation['investigation_details']['3'] : '';
-            // $blood_report['rbs'][$date] = isset($investigation['investigation_details']['6']) ? $investigation['investigation_details']['6'] : '';
-            // $blood_report['hiv'][$date] = isset($investigation['investigation_details']['10']) ? $investigation['investigation_details']['10'] : '';
-            // $blood_report['hbsag'][$date] = isset($investigation['investigation_details']['8']) ? $investigation['investigation_details']['8'] : '';
-            // $blood_report['tsh'][$date] = isset($investigation['investigation_details']['14']) ? $investigation['investigation_details']['14'] : '';
-            // $blood_report['fbs'][$date] = isset($investigation['investigation_details']['2']) ? $investigation['investigation_details']['2'] : '';
-            // $blood_report['ppbs'][$date] = isset($investigation['investigation_details']['4']) ? $investigation['investigation_details']['4'] : '';
+            $otherDetails['tt1'] = !empty($injection['tt1']) ? $injection['tt1'] : '';
+            $otherDetails['tt2'] = !empty($injection['tt2']) ? $injection['tt2'] : '';
+            $otherDetails['betnasol_1'] = !empty($injection['betnasol_1']) ? $injection['betnasol_1'] : '';
+            $otherDetails['betnasol_2'] = !empty($injection['betnasol_2']) ? $injection['betnasol_2'] : '';
+            $otherDetails['nt_scan'] = !empty($injection['nt_scan']) ? $injection['nt_scan'] : '';
+            $otherDetails['anomalies_miles'] = !empty($injection['anomalies_miles']) ? $injection['anomalies_miles'] : '';
+            $otherDetails['d_m_date'] = !empty($injection['d_m_date']) ? $injection['d_m_date'] : '';
+            $otherDetails['lmp_date'] = !empty($description['last_menstrual_date']) ? $description['last_menstrual_date'] : '';
+            $otherDetails['edd'] = !empty($description['edd']) ? Carbon::parse($description['edd'])->format('D d M Y') : '';
         }
-        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails'));
+        // dd($rows);
+         
+        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails','rows'));
     }
 
     

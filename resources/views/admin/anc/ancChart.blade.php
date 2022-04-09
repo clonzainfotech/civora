@@ -16,6 +16,10 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
         .anc-header ul li{
             list-style: none;
         }
+        .font-12
+        {
+            font-size: 12px;
+        }
     </style>
 @stop
 
@@ -55,21 +59,10 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                 <div class="body">
                     <div class="row">
                         <div class="col-md-12 d-flex anc-header">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <ul>
-                                    <li><strong>HB : </strong>{{implode(', ',$blood_report['hb'])}}</li>
-                                    <li><strong>Blood Group : </strong>{{implode(', ',$blood_report['blood_group'])}}</li>
-                                    <li><strong>Urine : </strong>{{implode(', ',$blood_report['urine'])}}</li>
-                                    <li><strong>RBS : </strong>{{implode(', ',$blood_report['rbs'])}}</li>
-                                    <li><strong>HIV : </strong>{{implode(', ',$blood_report['hiv'])}}</li>
-                                    <li><strong>HBgAG : </strong>{{implode(', ',$blood_report['hbsag'])}}</li>
-                                    <li><strong>TSH : </strong>{{implode(', ',$blood_report['tsh'])}}</li>
-                                    <li><strong>FBS : </strong>{{implode(', ',$blood_report['fbs'])}}</li>
-                                    <li><strong>PPBS : </strong>{{implode(', ',$blood_report['ppbs'])}}</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul>
+                                    <li><strong>LMP Date : </strong>{{$otherDetails['lmp_date']}}</li>
+                                    <li><strong>EDD Date : </strong>{{$otherDetails['edd']}}</li>
                                     <li><strong>T1 Date : </strong>{{!empty($otherDetails['tt1']) ? $otherDetails['tt1'] : ''}}</li>
                                     <li><strong>T2 Date : </strong>{{!empty($otherDetails['tt2']) ? $otherDetails['tt2'] : ''}}</li>
                                     <li><strong>Betnasol 1 : </strong>{{!empty($otherDetails['betnasol_1']) ? $otherDetails['betnasol_1'] : ''}}</li>
@@ -78,6 +71,40 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                                     <li><strong>Anomalies Scan : </strong>{{!empty($otherDetails['anomalies_miles']) ? $otherDetails['anomalies_miles'] : ''}}</li>
                                     <li><strong>Double Marker : </strong>{{!empty($otherDetails['d_m_date']) ? $otherDetails['d_m_date'] : ''}}</li>
                                 </ul>
+                            </div>
+                            <div class="col-md-8">
+                                @php
+                                    $columns = array();
+                                    foreach ($rows as $row) {
+                                        foreach ($row as $roll => $set) {
+                                            foreach ($set as $class => $score) {
+                                                $columns[$class] = $class;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <table class="table table-bordered font-12">
+                                    <thead>
+                                        <tr>
+                                            <th class=""><strong>Date</strong></th>
+                                            @foreach ($columns as $column) 
+                                                <th><strong>{{$column}}</strong></th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($rows as $row)
+                                            <tr>
+                                            @foreach ($row as $investigation => $set)
+                                                <td>{{$investigation }}</td>
+                                                @foreach ($columns as $class) 
+                                                    <td>{{((array_key_exists($class, $set)) ? $set[$class] : '')}}</td>
+                                                @endforeach
+                                            @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

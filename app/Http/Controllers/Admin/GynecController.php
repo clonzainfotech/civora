@@ -259,6 +259,7 @@ class GynecController extends AdminController
             $personalData = $this->AncHoHistory->where('type',1)->pluck('name','name')->toArray();
             $pastData = $this->AncHoHistory->where('type',2)->pluck('name','name')->toArray();
             $familyData = $this->AncHoHistory->where('type',3)->pluck('name','name')->toArray();
+            $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             if($request->ajax()){
                 if($checkGynec){
                     $gynec = $checkGynec;
@@ -328,7 +329,6 @@ class GynecController extends AdminController
                 $leftOvaryData = $this->OvaryDetail->where('type',1)->pluck('name','name');
                 $rightOvaryData = $this->OvaryDetail->where('type',2)->pluck('name','name');
                 $surgicallyData = $this->surgicallyType()['data'];
-                $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
 
                 // 
                 // $isGynec = 0;
@@ -352,7 +352,7 @@ class GynecController extends AdminController
             }
             $isIvfHistory = !empty($this->IvfHistory->where('patients_id',$pId)->first()) ? true : false;
             $isAncHistory = !empty($this->AncHistory->where('patients_id',$pId)->first()) ? true : false;
-            return view('admin.gynec.history',compact('date','patientsId','medicines','patient','isIvfHistory','isAncHistory'));
+            return view('admin.gynec.history',compact('date','patientsId','medicines','patient','isIvfHistory','isAncHistory','referenceDoctor'));
         }catch(Exception $e){
             log::debug($e);
             abort(500);

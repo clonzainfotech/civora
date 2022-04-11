@@ -1930,7 +1930,7 @@ class ANCController extends AdminController
         $blood_report['ppbs'] = [];
         $otherDetails = [];
         $investigation_date = [];
-        $rows = [];
+        $chartData = [];
         foreach($ancHistory as $anc)
         {
             $date = Carbon::parse($anc->created_at)->format('d-m-Y');
@@ -1951,7 +1951,7 @@ class ANCController extends AdminController
                         )
                     );
             $data = array_filter(array_map('array_filter', $data));
-            array_push($rows,$data);
+            array_push($chartData,$data);
             
             $otherDetails['tt1'] = !empty($injection['tt1']) ? $injection['tt1'] : '';
             $otherDetails['tt2'] = !empty($injection['tt2']) ? $injection['tt2'] : '';
@@ -1960,12 +1960,11 @@ class ANCController extends AdminController
             $otherDetails['nt_scan'] = !empty($injection['nt_scan']) ? $injection['nt_scan'] : '';
             $otherDetails['anomalies_miles'] = !empty($injection['anomalies_miles']) ? $injection['anomalies_miles'] : '';
             $otherDetails['d_m_date'] = !empty($injection['d_m_date']) ? $injection['d_m_date'] : '';
-            $otherDetails['lmp_date'] = !empty($description['last_menstrual_date']) ? $description['last_menstrual_date'] : '';
-            $otherDetails['edd'] = !empty($description['edd']) ? Carbon::parse($description['edd'])->format('D d M Y') : '';
+            
         }
-        // dd($rows);
-         
-        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails','rows'));
+        $otherDetails['lmp_date'] = !empty($description['last_menstrual_date']) ? $description['last_menstrual_date'] : '';
+        $otherDetails['edd'] = !empty($description['edd']) ? Carbon::parse($description['edd'])->format('D d M Y') : '';
+        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails','chartData'));
     }
 
     

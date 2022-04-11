@@ -75,7 +75,7 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                             <div class="col-md-8">
                                 @php
                                     $columns = array();
-                                    foreach ($rows as $row) {
+                                    foreach ($chartData as $row) {
                                         foreach ($row as $roll => $set) {
                                             foreach ($set as $class => $score) {
                                                 $columns[$class] = $class;
@@ -83,28 +83,30 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                                         }
                                     }
                                 @endphp
-                                <table class="table table-bordered font-12">
-                                    <thead>
-                                        <tr>
-                                            <th class=""><strong>Date</strong></th>
-                                            @foreach ($columns as $column) 
-                                                <th><strong>{{$column}}</strong></th>
-                                            @endforeach
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($rows as $row)
+                                @if(!empty($columns))
+                                    <table class="table table-bordered font-12">
+                                        <thead>
                                             <tr>
-                                            @foreach ($row as $investigation => $set)
-                                                <td>{{$investigation }}</td>
-                                                @foreach ($columns as $class) 
-                                                    <td>{{((array_key_exists($class, $set)) ? $set[$class] : '')}}</td>
+                                                <th class=""><strong>Date</strong></th>
+                                                @foreach ($columns as $column) 
+                                                    <th><strong>{{$column}}</strong></th>
                                                 @endforeach
-                                            @endforeach
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($chartData as $row)
+                                                <tr>
+                                                @foreach ($row as $investigation => $set)
+                                                    <td>{{$investigation }}</td>
+                                                    @foreach ($columns as $class) 
+                                                        <td>{{((array_key_exists($class, $set)) ? $set[$class] : '')}}</td>
+                                                    @endforeach
+                                                @endforeach
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
                             </div>
                         </div>
                     </div>

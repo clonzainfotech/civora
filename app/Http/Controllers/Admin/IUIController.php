@@ -148,6 +148,7 @@ class IUIController extends AdminController
             $usgOldImages = [];
             $hsaOldImages = [];
             $usgOldImages = [];
+            $is_medicine_given_from_opd = 0;
             if($request->visit == 1){
                 $iui = $this->IUI;
                 $investigationData = $request->investigation;
@@ -368,6 +369,8 @@ class IUIController extends AdminController
                         }
 
                 $iui->treatment = !empty($request->treatment) ? json_encode($request->treatment) : json_encode($request->old_treatment);
+                $is_medicine_given_from_opd = !empty(array_filter($request->treatment['medicinedata'])) ? 0 : 2;
+
                 // patients data update from iui
                 $patients = $this->OpdPatients->find($patientsId);
                 $patients->name = $request->name;
@@ -694,6 +697,7 @@ class IUIController extends AdminController
                 if((isset($request->data['skip_cycle']) && $request->data['skip_cycle'] == 'yes') || (isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes')){
                     $iui->cycle_status = 2;
                 }
+                $is_medicine_given_from_opd = !empty(array_filter($request->data['treatment']['medicinedata'])) ? 0 : 2;
             }
             
             if($request->visit == 4){
@@ -1067,54 +1071,6 @@ class IUIController extends AdminController
                     }
                     $this->IvfHistory->insert($ivfHistorydata);
                 }
-                // else//coverting from 2nd visit to IVF
-                // {
-                //     $description = $request->data;
-                //     $lastIvfHistory = $this->IvfHistory->where('patients_id',$patientsId)->where('plan',$request->data['ivf_plan'])->orderBy('id','desc')->first();
-                //     if($request->data['ivf_plan'] == 1)
-                //     {
-                        
-                //         $lmpDate = \Carbon\Carbon::parse($description['lmp']['date'])->format('d-m-Y');
-                //         $diff = \Carbon\Carbon::parse($lmpDate)->diffInDays(\Carbon\Carbon::now());
-                //         $protocol = [];
-                //         $followUp_diff = \Carbon\Carbon::parse($followupDate)->diffInDays(\Carbon\Carbon::now());
-                //         for($i = 1; $i<=($followUp_diff+1); $i++)
-                //         {
-                //             $diff = $diff + 1;
-                //             $protocol[$i]['day'] = $diff;
-                //             $protocol[$i]['s_day'] = $i;
-                //             $protocol[$i]['date'] = \Carbon\Carbon::parse($lmpDate)->addDays($i)->format('D d M Y');
-                //             $protocol[$i]['injection'] = null;
-                //             $protocol[$i]['hmg'] = null;
-                //             $protocol[$i]['hmg_brand_name'] = null;
-                //             $protocol[$i]['fsh'] = null;
-                //             $protocol[$i]['fsh_brand_name'] = null;
-                //             $protocol[$i]['antagonist'] = null;
-                //             $protocol[$i]['time'] = null;
-                //         }
-                //         $description['protocol'] = $protocol;
-                //     }
-                //     $newIvfHistory = $this->IvfHistory;
-                //     $newIvfHistory->patients_id = $patientsId;
-                //     $newIvfHistory->seen_by = ($seenBy) ? $seenBy : Auth::user()->id;
-                //     $newIvfHistory->rmo_doctor = $request->rmo_doctor;
-                //     $description['le'] = $description['lmp']['le'];
-                //     $description['is_transfer'] = "no";
-                //     $description['is_transfer_print'] = "no";
-                //     $description['skip_reason'] = null;
-                //     $description['remark'] = !empty($description['remark']) ? $description['remark'].', Transfer From IUI' : 'Transfer From IUI';
-                //     $description['plan'] = null;
-                //     $description['follow_up'] = \Carbon\Carbon::parse($followupDate)->format('D d M Y');
-                //     $newIvfHistory->description = json_encode($description);
-                //     $newIvfHistory->created_by = Auth::user()->id;
-                //     $newIvfHistory->plan = $request->data['ivf_plan'];
-                //     $newIvfHistory->visit = 2;
-                //     $newIvfHistory->cycle_no = !empty($lastIvfHistory) ? $lastIvfHistory->cycle_no + 1 : 1;
-                //     $newIvfHistory->investigation = null;
-                //     $newIvfHistory->trigger_date = null;
-                //     $newIvfHistory->trigger_time = null;
-                //     $newIvfHistory->save();
-                // }
             }
             if($request->iui_history_id)
             {
@@ -1148,10 +1104,10 @@ class IUIController extends AdminController
                 }
             }
             $now = Carbon::now()->format('Y-m-d');
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             if(!$request->iui_history_id && !$request->iui_id)
             {
-                $is_medicine_given_from_opd = isset($request->treatment['medicinedata'][0]) && !empty($request->treatment['medicinedata'][0]) ? 0 : 2;
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$iui->seen_by,'in_consulting_room'=>0,'is_medicine_given'=>$is_medicine_given_from_opd]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$iui->seen_by,'in_consulting_room'=>0]);
 
                 if(!empty($request->data['hcg']['type']) && $request->data['hcg']['type'] == 'yes' && !empty($request->data['hcg']['time']) && $request->data['hcg']['iui']['status'] == 'yes')
                 {

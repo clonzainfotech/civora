@@ -10,7 +10,7 @@
     <tbody>
     @forelse($patients as $row)
     @php
-        $class = $row->getCurrentDoneAppointment()['status'] == 1 && $row->getCurrentDoneAppointment()['medicine_status'] == 0 ? 'medicine-not-given' : 'medicine-given';
+        $class = $row->getCurrentDoneAppointment()['status'] == 1 && $row->getCurrentDoneAppointment()['medicine_status'] == 1 ? 'medicine-given' : 'medicine-not-given';
     @endphp
         <tr data-id="{{encrypt($row->id)}}" class="{{$class}}">
             <td>{{((($patients->currentPage() - 1 ) * $patients->perPage()) + $loop->iteration) . '.'}}</td>

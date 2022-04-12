@@ -2703,7 +2703,6 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             <tr>
                                                 <th>
                                                     @php
-                                                        
                                                         $investigationData = [];
                                                         $investigationValueDetails['hub'] = [];
                                                         $data = !empty($historyHubInvestigation->investigation_data) ? $historyHubInvestigation->investigation_data : [];

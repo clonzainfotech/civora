@@ -1883,7 +1883,7 @@
             <br>
         @endif
         <br>
-        <div class="row mt-1">s
+        <div class="row mt-1">
             <div class="col-md-6">
                 <label>Dr. Remark:</label>
                 <div class="form-group">

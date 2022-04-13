@@ -369,7 +369,9 @@ class IUIController extends AdminController
                         }
 
                 $iui->treatment = !empty($request->treatment) ? json_encode($request->treatment) : json_encode($request->old_treatment);
-                $is_medicine_given_from_opd = !empty(array_filter($request->treatment['medicinedata'])) ? 0 : 2;
+                $medicine = json_decode($iui->treatment,true);
+                unset($medicine['medicinedata']);
+                $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
 
                 // patients data update from iui
                 $patients = $this->OpdPatients->find($patientsId);
@@ -697,7 +699,9 @@ class IUIController extends AdminController
                 if((isset($request->data['skip_cycle']) && $request->data['skip_cycle'] == 'yes') || (isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes')){
                     $iui->cycle_status = 2;
                 }
-                $is_medicine_given_from_opd = !empty(array_filter($request->data['treatment']['medicinedata'])) ? 0 : 2;
+                $medicine = $request->data['treatment'];
+                unset($medicine['medicinedata']);
+                $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
             }
             
             if($request->visit == 4){
@@ -1104,7 +1108,7 @@ class IUIController extends AdminController
                 }
             }
             $now = Carbon::now()->format('Y-m-d');
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($iui->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             if(!$request->iui_history_id && !$request->iui_id)
             {
                 $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$iui->seen_by,'in_consulting_room'=>0]);
@@ -2312,10 +2316,14 @@ class IUIController extends AdminController
             $iuiExtraVisit->save();
 
             $now = Carbon::now()->format('Y-m-d');
+            $medicine = json_decode($iuiExtraVisit->treatment,true);
+            unset($medicine['medicinedata']);
+            $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($iuiExtraVisit->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+            
             if(!$request->iui_extra_visit_id)
             {
-                $is_medicine_given_from_opd = isset($request->treatment['medicinedata'][0]) && !empty($request->treatment['medicinedata'][0]) ? 0 : 2;
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by,'in_consulting_room'=>0,'is_medicine_given'=>$is_medicine_given_from_opd]);
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by,'in_consulting_room'=>0]);
             }
             $followupDate = !empty($request->oe['follow_up']) ? $request->oe['follow_up'] : null;
             $appointmentTime = null;

@@ -519,12 +519,16 @@ class IVFController extends AdminController
                 }
 
                 $treatmentData = !empty($request->treatment['medicinedata']) ? array_filter($request->treatment['medicinedata']) : [];
-                $is_medicine_given_from_opd = !empty($treatmentData) ? 0 : 2;
+                $medicine = $request->treatment;
+                unset($medicine['medicinedata']);
+                $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2; // 2 = medicine is not given from opd, 0= medicine is given from opd but not from medical
+                
                 $this->complaintStore($request->co);
-                if(!empty($treatmentData)){
-                    $this->medicineData($treatmentData);
-                    $this->treatmentData($request->treatment);
-                }
+                
+                // if(!empty($treatmentData)){
+                //     $this->medicineData($treatmentData);
+                //     $this->treatmentData($request->treatment);
+                // }
                 $ivf->treatment = !empty($request->treatment) ? json_encode($request->treatment) : json_encode($request->old_treatment);
                 // if(!empty($treatmentData)){
                 //     $this->medicineData($request->treatment['medicinedata']);
@@ -1072,13 +1076,17 @@ class IVFController extends AdminController
                         }
                     }
                 }
-                $is_medicine_given_from_opd = !empty(array_filter($data['medicinedata'])) ? 0 : 2;
+                // $is_medicine_given_from_opd = !empty(array_filter($data['medicinedata'])) ? 0 : 2;
+                $medicine = $data['medicinedata'];
+                unset($medicine['medicinedata']);
+                $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2; // 2 = medicine is not given from opd, 0= medicine is given from opd but not from medical
             }
             $now = Carbon::now()->format('Y-m-d');
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($ivf->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+
             if(!$request->ivf_visit_id)
             {
-                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$ivf->seen_by,'in_consulting_room'=>0,'is_medicine_given'=>$is_medicine_given_from_opd]);
-
+                $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$ivf->seen_by,'in_consulting_room'=>0]);
             }
             $isIvfHistory =  '1';
             $ivfCycleData = null;

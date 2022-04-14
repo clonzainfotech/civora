@@ -1780,15 +1780,57 @@
                                                 </th>
                                             </tr>
                                         @endif
+                                        @php
+                                            $iui_how_much = [];
+                                            $iui_when_where = [];
+                                            $iui_type = [];
+                                        @endphp
                                         @if(isset($hoRx->iui->how_much_no) && ($hoRx->iui->how_much_no > 0))
-                                            <tr>
+                                            @if (isset($hoRx->iui->how_much))
+                                                @foreach($hoRx->iui->how_much as $key => $value)
+                                                    @php
+                                                        $iui_how_much[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->iui->when_where))
+                                                @foreach($hoRx->iui->when_where as $key => $value)
+                                                    @php
+                                                        $iui_when_where[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->iui->type))
+                                                @foreach($hoRx->iui->type as $key => $value)
+                                                    @php
+                                                        if ($value[0] == 1)
+                                                        {
+                                                            $iui_type[] = 'IUI-H';
+                                                        }
+                                                        elseif ($value[0] == 2)
+                                                        {
+                                                            $iui_type[] ='IUI-D';
+                                                        }
+                                                        elseif ($value[0] == 3)
+                                                        {
+                                                            $iui_type[] = 'Both';
+                                                        }
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @foreach($iui_how_much as $key => $value)
+                                                <tr>
+                                                    <td>{{ $value.' - '.(isset($iui_when_where[$key]) ? $iui_when_where[$key] : '').' - '.(isset($iui_type[$key]) ? $iui_type[$key] : '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                            {{-- <tr>
                                                 @if (isset($hoRx->iui->how_much))
                                                     <td style="width: 10%">
                                                         <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
                                                             @foreach($hoRx->iui->how_much as $key => $value)
                                                                 @if(!empty($value))
                                                                     <tr>
-                                                                        <td >
+                                                                        <td>
                                                                             {{$value}}
                                                                         </td>
                                                                     </tr>
@@ -1811,8 +1853,8 @@
                                                         @endforeach
                                                         </table>
                                                     </td> 
-                                            @endif
-                                            @if (isset($hoRx->iui->type))
+                                                @endif
+                                                @if (isset($hoRx->iui->type))
                                                     <td colspan="4">
                                                         <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
                                                         @foreach($hoRx->iui->type as $key => $value)
@@ -1833,12 +1875,65 @@
                                                         </table>
                                                     </td>
                                                 @endif
-                                            </tr>
+                                            </tr> --}}
                                         @endif
                                     @endif
                                     @if($hoRx->ivf->status == 'yes')
                                         @if(isset($hoRx->ivf->status) && isset($hoRx->ivf->how_much_no) && $hoRx->ivf->how_much_no > 0)
-                                            <tr>
+                                            @php
+                                                $ivf_how_much = [];
+                                                $ivf_when_where = [];
+                                                $ivf_type = [];
+                                            @endphp
+                                            @if (isset($hoRx->ivf->how_much))
+                                                @foreach($hoRx->ivf->how_much as $key => $value)
+                                                    @php
+                                                        $ivf_how_much[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->ivf->when_where))
+                                                @foreach($hoRx->ivf->when_where as $key => $value)
+                                                    @php
+                                                        $ivf_when_where[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->ivf->type))
+                                                @php
+                                                    if (isset($hoRx->ivf->type)) {
+                                                        $medicines = collect($hoRx->ivf->type)->toArray();
+                                                        $medicineKeys = array_keys($medicines);
+                                                    }
+                                                @endphp
+                                                @if (isset($hoRx->ivf->type))
+                                                    @for ($i = 1; $i <= $hoRx->ivf->how_much_no; $i++)
+                                                    @php
+                                                        $type = [];
+                                                    @endphp
+                                                        @if (in_array($i, $medicineKeys))
+                                                            @foreach($medicines[$i] as $value)
+                                                                @if ($value == 1)
+                                                                    @php $type[] = 'IVF-SELF'; @endphp
+                                                                @elseif ($value == 2)
+                                                                    @php $type[] = 'IVF-OD'; @endphp
+                                                                @elseif ($value == 3)
+                                                                    @php $type[] = 'IVF-ED';@endphp
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                        @php
+                                                            $ivf_type[] = implode(', ',$type);
+                                                        @endphp
+                                                    @endfor
+                                                @endif
+                                            @endif
+                                            @foreach($ivf_how_much as $key => $value)
+                                                <tr>
+                                                    <td>{{ $value.' - '.(isset($ivf_when_where[$key]) ? $ivf_when_where[$key] : '').' - '.(isset($ivf_type[$key]) ? $ivf_type[$key] : '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                            {{-- <tr>
                                                 <td style="width: 10%">
                                                     <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
                                                         @if (isset($hoRx->ivf->how_much))
@@ -1898,7 +1993,7 @@
                                                         @endif
                                                     </table>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                         @endif
                                     @endif
                                 </tbody>

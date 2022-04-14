@@ -293,6 +293,7 @@
                                             </div>
                                             <div class="col-sm-1">
                                                 {{Form::select('donor[blood_group]',[
+                                                    '' => 'Select Blood Group',
                                                     'A+' => 'A+',
                                                     'A-' => 'A-',
                                                     'B+' => 'B+',
@@ -327,7 +328,7 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="radio is-conceived">
-                                                    {{Form::radio("donor[hiv]",1,true,[
+                                                    {{Form::radio("donor[hiv]",1,'',[
                                                         'id'=>'hiv_positive',
                                                         'class'=>'hiv'
                                                     ])}}
@@ -335,7 +336,7 @@
                                                         Positive
                                                     </label>
 
-                                                    {{Form::radio("donor[hiv]",0,'',[
+                                                    {{Form::radio("donor[hiv]",0,true,[
                                                         'id'=>'hiv_nagative',
                                                         'class'=>'hiv'
                                                     ])}}
@@ -351,7 +352,7 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="radio is-conceived">
-                                                    {{Form::radio("donor[hbsag]",1,true,[
+                                                    {{Form::radio("donor[hbsag]",1,'',[
                                                         'id'=>'hbsag_positive',
                                                         'class'=>'hbsag'
                                                     ])}}
@@ -359,7 +360,7 @@
                                                         Positive
                                                     </label>
 
-                                                    {{Form::radio("donor[hbsag]",0,'',[
+                                                    {{Form::radio("donor[hbsag]",0,true,[
                                                         'id'=>'hbsag_nagative',
                                                         'class'=>'hbsag'
                                                     ])}}
@@ -375,7 +376,7 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="radio is-conceived">
-                                                    {{Form::radio("donor[vdrl]",1,true,[
+                                                    {{Form::radio("donor[vdrl]",1,'',[
                                                         'id'=>'vdrl_positive',
                                                         'class'=>'vdrl'
                                                     ])}}
@@ -383,7 +384,7 @@
                                                         Positive
                                                     </label>
 
-                                                    {{Form::radio("donor[vdrl]",0,'',[
+                                                    {{Form::radio("donor[vdrl]",0,true,[
                                                         'id'=>'vdrl_nagative',
                                                         'class'=>'vdrl'
                                                     ])}}

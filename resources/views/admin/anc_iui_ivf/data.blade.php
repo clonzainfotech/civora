@@ -74,7 +74,7 @@
                 @php
                     $categoryName = 'IVF';
                     $cName = 'IVF';
-                    $type = $row->getPatientsDetails->getIvf  || $row->checkFirstVisitExists() ? 'history' : 'create';
+                    $type = !empty($row->getPatientsDetails->getIvf)  || $row->checkFirstVisitExists() ? 'history' : 'create';
                 @endphp
             @endif
             @if($categoryId == '17' || $categoryId == '18' || strtolower($row->categoryDetails['name']) == 'gynec' || strtolower($row->categoryDetails['name']) == 'new gynec' || strtolower($row->categoryDetails['name']) == 'old gynec')
@@ -111,19 +111,19 @@
             <tr data-id="{{encrypt($row->getPatientsDetails['id'])}}" data-type="{{$type}}" data-catname="{{$cName}}"
                 class="appointment_dropdown anc-iui-ivf-edit appointmentdata
                     @if($categoryId != '4' && $categoryId != '3' && $categoryId != '1' && $categoryId != '2' && $categoryId != '17')
-                        {{$row->getPatientsDetails->getAnc &&  $row->is_new_anc == 0  ? 'old-anc' : 'new-anc'}}
+                        {{!empty($row->getPatientsDetails->getAnc) &&  $row->is_new_anc == 0  ? 'old-anc' : 'new-anc'}}
                     @endif
                     @if($categoryId == '4' || $categoryId == '3')
-                        {{$row->getPatientsDetails->getIui || $row->checkFirstVisitExists() ? 'old-iui' : 'new-iui'}}
+                        {{!empty($row->getPatientsDetails->getIui) || $row->checkFirstVisitExists() ? 'old-iui' : 'new-iui'}}
                     @endif
                     @if($categoryId == '1' || $categoryId == '2' || $categoryId == '11' || $categoryId == '14')
-                        {{$row->getPatientsDetails->getIvf || $row->checkFirstVisitExists() ? 'old-ivf' : 'new-ivf'}}
+                        {{!empty($row->getPatientsDetails->getIvf) || $row->checkFirstVisitExists() ? 'old-ivf' : 'new-ivf'}}
                     @endif
                     @if($categoryId == '22')
-                        {{$row->getPatientsDetails->getIvf ? 'old-stich' : 'new-stich'}}
+                        {{!empty($row->getPatientsDetails->getIvf) ? 'old-stich' : 'new-stich'}}
                     @endif
                     @if($categoryId == '17' || $categoryId == '18' || strtolower($row->categoryDetails['name']) == 'gynec' || strtolower($row->categoryDetails['name']) == 'new gynec' || strtolower($row->categoryDetails['name']) == 'old gynec')
-                        {{$row->getPatientsDetails->getGynec ? 'old-gynec' : 'new-gynec'}}
+                        {{!empty($row->getPatientsDetails->getGynec) ? 'old-gynec' : 'new-gynec'}}
                     @endif
                     {{$isDone}} {{$inConsultingroom}}" data-apid="{{encrypt($row->id)}}">
                 <td> {{ ((($appointment->currentPage() - 1 ) * $appointment->perPage() ) + $loop->iteration) . '.' }}</td>

@@ -18,5 +18,8 @@ class AppointmentRequest extends BaseModel
    }
    public function lastDoneAppointmentData(){
     return $this->hasOne('App\Models\Appointment','patients_id','id')->where('is_done','1')->orderBy('id','DESC');
-}
+   }
+   public function lastAppointmentData(){
+    return $this->hasOne('App\Models\Appointment','patients_id','id')->orderBy('id','DESC');
+   }
 }

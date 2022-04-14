@@ -162,7 +162,7 @@ class GynecController extends AdminController
             $medicine = json_decode($gynec->treatment,true);
             unset($medicine['medicinedata']);
             $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($gynec->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+            $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',Carbon::parse($gynec->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             
             $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by,'in_consulting_room'=>0]);
 

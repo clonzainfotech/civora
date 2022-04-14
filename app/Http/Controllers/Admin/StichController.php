@@ -63,7 +63,7 @@ class StichController extends AdminController
             $medicine = json_decode($stich->treatment,true);
             unset($medicine['medicinedata']);
             $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($stich->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',Carbon::parse($stich->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             
             
             $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$stich->seen_by,'in_consulting_room'=>0]);

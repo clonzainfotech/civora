@@ -2319,7 +2319,7 @@ class IUIController extends AdminController
             $medicine = json_decode($iuiExtraVisit->treatment,true);
             unset($medicine['medicinedata']);
             $is_medicine_given_from_opd = !empty($medicine) ? 0 : 2;
-            $appointmentFlag = $this->Appointment->wherePatientsId($patientsId)->where('date',Carbon::parse($iuiExtraVisit->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
+            $appointmentFlag = $this->Appointment->wherePatientsId($patientId)->where('date',Carbon::parse($iuiExtraVisit->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             
             if(!$request->iui_extra_visit_id)
             {

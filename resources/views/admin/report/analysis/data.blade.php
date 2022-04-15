@@ -121,6 +121,18 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-2">
+        <div class="card iui-box" data-key='pending-result'>
+            <div class="body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-muted">Pending Result</p>
+                        <h4 class="number mt-0 mb-0">{{ $data['pending_result'] }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <table class="table" id="myTable">

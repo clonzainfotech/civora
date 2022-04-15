@@ -2157,7 +2157,7 @@ function oeNumber(oeValue){
             "<input type='radio' name='oe[utdata]["+i+"][yalk_sac]' value='absent' id='absent_"+i+"' class='yalk_sac'><label for='absent_"+i+"'>Absent</label>"+
             "<input type='radio' name='oe[utdata]["+i+"][yalk_sac]' value='none' id='none_"+i+"' class='yalk_sac'><label for='none_"+i+"'>None</label>"+
             "</div></div>"+
-            "<div class='col-md-1 d-none pr-0 fefal-pole-data-"+i+"'><label class='vertical-form-label pr-0'>Fefal Pole :</label></div>"+
+            "<div class='col-md-1 d-none pr-0 fefal-pole-data-"+i+"'><label class='vertical-form-label pr-0'>Fetal Pole :</label></div>"+
             "<div class='col-md-3 d-none fefal-pole-data-"+i+"'><div class='radio is-conceived'>"+
             "<input type='radio' name='oe[utdata]["+i+"][fefal_pole]' value='seen' id='seen_"+i+"' class='fefal-pole' data-id='"+i+"'><label for='seen_"+i+"'>Seen</label>"+
             "<input type='radio' name='oe[utdata]["+i+"][fefal_pole]' value='notseen' id='unseen_"+i+"' class='fefal-pole' data-id='"+i+"'><label for='unseen_"+i+"'>Not Seen</label>"+

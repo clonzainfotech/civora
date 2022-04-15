@@ -704,11 +704,10 @@ class HomeController extends AdminController
                 $remark = !empty($currentData->remark) ? $currentData->remark : '';
             }
             $check_iui_result = $this->IuiHistory->where('patients_id',$patients_id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),'<=',$appoitmentDate)->orderBy('id','desc')->first();
-            if($check_iui_result)
+            if(!empty($check_iui_result))
             {
                 $iui_result = json_decode($check_iui_result->description);
-                
-                $result = $iui_result->ovalution == 'yes' ? "IUI Result (".(\Carbon\Carbon::parse($iui_result->follow_up)->format('d-m-Y')).')' : '';
+                $result = isset($iui_result->ovalution) && $iui_result->ovalution == 'yes' ? "IUI Result (".(\Carbon\Carbon::parse($iui_result->follow_up)->format('d-m-Y')).')' : '';
             }
             $data = '<p><span class="font-bold candor-color">Marriage Life : </span>'.$ml.'</p>
             <p><span class="font-bold candor-color">Patient Age : </span>'.$opdPatient->age.' Years'.'</p>

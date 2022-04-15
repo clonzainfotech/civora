@@ -9,6 +9,11 @@
     {
         border: 2px solid #1e5f63 !important;
     }
+    .default-box-border
+    {
+        border: 1px solid gray !important;
+
+    }
     </style>
 
 @stop
@@ -23,11 +28,11 @@
                     <!-- Nav tabs -->
                         <div class="row">
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total IUI</h5>
+                                                <span class="text-muted font-16 text-bold">Total IUI</span>
                                                 <h4 class="number mt-0 mb-0">{{$total_IUI}}</h4>
                                             </div>
                                         </div>
@@ -35,24 +40,36 @@
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total Conceived</h5>
-                                                <h4 class="number mt-0 mb-0">{{$total_consive}}</h4>
+                                                <span class="text-muted font-16 text-bold">Total Conceived</span>
+                                                <h4 class="number mt-0 mb-0 candor-color">{{$total_consive}}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total Fail</h5>
-                                                <h4 class="number mt-0 mb-0">{{$total_fail}}</h4>
+                                                <span class="text-muted font-16 text-bold">Total Fail</span>
+                                                <h4 class="number mt-0 mb-0 text-danger">{{$total_fail}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="card default-box-border">
+                                    <div class="body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="text-muted font-16 text-bold">Total Pending Result</span>
+                                                <h4 class="number mt-0 mb-0 candor-color">{{$data_pending_result}}</h4>
                                             </div>
                                         </div>
                                     </div>

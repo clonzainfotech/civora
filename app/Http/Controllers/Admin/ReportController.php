@@ -2015,6 +2015,7 @@ class ReportController extends AdminController
             $data_total = $this->Appointment->whereHas('getAppointmentCharges')->where('is_done',1)->whereIn('category_id',[3,4])->groupBy('patients_id')->orderBy('id','DESC')->get();
             $total_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->groupBy('patients_id')->orderBy('id','DESC')->get();
             $total_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC')->get();
+            $data_pending_result = $this->IuiHistory::where('visit', 3)->whereHas('getPatientsDetails')->where('cycle_status',1)->where('description->ovalution', 'yes')->orderBy('id','DESC');
                                 
             if($request->ajax())
             {
@@ -2022,12 +2023,10 @@ class ReportController extends AdminController
                 $injection_type = '';         
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
-            
-            
                 $data_newIUI = $this->Appointment->whereHas('getAppointmentCharges')->where('is_done',1)->whereIn('category_id',[3])->groupBy('patients_id')->orderBy('id','DESC');
                 $data_oldinf = $this->IuiHistory->groupBy('patients_id')->whereHas('getPatientsDetails');
-                $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->groupBy('patients_id')->orderBy('id','DESC');
-                $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->groupBy('patients_id')->orderBy('id','DESC');
+                $data_fail = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%fail%')->orderBy('id','DESC');
+                $data_consive = $this->IuiHistory::where('visit', 4 )->whereHas('getPatientsDetails')->where('description->result','like', '%consive%')->orderBy('id','DESC');
                 // $data_dropIds = $this->Appointment->select('*',\DB::raw('max(id) as appointment_id'))->where('is_done',1)->groupBy('patients_id')->orderBy('id','DESC')->pluck('appointment_id','appointment_id')->toArray();
                 $data_dropIds = $this->Appointment->orderBy('created_at','desc')->where('is_done',1)->get()->unique('patients_id')->pluck('appointment_id','appointment_id')->toArray();
                 $data_drop = $this->Appointment->whereIn('id',$data_dropIds)->where('date', '<', (new \Carbon\Carbon)->submonths(1))->whereIn('category_id',[3,4]);
@@ -2040,7 +2039,7 @@ class ReportController extends AdminController
                     $query->whereHas('lastAppointmentData', function($query) {
                         return $query->whereCategoryId(4);
                     });
-                })->groupBy('patients_id')->orderBy('id','DESC');
+                })->orderBy('id','DESC');
                 if(!empty($request->injection_type) || !empty($request->plan_type))
                 {
                     $data_plan_type = $this->IuiHistory::where('visit', 2 )->whereHas('getPatientsDetails');
@@ -2068,10 +2067,10 @@ class ReportController extends AdminController
                     $todate = $todate;
                     $data_newIUI = $data_newIUI->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
                     $data_oldinf = $data_oldinf->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                    $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
-                    $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                    $data_fail = $data_fail->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                    $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    // $data_drop = $data_drop->whereBetween(\DB::raw('DATE(date)'), [$fromdate, $todate]);
+                    // $data_consive = $data_consive->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    // $data_fail = $data_fail->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    // $data_skip = $data_skip->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     $data_continue = $this->IuiHistory->orderBy('created_at','desc')->where(function($query){
                         $query->whereHas('lastAppointmentData', function($query) {
                                     return $query->whereIn('category_id',[3,4]);
@@ -2240,11 +2239,14 @@ class ReportController extends AdminController
             $total_IUI = count($data_total);
             $total_consive = count($total_consive);
             $total_fail = count($total_fail);
+            $data_pending_result = $data_pending_result->pluck('patients_id','patients_id')->toArray();
+            $data_pending_result = count($data_pending_result);
+
 
             $planType = $this->Injection->where('category',1)->groupBy('type')->pluck('type','id');
             $planData = $this->Injection->where('category',1)->pluck('name','id');
 
-            return view('admin.report.analysis.index',compact('planType','planData','total_IUI','total_consive','total_fail'));
+            return view('admin.report.analysis.index',compact('planType','planData','total_IUI','total_consive','total_fail','data_pending_result'));
         }
         catch(Exception $e){
             log::debug($e);

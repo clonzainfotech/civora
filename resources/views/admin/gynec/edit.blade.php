@@ -1692,6 +1692,9 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
         <div id="oe_tab" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
             <div class="panel-body" id="parent">
             <div class="row">
+                @php
+                    $paType = !empty($oe->p_a->type) && $oe->p_a->type == 'yes' ? '' : 'd-none';
+                @endphp
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
                             P/A :
@@ -1699,20 +1702,20 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-sm-2">
                         <div class="radio is-conceived">
-                            {{Form::radio("oe[p_a][type]",'yes','',['id'=>'pa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
+                            {{Form::radio("oe[p_a][type]",'yes',!empty($paType) ? false : true,['id'=>'pa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
                             <label for="pa_type_yes">
                                 Yes
                             </label>
 
-                            {{Form::radio("oe[p_a][type]",'no',true,['id'=>'pa_type_no','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
+                            {{Form::radio("oe[p_a][type]",'no',!empty($paType) ? true : false,['id'=>'pa_type_no','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
                             <label for="pa_type_no">
                                 No
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-3 pa-details d-none">
+                    <div class="{{'col-md-3 pa-details '.$paType}}">
                         <div class="form-group">
-                            {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'UT Details'])}}
+                            {{Form::text("oe[p_a][details]",!empty($oe->p_a->details) ? $oe->p_a->details : null,['class'=>'form-control','placeholder'=>'UT Details'])}}
                         </div>
                     </div>
                     <div class="col-md-1 pr-0">
@@ -1726,28 +1729,31 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </div>
                     </div>
                 </div>
+                @php
+                    $leType = !empty($oe->l_s->type) && $oe->l_s->type == 'yes' ? '' : 'd-none';
+                @endphp
                 <div class="row">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
-                            L/S :
+                            L/E :
                         </label>
                     </div>
                     <div class="col-sm-2">
                         <div class="radio is-conceived">
-                            {{Form::radio("oe[l_s][type]",'yes','',['id'=>'ls_type_yes','class'=>'gynec-yes-no-status','data-type'=>'ls-details'])}}
+                            {{Form::radio("oe[l_s][type]",'yes',!empty($leType) ? false : true,['id'=>'ls_type_yes','class'=>'gynec-yes-no-status','data-type'=>'ls-details'])}}
                             <label for="ls_type_yes">
                                 Yes
                             </label>
 
-                            {{Form::radio("oe[l_s][type]",'no',true,['id'=>'ls_type_no','class'=>'gynec-yes-no-status','data-type'=>'ls-details'])}}
+                            {{Form::radio("oe[l_s][type]",'no',!empty($leType) ? true : false,['id'=>'ls_type_no','class'=>'gynec-yes-no-status','data-type'=>'ls-details'])}}
                             <label for="ls_type_no">
                                 No
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-3 ls-details d-none">
+                    <div class="{{'col-md-3 ls-details '.$leType}}">
                         <div class="form-group">
-                            {{Form::text("oe[l_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
+                            {{Form::text("oe[l_s][details]",!empty($oe->l_s->details) ? $oe->l_s->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
                         </div>
                     </div>
                 </div>
@@ -3407,7 +3413,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         <div class='col-md-4'>
                             <div class='form-group'>
                                 <!-- <span class='input-group-addon'>Day :</span> -->
-                                {{Form::number('treatment['.$mId.'][note]',isset($row->note) ? $row->note : '',['class'=>'form-control','placeholder'=>'Note'])}}
+                                {{Form::text('treatment['.$mId.'][note]',isset($row->note) ? $row->note : '',['class'=>'form-control','placeholder'=>'Note'])}}
                             </div>
                         </div>
                         <div class='col-md-1 medicine-data-remove'>

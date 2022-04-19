@@ -100,6 +100,7 @@ class StichController extends AdminController
             }
             return ['status'=>1];
         }catch(Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }
@@ -155,6 +156,7 @@ class StichController extends AdminController
             }
             return view('admin.stich.history',compact('pId','patient','date','medicines'));
         }catch(Exception $e){
+            log::Debug($e);
             abort(500);
         }
     }

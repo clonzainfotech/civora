@@ -381,14 +381,29 @@
                                             'onclick' => 'getConsultingCharges(this.id)'
                                         ]) !!}
                                     </div>
+                                    
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12 charge">
                                     <div class="col-md-2">
+                                        {!! Form::button('400', [
+                                            'class' => 'btn btn-primary btn-sm amount button',
+                                            'id' => '400',
+                                            'onclick' => 'getConsultingCharges(this.id)'
+                                        ]) !!}
+                                    </div>
+                                    <div class="col-md-2">
                                         {!! Form::button('500', [
                                             'class' => 'btn btn-primary btn-sm amount button',
                                             'id' => '500',
+                                            'onclick' => 'getConsultingCharges(this.id)'
+                                        ]) !!}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! Form::button('600', [
+                                            'class' => 'btn btn-primary btn-sm amount button',
+                                            'id' => '600',
                                             'onclick' => 'getConsultingCharges(this.id)'
                                         ]) !!}
                                     </div>

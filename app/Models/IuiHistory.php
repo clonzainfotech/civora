@@ -54,7 +54,7 @@ class IuiHistory extends BaseModel
             'patients_id' => $this->patients_id,
             'visit' => 3
         ])->whereJsonContains('description',['ovalution' => 'yes'])->first();
-        return !empty($iui) ? $iui : null;
+        return !empty($iui) ? json_decode($iui->description,true) : null;
     }
     /**
      * check that iui cycle is skip or not
@@ -75,5 +75,8 @@ class IuiHistory extends BaseModel
                 ->whereDate('date','=',$this->created_at)
                 ->first();
         return $anc;
+    }
+    public function getAllIuiHistory(){
+        return $this->hasMany(IuiHistory::class,'patients_id','patients_id')->where('cycle_no',$this->cycle_no)->orderBy('id','DESC');
     }
 }

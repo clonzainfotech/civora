@@ -100,7 +100,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <form method="post" autocomplete="off" action="">
-                                        {{Form::select("plan_type",$planType,null,['class'=>'form-control select-padding-0 plan-type','placeholder'=>'Select Plan Type','data-live-search'=>"true"])}}
+                                        {{Form::select("plan_type",$planType,null,['class'=>'form-control select-padding-0 plan-type','title'=>'Select Plan Type','data-live-search'=>"true"])}}
 
                                     </form>
                                 </div>
@@ -122,7 +122,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <form method="post" autocomplete="off" action="">
-                                        {{Form::select("follicle",['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'More than 5'], null,['class'=>'form-control select-padding-0 follicle','title'=>'Select Follicle Number','data-live-search'=>"true"])}}
+                                        {{Form::select("follicle",['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'More than 5'], null,['class'=>'form-control select-padding-0 follicle','placeholder'=>'Select Follicle Number','data-live-search'=>"true"])}}
                                     </form>
                                 </div>
                             </div>

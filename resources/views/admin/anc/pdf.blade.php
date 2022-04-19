@@ -400,7 +400,7 @@
                             {{  !empty($value->yalk_sac) ? $value->yalk_sac : null}}
                         </span>
                         <div class="seperator">
-                            Fefal Pole :
+                            Fetal Pole :
                         </div>
                         <span class="seperator">
                             {{!empty($value->fefal_pole) ? $value->fefal_pole : null}}
@@ -1577,7 +1577,7 @@
                             @endif
                             @if(!empty($value->fefal_pole))
                                 <div class="seperator">
-                                    <span class="anc-label ">Fefal Pole : </span>
+                                    <span class="anc-label ">Fetal Pole : </span>
                                     {{$value->fefal_pole}}
                                 </div>
                             @endif

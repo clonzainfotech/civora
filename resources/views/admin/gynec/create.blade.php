@@ -1595,7 +1595,7 @@
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
-                                                            L/S :
+                                                            L/E :
                                                         </label>
                                                     </div>
                                                     <div class="col-sm-2">

@@ -9,6 +9,11 @@
     {
         border: 2px solid #1e5f63 !important;
     }
+    .default-box-border
+    {
+        border: 1px solid gray !important;
+
+    }
     </style>
 
 @stop
@@ -23,11 +28,11 @@
                     <!-- Nav tabs -->
                         <div class="row">
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total IUI</h5>
+                                                <span class="text-muted font-16 text-bold">Total IUI</span>
                                                 <h4 class="number mt-0 mb-0">{{$total_IUI}}</h4>
                                             </div>
                                         </div>
@@ -35,24 +40,36 @@
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total Conceived</h5>
-                                                <h4 class="number mt-0 mb-0">{{$total_consive}}</h4>
+                                                <span class="text-muted font-16 text-bold">Total Conceived</span>
+                                                <h4 class="number mt-0 mb-0 candor-color">{{$total_consive}}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="card iui-box">
+                                <div class="card default-box-border">
                                     <div class="body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h5 class="text-muted">Total Fail</h5>
-                                                <h4 class="number mt-0 mb-0">{{$total_fail}}</h4>
+                                                <span class="text-muted font-16 text-bold">Total Fail</span>
+                                                <h4 class="number mt-0 mb-0 text-danger">{{$total_fail}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="card default-box-border">
+                                    <div class="body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="text-muted font-16 text-bold">Total Pending Result</span>
+                                                <h4 class="number mt-0 mb-0 candor-color">{{$data_pending_result}}</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -102,7 +119,17 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <form method="post" autocomplete="off" action="">
+                                        {{Form::select("follicle",['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'More than 5'], null,['class'=>'form-control select-padding-0 follicle','title'=>'Select Follicle Number','data-live-search'=>"true"])}}
+                                    </form>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <span class="text-danger">**Below All Analysis data is according to Above Filters**</span>
                     </div>
                     <div class="tab-content m-t-10">
                         <div class="analysis-report-data table-responsive active">
@@ -130,6 +157,7 @@
         var plan_type = '';
         var injection_type = '';
         var age = '';
+        var follicle ='';
         var qstring = '?fromdate=' + moment(fromdate).format('YYYY-MM-DD') + '&todate=' + moment(todate).format('YYYY-MM-DD') + '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
 
         $(document).ready(function () {
@@ -149,7 +177,7 @@
 
                 fromdate = picker.startDate.format('YYYY-MM-DD');
                 todate = picker.endDate.format('YYYY-MM-DD');
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
                 getAnalysisData(qstring);
 
             });
@@ -161,7 +189,7 @@
                 // Destroy and rebuild daterangepicker to clear data
                 fromdate = '';
                 todate = '';
-                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age;
+                qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+ '&key='+key+'&plan_type='+plan_type+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
                 getAnalysisData(qstring);
             });
             getAnalysisData(qstring);
@@ -170,34 +198,33 @@
         $(document).on("keyup",'#myInput', function() {
             
             search = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
             getAnalysisData(qstring)
         });
         $(document).on('click','.card.iui-box',function(){
             $('.card.iui-box').removeClass('box-border');
             currentData = $(this).data("key");
             key = $(this).data('key');
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
             getAnalysisData(qstring)
             
         });
         $(document).on('change','select.plan-type',function(){
-            
             plan_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
             getPlanData($("select.plan-type option:selected").html());
             getAnalysisData(qstring);
         });
         $(document).on('change','select.injection-type',function(){
             
             injection_type = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
             getAnalysisData(qstring);
         });
-        $(document).on('change','select.age',function(){
-            // alert($(this).val());
-            age = $(this).val();
-            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age;
+        
+        $(document).on('change','select.follicle',function(){
+            follicle = $(this).val();
+            qstring = '?fromdate=' + fromdate + '&todate=' + todate+ '&search='+search+'&plan_type='+plan_type+'&key='+key+'&injection_type='+injection_type+'&age='+age+'&follicle='+follicle;
             getAnalysisData(qstring);
         });
         // get all collection report data

@@ -20,10 +20,35 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Stich Appointment</strong>
-                     {{-- <small>Description text here...</small> --}}
-                    </h2>
-                    <ul class="header-dropdown col-md-3">
+                    <div class="row mb-2">
+                        <div class="col-md-12 col-lg-12">
+                            <h2><strong>Stich Appointment</strong>
+                            {{-- <small>Description text here...</small> --}}
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <span>Previous Visit :</span>
+                            @if(count($date)>0)
+                                <?php
+                                $date = array_reverse($date);
+                                $ii = 1;
+                                ?>
+                                @foreach($date as $k => $dt)
+                                    <?php $ij = $ii++;?>
+                                    {{Form::radio("date",$dt,'',[
+                                            'id'=>'dt_'.$ij,
+                                            'class'=>'stich-date',
+                                        ])}}
+                                    <label class="pl-0 pr-3" for="dt_{{$ij}}">
+                                        {{\Carbon\Carbon::parse($dt)->format('d-m-Y') }}
+                                    </label>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    {{-- <ul class="header-dropdown col-md-3">
                         <li class="w-100">
                             {{Form::select("date",$date,'',[
                                 'class'=>'form-control select-padding-0 stich-date',
@@ -31,7 +56,7 @@
                                 'placeholder'=>'Select Date'
                             ])}}
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
                 <div class="body">
                     <div class="col-md-12 col-lg-12">
@@ -85,7 +110,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             storeStichFormData(formData);
         });
 
-        $(document).on('change','select.stich-date',function(e){
+        $(document).on('change','input.stich-date',function(e){
             date = $(this).val();
             qstring = 'date='+date;
             stichFormData(qstring);

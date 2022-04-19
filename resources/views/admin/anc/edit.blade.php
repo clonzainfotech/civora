@@ -3302,7 +3302,7 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                                         </div>
                                         <div class="{{'col-md-1 pr-0 fefal-pole-data-'.$key .' '. $fefalData}}">
                                             <label class="vertical-form-label pr-0">
-                                                Fefal Pole :
+                                                Fetal Pole :
                                             </label>
                                         </div>
                                         <div class="{{'col-sm-3 fefal-pole-data-'.$key .' '. $fefalData}}">

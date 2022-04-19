@@ -974,7 +974,7 @@
                         </tbody>
                     </table>
             @endif
-            @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+            @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || (isset($oe->l_s) && $oe->l_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
                 
                 <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
                     <tbody>
@@ -1006,13 +1006,35 @@
                                 </th>
                             @endif
                         </tr>
+                        @if($oe->p_a->type == 'yes')
+                            <tr>
+                                <th>
+                                    <span class="iui-label">P/A:</span>
+                                    {{ !empty($oe->p_a->type == 'yes') ? 'Yes' : 'No' }}
+                                    @if ($oe->p_a->type == 'yes')
+                                        {{!empty($oe->p_a->details) ? '| '.$oe->p_a->details : '-' }}
+                                    @endif
+                                </th>
+                            </tr>
+                        @endif
                         @if($oe->p_s->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">P / S:</span>
+                                    <span class="iui-label">P/S:</span>
                                     {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
                                     @if ($oe->p_s->type == 'yes')
                                         {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
+                                    @endif
+                                </th>
+                            </tr>
+                        @endif
+                        @if($oe->l_s->type == 'yes')
+                            <tr>
+                                <th>
+                                    <span class="iui-label">L/E:</span>
+                                    {{ !empty($oe->l_s->type == 'yes') ? 'Yes' : 'No' }}
+                                    @if ($oe->l_s->type == 'yes')
+                                        {{!empty($oe->l_s->details) ? '| '.$oe->l_s->details : '-' }}
                                     @endif
                                 </th>
                             </tr>
@@ -1306,7 +1328,7 @@
                                         {{implode(',',$planManagement->plan_of_management_data)}}
                                     </th>
                                 </tr>
-                                @if(!empty($planManagement->surgically_details))
+                                @if(!empty($planManagement->surgically_details) && in_array('surgically',$planManagement->plan_of_management_data))
                                     @php
                                         $sData = [];
                                         foreach ($planManagement->surgically_details as $row) {
@@ -1679,7 +1701,7 @@
                                                 $medicine_status = '';
                                                 $mId = preg_replace('/[^a-zA-Z0-9]+/', '_', $row->medicine);
                                                 $firstCharacter = strtoupper(substr($mId, 0, 3));
-                                                if($firstCharacter == "INJ"){
+                                                if($firstCharacter == "INJ" && !empty($row->medicine_time)){
                                                     switch($row->medicine_time){
                                                         case '1':
                                                             $medicine_status = 'IV';

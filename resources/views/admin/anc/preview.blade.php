@@ -372,7 +372,7 @@
                                     {{  !empty($value->yalk_sac) ? $value->yalk_sac : null}}
                                 </td>
                                 <th>
-                                    Fefal Pole :
+                                    Fetal Pole :
                                 </th>
                                 <td>
                                     {{!empty($value->fefal_pole) ? $value->fefal_pole : null}}

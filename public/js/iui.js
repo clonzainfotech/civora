@@ -1500,7 +1500,7 @@ function oeNumber(oeValue) {
             "<input type='radio' name='oe[utdata][" + i + "][yalk_sac]' value='absent' id='absent_" + i + "' class='yalk_sac'><label for='absent_" + i + "'>Absent</label>" +
             "<input type='radio' name='oe[utdata][" + i + "][yalk_sac]' value='none' id='none_" + i + "' class='yalk_sac'><label for='none_" + i + "'>None</label>" +
             "</div></div>" +
-            "<div class='col-md-1 pr-0'><label class='vertical-form-label pr-0'>Fefal Pole :</label></div>" +
+            "<div class='col-md-1 pr-0'><label class='vertical-form-label pr-0'>Fetal Pole :</label></div>" +
             "<div class='col-md-3'><div class='radio is-conceived'>" +
             "<input type='radio' name='oe[utdata][" + i + "][fefal_pole]' value='seen' id='seen_" + i + "' class='fefal-pole' data-id='" + i + "'><label for='seen_" + i + "'>Seen</label>" +
             "<input type='radio' name='oe[utdata][" + i + "][fefal_pole]' value='notseen' id='unseen_" + i + "' class='fefal-pole' data-id='" + i + "'><label for='unseen_" + i + "'>Not Seen</label>" +
@@ -1698,7 +1698,7 @@ function medicineData(value,dId) {
                     madicineData += "<div class='col-md-2'><div class='input-group'><span class='input-group-addon'>Days:</span>"+
                     "<input type ='number' name='"+ name +"["+differenceMedicine+"][no]' class='form-control' value='" + ((data.data != null && data.data.number != null) ? data.data.number : '') + "'></div></div>";
                 }
-                madicineData += "<div class='col-md-4 medicine-note'><div class='form-group'><input type='text' name='treatment["+differenceMedicine+"][note]' class='form-control' placeholder='Note'></div></div>"
+                madicineData += "<div class='col-md-4 medicine-note'><div class='form-group'><input type='text' name='"+ name +"["+differenceMedicine+"][note]' class='form-control' placeholder='Note'></div></div>"
 
                 madicineData += "<div class='col-md-1 medicine-data-remove'><span class=''><i class='material-icons'>close</i></span></div>";
                 // madicineData += "</div><div class='row "+notinject+"' data-id=" + differenceMedicine + ">";

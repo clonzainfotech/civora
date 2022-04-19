@@ -1,17 +1,5 @@
 
 <div class="row m-0 clearfix dashboard">
-    {{-- <div class="col-sm-2">
-        <div class="card iui-box" data-key='total'>
-            <div class="body">
-                <div class="row">
-                    <div class="col-12">
-                        <p class="text-muted">TOTAL</p>
-                        <h4 class="number mt-0 mb-0">{{ $data ['total'] }}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <div class="col-sm-2">
         <div class="card iui-box" data-key='new-inf'>
             <div class="body">
@@ -31,6 +19,18 @@
                     <div class="col-12">
                         <p class="text-muted">OLD INF</p>
                         <h4 class="number mt-0 mb-0">{{ $data['oldinf'] }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card iui-box" data-key='plan-inf'>
+            <div class="body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-muted plan-type">Selected Plan Wise</p>
+                        <h4 class="number mt-0 mb-0">{{$data['plan_type']}}</h4>
                     </div>
                 </div>
             </div>
@@ -72,18 +72,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-2">
-        <div class="card iui-box" data-key='plan-inf'>
-            <div class="body">
-                <div class="row">
-                    <div class="col-12">
-                        <p class="text-muted plan-type">Plan</p>
-                        <h4 class="number mt-0 mb-0">{{$data['plan_type']}}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     {{-- <div class="col-sm-2">
         <div class="card iui-box" data-key='ltz-inf'>
             <div class="body">
@@ -120,6 +109,18 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-2">
+        <div class="card iui-box" data-key='pending-result'>
+            <div class="body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-muted">Pending Result</p>
+                        <h4 class="number mt-0 mb-0">{{ $data['pending_result'] }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <table class="table" id="myTable">
@@ -134,7 +135,7 @@
         </tr>
     </thead>
     <tbody>
-        <td class="reportdata-loader" colspan="3">
+        <td class="reportdata-loader" colspan="6">
             <div class="row">
                 <div class="page-loader-wrapper medicine-loader report-loader">
                     <div class="loader">
@@ -153,7 +154,7 @@
             <td><a href="{{URL::to('patient-history/'.encrypt($patient->id))}}" target="_blank" class="btn btn-primary">View History</a></td>
         </tr>
      @empty
-        <td colspan='4' class="text-center reportdata">No records available</td>
+        <td colspan='6' class="text-center reportdata">No records available</td>
         @endforelse
     </tbody>
 </table>

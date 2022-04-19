@@ -118,10 +118,10 @@ Route::group(['middleware'=>'checkDB'],function(){
 
             //Doctor Notification
             Route::get('doctor-explore','DoctorApi\ExploreController@explore');
-            Route::get('doctor-appointment','DoctorApi\AppointmentController@appointment');
-            Route::get('doctor-notification','DoctorApi\NotificationController@notification');
+            Route::post('doctor-appointment','DoctorApi\AppointmentController@appointment');
+            Route::post('doctor-notification','DoctorApi\NotificationController@notification');
             Route::get('doctor-profile','DoctorApi\ProfileController@doctorprofile');
-            Route::get('doctor-patient','DoctorApi\MyPatientController@doctorpatient');
+            Route::post('doctor-patient','DoctorApi\MyPatientController@doctorpatient');
             Route::post('doctor-updateprofile','DoctorApi\UpdateProfileController@doctorupdateprofile');
             Route::post('doctor-updatepassword','DoctorApi\UpdatePasswordController@doctorupdatepassword');
             Route::post('doctor-TodayPatients','DoctorApi\TodayPatientsController@doctortodaypatients');

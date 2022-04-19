@@ -9,15 +9,17 @@ use App\Http\Controllers\Controller;
 class NotificationController extends ApiController
 {
     /**
-    *Get Notification list
-    * @param  \Illuminate\Http\Request
-    * @return \Illuminate\Http\Response
-    */
+     *Get Notification list
+     * @param  \Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
     public function notification(Request $request)
     {
         $token = $request->header('Authorization');
         $UserData = $this->UserToken->where('token', $token)->first();
-
+        $per_page = isset($request->per_page) ? $request->per_page : '';
+        $page = isset($request->page) ? $request->page : '';
+        //  dd($per_page);
         if ($token && $UserData) {
             $notification = $this->Notification->select(
                 'id',
@@ -36,11 +38,13 @@ class NotificationController extends ApiController
                 WHEN module = "8" THEN "remind"
                 WHEN module = "9" THEN "payment"
                 END) AS module')
-            )->where('user_type', 0)->where('user_id', $UserData->user_id)->orderBy('created_at', 'desc')->paginate(20);
+            )->where('user_type', 0)->where('user_id', $UserData->user_id)->orderBy('created_at', 'desc')->limit($per_page)->offset(($page - 1) * $per_page)->get()->toArray();
             $msg = 'Notification not found';
             if (!empty($notification)) {
                 $msg = 'Get Notification successfully';
             }
+            // dd($notification);
+
             return $this->sendResponse($msg, $notification);
 
             // return $this->sendResponse('Your Notification successfully get',$notificationList);

@@ -810,13 +810,13 @@ class AppointmentController extends ApiController
                 $sloats = ['10:00','10:15','10:30','10:45','11:00','11:15','11:30','11:45','12:00'];
                 $message = 'Sorry for inconvenience '.$doctor->name.' not available on this date prefer other Doctor or Dates';
             }
-            foreach($sloats as $sloat)
+            foreach($sloats as $key => $sloat)
             {
-                
+                $start_sloat = $key != 0 ? \Carbon\Carbon::parse($sloat)->addMinute(1)->format('h:i') : $sloat;
                 $appointmentTime = \Carbon\Carbon::parse($sloat)->format('h:i:s');
-                $nextAppointmentTime = \Carbon\Carbon::parse($sloat)->addMinute(16)->format('h:i');
+                $nextAppointmentTime = \Carbon\Carbon::parse($sloat)->addMinute(15)->format('h:i');
                 $checkTotalAppointment = $this->AppointmentRequest->where('seen_by',$request->doctor_id)->where('appointment_date',\Carbon\Carbon::parse($request->date)->format('Y-m-d'))->where('is_book',0)->where('appointment_time',$appointmentTime)->get();
-                $data['sloat'] = \Carbon\Carbon::parse($sloat)->format('h:i').'-'.$nextAppointmentTime;
+                $data['sloat'] = \Carbon\Carbon::parse($start_sloat)->format('h:i').'-'.$nextAppointmentTime;
                 //count = how many sloat is available
                 $data['count'] = ($totalSloat - count($checkTotalAppointment)) >= 0  ? ($totalSloat - count($checkTotalAppointment)) : 0;
                 if(strtotime($sloat) <= time() && \Carbon\Carbon::parse($request->date)->format('Y-m-d') <= date('Y-m-d'))

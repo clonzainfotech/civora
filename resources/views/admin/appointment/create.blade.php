@@ -985,9 +985,9 @@
                 $(".appointment-form").submit();
                 $('.showSweetAlert').hide();
             }else{
-                updateAppointmentDate(appointmentId,date,time);
-                // swal("Deleted!", "Your appointment has been deleted.", "success");
                 $('.showSweetAlert').hide();
+                updateAppointmentDate(appointmentId,date,time);
+                window.location.href = "{{URL::to('appointment')}}";
             }
         });
     }

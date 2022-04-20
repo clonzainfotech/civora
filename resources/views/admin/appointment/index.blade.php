@@ -594,24 +594,26 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header header-bottom-border">
-
-
                         <div class="row">
                             <div class="col-md-12">
                                 <h5 class="modal-title" id="myModalLabel"></h5>
                             </div>
                         </div>
-                        <button type="button" class="close preview-close mb-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-footer footer-top-border text-right d-inline-block">
+                        <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
                     </div>
                     <div class="modal-body">
+                        {{-- <div class="row float-right">
+                            <button type="button" class="close preview-close mb-2 text-right" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div> --}}
                         <div class="visit-details-data">
                         </div>
                     </div>
 
-                    <div class="modal-footer footer-top-border text-right d-inline-block">
+                    {{-- <div class="modal-footer footer-top-border text-right d-inline-block">
                         <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
-
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -1391,7 +1393,8 @@
                 }
             });
             $(document).on('click','.preview-close',function(){
-                $('.visit-details-data').html('');
+                alert('dfgdfg');
+                // $('.visit-details-data').html('');
                 $('.preview-file-modal').modal('hide');
                 location.reload();
             })

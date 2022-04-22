@@ -1201,10 +1201,11 @@ class IUIController extends AdminController
                     $iui->h_o = $iui->ho;
                 }
                 $investigationReport = $this->allInvestigationReport();
+                $pt_view = 1;
                 return response()->json([
                     'status' => 1,
                     'id' => $iui->id,
-                    'data' => View::make('admin.iui.preview', compact('investigationReport','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData'))->render()
+                    'data' => View::make('admin.iui.preview', compact('pt_view','investigationReport','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData'))->render()
                 ]);
             }
             if(isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->isprint == 8)
@@ -1448,15 +1449,15 @@ class IUIController extends AdminController
                 $iuiReportCycleNo = $request->iui_cycle_no ? $request->iui_cycle_no :  $cycleNo;
                 if($request->iuihistorydate || $request->iui_visit_id)
                 {
-                    if($request->iuihistorydate)
+                    if(!empty($request->iuihistorydate))
                     {
-                        $iuiFirstVisit = $this->IUI->where('patients_id',$id)->orderBy('created_at','desc')->first();
+                        $iuiFirstVisit = $this->IUI->where('patients_id',$id)->where('created_at',$request->iuihistorydate)->first();
                         $iuiHistory = $this->IuiHistory->where('created_at',$request->iuihistorydate)->first();
                     }
-                    if($request->iui_visit_id)
+                    if(!empty($request->iui_visit_id))
                     {
                         $iuiVisitId = decrypt($request->iui_visit_id);
-                        $iuiFirstVisit = $this->IUI->where('patients_id',$id)->orderBy('created_at','desc')->first();
+                        $iuiFirstVisit = $this->IUI->where('patients_id',$id)->where('id',$iuiVisitId)->orderBy('created_at','desc')->first();
                         $iuiHistory = $this->IuiHistory->where('id',$iuiVisitId)->first();
 
                     }
@@ -2357,10 +2358,11 @@ class IUIController extends AdminController
             $isExtraVisit = 1;
             if($request->isprint == 1)
             {
+                $pt_view = 1;
                 return [
                     'status'=>2,
                     'id'=>$iuiExtraVisit->id,
-                    'preview' => View::make('admin.iui.preview',compact('iuiExtraVisit','iuiPatients','isExtraVisit'))->render()
+                    'preview' => View::make('admin.iui.preview',compact('iuiExtraVisit','iuiPatients','isExtraVisit','pt_view'))->render()
                 ];
 
             }

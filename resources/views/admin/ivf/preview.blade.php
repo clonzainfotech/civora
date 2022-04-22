@@ -3419,7 +3419,13 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </div>
                             <div class="col-md-9 pl-15">
                                 <div class="">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
+                                @if(!empty($ivfSecondVisitData->oe->ovary->right->updated_details))
+                                    <div class="">Right Detail :- {{implode(',',$ivfSecondVisitData->oe->ovary->right->updated_details)}}</div>
+                                @endif
                                 <div>L :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->left->afcs) ? $ivfSecondVisitData->oe->ovary->left->afcs : null}}</div>
+                                @if(!empty($ivfSecondVisitData->oe->ovary->left->updated_details))
+                                    <div class="">Left Detail :- {{implode(',',$ivfSecondVisitData->oe->ovary->left->updated_details)}}</div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -3934,7 +3940,13 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                             </div>
                             <div class="col-md-9 pl-15">
                                 <div class="">R :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->right->afcs) ? $ivfSecondVisitData->oe->ovary->right->afcs : null}}</div>
+                                @if(!empty($ivfSecondVisitData->oe->ovary->right->updated_details))
+                                    <div class="">Right Detail :- {{implode(',',$ivfSecondVisitData->oe->ovary->right->updated_details)}}</div>
+                                @endif
                                 <div>L :- {{isset($ivfSecondVisitData->oe) && !empty($ivfSecondVisitData->oe->ovary->left->afcs) ? $ivfSecondVisitData->oe->ovary->left->afcs : null}}</div>
+                                @if(!empty($ivfSecondVisitData->oe->ovary->left->updated_details))
+                                    <div class="">Left Detail :- {{implode(',',$ivfSecondVisitData->oe->ovary->left->updated_details)}}</div>
+                                @endif
                             </div>
                         </div>
                     </div>

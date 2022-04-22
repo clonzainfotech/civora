@@ -2968,6 +2968,8 @@ class IVFController extends AdminController
                             {
                                 $isTableView = 1;
                                 $ivfCycleData = $this->IvfHistory->wherePatientsId($patientId)->whereCycleNo($ivfHistory->cycle_no)->wherePlan($ivfHistory->plan)->get();
+                                $ivfSecondVisit = $this->IvfHistory->where('patients_id',$patientId)->where('plan',$ivfHistory->plan)->where('cycle_no',$ivfHistory->cycle_no)->where('visit',2)->first();
+                                $ivfSecondVisitData = json_decode($ivfSecondVisit->description);
 
                             }
                             $ivf = $ivfHistory;
@@ -2975,7 +2977,7 @@ class IVFController extends AdminController
                             $doseData = $this->Dose->pluck('name','name');
                         }
                         $visitNumber[] = $isIvfHistory;
-                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
+                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
                             // $viewAllVisit,$preview);
                         $dateValue[] = $visitDate;
                         $extraVisit[] = 0;
@@ -3263,7 +3265,6 @@ class IVFController extends AdminController
                     }
                     $ivf = $ivfData;
                     $printPreview = 1;
-                    
                     return view('admin.ivf.preview', compact('ivfFirstVisitData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData','printPreview','pt_view','isTableView','ohData','ivfSecondVisitData','ivfCycleData','ivfPatients','ivfExtraVisit','isExtraVisit'));
                 }
                 

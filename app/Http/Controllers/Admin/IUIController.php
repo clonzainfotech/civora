@@ -1201,11 +1201,11 @@ class IUIController extends AdminController
                     $iui->h_o = $iui->ho;
                 }
                 $investigationReport = $this->allInvestigationReport();
-                $pt_view = 1;
+                $patient_view = 1;
                 return response()->json([
                     'status' => 1,
                     'id' => $iui->id,
-                    'data' => View::make('admin.iui.preview', compact('pt_view','investigationReport','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData'))->render()
+                    'data' => View::make('admin.iui.preview', compact('patient_view','investigationReport','iui', 'inducingInjectionData','currentdate','lastAppointmentData','iuiFirstVisit','iuiSecondVisit','iuiThirdVisit','iuiHistoryData'))->render()
                 ]);
             }
             if(isset($request->is_iui_report) && $request->is_iui_report == 'yes' && $request->isprint == 8)
@@ -2358,11 +2358,11 @@ class IUIController extends AdminController
             $isExtraVisit = 1;
             if($request->isprint == 1)
             {
-                $pt_view = 1;
+                $patient_view = 1;
                 return [
                     'status'=>2,
                     'id'=>$iuiExtraVisit->id,
-                    'preview' => View::make('admin.iui.preview',compact('iuiExtraVisit','iuiPatients','isExtraVisit','pt_view'))->render()
+                    'preview' => View::make('admin.iui.preview',compact('iuiExtraVisit','iuiPatients','isExtraVisit','patient_view'))->render()
                 ];
 
             }

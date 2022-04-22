@@ -2405,18 +2405,19 @@
                                         <th><span class="iui-label">Remark : </span>{{$patients_remark}}</th>
                                     </tr>
                                 @endif --}}
-                                @if(isset($patients_remark) && !empty($patients_remark))
+                                @if(!empty($description->pt_remark))
                 
                                 <!-- <div class="row"> -->
                                     <tr>
-                                        <th><span class="iui-label">Remark : </span>{{$patients_remark}}</th>
+                                        <th><span class="iui-label">Remark : </span>{{$description->pt_remark}}</th>
                                     </tr>
                                 <!-- </div> -->
-                                @else
-                                <tr>
-                                    <th><span class="iui-label">Remark : </span>{{!empty($description->remark) ? $description->remark : ''}}</th>
-                                </tr>
-                            @endif
+                                @endif
+                                @if(!isset($patient_view) || $patient_view != 1)
+                                    <tr>
+                                        <th><span class="iui-label">DR Remark : </span>{{!empty($description->remark) ? $description->remark : ''}}</th>
+                                    </tr>
+                                @endif
                             <br>
                                 <tr>
                                     {{-- @if(!empty($coData)) --}}

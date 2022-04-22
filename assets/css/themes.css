@@ -2954,3 +2954,6 @@ a.ui-state-default:hover, a.ui-datepicker-prev.ui-corner-all:hover ,a.ui-datepic
         margin-bottom: 40px;
     }
 }
+svg {
+    width: 100%;
+}

@@ -113,8 +113,6 @@ class AdminController extends BaseController
                 $patient_check->save();
             }
         }else{
-            
-
             if($appointmentData['date'] != $date && $appointmentData['date'] < $date){
                 $appointment = $this->Appointment;
                 $appointment->date = $date;
@@ -679,4 +677,31 @@ class AdminController extends BaseController
         return true;
     }
     
+    /**
+     * Add Direct Appointment
+     */
+    public function addDirectAppointment($data,$patients_id)
+    {
+        $lastAppointment = $this->Appointment->where('patients_id',$patients_id)->where('is_done',1)->orderBy('id','desc')->first();
+        $patients = $this->OpdPatients->find($patients_id);
+        $date = Carbon::parse($data['date'])->format('Y-m-d');
+        $appointment = $this->Appointment;
+        $appointment->date = $date;
+        $appointment->remark = !empty($data['remark']) ? $data['remark'] : null;
+        $appointment->time = (!empty($data['time'])) ? Carbon::parse($data['time'])->format('H:i:s') : null;
+        
+        $appointment->category_id = !empty($data['category']) ? $data['category'] : $appointment->category_id;
+        $appointment->created_by = Auth::user()->id;
+        $appointment->updated_by = Auth::user()->id;
+        $appointment->seen_by = !empty($patients->hospital_doctor_id) ? $patients->hospital_doctor_id : 0;
+        $appointment->patients_id = $patients_id;
+        $appointment->medical_note = !empty($lastAppointment) ? $lastAppointment->medical_note : '';
+        $appointment->save();
+        // update Age
+        if(!empty($patients))
+        {
+            $patients->age = !empty($patients->dob) ? Carbon::parse($patients->dob)->age : $patients->age;
+            $patients->save();
+        }
+    }
 }

@@ -769,7 +769,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                 )
@@ -784,7 +784,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                 )
@@ -799,7 +799,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                     )
@@ -812,7 +812,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                     )
@@ -835,7 +835,7 @@ class ReportController extends AdminController
                         WHEN payment_method = "2" THEN "Swipe"
                         WHEN payment_method = "3" THEN "Cheque"
                         WHEN payment_method = "4" THEN "UPI"
-                        WHEN payment_method = "4" THEN "NEFT"
+                        WHEN payment_method = "5" THEN "NEFT"
                     END)
                     AS payment_mode')
                 )
@@ -848,7 +848,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                     )
@@ -1528,7 +1528,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                 )
@@ -1548,7 +1548,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                 )
@@ -1929,7 +1929,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                     )->orderBy('id', 'desc');
@@ -1940,7 +1940,7 @@ class ReportController extends AdminController
                                 WHEN payment_method = "2" THEN "Swipe"
                                 WHEN payment_method = "3" THEN "Cheque"
                                 WHEN payment_method = "4" THEN "UPI"
-                                WHEN payment_method = "4" THEN "NEFT"
+                                WHEN payment_method = "5" THEN "NEFT"
                             END)
                             AS payment_mode')
                             )->orderBy('id', 'desc');
@@ -2390,7 +2390,7 @@ class ReportController extends AdminController
                             WHEN payment_method = "2" THEN "Swipe"
                             WHEN payment_method = "3" THEN "Cheque"
                             WHEN payment_method = "4" THEN "UPI"
-                            WHEN payment_method = "4" THEN "NEFT"
+                            WHEN payment_method = "5" THEN "NEFT"
                         END)
                         AS payment_mode')
                     )->orderBy('id', 'desc');
@@ -2401,7 +2401,7 @@ class ReportController extends AdminController
                                 WHEN payment_method = "2" THEN "Swipe"
                                 WHEN payment_method = "3" THEN "Cheque"
                                 WHEN payment_method = "4" THEN "UPI"
-                                WHEN payment_method = "4" THEN "NEFT"
+                                WHEN payment_method = "5" THEN "NEFT"
                             END)
                             AS payment_mode')
                             )->orderBy('id', 'desc');

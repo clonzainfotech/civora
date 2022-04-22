@@ -3025,6 +3025,20 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         <span class="ivf-label">Follow Up:</span>
                         {{!empty($historyData->follow_up) ? \Carbon\Carbon::parse($historyData->follow_up)->format('D d M Y') : '-'}}
                     </th>
+                    @if(!empty($historyData->pt_remark))
+                        <th>
+                            <br>
+                            <span class="ivf-label">Remark:</span>
+                            {{!empty($historyData->pt_remark) ? $historyData->pt_remark : ''}}
+                        </th>
+                    @endif
+                    @if(!empty($historyData->remark) && (!isset($pt_view) || $pt_view != 1))
+                        <th>
+                            <br>
+                            <span class="ivf-label">DR Remark:</span>
+                            {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                        </th>
+                    @endif
                 </tr>
             @else
                 <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
@@ -3578,7 +3592,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                                         <br>
                                                                         S.P2 : {{implode(',',$sp2Data)}}
                                                                         @endif
-                                                                        {{!empty($historyData->remark) ? $historyData->remark : ''}}
+                                                                        {{(!isset($pt_view) || $pt_view != 1) ? $historyData->remark : (isset($historyData->pt_remark) ? $historyData->pt_remark : '')}}
                                                                         {{isset($historyData->investigation_extra) && !empty($historyData->investigation_extra) ? ' Other Report: '.$historyData->investigation_extra : ''}}
                                                                     @endif
 

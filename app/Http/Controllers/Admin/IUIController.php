@@ -2235,6 +2235,8 @@ class IUIController extends AdminController
             $bloodReportImagesArray = [];
             $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
             $rmoDoctor = $this->User->whereRole('3')->where('is_rmo_doctor',1)->whereStatus('1')->pluck('name','id')->toArray();
+            $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
+
             if($request->ajax()){
                 $iuiHistoryData = null;
                 $date = $request->date;
@@ -2260,7 +2262,7 @@ class IUIController extends AdminController
                 $data['extra_visit_data'] = View::make('admin.iui.extra_visit_data',compact('hospitalDoctor','rmoDoctor','bloodReportImagesArray','iuiHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','iuiPatients'))->render();
                 return $data;
             }
-            return view('admin.iui.extra_visit',compact('iuiPatients','iuiHistoryDate','medicines','cycle_no'));
+            return view('admin.iui.extra_visit',compact('iuiPatients','iuiHistoryDate','medicines','cycle_no','referenceDoctor'));
         }catch(Exception $e){
             log::Debug($e);
             abort(500);

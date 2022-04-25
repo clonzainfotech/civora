@@ -152,7 +152,7 @@
                                     $careof = (!empty($lastAppointment->getPatientsDetails->reference_doctor_id) && isset($referenceDoctor[$lastAppointment->getPatientsDetails->reference_doctor_id])) ? $referenceDoctor[$lastAppointment->getPatientsDetails->reference_doctor_id] : '';
                                     if(!empty($lastAppointment->getPatientsDetails->reference_doctor_id) && $lastAppointment->getPatientsDetails->reference_doctor_id == '1' )
                                     {
-                                        $careof = !empty($lastAppointment->getPatientsDetails->reference_pt_name) && !empty($lastAppointment->getPatientsDetails->reference_pt_mobile) ? $lastAppointment->getPatientsDetails->reference_pt_name.'('.$lastAppointment->getPatientsDetails->reference_pt_mobile.')' :'SELF--';
+                                        $careof = !empty($lastAppointment->getPatientsDetails->reference_pt_name) ? $lastAppointment->getPatientsDetails->reference_pt_name.'('.$lastAppointment->getPatientsDetails->reference_pt_mobile.')' :'SELF--';
                                     }
                                 @endphp
                                 {{' care of '.$careof}}</h2>

@@ -192,7 +192,7 @@
                         $careof = isset($referenceDoctor[$iui->getPatientsInfo['reference_doctor_id']]) ? $referenceDoctor[$iui->getPatientsInfo['reference_doctor_id']]: '';
                         if(!empty($iui->getPatientsInfo['reference_doctor_id']) && $iui->getPatientsInfo['reference_doctor_id'] == 1)
                         {
-                            $careof = !empty($iui->getPatientsInfo['reference_pt_name']) && !empty($iui->getPatientsInfo['reference_pt_mobile']) ? $iui->getPatientsInfo['reference_pt_name'].'('.$iui->getPatientsInfo['reference_pt_mobile'].')' :'SELF';
+                            $careof = !empty($iui->getPatientsInfo['reference_pt_name']) ? $iui->getPatientsInfo['reference_pt_name'].'('.$iui->getPatientsInfo['reference_pt_mobile'].')' :'SELF';
                         }
                     @endphp
                     <div class="col-md-6">

@@ -33,7 +33,7 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                             $careOf = (!empty($patients->reference_doctor_id) && isset($referenceDoctor[$patients->reference_doctor_id])) ? $referenceDoctor[$patients->reference_doctor_id] : '';
                             if(!empty($patients->getPatients['reference_doctor_id']) && $patients->getPatients['reference_doctor_id'] == 1)
                             {
-                                $careOf = !empty($patients->getPatients['reference_pt_name']) && !empty($patients->getPatients['reference_pt_mobile']) ? $patients->getPatients['reference_pt_name'].'('.$patients->getPatients['reference_pt_mobile'].')' :'SELF';
+                                $careOf = !empty($patients->getPatients['reference_pt_name']) ? $patients->getPatients['reference_pt_name'].'('.$patients->getPatients['reference_pt_mobile'].')' :'SELF';
                             }
                         @endphp
                         <h2><strong class="text-secondary"> {{ucwords($patients->name)}}</strong>{{' care of '.$careOf}}</h2>

@@ -117,6 +117,7 @@ class StichController extends AdminController
             $date = $this->Stich->where('patients_id',$patientId)->pluck('created_at','created_at')->toArray();
             $medicines = $this->Medicine->pluck('name','name');
             $stich = null;
+            $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             if($request->ajax()){
                 if($request->date){
                     $stich = $this->Stich->where('created_at',$request->date)->first();
@@ -154,7 +155,7 @@ class StichController extends AdminController
                 $data['editGynec'] = View::make('admin.stich.edit',$data)->render();
                 return $data;
             }
-            return view('admin.stich.history',compact('pId','patient','date','medicines'));
+            return view('admin.stich.history',compact('pId','patient','date','medicines','referenceDoctor'));
         }catch(Exception $e){
             log::Debug($e);
             abort(500);

@@ -61,7 +61,15 @@
         <div class="col-md-12 p-0">
             <div class="card patients-list">
                 <div class="header">
-                    <h2><strong class="text-secondary">{{ucwords($ivfPatients->name)}}</strong></h2>
+                    <h2><strong class="text-secondary">{{ucwords($ivfPatients->name)}}</strong>
+                        @php
+                            $careof = (!empty($ivfPatients->reference_doctor_id) && isset($referenceDoctor[$ivfPatients->reference_doctor_id])) ? $referenceDoctor[$ivfPatients->reference_doctor_id] : '';
+                            if(!empty($ivfPatients->reference_doctor_id) && $ivfPatients->reference_doctor_id == '1' )
+                            {
+                                $careof = !empty($ivfPatients->reference_pt_name) ? $ivfPatients->reference_pt_name.'('.$ivfPatients->reference_pt_mobile.')' :'SELF--';
+                            }
+                        @endphp
+                        {{' care of '.$careof}}</h2>
                 </div>
             </div>
         </div>

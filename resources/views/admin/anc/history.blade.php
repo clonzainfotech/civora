@@ -48,7 +48,7 @@
                             $careOf = (!empty($ancData->getPatients['reference_doctor_id']) && isset($referenceDoctor[$ancData->getPatients['reference_doctor_id']])) ? $referenceDoctor[$ancData->getPatients['reference_doctor_id']] : '';
                             if(!empty($ancData->getPatients['reference_doctor_id']) && $ancData->getPatients['reference_doctor_id'] == 1)
                             {
-                                $careOf = !empty($ancData->getPatients['reference_pt_name']) && !empty($ancData->getPatients['reference_pt_mobile']) ? $ancData->getPatients['reference_pt_name'].'('.$ancData->getPatients['reference_pt_mobile'].')' :'SELF';
+                                $careOf = !empty($ancData->getPatients['reference_pt_name']) ? $ancData->getPatients['reference_pt_name'].'('.$ancData->getPatients['reference_pt_mobile'].')' :'SELF';
                             }
                         @endphp
                         <h2><strong class="text-secondary"> {{ucwords($ancPatients->name)}}</strong>{{' care of '.$careOf}}</h2>

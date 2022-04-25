@@ -878,7 +878,7 @@ class AppointmentController extends AdminController
                 if(in_array($appointment->category_id, [1, 2])) 
                 {
                     $ivfHistory = $this->IvfHistory->where('patients_id',$patients->id)->where(\DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"),$lastAppointment->date)->first();
-                    if($ivfHistory){
+                    if(!empty($ivfHistory)){
                         $ivfData = json_decode($ivfHistory->description);
                         
                             $ivfData->follow_up = Carbon::parse($newFollowUpDate)->format('D d M Y');

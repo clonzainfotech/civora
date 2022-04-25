@@ -690,7 +690,7 @@ class AdminController extends BaseController
         $appointment->remark = !empty($data['remark']) ? $data['remark'] : null;
         $appointment->time = (!empty($data['time'])) ? Carbon::parse($data['time'])->format('H:i:s') : null;
         
-        $appointment->category_id = !empty($data['category']) ? $data['category'] : $appointment->category_id;
+        $appointment->category_id = !empty($data['category']) ? $data['category'] : $lastAppointment->category_id;
         $appointment->created_by = Auth::user()->id;
         $appointment->updated_by = Auth::user()->id;
         $appointment->seen_by = !empty($patients->hospital_doctor_id) ? $patients->hospital_doctor_id : 0;

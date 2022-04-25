@@ -3400,6 +3400,7 @@ class IVFController extends AdminController
             $bloodReportImagesArray = [];
             $hospitalDoctor = $this->User->whereRole('3')->whereStatus('1')->pluck('name','id')->toArray();
             $rmoDoctor = $this->User->whereRole('3')->where('is_rmo_doctor',1)->whereStatus('1')->pluck('name','id')->toArray();
+            $referenceDoctor = $this->ReferenceDoctor->pluck('name','id');
             if($request->ajax()){
                 $ivfHistoryData = null;
                 $date = $request->date;
@@ -3423,7 +3424,7 @@ class IVFController extends AdminController
                 $data['extra_visit_data'] = View::make('admin.ivf.extra_visit_data',compact('hospitalDoctor','rmoDoctor','bloodReportImagesArray','ivfHistoryData','complaints','leftOvaryData','rightOvaryData','medicines','ivfPatients'))->render();
                 return $data;
             }
-            return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no','plan'));
+            return view('admin.ivf.extra_visit',compact('ivfPatients','ivfHistoryDate','medicines','cycle_no','plan','referenceDoctor'));
         }catch(Exception $e){
             log::Debug($e);
             abort(500);

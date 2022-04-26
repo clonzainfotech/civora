@@ -219,7 +219,7 @@ tr td th {
 @endphp
 @if ($count > 0)
     <tr>
-        <th colspan="12" class="sub-heading">INF</th>
+        <th colspan="12" class="sub-heading">IUI</th>
     </tr>
     
         @for ($i = 0; $i < $count; $i++)

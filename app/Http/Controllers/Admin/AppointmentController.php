@@ -355,6 +355,7 @@ class AppointmentController extends AdminController
                 }
                 $rule['mobile_number'] = 'nullable|numeric|digits:10|unique:patients,mobile_number,' . $patientsId;
             }
+            dd('here');
             if($isNext == 1){
                 // Session::flash('msg',"You can't add next appointment for this patients because he has already appointment !");
                 if(!empty($nextAppointmentData)){

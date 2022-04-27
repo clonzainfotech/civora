@@ -1921,6 +1921,8 @@ class ANCController extends AdminController
         $ancHistory = $this->AncHistory->where('patients_id',$pID)->where('anc_id',$ancId)->get();
         $anc = $this->ANC->where('patients_id',$pID)->where('id',$ancId)->first();
         $description = json_decode($anc->m_h,true);
+        $ancFirst_patientsObstratics = isset($anc) ? json_decode($anc->patients_obstratics) : null;
+
         // $blood_report = [];
         $blood_report['hb'] = [];
         $blood_report['blood_group'] = [];
@@ -1934,12 +1936,16 @@ class ANCController extends AdminController
         $otherDetails = [];
         $investigation_date = [];
         $chartData = [];
+        $ancCreatedDate = null;
+        $ancAutoRemark = null;
         foreach($ancHistory as $anc)
         {
             $date = Carbon::parse($anc->created_at)->format('d-m-Y');
             $investigation = json_decode($anc->investigation,true);
             $injection = json_decode($anc->injection,true);
+            $patients_details_ho = json_decode($anc->patients_details_ho,true);
             $usg = json_decode($anc->usg,true);
+            $oe = !empty($anc->o_e) ? json_decode($anc->o_e,true) : null;
             $data = array($date => 
                         array(
                             'HB'=> isset($investigation['investigation_details']['31']) ? $investigation['investigation_details']['31'] : '',
@@ -1963,11 +1969,16 @@ class ANCController extends AdminController
             $otherDetails['nt_scan'] = !empty($injection['nt_scan']) ? $injection['nt_scan'] : '';
             $otherDetails['anomalies_miles'] = !empty($injection['anomalies_miles']) ? $injection['anomalies_miles'] : '';
             $otherDetails['d_m_date'] = !empty($injection['d_m_date']) ? $injection['d_m_date'] : '';
-            
+            $otherDetails['personal_history'] = !empty($patients_details_ho['personal_history_history_type']) ? $patients_details_ho['personal_history_history_type'] : [];
+            $otherDetails['family_history'] = !empty($patients_details_ho['family_history_type']) ? $patients_details_ho['family_history_type'] : [];
+            $otherDetails['past_history'] = !empty($patients_details_ho['past_history_type']) ? $patients_details_ho['past_history_type'] : [];
+            $otherDetails['oe_remark'] = !empty($oe['remark']) ? $oe['remark'] : null;
+            $ancCreatedDate = $anc->created_at;
         }
         $otherDetails['lmp_date'] = !empty($description['last_menstrual_date']) ? $description['last_menstrual_date'] : '';
         $otherDetails['edd'] = !empty($description['edd']) ? Carbon::parse($description['edd'])->format('D d M Y') : '';
-        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails','chartData'));
+        $ancAutoRemark = $this->getAutoRemark($pID,$ancId);
+        return view('admin.anc.ancChart', compact('patients','referenceDoctor','ancHistory','blood_report','otherDetails','chartData','ancAutoRemark','ancCreatedDate','ancFirst_patientsObstratics'));
     }
 
     

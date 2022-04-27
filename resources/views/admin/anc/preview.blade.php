@@ -701,9 +701,6 @@
                                 </tr>
                             @endif
                             @if(!isset($patient_preview) || $patient_preview != 1)
-                            @php
-                            //  print_r($ancAutoRemark);
-                            @endphp
                             <tr>
                                 @if(!empty($oe->remark))
                                     <th class="text-danger">

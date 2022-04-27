@@ -260,7 +260,7 @@ return [
     'GOOGLE_CLIENT_SECRET' => 'eSold9YPOYmRmF_j13M1WVZo',
     'GOOGLE_REFRESH_TOKEN' => '1//04lMN1kpE8NfeCgYIARAAGAQSNwF-L9Ir_MfDBdhubB1CXFkX6moKG-x9Rcjm9AqWLU1baEFUUzPvjzW0xy67wI6-IXDLzGHO8yE',
     'GOOGLE_FOLDER_ID' => '1uK79a2YTAOW4CALT0eWgoDHtnkzkHnaX',
-    'social_reference' => ['banner','camp','youtube','insta','facebook','pamplets','call'],
+    'social_reference' => ['benner','camp','youtube','insta','facebook','pamplets','call'],
 
     'reject_apt_reason_en' => ["0"=>"We can't book right now as tomorrow OPD schedule is not planned yet. We contact you as soon as it planned or you can contact us on phone.",
                                 "1"=>"Thank you for your booking an appointment with us. We Will assure you to take in consultation room with Dr no booked time if you come on time. Sorry for inconvenience in advance if we can't for that if any unavoidable circumstance will be there.",

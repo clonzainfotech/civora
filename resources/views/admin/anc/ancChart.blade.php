@@ -20,6 +20,7 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
         {
             font-size: 12px;
         }
+        
     </style>
 @stop
 
@@ -59,8 +60,100 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                 <div class="body">
                     <div class="row">
                         <div class="col-md-12 d-flex anc-header">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <ul>
+                                    <li><strong>Patient's Name : </strong>{{ucwords(strtolower($patients->name))}}</li>
+                                    <li><strong>Age / Weight: </strong>{{$patients->age.' Year / '.$patients->weight.' kg'}}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>LMP Date : </strong>{{\Carbon\Carbon::parse($otherDetails['lmp_date'])->format('d-m-Y')}}</li>
+                                    <li><strong>EDD Date : </strong>{{\Carbon\Carbon::parse($otherDetails['edd'])->format('d-m-Y')}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex anc-header mt-3">
+                            <div class="col-md-3">
+                                <ul>
+                                    <li class="candor-color"><h6><strong><u>Injections : </u></strong></h6></li>
+                                    <li><strong>T1 Date : </strong>{{!empty($otherDetails['tt1']) ? $otherDetails['tt1'] : ''}}</li>
+                                    <li><strong>T2 Date : </strong>{{!empty($otherDetails['tt2']) ? $otherDetails['tt2'] : ''}}</li>
+                                    <li><strong>Betnasol 1 : </strong>{{!empty($otherDetails['betnasol_1']) ? $otherDetails['betnasol_1'] : ''}}</li>
+                                    <li><strong>Betnasol 2 : </strong>{{!empty($otherDetails['betnasol_2']) ? $otherDetails['betnasol_2'] : ''}}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3">
+                                <ul>
+                                    <li class="candor-color"><h6><strong><u>USG : </u></strong></h6></li>
+                                    <li><strong>NT Scan : </strong>{{!empty($otherDetails['nt_scan']) ? $otherDetails['nt_scan'] : ''}}</li>
+                                    <li><strong>Anomalies Scan : </strong>{{!empty($otherDetails['anomalies_miles']) ? $otherDetails['anomalies_miles'] : ''}}</li>
+                                    <li><strong>Double Marker : </strong>{{!empty($otherDetails['d_m_date']) ? $otherDetails['d_m_date'] : ''}}</li>
+                                </ul>
+                            </div>
+                        {{-- </div> --}}
+                        {{-- <div class="col-md-12 d-flex anc-header"> --}}
+                            <div class="col-md-3">
+                                <ul>
+                                    <li class="candor-color"><h6><strong><u>History details: </u></strong></h6></li>
+                                    <li><strong>Personal History : </strong>{{implode(',',$otherDetails['personal_history'])}}</li>
+                                    <li><strong>Family History : </strong>{{implode(',',$otherDetails['family_history'])}}</li>
+                                    <li><strong>Past History: </strong>{{implode(',',$otherDetails['past_history'])}}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3">
+                                <ul style="color: red;">
+                                    <li class="candor-color"><h6><strong><u>Diagnosis: </u></strong></h6></li>
+                                @if (isset($otherDetails['oe_remark']) && !empty($otherDetails['oe_remark']))
+                                    <span class="anc-label ">*Last Remark:</span>
+                                                {{$otherDetails['oe_remark']}}
+                                @endif
+                                @if (isset($ancFirst_patientsObstratics->gpal_status) && !empty($ancFirst_patientsObstratics->gpal_status))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*GPAL Status:</span>
+                                                {{$ancFirst_patientsObstratics->gpal_status}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['blood_group']) &&  (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['blood_group_date'])))
+                                    <span class="anc-label ">*Blood Group:</span>
+                                        {{$ancAutoRemark['blood_group']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['hbsag']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['hbsag_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*HBSAG:</span>
+                                        {{$ancAutoRemark['hbsag']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['hiv']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['hiv_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*HIV:</span>
+                                        {{$ancAutoRemark['hiv']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['vdrl']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['vdrl_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*VDRL:</span>
+                                        {{$ancAutoRemark['vdrl']}}
+                                @endif
+                                
+                                @if($ancAutoRemark && !empty($ancAutoRemark['late_concept']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['late_concept_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Late Conception:</span>
+                                    Yes
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['cesarean']))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Previous:</span>
+                                        {{$ancAutoRemark['cesarean']. ' - LSCS'}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['position']) && ($ancAutoRemark['position'] == 'breech' || $ancAutoRemark['position'] == 'transverse' || $ancAutoRemark['position'] == 'oblique'))
+                                    @if(empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['position_date']))    
+                                        <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Position:</span>
+                                        {{$ancAutoRemark['position']}}
+                                    @endif
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['liquor']) && ($ancAutoRemark['liquor'] == 'oligo' || $ancAutoRemark['liquor'] == 'poly') && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['liquor_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Liquor:</span>
+                                        {{$ancAutoRemark['liquor']}}
+                                @endif
+                                @if($ancAutoRemark && !empty($ancAutoRemark['placenta']) && (empty($ancCreatedDate) || (!empty($ancCreatedDate) && $ancCreatedDate >= $ancAutoRemark['placenta_date'])))
+                                    <span class="anc-label ">&nbsp;&nbsp;&nbsp;*Placenta:</span>
+                                        {{$ancAutoRemark['placenta']}}
+                                @endif
+                                </ul>
+                            </div>
+                                {{-- <ul>
                                     <li><strong>LMP Date : </strong>{{$otherDetails['lmp_date']}}</li>
                                     <li><strong>EDD Date : </strong>{{$otherDetails['edd']}}</li>
                                     <li><strong>T1 Date : </strong>{{!empty($otherDetails['tt1']) ? $otherDetails['tt1'] : ''}}</li>
@@ -70,48 +163,49 @@ $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6 Weeks',4=>'6 - 8 Weeks',5=>
                                     <li><strong>NT Scan : </strong>{{!empty($otherDetails['nt_scan']) ? $otherDetails['nt_scan'] : ''}}</li>
                                     <li><strong>Anomalies Scan : </strong>{{!empty($otherDetails['anomalies_miles']) ? $otherDetails['anomalies_miles'] : ''}}</li>
                                     <li><strong>Double Marker : </strong>{{!empty($otherDetails['d_m_date']) ? $otherDetails['d_m_date'] : ''}}</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-8">
-                                @php
-                                    $columns = array();
-                                    foreach ($chartData as $row) {
-                                        foreach ($row as $roll => $set) {
-                                            foreach ($set as $class => $score) {
-                                                $columns[$class] = $class;
-                                            }
-                                        }
-                                    }
-                                @endphp
-                                @if(!empty($columns))
-                                    <table class="table table-bordered font-12">
-                                        <thead>
-                                            <tr>
-                                                <th class=""><strong>Date</strong></th>
-                                                @foreach ($columns as $column) 
-                                                    <th><strong>{{$column}}</strong></th>
-                                                @endforeach
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($chartData as $row)
-                                                <tr>
-                                                @foreach ($row as $investigation => $set)
-                                                    <td>{{$investigation }}</td>
-                                                    @foreach ($columns as $class) 
-                                                        <td>{{((array_key_exists($class, $set)) ? $set[$class] : '')}}</td>
-                                                    @endforeach
-                                                @endforeach
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                @endif
-                            </div>
+                                </ul> --}}
                         </div>
                     </div>
                     <div class="row">
+                        @php
+                            $columns = array();
+                            foreach ($chartData as $row) {
+                                foreach ($row as $roll => $set) {
+                                    foreach ($set as $class => $score) {
+                                        $columns[$class] = $class;
+                                    }
+                                }
+                            }
+                        @endphp
                         <div class="col-md-12 col-lg-12 table-responsive">
+                            @if(!empty($columns))
+                                {{-- <h6>Investigation Detail:</h6> --}}
+                                <table class="table table-bordered font-12">
+                                    <thead>
+                                        <tr>
+                                            <th class=""><strong>Investigation Date</strong></th>
+                                            @foreach ($columns as $column) 
+                                                <th><strong>{{$column}}</strong></th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($chartData as $row)
+                                            <tr>
+                                            @foreach ($row as $investigation => $set)
+                                                <td>{{$investigation }}</td>
+                                                @foreach ($columns as $class) 
+                                                    <td>{{((array_key_exists($class, $set)) ? $set[$class] : '')}}</td>
+                                                @endforeach
+                                            @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                        </div>
+                        <div class="col-md-12 col-lg-12 table-responsive">
+                            {{-- <h6>Anc Details:</h6> --}}
                             <table class="table table-bordered ">
                                 <thead>
                                     <tr>

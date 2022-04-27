@@ -361,7 +361,7 @@ class AppointmentController extends AdminController
                 }
                 if(!empty($nextAppointmentData) && $nextAppointmentData->category_id == 4)
                 {
-                    $resultAppointment = $this->IuIHistory->where('patients_id',$patientsId)->whereJsonContains('description',['ovalution' => 'yes'])->whereDate('created_at',Carbon::parse($nextAppointmentData->created_at)->format('Y-m-d'))->first();
+                    $resultAppointment = $this->IuiHistory->where('patients_id',$patientsId)->whereJsonContains('description',['ovalution' => 'yes'])->whereDate('created_at',Carbon::parse($nextAppointmentData->created_at)->format('Y-m-d'))->first();
                 }
                 $rule['mobile_number'] = 'nullable|numeric|digits:10|unique:patients,mobile_number,' . $patientsId;
             }

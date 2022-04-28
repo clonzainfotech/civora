@@ -376,6 +376,7 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('testimonials/delete/{id}','TestimonialController@destroy');
         Route::get('sms-manager','SMSManagerController@index');
         Route::post('testimonials/{id}','TestimonialController@update');
+        Route::post('app-version','SystemSettingController@appVersion');
 
         // medicines route
         Route::get('medicines-setting','SystemSettingController@medicinesSetting');

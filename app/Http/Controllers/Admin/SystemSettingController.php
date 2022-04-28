@@ -512,4 +512,21 @@ class SystemSettingController extends AdminController
         }
         return ['status'=>1];
     }
+
+    public function appVersion(Request $request)
+    {
+        try{
+
+            $systemSetting = $this->SystemSetting->first();
+            if(!$systemSetting){
+                $systemSetting = $this->SystemSetting;
+            }
+            $systemSetting->app_android_version = $request->app_android_version;
+            $systemSetting->app_ios_version = $request->app_ios_version;
+            $systemSetting->save();
+            return redirect('systemsetting')->with('msg','Your setting has been updated.');
+        }catch (Exception $e) {
+            return redirect('systemsetting')->with('msg','Something went wrong.');
+        }
+    }
 }

@@ -215,4 +215,16 @@ class UserController extends ApiController
         }
         return $this->sendError(__('auth.failed'), 401);
     }
+    /**
+    * Get App version
+    * @param  \Illuminate\Http\Request 
+    * @return \Illuminate\Http\Response
+    */
+    public function getAppVersion()
+    {
+        $system_setting = $this->SystemSetting->first();
+        $data['android_version'] = $system_setting->app_android_version;
+        $data['ios_version'] = $system_setting->app_ios_version;
+            return $this->sendResponse('success', $data);
+    }
 }

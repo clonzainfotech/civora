@@ -27,6 +27,7 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('getHtmlPages','HomeController@getHtmlPages');
         Route::post('getRegisterStatus','AuthApiController@registerStatus');
         Route::get('get-question/{id?}','FaqController@index');
+        Route::get('get-app-version','UserController@getAppVersion');
 
         //Doctor API
         Route::post('/doctor-login', 'DoctorApi\LoginController@login');

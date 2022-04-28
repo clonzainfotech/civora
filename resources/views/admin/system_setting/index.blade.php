@@ -470,6 +470,42 @@
 		</div>
 	</div>
 </div>
+<div class="row clearfix">
+	<div class="col-md-12">
+		<div class="card patients-list">
+			{{-- <div class="header">
+				<h2><strong></strong></h2>
+			</div> --}}
+			<div class="body">
+				{{Form::open(['url'=>'app-version','method'=>'post','files'=>'true'])}}
+					<div class="card-body">
+					
+						<div class="row mt-1">
+							<div class="col-md-2">
+								<label class="unik-lbl-spn">Android App Version</label>
+							</div>
+							<div class="col-md-5">
+								{{Form::text('app_android_version',$data->app_android_version,['class'=>'form-control'])}}
+							</div>
+						</div>
+						<div class="row mt-1">
+							<div class="col-md-2">
+								<label class="unik-lbl-spn">iOS App Version</label>
+							</div>
+							<div class="col-md-5">
+								{{Form::text('app_ios_version',$data->app_ios_version,['class'=>'form-control'])}}
+							</div>
+						</div>
+						<div class="row mt-3">
+							{{Form::submit('Save',['class'=>'btn btn-primary'])}}
+							<a href="{{URL::to('systemsetting')}}" class="btn btn-default">Cancel</a>
+						</div>
+					</div>
+				{{Form::close()}}
+			</div>
+		</div>
+	</div>
+</div>
 @stop
 @section('page-script')
 	<script src="{{url('public/js/system_setting.js')}}"></script>

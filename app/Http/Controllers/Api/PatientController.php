@@ -452,8 +452,14 @@ class PatientController extends ApiController
                 if($request->hasFile('image'))
                 {
                     $image = $request->file('image');
-                    $profilePicture = $this->uploadImage($image, 'public/upload/patient/memory/');
-                    $patient_memory->image = url('public/upload/patient/memory/'.$profilePicture);
+                    $memoryImage = $this->uploadImage($image, 'public/upload/patient/memory/');
+                    $patient_memory->image = url('public/upload/patient/memory/'.$memoryImage);
+                }
+                if($request->hasFile('file'))
+                {
+                    $file_name = $request->file('file');
+                    $file = $this->uploadImage($file_name, 'public/upload/patient/memory/');
+                    $patient_memory->file = url('public/upload/patient/memory/'.$file);
                 }
                 $patient_memory->save();
                 return $this->sendResponse('Add Memory Successfully',$patient_memory);
@@ -496,9 +502,17 @@ class PatientController extends ApiController
                 // $patient_memory->image = null;
                 if($request->hasFile('image'))
                 {
+                    $this->removeImage($patient_memory->image);
                     $image = $request->file('image');
-                    $profilePicture = $this->uploadImage($image, 'public/upload/patient/memory/');
-                    $patient_memory->image = url('public/upload/patient/memory/'.$profilePicture);
+                    $memory_image = $this->uploadImage($image, 'public/upload/patient/memory/');
+                    $patient_memory->image = url('public/upload/patient/memory/'.$memory_image);
+                }
+                if($request->hasFile('file'))
+                {
+                    $this->removeImage($patient_memory->file);
+                    $file_name = $request->file('file');
+                    $file = $this->uploadImage($file_name, 'public/upload/patient/memory/');
+                    $patient_memory->file = url('public/upload/patient/memory/'.$file);
                 }
                 $patient_memory->save();
                 return $this->sendResponse('Update Memory Successfully',$patient_memory);
@@ -533,8 +547,10 @@ class PatientController extends ApiController
             if ($user && !empty($user->code)) 
             {   
                 $patient_memory = $this->PatientMemory->find($request->id);
-                if($patient_memory)
+                if(!empty($patient_memory))
                 {
+                    $this->removeImage($patient_memory->file);
+                    $this->removeImage($patient_memory->image);
                     $patient_memory->delete();
                 }
                 return $this->sendResponse('Delete Memory Successfully');

@@ -17,4 +17,12 @@ class ExpenseManager extends BaseModel
     public function getPatient() {
         return $this->belongsTo('App\Models\OpdPatients','patients_id');
     }
+    public function getAmountCategoryWise()
+    {
+        $sum = ExpenseManager::where([
+            'expense_category' => $this->expense_category,
+        ])
+        ->sum('amount');
+        return $sum;
+    }
 }

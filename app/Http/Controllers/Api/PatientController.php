@@ -616,7 +616,12 @@ class PatientController extends ApiController
             $user = OpdPatients::where('id', $get_token->patients_id)->first();
             if ($user && !empty($user->code)) 
             {   
-                $patient_memory = $this->PatientWeight;
+                $patient_memory = $this->PatientWeight->whereDate('date',Carbon::parse($request->date)->format('Y-m-d'))->where('patients_id',$get_token->patients_id)->first();
+                
+                if(empty($patient_memory))
+                {
+                    $patient_memory = $this->PatientWeight;
+                }
                 $patient_memory->patients_id = $get_token->patients_id;
                 $patient_memory->week = $request->week;
                 $patient_memory->date = Carbon::parse($request->date)->format('Y-m-d H:i:s');

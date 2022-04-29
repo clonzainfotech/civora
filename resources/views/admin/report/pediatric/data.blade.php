@@ -156,30 +156,53 @@
         @endforelse
     </tbody>
 </table>
-<table class="table m-b-0 table-hover grand-total" style="width:40%;">
-    <tr class="bt-none">
-        <th class="bt-none">OPD Total</th>
-        <th class="bt-none">:</th>
-        <th class="total-upper-border text-right">{{ $totalOpd }}</th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">IPD Total</th>
-        <th class="bt-none">:</th>
-        <th class="total-upper-border text-right">{{ $totalIpd }}</th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">Total</th>
-        <th class="bt-none">:</th>
-        <th class="top-border-first total-upper-border text-right">{{ $totalOpd + $totalIpd }}</th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">Expense Total </th>
-        <th class="bt-none">:</th>
-        <th class="total-upper-border text-right"> {{ $totalExpense }} </th>
-    </tr>
-    <tr class="bt-none">
-        <th class="bt-none">Grand Total</th>
-        <th class="bt-none">:</th>
-        <th class="top-border-first text-right"> {{ ($totalOpd + $totalIpd) - $totalExpense}} </th>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+            <tr class="bt-none">
+                <th class="bt-none">OPD Total</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $totalOpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">IPD Total</th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right">{{ $totalIpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first total-upper-border text-right">{{ $totalOpd + $totalIpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Expense Total </th>
+                <th class="bt-none">:</th>
+                <th class="total-upper-border text-right"> {{ $totalExpense }} </th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Grand Total</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first text-right"> {{ ($totalOpd + $totalIpd) - $totalExpense}} </th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+            
+            <tr class="bt-none">
+                <th class="bt-none">Total Pediatric Income</th>
+                <th class="bt-none">:</th>
+                <th class="text-right">{{ $totalOpd + $totalIpd }}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">Remove Expense of</th>
+                <th class="bt-none">:</th>
+                <th class="text-right">
+                    <div class="form-group">
+                        {{Form::select('payment_method',$pediatricExpenseCategory,'',['class'=>'form-control select-padding-0','id'=>'','placeholder'=>'Select Pediatric Expense'])}}
+                    </div>
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1908,10 +1908,12 @@ class ReportController extends AdminController
             {
                 $paymentType = $request->payment_type;
                 //opd
-                
                 $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->whereStatus('1')->pluck('id','id');
                 $income = $this->IncomeManager->whereIn('income_category',$category);
                 $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->whereStatus('1')->pluck('id','id');
+                
+                
+                // dd($pediatricExpenseCategory);
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 //ipd
                 $indoorBook = $this->IndoorBook->with('getInvoice')->where('is_pediatric_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date')->orderBy('id','DESC');
@@ -1967,11 +1969,19 @@ class ReportController extends AdminController
                 });
                 $income = $income->groupBy('income_category');
 
+                
+
                 $expense = collect($expense->get())->map(function ($query){
+                    $query->expense_category_name = $query->getExpenseCategory['name'];
                     $query->expense_category = $query->getExpenseCategory['name'];
                     return $query;
-                });
+                }); 
                 $expense = $expense->groupBy('expense_category');
+                $pediatricExpenseCategory = collect($expense)->map(function($query){
+                    $query->total_amount = $query->sum('amount');
+                    $query->name = $query[0]->expense_category_name;
+                    return $query;
+                })->pluck('name','total_amount');
                 $indoorBook = collect($indoorBook->get())
                     ->map(function ($query) {
                         $procedureName = implode(', ', $this->IndoorProcedure
@@ -1999,7 +2009,7 @@ class ReportController extends AdminController
                     return $data;
                 }
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
+                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook','indoorCaseDeposit','pediatricExpenseCategory'))->render();
                 return $data;
             }
             return view('admin.report.pediatric.index');

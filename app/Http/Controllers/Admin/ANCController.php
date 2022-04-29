@@ -208,6 +208,8 @@ class ANCController extends AdminController
             if(!empty($request['p_detailes']['family_history'])){
                 $this->storeAncHoData($request['p_detailes']['family_history'],3);
             }
+            $patients = $this->OpdPatients->find($patientsId);
+
             if($request->anc_history_type == 'anc'){
                 $isFirstVisit = true;
                 if(!empty($howMuchNumber)){
@@ -253,6 +255,8 @@ class ANCController extends AdminController
                 if($isGynecStatus == 0){
                     $anc->patients_info = json_encode($request->p_info);
                     $anc->h_o = json_encode($request->ho);
+                    $patients->weight = $request->ho['weight'];
+
                     $anc->c_o = json_encode($request->co);
                 }
                 if($iuiIvfStatus == 1){
@@ -438,7 +442,6 @@ class ANCController extends AdminController
                 $ancData = $anc;
             }
             // save patients data table
-            $patients = $this->OpdPatients->find($patientsId);
             $patients->name = $request->name;
             // $patients->weight = $request->weight;
             $patients->reference_doctor_id = $request->rd_reference;
@@ -491,6 +494,10 @@ class ANCController extends AdminController
                 $earlyScanTypeImages = [];
                 $otherImages = [];
                 $growthReportImages = [];
+                $patients = $this->OpdPatients->find($patientsId);
+                $patients->weight = $request->ho['weight'];
+                $patients->save();
+                
                 if($request->anc_history_id){
                         $this->getImagesData('usg_old','anc_history',decrypt($request->anc_history_id),$request->usg_old ? $request->usg_old : [-1]);
                     // if(empty($request['investigation']['investigation_early_scan_type']['images'])){
@@ -638,6 +645,37 @@ class ANCController extends AdminController
                 $lmdDate = $request->oe_lmd_date;
                 $usgEddDate = $request->oe_usg_edd_date;
                 $eddDate = $request->oe_edd_date;
+            }
+            //add patient's weight in app
+            if(isset($request->ho['weight']) && !empty($request->ho['weight']))
+            {
+                $hoDate = null;
+                $hoData = json_decode($ancData->h_o);
+                $utersWeek = 0;
+                if(!empty($hoData) && !empty($lmdDate)){
+                   
+                    $days = 30;
+                    $oldDate = Carbon::parse($lmdDate)->format('Y-m-d');
+                    $nowDate = Carbon::now()->format('Y-m-d');
+                    $diffDays = Carbon::parse($oldDate)->diffInDays($nowDate);
+                    $totalDays = $diffDays;
+                    $hoDate = (int)($totalDays/$days).'-'.$totalDays % $days; 
+                    $utersWeek = Carbon::parse($oldDate)->diffInWeeks($nowDate);
+                }
+                $weekData =  [1=>'Normal Size',2=>'Just Bulky',3=>'6',4=>'6 - 8',5=>'8',6=>'8 - 10',7=>'10 - 12',8=>'12',9=>'Uterus Just Palpable',10=>'14',11=>'16',12=>'18',13=>'20',14=>'22',15=>'24',16=>'26',17=>'28',18=>'30',19=>'32',20=>'34',21=>'36',22=>'Full Term'];
+                $ancOeData = json_decode($ancData->o_e,true);
+                $week = isset($ancOeData['utdata'][1]['oe_ut_sac_1']) && !empty($ancOeData['utdata'][1]['oe_ut_sac_1']) && isset($weekData[$ancOeData['utdata'][1]['oe_ut_sac_1']]) ? $weekData[$ancOeData['utdata'][1]['oe_ut_sac_1']] : $utersWeek;
+                $patient_memory = $this->PatientWeight->whereDate('date',Carbon::parse($ancData->created_at)->format('Y-m-d'))->where('patients_id',$patientsId)->first();
+            
+                if(empty($patient_memory))
+                {
+                    $patient_memory = $this->PatientWeight;
+                }
+                $patient_memory->patients_id = $patientsId;
+                $patient_memory->week = $week;
+                $patient_memory->date = Carbon::parse($ancData->created_at)->format('Y-m-d H:i:s');
+                $patient_memory->weight = $request->ho['weight'];
+                $patient_memory->save();
             }
             // update appointment flag
             $now = Carbon::now()->format('Y-m-d');

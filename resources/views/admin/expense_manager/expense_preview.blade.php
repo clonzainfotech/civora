@@ -84,7 +84,7 @@
 
 </style>
 @php
-    $pMethod = ['1'=>'Swipe','2'=>'Cash','3'=>'Cheque','4'=>'UPI','5'=>'NEFT'];
+    $pMethod = ['2'=>'Swipe','1'=>'Cash','3'=>'Cheque','4'=>'UPI','5'=>'NEFT'];
     print_r($expense->date);
 @endphp
 <table id="print-deposit-table" class="print-deposit-table">

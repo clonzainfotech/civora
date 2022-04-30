@@ -1225,7 +1225,8 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                         <div class="col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon">Weight : &nbsp;</span>
-                                {{Form::text("ho[weight]",!empty($ho->weight) ? $ho->weight  : (!empty(json_decode($ancData->patients_info)->weight) ? json_decode($ancData->patients_info)->weight : $ancData->getPatients['weight']),['class'=>'form-control weight-2','id'=>'weight'])}}
+                                {{-- {{Form::text("ho[weight]",!empty($ho->weight) ? $ho->weight  : (!empty(json_decode($ancData->patients_info)->weight) ? json_decode($ancData->patients_info)->weight : $ancData->getPatients['weight']),['class'=>'form-control weight-2','id'=>'weight'])}} --}}
+                                {{Form::text("ho[weight]",null,['class'=>'form-control weight-2','id'=>'weight'])}}
                             </div>
                             <span class="form-error-msg weight">
                                     {{$errors->first('weight')}}

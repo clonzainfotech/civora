@@ -255,7 +255,7 @@ class ANCController extends AdminController
                 if($isGynecStatus == 0){
                     $anc->patients_info = json_encode($request->p_info);
                     $anc->h_o = json_encode($request->ho);
-                    $patients->weight = $request->ho['weight'];
+                    $patients->weight = isset($request->p_info['weight']) ? $request->p_info['weight'] : '';
 
                     $anc->c_o = json_encode($request->co);
                 }

@@ -2012,7 +2012,7 @@ class ReportController extends AdminController
                 if($request->isprint == 1)
                 {
                     $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook','indoorCaseDeposit','month_billing','is_display_bill_expense'))->render();
+                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook','indoorCaseDeposit','incomeCategoryName','month_billing','is_display_bill_expense'))->render();
                     return $data;
                 }
                 $data['status'] = 1;

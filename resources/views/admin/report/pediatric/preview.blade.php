@@ -103,6 +103,7 @@
         @php 
             $totalOpd = $totalIpd = $expenseGrandTotal = 0;
             $j = 1;
+            $categoryWiseIncome = [];
         @endphp
         <tbody>
             @forelse($income as $rowlist => $data)
@@ -111,6 +112,7 @@
                 </tr>
                 @php
                     $total = 0;
+                    $total1 = 0;
                 @endphp
                 @foreach($data as $row)
                     <tr>
@@ -125,8 +127,16 @@
                             <div class="amount">
                                 {{$row->amount}}
                                 @php
-                                $totalOpd += $row->amount; 
-                                $total += $row->amount; 
+                                $total +=  $row->amount;
+                                $total1 +=  $row->amount;
+                                $totalOpd += $row->amount;
+                                if(isset($categoryWiseIncome[$row->income_category]))
+                                {
+                                    $categoryWiseIncome[$row->income_category] = $total +=  $row->amount;
+                                } 
+                                else {
+                                    $categoryWiseIncome[$row->income_category] = $total;
+                                }
                                 @endphp
                             </div>
                         </td>
@@ -268,4 +278,77 @@
             </tr>
         </tbody>
     </table>
+    @if($is_display_bill_expense == 1)
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <table class="table m-b-0 table-hover grand-total" style="width:100%">
+                    @php
+                        $total_category_amount = 0;
+                        $total_category_expense = 0;
+                    @endphp
+                    
+                    @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0)
+                        @forelse($month_billing as $category)
+                            <tr class="bt-none">
+                                <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                                <th class="bt-none">:</th>
+                                <th class='text-right'>{{$categoryWiseIncome[$category->expense_category]}}</th>
+                                <th class="text-right">Expense : {{$category->bill_amount}}</th>
+                                <th class="text-right">Total : {{$categoryWiseIncome[$category->expense_category] - $category->bill_amount}}</th>
+                            </tr>
+                            @php
+                                $total_category_amount += $categoryWiseIncome[$category->expense_category];
+                                $total_category_expense += $category->bill_amount;
+                            @endphp
+                        @empty
+                            <td colspan="8" class="text-center">No records available</td>
+                        @endforelse
+                        <tr class="bt-none">
+                            <th class="bt-none">Net Amount</th>
+                            <th class="bt-none">:</th>
+                            <th class="text-right net-amount upper-border">{{$total_category_amount}}</th>
+                            <th class="text-right upper-border">Expense : <span class="net-expense-category-wise">{{$total_category_expense}}</span></th>
+                            <th class="text-right top-border-first total-upper-border text-right upper-border">= &nbsp;&nbsp;<span class="net-amount-category-wise">{{$total_category_amount - $total_category_expense}}</span></th>
+                        </tr>
+                    @endif
+                </table>
+            </div>
+        </div>
+        <div class="row d-flex" style="display:flex;margin-top:20px;">
+                <table class="table m-b-0 table-hover grand-total" style="width:50%">
+                    <tr class="bt-none">
+                        <th class="bt-none">OPD 60% Income</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none opd-60">{{(($total_category_amount - $total_category_expense) * 60)/100}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">OPD 40% Income</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none opd-40">{{(($total_category_amount - $total_category_expense) * 40)/100}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">Total</th>
+                        <th class="bt-none">:</th>
+                        <th class="top-border-first total-upper-border text-right total-opd-60-40 upper-border">{{$total_category_amount - $total_category_expense}}</th>
+                    </tr>
+                </table>  
+                <table class="table m-b-0 table-hover grand-total" style="width:50%">
+                    <tr class="bt-none">
+                        <th class="bt-none">IPD 60% Income</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none ipd-60">{{$totalIpd != 0 ? ($totalIpd * 60)/100 : ''}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">IPD 40% Income</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 40)/100 : ''}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">Total</th>
+                        <th class="bt-none">:</th>
+                        <th class="top-border-first total-upper-border text-right upper-border">{{$totalIpd}}</th>
+                    </tr>
+                </table>
+        </div> 
+    @endif
     

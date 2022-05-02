@@ -20,13 +20,14 @@
     ?>
     <tbody>
         <tr>
-            <td colspan="8"  class="sub-headline">OPD Income</td>
+            <td colspan="7"  class="sub-headline">OPD Income</td>
         </tr>
         @forelse($income as $rowlist => $data)
             <tr class="refdocdata">
-                <td colspan="9" class="sub-headline">{{ ucWords(strtolower($rowlist))}}</td>
+                <td colspan="" class="sub-headline">{{ ucWords(strtolower($rowlist))}}</td>
             </tr>
             @php
+                $total1 = 0;
                 $total = 0;
             @endphp
             @foreach($data as $row)
@@ -42,6 +43,7 @@
                     @php
                         $j++;
                         $total +=  $row->amount;
+                        $total1 +=  $row->amount;
                         $totalOpd += $row->amount;
                         if(isset($categoryWiseIncome[$row->income_category]))
                         {
@@ -56,16 +58,16 @@
                 $i++;
             @endphp
             <tr>
-                <td colspan="7"></td>
-                <td class="sub-headline upper-border">{{$total}}</td>
+                <td colspan="6"></td>
+                <td class="sub-headline upper-border">{{$total1}}</td>
 
             </tr>
             
         @empty
-            <td colspan="8" class="text-center">No records available</td>
+            <td colspan="7" class="text-center">No records available</td>
         @endforelse
         <tr>
-            <td colspan="8"  class="sub-headline">IPD Income</td>
+            <td colspan="7"  class="sub-headline">IPD Income</td>
         </tr>
         @foreach($indoorCaseDeposit as $rowList => $data)
             <tr>
@@ -73,7 +75,6 @@
                 <td>{{\Carbon\Carbon::parse($data->created_at)->format('d-m-Y')}}</td>
                 <td>{{ucWords(strtolower($data->getPatientsDetails['name']))}}</td>
                 <td>{{$data->procedure_name}}</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td>{{$data->amount}}</td>
@@ -91,7 +92,6 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td>{{$data->getInvoice['grand_total_amt']}}</td>
             </tr>
             @php
@@ -99,11 +99,11 @@
                 $totalIpd += $data->getInvoice['grand_total_amt'];
             @endphp
         @empty
-            <td colspan="8" class="text-center">No records available</td>
+            <td colspan="7" class="text-center">No records available</td>
 
         @endforelse
         <tr>
-            <td colspan="7"></td>
+            <td colspan="6"></td>
             <td class="sub-headline upper-border">{{$totalIpd}}</td>
         </tr>
     </tbody>
@@ -155,11 +155,11 @@
                 $i++;
             @endphp
             <tr>
-                <td colspan="7"></td>
+                <td colspan="6"></td>
                 <td class="sub-headline upper-border">{{$total}}</td>
             </tr>
         @empty
-            <td colspan="8" class="text-center">No records available</td>
+            <td colspan="7" class="text-center">No records available</td>
         @endforelse
     </tbody>
 </table>
@@ -265,6 +265,11 @@
                     <th class="bt-none">:</th>
                     <th class="bt-none opd-40"></th>
                 </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">Total</th>
+                    <th class="bt-none">:</th>
+                    <th class="top-border-first total-upper-border text-right total-opd-60-40"></th>
+                </tr>
             </table>  
         </div>
         <div class="col-md-3">
@@ -272,14 +277,19 @@
                 <tr class="bt-none">
                     <th class="bt-none">IPD 60% Income</th>
                     <th class="bt-none">:</th>
-                    <th class="bt-none opd-60"></th>
+                    <th class="bt-none ipd-60">{{$totalIpd != 0 ? ($totalIpd * 60)/100 : ''}}</th>
                 </tr>
                 <tr class="bt-none">
                     <th class="bt-none">IPD 40% Income</th>
                     <th class="bt-none">:</th>
-                    <th class="bt-none opd-40"></th>
+                    <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 40)/100 : ''}}</th>
                 </tr>
-            </table>  
+                <tr class="bt-none">
+                    <th class="bt-none">Total</th>
+                    <th class="bt-none">:</th>
+                    <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
+                </tr>
+            </table>
         </div>  
         {{Form::close()}}
     @endif
@@ -293,10 +303,7 @@
         });
         console.log(sum);
         $(".net-amount").text(sum);
-        var opd_60 = (60*parseInt(sum)) / 100;
-        var opd_40 = (40*parseInt(sum)) / 100;
-        $('.opd-60').text(opd_60);
-        $('.opd-40').text(opd_40);
+        
     }
     function netExpenseWithCategory()
     {
@@ -322,6 +329,13 @@
     function removeExpenseFromNetAmount()
     {
         $('.net-amount-category-wise').text(parseInt($('.net-amount').text() - $('.net-expense-category-wise').text()))
+        var net_amount= $('.net-amount-category-wise').text();
+        var opd_60 = (60*parseInt(net_amount)) / 100;
+        var opd_40 = (40*parseInt(net_amount)) / 100;
+        $('.opd-60').text(opd_60);
+        $('.opd-40').text(opd_40);
+        $('.total-opd-60-40').text(opd_60+opd_40);
+
     }
     netAmountWithCategory();
     netExpenseWithCategory();

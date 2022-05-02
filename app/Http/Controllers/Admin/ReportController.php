@@ -15,6 +15,7 @@ use DB;
 use Excel;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Auth;
 
 class ReportController extends AdminController
 {
@@ -1911,14 +1912,14 @@ class ReportController extends AdminController
                 $category = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->whereStatus('1')->pluck('id','id');
                 $income = $this->IncomeManager->whereIn('income_category',$category);
                 $expenseCategory = $this->ExpenseCategory->where('is_pediatric',1)->whereType('2')->whereStatus('1')->pluck('id','id');
-                
-                
+                $incomeCategoryName = $this->ExpenseCategory->where('is_pediatric',1)->whereType('1')->whereStatus('1')->pluck('name','id');
                 // dd($pediatricExpenseCategory);
                 $expense = $this->ExpenseManager->whereIn('expense_category',$expenseCategory);
                 //ipd
                 $indoorBook = $this->IndoorBook->with('getInvoice')->where('is_pediatric_patient',1)->where('is_final_invoice',1)->whereNotNull('final_invoice_date')->orderBy('id','DESC');
                 $indoorCaseDeposit = $this->IndoorDeposit->where('is_pediatric',1)->whereCaseTypeAndChargeType('Credit', 4)->with('getPatients')->orderBy('id', 'DESC');
-                
+                $month_billing = [];
+
                 if(!empty($paymentType) || $paymentType != 0)
                 {
                     $indoorCaseDeposit = $indoorCaseDeposit->where('payment_type',$paymentType);
@@ -1961,22 +1962,19 @@ class ReportController extends AdminController
                     $income = $income->whereBetween('date', [$fromdate, $todate]);
                     $indoorBook = $indoorBook->whereBetween('final_invoice_date', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
                     $indoorCaseDeposit = $indoorCaseDeposit->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate . ' 23:59:59']);
-                    
+                    $month_billing = $this->MonthlyBillExpense->whereDate('month',$todate)->get();
                 }
                 $income = collect($income->get())->map(function ($query){
-                    $query->income_category = $query->getExpenseCategory['name'];
+                    $query->income_category_name = $query->getExpenseCategory['name'];
                     return $query;
                 });
-                $income = $income->groupBy('income_category');
-
-                
-
+                $income = $income->groupBy('income_category_name');
                 $expense = collect($expense->get())->map(function ($query){
                     $query->expense_category_name = $query->getExpenseCategory['name'];
-                    $query->expense_category = $query->getExpenseCategory['name'];
+                    $query->category = $query->getExpenseCategory['name'];
                     return $query;
                 }); 
-                $expense = $expense->groupBy('expense_category');
+                $expense = $expense->groupBy('category');
                 $pediatricExpenseCategory = collect($expense)->map(function($query){
                     $query->total_amount = $query->sum('amount');
                     $query->name = $query[0]->expense_category_name;
@@ -2005,14 +2003,43 @@ class ReportController extends AdminController
                 if($request->isprint == 1)
                 {
                     $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook','indoorCaseDeposit'))->render();
+                    $data['report_data'] = View::make('admin.report.pediatric.preview',compact('income','expense','indoorBook','indoorCaseDeposit','month_billing'))->render();
                     return $data;
                 }
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook','indoorCaseDeposit','pediatricExpenseCategory'))->render();
+                $data['report_data'] = View::make('admin.report.pediatric.data',compact('income','expense','indoorBook','indoorCaseDeposit','pediatricExpenseCategory','incomeCategoryName','month_billing'))->render();
                 return $data;
             }
             return view('admin.report.pediatric.index');
+        }
+        catch(Exception $e){
+            log::debug($e);
+            abort(500);
+        }
+    }
+    /**
+    * Store monthy expense bill (expense bill is consider for month)
+    * @param  \Illuminate\Http\Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function storeMonthlyExpenseBill(Request $request)
+    {
+        try{
+            $month = carbon::parse($request->month_date)->format('Y-m-d');
+            $billing = $this->MonthlyBillExpense->whereDate('month',$month)->delete();
+            $data = [];
+            foreach($request->income_category as $category)
+            {
+                $data[] = array(
+                    'month'=>$month,
+                    'expense_category' => $category,
+                    'bill_amount' => $request->category_wise_expense[$category],
+                    'apply_by' => Auth::user()->id,
+                    'created_at' => carbon::now()->format('Y-m-d H:i:s'),
+                    'updated_at' => carbon::now()->format('Y-m-d H:i:s'),
+                );
+            }
+            $this->MonthlyBillExpense->insert($data);
         }
         catch(Exception $e){
             log::debug($e);

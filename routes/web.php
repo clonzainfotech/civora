@@ -265,6 +265,7 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('all-collection-report','ReportController@getAllCollectionReport');
         Route::get('hormon-inj-report','ReportController@getHormonInjectionReport');
         Route::get('pediatric-report','ReportController@getPedCollection');
+        Route::post('monthly-expense-bill','ReportController@storeMonthlyExpenseBill');
         Route::get('medicare-report','ReportController@getMedicareCollection');
         Route::get('analysis-report','ReportController@analysisReport');
         Route::get('ref-patient-report','PatientsController@getReferencePatientList');

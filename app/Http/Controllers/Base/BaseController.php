@@ -91,8 +91,7 @@ use App\Models\FaqQuestion;
 use App\Models\UserRole;
 use App\Models\UserToken;
 use App\Models\PatientReport;
-
-
+use App\Models\MonthlyBillExpense;
 
 
 class BaseController extends Controller
@@ -185,7 +184,7 @@ class BaseController extends Controller
         $this->UserRole = new UserRole;
         $this->UserToken = new UserToken;
         $this->PatientReport = new PatientReport;
-
+        $this->MonthlyBillExpense = new MonthlyBillExpense;
 
     }
 

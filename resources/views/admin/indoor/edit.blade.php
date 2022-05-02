@@ -470,7 +470,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="checkbox">
-                                                    {{Form::checkbox('is_pediatric_patient',0,$bookingdata->is_pediatric_patient,['class'=>'is_pediatric_patient','id'=>'is_pediatric_patient'])}}
+                                                    {{Form::checkbox('is_pediatric_patient',$bookingdata->is_pediatric_patient,$bookingdata->is_pediatric_patient == 1 ? true : false,['class'=>'is_pediatric_patient','id'=>'is_pediatric_patient'])}}
                                                     <label for="is_pediatric_patient">
                                                         Pediatric Patient
                                                     </label>
@@ -478,7 +478,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="checkbox">
-                                                    {{Form::checkbox('is_medicare_patient',0,$bookingdata->is_medicare_patient,['class'=>'is_medicare_patient','id'=>'is_medicare_patient'])}}
+                                                    {{Form::checkbox('is_medicare_patient',$bookingdata->is_medicare_patient,$bookingdata->is_medicare_patient == 1 ? true : false,['class'=>'is_medicare_patient','id'=>'is_medicare_patient'])}}
                                                     <label for="is_medicare_patient">
                                                         Medicare Patient
                                                     </label>

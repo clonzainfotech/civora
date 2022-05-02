@@ -4,7 +4,6 @@
             <th>Sr No</th>
             <th>Date</th>
             <th>Patient</th>
-            <th>Category</th>
             <th>Given For</th>
             <th>Note</th>
             <th>Created By</th>
@@ -35,7 +34,6 @@
                         <td>{{$j}}</td>
                         <td>{{\Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
                         <td>{{ucWords(strtolower($row->getPatient['name']))}}</td>
-                        <td>{{$row->income_category}}</td>
                         <td>{{$row->given_by}}</td>
                         <td>{{$row->note}}</td>
                         <td>{{$row->getUser['name']}}</td>
@@ -194,89 +192,97 @@
             </tr>
         </table>
     </div>
-    {{-- <div class="col-md-6">
-        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
-            
-            <tr class="bt-none">
-                <th class="bt-none">Total Pediatric Income</th>
-                <th class="bt-none">:</th>
-                <th class="text-right">{{ $totalOpd + $totalIpd }}</th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">Remove Expense of</th>
-                <th class="bt-none">:</th>
-                <th class="text-right">
-                    <div class="form-group">
-                        {{Form::select('pediatric_expense',$pediatricExpenseCategory,'',['class'=>'form-control select-padding-0','id'=>'','placeholder'=>'Select Pediatric Expense'])}}
-                    </div>
-                </th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">Income</th>
-                <th class="bt-none">:</th>
-                <th class="text-right income-with-remove-expense"></th>
-            </tr>
-        </table>
-    </div> --}}
-{{-- <div class="row"> --}}
-    {{Form::open(['class'=>'form month-bill-expense','method'=>'POST','id'=>'ivf-form'])}}
-    <table class="table m-b-0 table-hover grand-total" style="width:40%;">
-        @php
-            $total_category_amount = 0;
-        @endphp
-        @if(count($month_billing)  == 0 && $is_display_bill_expense == 1)
-            @forelse($categoryWiseIncome as $category => $amount)
-                <tr class="bt-none">
-                    {{Form::hidden('income_category[]',$category,['class'=>'input-income_category'])}}
-                    {{Form::hidden('category_wise_expense['.$category.']',0,['class'=>'category-wise-expense'.$category])}}
-                    <th class="bt-none">{{ isset($incomeCategoryName[$category]) ? $incomeCategoryName[$category] : ''}}</th>
-                    <th class="bt-none">:</th>
-                    <th class="{{'text-right '.'th-income-'.$amount}}">{{$amount}}</th>
-                    <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category}}" data-type="{{'income-'.$amount}}" value="0"></th>
-                    <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$amount}}">{{$amount}}</span></th>
-                </tr>
+    
+    @if($is_display_bill_expense == 1)
+        {{Form::open(['class'=>'form month-bill-expense d-flex','method'=>'POST','id'=>'ivf-form'])}}
+        <div class="col-md-6">
+            <table class="table m-b-0 table-hover grand-total" style="width:40%;">
                 @php
-                    $total_category_amount += $amount;
+                    $total_category_amount = 0;
                 @endphp
-            @empty
-                <td colspan="8" class="text-center">No records available</td>
-            @endforelse
-            <tr class="bt-none">
-                <th class="bt-none">Net Amount</th>
-                <th class="bt-none">:</th>
-                <th class="text-right net-amount"></th>
-                <th class="text-right net-expense-category-wise"></th>
-                <th class="text-right net-amount-category-wise top-border-first total-upper-border text-right"></th>
-            </tr>
-        @endif
-        @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0 && $is_display_bill_expense == 1)
-            @forelse($month_billing as $category)
+                @if(count($month_billing)  == 0)
+                    @forelse($categoryWiseIncome as $category => $amount)
+                        <tr class="bt-none">
+                            {{Form::hidden('income_category[]',$category,['class'=>'input-income_category'])}}
+                            {{Form::hidden('category_wise_expense['.$category.']',0,['class'=>'category-wise-expense'.$category])}}
+                            <th class="bt-none">{{ isset($incomeCategoryName[$category]) ? $incomeCategoryName[$category] : ''}}</th>
+                            <th class="bt-none">:</th>
+                            <th class="{{'text-right '.'th-income-'.$amount}}">{{$amount}}</th>
+                            <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category}}" data-type="{{'income-'.$amount}}" value="0"></th>
+                            <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$amount}}">{{$amount}}</span></th>
+                        </tr>
+                        @php
+                            $total_category_amount += $amount;
+                        @endphp
+                    @empty
+                        <td colspan="8" class="text-center">No records available</td>
+                    @endforelse
+                    <tr class="bt-none">
+                        <th class="bt-none">Net Amount</th>
+                        <th class="bt-none">:</th>
+                        <th class="text-right net-amount"></th>
+                        <th class="text-right net-expense-category-wise"></th>
+                        <th class="text-right  top-border-first total-upper-border text-right">=<span class="net-amount-category-wise"></span></th>
+                    </tr>
+                @endif
+                @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0)
+                    @forelse($month_billing as $category)
+                        <tr class="bt-none">
+                            {{Form::hidden('income_category[]',$category->expense_category,['class'=>'input-income_category'])}}
+                            {{Form::hidden('category_wise_expense['.$category->expense_category.']',$category->bill_amount,['class'=>'category-wise-expense'.$category->expense_category])}}
+                            <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                            <th class="bt-none">:</th>
+                            <th class="{{'text-right '.'th-income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</th>
+                            <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category->expense_category}}" data-type="{{'income-'.$categoryWiseIncome[$category->expense_category]}}" value="{{$category->bill_amount}}"></th>
+                            <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</span></th>
+                        </tr>
+                        @php
+                            $total_category_amount += $categoryWiseIncome[$category->expense_category];
+                        @endphp
+                    @empty
+                        <td colspan="8" class="text-center">No records available</td>
+                    @endforelse
+                    <tr class="bt-none">
+                        <th class="bt-none">Net Amount</th>
+                        <th class="bt-none">:</th>
+                        <th class="text-right net-amount"></th>
+                        <th class="text-right">Expense : <span class="net-expense-category-wise"></span></th>
+                        <th class="text-right top-border-first total-upper-border text-right">= &nbsp;&nbsp;<span class="net-amount-category-wise"></span></th>
+                    </tr>
+                @endif
+            </table>
+            <button type="button" class="btn btn-primary expense-bill-apply">Apply</button>
+        </div>
+        <div class="col-md-3">
+            <table class="table m-b-0 table-hover grand-total" style="width:40%;">
                 <tr class="bt-none">
-                    {{Form::hidden('income_category[]',$category->expense_category,['class'=>'input-income_category'])}}
-                    {{Form::hidden('category_wise_expense['.$category->expense_category.']',$category->bill_amount,['class'=>'category-wise-expense'.$category->expense_category])}}
-                    <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                    <th class="bt-none">OPD 60% Income</th>
                     <th class="bt-none">:</th>
-                    <th class="{{'text-right '.'th-income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</th>
-                    <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category->expense_category}}" data-type="{{'income-'.$categoryWiseIncome[$category->expense_category]}}" value="{{$category->bill_amount}}"></th>
-                    <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</span></th>
+                    <th class="bt-none opd-60"></th>
                 </tr>
-                @php
-                    $total_category_amount += $categoryWiseIncome[$category->expense_category];
-                @endphp
-            @empty
-                <td colspan="8" class="text-center">No records available</td>
-            @endforelse
-            <tr class="bt-none">
-                <th class="bt-none">Net Amount</th>
-                <th class="bt-none">:</th>
-                <th class="text-right net-amount"></th>
-                <th class="text-right net-expense-category-wise"></th>
-                <th class="text-right net-amount-category-wise top-border-first total-upper-border text-right"></th>
-            </tr>
-        @endif
-    </table>
-    <button type="button" class="btn btn-primary expense-bill-apply">Apply</button>
-    {{Form::close()}}
+                <tr class="bt-none">
+                    <th class="bt-none">OPD 40% Income</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none opd-40"></th>
+                </tr>
+            </table>  
+        </div>
+        <div class="col-md-3">
+            <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+                <tr class="bt-none">
+                    <th class="bt-none">IPD 60% Income</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none opd-60"></th>
+                </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">IPD 40% Income</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none opd-40"></th>
+                </tr>
+            </table>  
+        </div>  
+        {{Form::close()}}
+    @endif
 {{-- </div> --}}
 <script>
     function netAmountWithCategory()
@@ -287,6 +293,10 @@
         });
         console.log(sum);
         $(".net-amount").text(sum);
+        var opd_60 = (60*parseInt(sum)) / 100;
+        var opd_40 = (40*parseInt(sum)) / 100;
+        $('.opd-60').text(opd_60);
+        $('.opd-40').text(opd_40);
     }
     function netExpenseWithCategory()
     {

@@ -173,7 +173,7 @@
         });
         $(document).on('click', '.expense-bill-apply', function () {
             var bill_data =new FormData($(".month-bill-expense")[0]);
-            bill_data.append('month-date', todate);
+            bill_data.append('month_date', todate);
             $.ajax({
                 method:'POST',
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -183,11 +183,7 @@
                 contentType: false,
                 processData: false,
             }).done(function (data) {
-                // w = window.open(window.location.href, "_blank");
-                // w.document.open();
-                // w.document.write(data.report_data);
-                // w.document.close();
-                // w.window.print();
+                getPedReportData(qstring);
             });
 
         });
@@ -214,17 +210,7 @@
 
             });
         }
-        // function netAmountWithCategory()
-        // {
-        //     var sum = 0;
-        //     $("span.category-income-with-expense").each(function(){
-        //         console.log($(this).text());
-        //         sum += +$(this).text();
-        //     });
-        //     console.log(sum);
-        //     $(".net-amount-category-wise").text(sum);
-        // }
-        // netAmountWithCategory();
+        
     </script>
 
 @stop

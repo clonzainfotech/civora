@@ -674,8 +674,6 @@ class IUIController extends AdminController
                 if(!empty($request->data['ivf']) && $request->data['ivf'] == 'yes' && !empty($request->data['ivf_plan']))
                 {
                     $data['remark'] = !empty($request->data['remark']) ? $request->data['remark'].', Transfer in IVF' : 'Transfer in IVF';
-                    $iui->cycle_status = 2;
-                    
                 }
                 $iui->description = json_encode($data);
                 
@@ -696,6 +694,10 @@ class IUIController extends AdminController
                 // ivf data store
                 if($iuiStatus == 1){
                     $iui->cycle_status = 1;
+                }
+                if(!empty($request->data['ivf']) && $request->data['ivf'] == 'yes' && !empty($request->data['ivf_plan']))
+                {
+                    $iui->cycle_status = 2;
                 }
                 if((isset($request->data['skip_cycle']) && $request->data['skip_cycle'] == 'yes') || (isset($request->data['naturally_conceive']) && $request->data['naturally_conceive'] == 'yes')){
                     $iui->cycle_status = 2;

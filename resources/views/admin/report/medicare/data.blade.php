@@ -197,8 +197,6 @@
         <table class="table m-b-0 table-hover grand-total" style="width:40%;">
             @php
                 $total_category_amount = 0;
-                print_r($incomeCategoryName);
-                print_r($categoryWiseIncome);
             @endphp
             @if(count($month_billing)  == 0)
                 @forelse($categoryWiseIncome as $category => $amount)

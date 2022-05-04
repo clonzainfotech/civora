@@ -2977,8 +2977,9 @@ class IVFController extends AdminController
                             $historyData = json_decode($ivf->description);
                             $doseData = $this->Dose->pluck('name','name');
                         }
+                        $pt_view = 1;
                         $visitNumber[] = $isIvfHistory;
-                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('ivfFirstVisitData','ivfSecondVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
+                        $viewAllVisit[] =  View::make('admin.ivf.preview', compact('pt_view','ivfFirstVisitData','ivfSecondVisitData','isTableView','ivfCycleData','investigationReport','ivf', 'historyData', 'isIvfHistory','doseData','remark','transferDate','currentdate','lastAppointmentData'))->render();
                             // $viewAllVisit,$preview);
                         $dateValue[] = $visitDate;
                         $extraVisit[] = 0;

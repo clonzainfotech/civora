@@ -254,23 +254,23 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
             }, 1000);
             return false;
         }
-        if($('#surgically-type').prop('checked') == true){
-            if($('select.surgically_type').val() == '')
-            {
-                $('.surgically-type-error').text('This field Required');
-                return false;
-            }
-           if($('.surgically_date').val() == '' )
-           {
-               $('.surgically-date-error').text('This field Required');
-               return false;
-           }
-           if($('.surgically_time').val() == '' )
-           {
-               $('.surgically-time-error').text('This field Required');
-               return false;
-           }
-        }
+        // if($('#surgically-type').prop('checked') == true){
+        //     if($('select.surgically_type').val() == '')
+        //     {
+        //         $('.surgically-type-error').text('This field Required');
+        //         return false;
+        //     }
+        //    if($('.surgically_date').val() == '' )
+        //    {
+        //        $('.surgically-date-error').text('This field Required');
+        //        return false;
+        //    }
+        //    if($('.surgically_time').val() == '' )
+        //    {
+        //        $('.surgically-time-error').text('This field Required');
+        //        return false;
+        //    }
+        // }
         var url = "{{URL::to('anc-iui-ivf')}}";
         $.ajax({
             headers: {

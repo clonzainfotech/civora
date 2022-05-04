@@ -617,6 +617,32 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="imp-remark-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header justify-content-center">
+                        <h4 class="title" id="next-appointment">Important Notes</h4>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="remark-details mb-2">
+                                    <div class="font-bold">{{\Carbon\Carbon::now()->format('d-m-Y')}} :</div>
+                                    <div>Tetsing test</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer next-appointment-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     @stop
 @stop
 @section('page-script')
@@ -795,6 +821,21 @@
                 $('.next-time').val('');
                 $('.save-btn').addClass('disabled');
                 $('.appointment-id').val($(this).attr('id'));
+            });
+            $(document).on('click','.imp-Note',function(e){
+                e.preventDefault();
+                var pId = $(this).data('pid');
+                $.ajax({
+                    url: "{{URL::to('appointment-important-note')}}?pId="+pId,
+                    dataType: 'json',
+                    type: 'get',
+                }).done(function(data) {
+                    console.log(data);
+
+                }).fail(function(error) {
+                    console.log(error);
+                });
+                
             });
 
             $(document).on('click','.next-appointment-form',function(e){

@@ -704,4 +704,21 @@ class AdminController extends BaseController
             $patients->save();
         }
     }
+    /**
+     * Return list Appointment Important remark list
+     */
+    public function getImportantNote($pId)
+    {
+        if($request->ajax())
+        {
+            dd('dfgh');
+            $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
+            return response()->json([
+                'status'=>1,
+                'data' => array('imp_note'=>$remark)
+            ]);
+        }
+        $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
+        return $remark;
+    }
 }

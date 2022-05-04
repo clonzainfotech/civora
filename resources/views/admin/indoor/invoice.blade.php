@@ -97,6 +97,35 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-12">
+                        <div class="panel-group" id="accordion_4" role="tablist" aria-multiselectable="true">
+                            <!-- patients basic information -->
+                            <div class="panel panel-primary">
+                                <div class="panel-heading" role="tab" id="headingThree_4">
+                                    <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_4" href="#imp_note" aria-expanded="true"
+                                                                aria-controls="imp_note">Patient's Important Note</a> </h4>
+                                </div>
+                                <div id="imp_note" class="" role="tabpanel" aria-labelledby="headingThree_4">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            @if(count($appointmentRemark) > 0)
+                                                @foreach($appointmentRemark as $key => $value)
+                                                    <div class="col-md-6">
+                                                        <div class="remark-details mb-2">
+                                                            <div class="font-bold">{{\Carbon\Carbon::Parse($key)->format('d-m-Y')}} :</div>
+                                                            <div>{{$value}}</div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="col-md-12 text-center">No Important Notes</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-12">
                         <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
                             <!-- patients basic information -->
                             <div class="panel panel-primary">

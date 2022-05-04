@@ -332,9 +332,33 @@
 
 
                                     </div>
-                                    </div>
                                 </div>
-
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"
+                                     role="tab"
+                                     id="headingThree_1">
+                                    <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#remark" aria-expanded="true"
+                                                                aria-controls="patients"> Patients Appointment Remark</a> </h4>
+                                </div>
+                                <div id="remark"
+                                     class=""
+                                     role="tabpanel"
+                                     aria-labelledby="headingThree_1">
+                                        <div class="panel-body">
+                                            <div class="row clearfix">
+                                                {{-- @foreach($appointmentRemark as $key => $value)
+                                                <div class="col-md-6">
+                                                    <div class="remark-details mb-2">
+                                                        <div class="font-bold">{{\Carbon\Carbon::Parse($key)->format('d-m-Y')}} :</div>
+                                                        <div>{{$value}}</div>
+                                                    </div>
+                                                </div>
+                                                @endforeach --}}
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
                                 <!-- doctor -->
                             <div class="panel panel-primary">
                                 <div class="panel-heading"
@@ -470,7 +494,7 @@
                                      aria-labelledby="headingThree_1">
                                     <div class="panel-body">
                                         <div class="row clearfix mb-3">
-                                            <div class="col-md-8 complain-mulit">
+                                            <div class="col-md-6 complain-mulit">
                                                 {{Form::select('pro[pro_type][]',$procedures,'',[
                                                     'class'=>'form-control co-value co_value_data',
                                                     'placeholder'=>'Enter Procedure/Surgery',
@@ -478,7 +502,7 @@
                                                     required'
                                                 ])}}
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                     <div class="checkbox">
                                                         {{Form::checkbox('is_pediatric_patient',0,'',['class'=>'is_pediatric_patient','id'=>'is_pediatric_patient'])}}
                                                         <label for="is_pediatric_patient">
@@ -486,7 +510,7 @@
                                                         </label>
                                                     </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="checkbox">
                                                     {{Form::checkbox('is_medicare_patient',0,'',['class'=>'is_medicare_patient','id'=>'is_medicare_patient'])}}
                                                     <label for="is_medicare_patient">

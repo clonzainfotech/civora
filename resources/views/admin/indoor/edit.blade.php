@@ -331,6 +331,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"
+                                     role="tab"
+                                     id="headingThree_1">
+                                    <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#remark" aria-expanded="true"
+                                                                aria-controls="patients">Patients Important Note</a> </h4>
+                                </div>
+                                <div id="remark"
+                                     class=""
+                                     role="tabpanel"
+                                     aria-labelledby="headingThree_1">
+                                        <div class="panel-body">
+                                            <div class="row clearfix">
+                                                @if(count($appointmentRemark) > 0)
+                                                    @foreach($appointmentRemark as $key => $value)
+                                                        <div class="col-md-6">
+                                                            <div class="remark-details mb-2">
+                                                                <div class="font-bold">{{\Carbon\Carbon::Parse($key)->format('d-m-Y')}} :</div>
+                                                                <div>{{$value}}</div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="col-md-12 text-center">No Important Notes</div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
                             <!-- doctor -->
                             <div class="panel panel-primary">
                                 <div class="panel-heading"
@@ -461,14 +490,14 @@
                                      aria-labelledby="headingThree_1">
                                     <div class="panel-body">
                                         <div class="row clearfix">
-                                            <div class="col-md-8 complain-mulit mb-3">
+                                            <div class="col-md-6 complain-mulit mb-3">
                                                 {{Form::select('pro[pro_type][]',$procedures,!empty($procedureData) ? $procedureData : null,[
                                                     'class'=>'form-control co-value co_value_data',
                                                     'placeholder'=>'Enter Procedure/Surgery',
                                                     'multiple'=>true
                                                 ])}}
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="checkbox">
                                                     {{Form::checkbox('is_pediatric_patient',$bookingdata->is_pediatric_patient,$bookingdata->is_pediatric_patient == 1 ? true : false,['class'=>'is_pediatric_patient','id'=>'is_pediatric_patient'])}}
                                                     <label for="is_pediatric_patient">
@@ -476,7 +505,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="checkbox">
                                                     {{Form::checkbox('is_medicare_patient',$bookingdata->is_medicare_patient,$bookingdata->is_medicare_patient == 1 ? true : false,['class'=>'is_medicare_patient','id'=>'is_medicare_patient'])}}
                                                     <label for="is_medicare_patient">

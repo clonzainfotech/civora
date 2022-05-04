@@ -538,6 +538,7 @@ class AppointmentController extends AdminController
             $appointment->created_by = Auth::user()->id;
             $appointment->patients_id = $updatePatient->id;
             $appointment->remark = $request->remark;
+            $appointment->important_note = $request->important_note;
             $appointment->usg_status= $request->is_usg ? 1 : 0;
 
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by :$request->hospital_doctor;
@@ -583,6 +584,7 @@ class AppointmentController extends AdminController
             $appointment->patients_id = $patient_check->id;
             $appointment->usg_status= $request->is_usg ? 1 : 0;
             $appointment->remark = $request->remark;
+            $appointment->important_note = $request->important_note;
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by : $request->hospital_doctor;
             $appointment->is_new_anc = !empty($request->is_new_anc) ? $request->is_new_anc :0;
             // dd($appointment);
@@ -639,6 +641,7 @@ class AppointmentController extends AdminController
     public function edit($id,Request $request){
         try{
             $proReferenceDoctor = ['other'=>'Other'] + $this->ReferenceDoctorPro->pluck('name','id')->toArray();
+            $appointmentRemark = [];
             if($request->ajax()){
                 $patients = $this->OpdPatients
                     ->whereId($id)
@@ -678,6 +681,9 @@ class AppointmentController extends AdminController
                     ->with('getPatientsDetails')
                     ->where('id',$appointmentId)
                     ->first();
+                $pId = $appointment->patients_id;
+                $appointmentRemark = $this->getImportantNote($pId);
+
             }
             $category = $this->Category
                 ->whereStatus(1)
@@ -695,7 +701,8 @@ class AppointmentController extends AdminController
                 $data['appointmentCategoryId'] = $categoryId;
                 return $data;
             }
-            return view('admin.appointment.edit',compact('proReferenceDoctor','appointment','category','referenceDoctor','hospitalDoctor','state','city'));
+
+            return view('admin.appointment.edit',compact('proReferenceDoctor','appointment','category','referenceDoctor','hospitalDoctor','state','city','appointmentRemark'));
         }catch(Exception $e){
             app('App\Http\Controllers\Base\Admin\AdminController')->storeLog($request,500,$e->getMessage());
             return view('errors.500');
@@ -816,6 +823,7 @@ class AppointmentController extends AdminController
             $appointment->category_id = $request->category;
             $appointment->updated_by = Auth::user()->id;
             $appointment->remark = $request->remark;
+            $appointment->important_note = $request->important_note;
             $appointment->seen_by = !empty($request->seen_by) ? $request->seen_by : $patients->hospital_doctor_id;
             $appointment->is_new_anc = !empty($request->is_new_anc) ? $request->is_new_anc :0;
             $appointment->save();
@@ -1285,7 +1293,6 @@ class AppointmentController extends AdminController
         try{
             $appointmentId = decrypt($request->appointmet_id);
             $appointmentData = $this->Appointment->find($appointmentId);
-            $appointmentData->visit_remark = $request->visit_remark;
             $appointmentData->remark = $request->remark;
             $appointmentData->save();
             return ['status'=>true];

@@ -377,7 +377,8 @@ class IndoorController extends AdminController
             // $bedid = $this->IndoorBed->where('flag',1)->where('status',1)->get('room_id');
             $patients = $this->getPatients();
             $patientcode = $this->getPatientscode();
-            return view('admin.indoor.edit',compact('patientid','category','referenceDoctor','hospitalDoctor','state','city','appointment','roomTypes','indoorRoom','bookingdata','procedures','procedureData', 'typeId','patients','patientcode'));
+            $appointmentRemark = $this->getImportantNote($patientid);
+            return view('admin.indoor.edit',compact('patientid','category','referenceDoctor','hospitalDoctor','state','city','appointment','roomTypes','indoorRoom','bookingdata','procedures','procedureData', 'typeId','patients','patientcode','appointmentRemark'));
         } catch (Exception $exception) {
             abort(500);
         }
@@ -426,6 +427,8 @@ class IndoorController extends AdminController
                     ->with('getPatientsDetails')
                     ->where('id',$appointmentId)
                     ->first();
+                $pId = $appointment->patients_id;
+                
             }
             $category = $this->Category->whereStatus(1)->pluck('name','id');
             $doctor = $this->getDoctor();
@@ -439,7 +442,8 @@ class IndoorController extends AdminController
                 $data['patients'] = $patients;
                 return $data;
             }
-            return view('admin.indoor.edit',compact('appointment','category','referenceDoctor','hospitalDoctor','state','city','patientsData','patientcode'));
+            $appointmentRemark = $this->getImportantNote($pId);
+            return view('admin.indoor.edit',compact('appointment','category','referenceDoctor','hospitalDoctor','state','city','patientsData','patientcode','appointmentRemark'));
         }catch(Exception $e){
             abort(500);
         }
@@ -922,8 +926,8 @@ class IndoorController extends AdminController
                 $roomtypedata = $this->IndoorType->where('id',$typeID)->first();
 
                 $currentDeposit = $this->IndoorDeposit->wherePatientIdAndChargeType($bookdata->patient_id, 4)->orderBy('id', 'DESC')->value('total');
-
-                return view('admin.indoor.invoice',compact('bookdata','roomtypedata','days', 'currentDeposit'));
+                $appointmentRemark = $this->getImportantNote($bookdata->patient_id);
+                return view('admin.indoor.invoice',compact('bookdata','roomtypedata','days', 'currentDeposit','appointmentRemark'));
             }
         }catch(Exception $e){
             abort(500);
@@ -1105,8 +1109,8 @@ class IndoorController extends AdminController
                 $patientid = $BookingData->patient_id;
                 $typeID = $BookingData->type_id;
                 $roomtypedata = $this->IndoorType->where('id',$typeID)->first();
-
-                return view('admin.indoor.invoiceedit', compact('invoicedata', 'patientdata', 'BookingData','roomtypedata','days', 'currentDeposit'));
+                $appointmentRemark = $this->getImportantNote($patientid);
+                return view('admin.indoor.invoiceedit', compact('invoicedata', 'patientdata', 'BookingData','roomtypedata','days', 'currentDeposit','appointmentRemark'));
             }
         }catch(Exception $exception) {
             abort(500);

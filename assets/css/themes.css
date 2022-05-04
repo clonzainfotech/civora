@@ -2948,7 +2948,13 @@ a.ui-state-default:hover, a.ui-datepicker-prev.ui-corner-all:hover ,a.ui-datepic
 .navbar .navbar-header {
     margin-right: 20px;
 }
-
+.remark-details {
+    display: flex;   
+}
+.remark-details div:nth-child(01) {
+    white-space: pre;
+    margin-right: 20px;
+}
 @media(max-width: 1260px){
     .block-header {
         margin-bottom: 40px;

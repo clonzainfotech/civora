@@ -482,6 +482,22 @@
                                 aria-labelledby="headingThree_1">
                                 <div class="panel-body">
                                     <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-sm-1 unik-lbl-spn">
+                                                    <label>Important Note :</label>        
+                                                </div>
+                                                <div class="col-sm-11">
+                                                    <div class="form-group">
+                                                        {{Form::textarea('important_note',null,[
+                                                            'class'=>'form-control no-resize important_note',
+                                                            'placeholder'=>'Important Note',
+                                                            'rows'=>'2'
+                                                        ])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-4 col-sm-4">
                                             <div class="input-group">
                                                 <span class="input-group-addon unik-lbl-spn">Weight : &nbsp;</span>

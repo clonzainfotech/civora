@@ -709,16 +709,22 @@ class AdminController extends BaseController
      */
     public function getImportantNote($pId)
     {
-        if($request->ajax())
-        {
-            dd('dfgh');
-            $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
-            return response()->json([
-                'status'=>1,
-                'data' => array('imp_note'=>$remark)
-            ]);
-        }
         $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
         return $remark;
+    }
+    /**
+     * Return list Appointment Important remark list
+     */
+    public function getAjaxImportantNote(Request $request)
+    {
+        if($request->ajax())
+        {
+            $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$request->pId)->pluck('important_note','date');
+            return response()->json([
+                'status'=>1,
+                'imp_note' => $remark
+            ]);
+        }
+        
     }
 }

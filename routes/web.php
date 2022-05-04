@@ -52,6 +52,7 @@ Route::group(['middleware'=>'checkDB'],function(){
     Route::get('update-lmp/{type}','Base\Admin\AdminController@updateLmp');
     Route::get('/anc/get-existed-medicine-data','Base\Admin\AdminController@getExistedMedicineData')->middleware('login');
     Route::get('get-complaint-wise-medicine','Base\Admin\AdminController@getComplaintWiseMedicine')->middleware('login');
+    Route::get('appointment-important-note','Base\Admin\AdminController@getAjaxImportantNote');
 
     //patient notification
     Route::get('patient_notification','Base\Admin\AdminController@patient_notification');
@@ -104,7 +105,6 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('update-appointment-date-time','AppointmentController@updateAppointmentDateAndTime');
         Route::get('get-appointment-popup-Detail','AppointmentController@getAppointmentPopUpDetail');
         Route::get('appointment-update-medicalRemark','AppointmentController@updateMedicalRemark');
-        Route::get('appointment-important-note','Base\Admin\AdminController@getImportantNote');
 
 
         //Donor

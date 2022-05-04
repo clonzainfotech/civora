@@ -627,17 +627,12 @@
                     </div>
                     <!-- body -->
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="remark-details mb-2">
-                                    <div class="font-bold">{{\Carbon\Carbon::now()->format('d-m-Y')}} :</div>
-                                    <div>Tetsing test</div>
-                                </div>
-                            </div>
+                        <div class="row imp-note-list">
+                            
                         </div>
                     </div>
                     <!-- footer -->
-                    <div class="modal-footer next-appointment-footer">
+                    <div class="modal-footer justify-content-right">
                         <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -830,7 +825,11 @@
                     dataType: 'json',
                     type: 'get',
                 }).done(function(data) {
-                    console.log(data);
+                    $('.imp-note-list').empty();
+                    $.each(data.imp_note,function(key,value){
+                        $('.imp-note-list').append('<div class="col-md-6"><div class="remark-details mb-2"><div class="font-bold">'+key+' :</div>'+
+                        '<div>'+value+'</div></div></div>');
+                    })
 
                 }).fail(function(error) {
                     console.log(error);

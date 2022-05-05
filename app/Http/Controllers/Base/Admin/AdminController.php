@@ -709,7 +709,7 @@ class AdminController extends BaseController
      */
     public function getImportantNote($pId)
     {
-        $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
+        $remark = $this->Appointment->select(\DB::raw("(DATE_FORMAT(created_at,'%m-%d-%Y')) as date"),'important_note')->whereNotNull('important_note')->where('patients_id',$pId)->pluck('important_note','date');
         return $remark;
     }
     /**
@@ -719,7 +719,7 @@ class AdminController extends BaseController
     {
         if($request->ajax())
         {
-            $remark = $this->Appointment->select('date','important_note')->whereNotNull('important_note')->where('patients_id',$request->pId)->pluck('important_note','date');
+            $remark = $this->Appointment->select(\DB::raw("(DATE_FORMAT(created_at,'%m-%d-%Y')) as date"),'important_note')->whereNotNull('important_note')->where('patients_id',$request->pId)->pluck('important_note','date');
             return response()->json([
                 'status'=>1,
                 'imp_note' => $remark

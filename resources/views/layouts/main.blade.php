@@ -329,6 +329,29 @@ $menu = "";
 
                 });
         }
+        function getImpNoteList(pId)
+        {
+            $.ajax({
+                url: "{{URL::to('appointment-important-note')}}?pId="+pId,
+                dataType: 'json',
+                type: 'get',
+            }).done(function(data) {
+                $('.imp-note-list').empty();
+                console.log('fgfd');
+                console.log(data.imp_note);
+                if(data.imp_note != null)
+                {
+                    $.each(data.imp_note,function(key,value){
+                        $('.imp-note-list').removeClass('d-none');
+                        $('.imp-note-list').append('<div class="col-md-6"><div class="remark-details mb-2"><div class="font-bold">'+key+' :</div>'+
+                        '<div>'+value+'</div></div></div>');
+                    })
+                } 
+
+            }).fail(function(error) {
+                console.log(error);
+            });
+        }
     </script>
 
 </body>

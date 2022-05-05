@@ -339,22 +339,15 @@
                                      role="tab"
                                      id="headingThree_1">
                                     <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#remark" aria-expanded="true"
-                                                                aria-controls="patients"> Patients Appointment Remark</a> </h4>
+                                                                aria-controls="patients">Patients Important Note</a> </h4>
                                 </div>
                                 <div id="remark"
                                      class=""
                                      role="tabpanel"
                                      aria-labelledby="headingThree_1">
                                         <div class="panel-body">
-                                            <div class="row clearfix">
-                                                {{-- @foreach($appointmentRemark as $key => $value)
-                                                <div class="col-md-6">
-                                                    <div class="remark-details mb-2">
-                                                        <div class="font-bold">{{\Carbon\Carbon::Parse($key)->format('d-m-Y')}} :</div>
-                                                        <div>{{$value}}</div>
-                                                    </div>
-                                                </div>
-                                                @endforeach --}}
+                                            <div class="row clearfix imp-note-list">
+                                                
                                             </div>
                                         </div>
                                 </div>
@@ -668,6 +661,8 @@
             }).done(function(data) {
                 if (data['patients'] != null) {
                     var name =  $('.name').val(data['patients']['id']);
+                    getImpNoteList(data['patients']['id']);
+
                     $('.name').selectpicker('refresh');
                     $('.years').val(data['patients']['age']);
                     $('.months').val(data['patients']['months']);

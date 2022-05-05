@@ -203,8 +203,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    {{Form::textarea("remark",'',['class'=>'form-control no-resize','placeholder'=>'Remark','rows'=>'5'])}}
+                                    {{Form::textarea("remark",'',['class'=>'form-control no-resize','placeholder'=>'Remark','rows'=>'2'])}}
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row imp-note-list-div d-none">
+                            <div class="col-md-12 mb-2">
+                                <span><strong><u>Important Note </u></strong></span>
+                            </div>
+                            <div class="col-md-12 imp-note-list">
                             </div>
                         </div>
                         <div class="row hormon-row mt-30 doctor-name d-none">
@@ -304,6 +311,8 @@
                     $('.hreference-doctor').val(1);
                     $('.hreference-doctor').selectpicker('refresh');
                     setField(1);
+                    $('.imp-note-list-div').removeClass('d-none');
+                    getImpNoteList(hormonData.patient.id);
                     if(hormonData.patient.reference_doctor_id != null){
                         $('.ref-name').val(hormonData.patient.reference_doctor_id);
                         $('.reference_doctor').val(hormonData.patient.reference_doctor_id);

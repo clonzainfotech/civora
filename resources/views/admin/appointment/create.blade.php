@@ -482,7 +482,11 @@
                                 aria-labelledby="headingThree_1">
                                 <div class="panel-body">
                                     <div class="row">
+
                                         <div class="col-md-12">
+                                            <div class="row imp-note-list d-none">
+                                                
+                                            </div>
                                             <div class="row">
                                                 <div class="col-sm-1 unik-lbl-spn">
                                                     <label>Important Note :</label>        
@@ -683,6 +687,7 @@
             if(!isNaN(patient)){
                 if(patient != null){
                     getPatientsDetails(patient);
+                    getImpNoteList(patient);
                     $('.patient-code').removeAttr('disabled', false);
                 }
             }else{ 
@@ -1022,5 +1027,6 @@
             
         });
     }
+    
 </script>
 @stop

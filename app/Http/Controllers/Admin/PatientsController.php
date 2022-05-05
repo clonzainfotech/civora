@@ -888,8 +888,17 @@ class PatientsController extends AdminController
         {
             if($request->ajax())
             {
-                $patient = $this->OpdPatients->whereNotNull('reference_pt_name');
+                $patient = $this->OpdPatients->where('reference_pt_name','!=','');
                 $search = $request->search;
+                $fromdate = $request->fromdate;
+                $todate = $request->todate;
+                if($fromdate || $todate)
+                    {
+                        $fromdate = $fromdate;
+                        $todate = $todate;
+                        $patient = $patient->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+                        
+                    }
                 if($search){
                     $patient = $patient->where(function($query) use($search) {
                         $query->where('reference_pt_name','LIKE',$search.'%')->orWhere('reference_pt_mobile','LIKE',$search.'%');

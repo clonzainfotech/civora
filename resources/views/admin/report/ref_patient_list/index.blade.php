@@ -33,6 +33,20 @@
                     <!-- Nav tabs -->
                         <div class="col-md-12">
                             <div class="row">
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group daterange">
+                                        <form method="post" autocomplete="off" action="">
+                                            {{ Form::text('daterange', '',  [
+                                                'id' => 'daterange',
+                                                'class' => 'form-control',
+                                                'placeholder' => 'Select Date',
+                                                'data-date-container' => '#myModalId',
+                                                'data-provide'=> 'datepicker',
+                                                'autocomplete'=>'off'
+                                            ]) }}
+                                        </form>
+                                    </div>
+                                </div>
                                 <div class="col-md-3">
                                     <form method="post" autocomplete="off" action="">
                                     <ul class="nav nav-tabs padding-0">
@@ -96,40 +110,55 @@
         var referenceDoctorId = '';
         var search = '';
         var date = '';
-        var qstring = 'page=' + page +'&search='+search;
+        var fromdate = moment(new Date()).format('Y-m-d');
+        var todate = moment(new Date()).format('Y-m-d');
+        var qstring = 'fromdate=' + fromdate + '&todate='+todate+'page=' + page +'&search='+search;
         var label_name = '';
 
 
         $(document).ready(function(){
 
-            $(".daterange").daterangepicker({
+            
+            $('input[name="daterange"]').daterangepicker({
                 locale: {
                     direction: 'drop-down-date-range',
                     cancelLabel: 'Clear',
                     format: 'D/M/Y',
+                    container: '#myModalId'
                 }
             });
-            getPatientData(qstring);
+            $('#daterange').on('apply.daterangepicker', function(ev, picker) {
 
-
-            $(document).on('click','.applyBtn',function(e){
-                event.preventDefault();
-                date = $('.daterange').val();
-                qstring = 'page=' + page +'&search='+search+'&date='+date;
+                fromdate = picker.startDate.format('Y-m-d');
+                todate = picker.endDate.format('Y-m-d');
+                qstring = 'fromdate=' + fromdate + '&todate=' + todate+'&search='+search;
                 getPatientData(qstring);
+
             });
+            $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+                // Reset values
+                $('#daterange #input-text').html('<span class="text-muted">Filter op datum..</span>');
+                $("#daterange").val('');
+                // Destroy and rebuild daterangepicker to clear data
+                fromdate = '';
+                todate = '';
+                qstring = 'fromdate=' + fromdate + '&todate=' + todate+'&search='+search;
+                getPatientData(qstring);
+
+            });
+            getPatientData(qstring);
 
             
             $(document).on('keyup','.search-mobile-number',function(){
                 search = $(this).val();
-                qstring = 'page=' + page+'&search='+search;
+                qstring = 'fromdate=' + fromdate + '&todate=' + todate+'page=' + page+'&search='+search;
                 getPatientData(qstring);
             });
 
             $(document).on('click', '.pagination a',function(event){
                 event.preventDefault();
                 page = $(this).attr('href').split('page=')[1];
-                qstring = 'page=' + page+'&search='+search;
+                qstring = 'fromdate=' + fromdate + '&todate=' + todate+'page=' + page+'&search='+search;
                 getPatientData(qstring);
             });
 

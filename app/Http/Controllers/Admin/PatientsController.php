@@ -560,7 +560,7 @@ class PatientsController extends AdminController
             foreach($patientReport as $report)
             {
                 $reportDate = Carbon::parse($report->created_at)->format('Y-m-d H:i:s');
-                $OtherReports[$reportDate.','.$report->id]['report'] = !empty($report->report) ? array($report->report) : [];
+                $OtherReports[$reportDate.'/'.$report->id]['report'] = !empty($report->report) ? array($report->report) : [];
             }
         }
 

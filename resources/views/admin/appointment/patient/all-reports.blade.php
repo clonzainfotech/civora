@@ -431,11 +431,11 @@
                         <div class="cont">
                             <div class="page-head">
                                 <div class="demo-gallery">
-                                    <ul id="lightgallery1">
+                                    <ul id="lightgallery5">
                                     @if($OtherReports)
 										@foreach($OtherReports as $key => $reports)
 											@php
-											$date = \Carbon\Carbon::parse($key)->format('D d M Y');
+											$date = \Carbon\Carbon::parse(explode(',',$key)[0])->format('D d M Y');
 											@endphp
 											@foreach($reports as $report => $value)
 												@php
@@ -504,6 +504,7 @@
     lightGallery(document.getElementById('lightgallery2'))
     lightGallery(document.getElementById('lightgallery3'))
     lightGallery(document.getElementById('lightgallery4'))
+    lightGallery(document.getElementById('lightgallery5'))
 	
   </script>
 </body>

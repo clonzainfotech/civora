@@ -894,8 +894,6 @@ class PatientsController extends AdminController
                 $todate = $request->todate;
                 if($fromdate || $todate)
                     {
-                        $fromdate = $fromdate;
-                        $todate = $todate;
                         $patient = $patient->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
                         
                     }

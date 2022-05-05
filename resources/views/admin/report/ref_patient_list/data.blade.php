@@ -28,7 +28,7 @@
             <tr class="patientdata" data-id="{{encrypt($row->id)}}">
                 <td>{{(($patient->currentPage() - 1 ) * $patient->perPage() ) + $loop->iteration}}</td>
                 <td>{{$row->name}}</td>
-                <td>{{$row->age}}</td>
+                <td>{{$row->age.'-'.$row->created_at}}</td>
                 <td>{{$row->code}}</td>
                 <td>{{($row->gender == '1') ? 'Male' : 'Female'}}</td>
                 <td>{{ $row->mobile_number }}</td>

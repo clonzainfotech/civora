@@ -110,8 +110,8 @@
         var referenceDoctorId = '';
         var search = '';
         var date = '';
-        var fromdate = moment(new Date()).format('Y-m-d');
-        var todate = moment(new Date()).format('Y-m-d');
+        var fromdate = moment(new Date()).format('YYYY-MM-DD');
+        var todate = moment(new Date()).format('YYYY-MM-DD');
         var qstring = 'fromdate=' + fromdate + '&todate='+todate+'page=' + page +'&search='+search;
         var label_name = '';
 
@@ -129,8 +129,8 @@
             });
             $('#daterange').on('apply.daterangepicker', function(ev, picker) {
 
-                fromdate = picker.startDate.format('Y-m-d');
-                todate = picker.endDate.format('Y-m-d');
+                fromdate = picker.startDate.format('YYYY-MM-DD');
+                todate = picker.endDate.format('YYYY-MM-DD');
                 qstring = 'fromdate=' + fromdate + '&todate=' + todate+'&search='+search;
                 getPatientData(qstring);
 

@@ -1484,11 +1484,11 @@
             }).done(function(data) {
                 // $('.panel-group').html('')
                 $('.iui-history-data').html(data.update_iui);
-                $('select.iui-cycle-no').val(cycleNo);
-                    $('.iui-cycle-no').selectpicker('refresh');
-                $('.div-seen-by').remove();
-                $('.div-btn').remove();
-                $('.ho-value .selectized').addClass('d-none');
+                // $('select.iui-cycle-no').val(cycleNo);
+                //     $('.iui-cycle-no').selectpicker('refresh');
+                // $('.div-seen-by').remove();
+                // $('.div-btn').remove();
+                // $('.ho-value .selectized').addClass('d-none');
 
             }).fail(function() {
 

@@ -2182,6 +2182,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             <th>Timing</th>
                                             <th>Freq.</th>
                                             <th>Duration</th>
+                                            <th>Note</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -3109,6 +3110,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     <th>Timing</th>
                                     <th>Freq.</th>
                                     <th>Duration</th>
+                                    <th>Note</th>
                                 </tr>
                             </tr>
                         </thead>

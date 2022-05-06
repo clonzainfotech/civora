@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Add Reference Doctor</strong>
+                    <h2><strong>Add Reference</strong>
                     </h2>
                     <ul class="header-dropdown">
                         <li>
@@ -39,7 +39,7 @@
                                         <div class="panel-body">
                                             <div class="row clearfix">
 
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-12">
                                                     <div class="input-group">
                                                         <span class="input-group-addon unik-lbl-spn">Name : &nbsp;</span>
                                                         {{Form::text('name','',[
@@ -67,11 +67,23 @@
                                                         {{$errors->first('mobile_number')}}
                                                     </span>
                                                 </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        {{Form::select('reference_type',['1'=>'Offline','2'=>'Online','3'=>'Lead'],null,[
+                                                            'class'=>'form-control select-padding-0 reference_type',
+                                                            'title'=>'Select Refernce Type',
+                                                            'required',
+                                                        ])}}
+                                                    </div>
+                                                    <span class="form-error-msg">
+                                                        {{$errors->first('reference_type')}}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        {{Form::textarea('address', null, ['class'=>'form-control no-resize','placeholder'=>'Address','rows'=>'5'])}}
+                                                        {{Form::textarea('address', null, ['class'=>'form-control no-resize','placeholder'=>'Address','rows'=>'2'])}}
                                                     </div>
                                                 </div>
                                             </div>

@@ -79,6 +79,7 @@
     <table class="table m-b-0 table-hover reference-report-table" id="reference-report-table" cellspacing="0">
         <?php 
             $i = 1;
+            $type = ['1'=>'Offline','2'=>'Online','3'=>'Lead'];
         ?>
         <thead>
             <tr class="report-header-tr seperator">
@@ -86,6 +87,7 @@
                 <th class="report-header-tr-th">Name</th>
                 <th class="report-header-tr-th">Mobile Number</th>
                 <th class="report-header-tr-th">Date</th>
+                <th class="report-header-tr-th">Reference Type</th>
             </tr>
         </thead>
         <tbody>
@@ -95,6 +97,8 @@
                     <td class="data-font seperator"><span class="list-name">{{ucwords(strtolower($row->name))}}</span></td>
                     <td class="data-font seperator"><span class="list-name">{{!empty($row->mobile_number) ? $row->mobile_number : '-'}}</span></td>
                     <td class="data-font seperator">{{ \Carbon\Carbon::parse($row->created_at)->format('d-m-Y h:i A') }}</td>
+                    <td class="data-font seperator"><span class="list-name">{{isset($type[$row->reference_type]) ? $type[$row->reference_type] : ''}}</span></td>
+                    
                 </tr>
             @empty
                 <td colspan="4" class="text-center">No records available</td>

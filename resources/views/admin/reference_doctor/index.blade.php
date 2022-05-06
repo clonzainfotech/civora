@@ -47,7 +47,7 @@
                                 <form method="post" autocomplete="off" action="">
                                     <ul class="nav nav-tabs padding-0">
                                         <div class="input-group">
-                                            <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" class="form-control search" placeholder="Search..." autocomplete="off">
+                                            <input type="text" class="form-control search" placeholder="Search..." autocomplete="off">
                                             <span class="input-group-addon search-border">
                                                 <i class="zmdi zmdi-search"></i>
                                             </span>

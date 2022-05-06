@@ -378,8 +378,8 @@ class ReportController extends AdminController
                 ->map(function ($query) {
                     $query = ucwords(strtolower($query));
                     return $query;
-                });
-
+                })->toArray();
+            $doctor = array_merge(['offline' => 'Offline','online'=>'Online','lead'=>'Lead'],$doctor);
             $reportDatails = [];
             $reportDatails['doctor'] = '';
             $category = $this->Category->pluck('name','id');
@@ -474,7 +474,39 @@ class ReportController extends AdminController
 
                 $referenceDoctorId = $request->reference_doctor_id;
 
-                if($referenceDoctorId)
+                if(in_array($referenceDoctorId,['offline','online','lead']))
+                {
+                    $reference_type = 0;
+                    switch($referenceDoctorId){
+                        case 'offline':
+                            $reference_type = '1';
+                            break;
+                        case 'online':
+                            $reference_type = '2';
+                            break;
+                        case 'lead':
+                            $reference_type = '3';
+                            break;
+                    }
+                    $reference_type_ids = $this->ReferenceDoctor->where('reference_type',$reference_type)->pluck('id','id');
+                    if($charge_type == 4) // IPD
+                    {
+                        $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                            $query->whereHas('getPatientsDetails', function($query)  use ($reference_type_ids) {
+                                $query->whereIn('reference_doctor_id', $reference_type_ids);
+                            });
+                        });
+                    }
+                    else
+                    {
+                        $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                            $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($reference_type_ids) {
+                                $query->whereIn('reference_doctor_id', $reference_type_ids);
+                            });
+                        });
+                    }
+                }
+                else
                 {//opd
                     
                     if($charge_type == 4) // IPD

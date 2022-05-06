@@ -1,3 +1,6 @@
+@php
+    $type = ['1'=>'Offline','2'=>'Online','3'=>'Lead'];
+@endphp
 <table class="table m-b-0 table-hover" id="Reference-table">
         <thead>
             <tr>
@@ -6,6 +9,7 @@
                 <th>Mobile Number</th>
                 <th>Address</th>
                 <th>Date</th>
+                <th>Reference Type</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -26,6 +30,7 @@
                     <td><span class="list-name">{{!empty($row->mobile_number) ? $row->mobile_number : '-'}}</span></td>
                     <td><div class="list-name text-wrap">{{!empty($row->address) ? $row->address : '-'}}</div></td>
                     <td>{{ \Carbon\Carbon::parse($row->created_at)->format('d-m-Y h:i A') }}</td>
+                    <td><span class="list-name">{{isset($type[$row->reference_type]) ? $type[$row->reference_type] : ''}}</span></td>
                     <td>
                         <a href="#" class="a-color">
                             <button class="btn  btn-icon  btn-neutral candor-color btn-icon-mini delete-reference-doctor" data-id="{{encrypt($row->id)}}">

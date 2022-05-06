@@ -105,6 +105,7 @@ class ReferenceDoctorController extends AdminController
 
             $rule = [
                 'name' => 'required',
+                'reference_type' => 'required',
                 'mobile_number' => 'required|digits:10|min:0|numeric|unique:reference_doctors,mobile_number,'.$referenceDoctorId
             ];
 
@@ -118,12 +119,13 @@ class ReferenceDoctorController extends AdminController
                         ->withErrors($valid->errors())
                         ->withInput();
             }
-
             $referenceDoctor->name = $request->name;
             $referenceDoctor->mobile_number = $request->mobile_number;
             $referenceDoctor->address = $request->address;
+            $referenceDoctor->reference_type = $request->reference_type;
             $referenceDoctor->created_by = Auth::user()->id;
             $referenceDoctor->save();
+
             return redirect('reference-doctor');
         }catch(Exception $e){
             abort(500);

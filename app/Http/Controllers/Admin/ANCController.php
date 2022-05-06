@@ -675,6 +675,7 @@ class ANCController extends AdminController
                 $patient_memory->week = $week;
                 $patient_memory->date = Carbon::parse($ancData->created_at)->format('Y-m-d H:i:s');
                 $patient_memory->weight = $request->ho['weight'];
+                $patient_memory->created_by = Auth::user()->id;
                 $patient_memory->save();
             }
             // update appointment flag

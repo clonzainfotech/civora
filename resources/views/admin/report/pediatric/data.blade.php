@@ -249,10 +249,10 @@
                     </tr>
                 @endif
             </table>
-            <button type="button" class="btn btn-primary expense-bill-apply">Apply</button>
+            <button type="button" class="btn btn-primary expense-bill-apply">Apply</button> <span class="text-danger"> *Click on Apply button if you want current changes*</span>
         </div>
         <div class="col-md-3 col-sm-3">
-            <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+            <table class="table m-b-0 table-hover grand-total border-right" style="width:40%;">
                 <tr class="bt-none">
                     <th class="bt-none">Ped. Owner Income(60%)</th>
                     <th class="bt-none">:</th>
@@ -292,7 +292,7 @@
                     <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
                 </tr>
                 <tr class="bt-none">
-                    <th class="bt-none">5% From Owner</th>
+                    <th class="bt-none">5% From (Ped. Man. Income + IPD Owner Income)</th>
                     <th class="bt-none">:</th>
                     <th class="top-border-first total-upper-border text-right income-from-owner-5"></th>
                 </tr>

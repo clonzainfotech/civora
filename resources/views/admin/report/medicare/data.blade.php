@@ -249,17 +249,17 @@
                 </tr>
             @endif
         </table>
-        <button type="button" class="btn btn-primary expense-bill-apply">Apply *Click on Apply button if you want current changes*</button>
+        <button type="button" class="btn btn-primary expense-bill-apply">Apply</button><span class="text-danger"> *Click on Apply button if you want current changes*</span>
     </div>
-    <div class="col-md-3">
-        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
+    <div class="col-md-2">
+        <table class="table m-b-0 table-hover grand-total border-right" style="width:40%;">
             <tr class="bt-none">
-                <th class="bt-none">OPD 60% Income</th>
+                <th class="bt-none">Medi. Owner Income(60%)</th>
                 <th class="bt-none">:</th>
                 <th class="bt-none opd-60"></th>
             </tr>
             <tr class="bt-none">
-                <th class="bt-none">OPD 40% Income</th>
+                <th class="bt-none">Medi. Owner Income(40%)</th>
                 <th class="bt-none">:</th>
                 <th class="bt-none opd-40"></th>
             </tr>
@@ -270,22 +270,27 @@
             </tr>
         </table>  
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <table class="table m-b-0 table-hover grand-total" style="width:40%;">
             <tr class="bt-none">
-                <th class="bt-none">IPD 60% Income</th>
+                <th class="bt-none">IPD Owner Income(70%)</th>
                 <th class="bt-none">:</th>
-                <th class="bt-none ipd-60">{{$totalIpd != 0 ? ($totalIpd * 60)/100 : ''}}</th>
+                <th class="bt-none ipd-60 owner-ipd-income">{{$totalIpd != 0 ? ($totalIpd * 70)/100 : ''}}</th>
             </tr>
             <tr class="bt-none">
-                <th class="bt-none">IPD 40% Income</th>
+                <th class="bt-none">IPD Owner Income(30%)</th>
                 <th class="bt-none">:</th>
-                <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 40)/100 : ''}}</th>
+                <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 30)/100 : ''}}</th>
             </tr>
             <tr class="bt-none">
                 <th class="bt-none">Total</th>
                 <th class="bt-none">:</th>
                 <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
+            </tr>
+            <tr class="bt-none">
+                <th class="bt-none">5% From(Medi. Man. Income + IPD Owner Income)</th>
+                <th class="bt-none">:</th>
+                <th class="top-border-first total-upper-border text-right income-from-owner-5"></th>
             </tr>
         </table>
     </div>  
@@ -332,6 +337,8 @@
         $('.opd-60').text(opd_60);
         $('.opd-40').text(opd_40);
         $('.total-opd-60-40').text(opd_60+opd_40);
+        var owner_ipd = $('.owner-ipd-income').text();
+        $('.income-from-owner-5').text((5*(parseInt(opd_40)+parseInt(owner_ipd))) / 100);
 
     }
     netAmountWithCategory();

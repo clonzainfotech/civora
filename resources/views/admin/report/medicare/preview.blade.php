@@ -267,4 +267,88 @@
             </tr>
         </tbody>
     </table>
+    @if($is_display_bill_expense == 1)
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <table class="table m-b-0 table-hover grand-total" style="width:100%">
+                    @php
+                        $total_category_amount = 0;
+                        $total_category_expense = 0;
+                    @endphp
+                    
+                    @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0)
+                        @forelse($month_billing as $category)
+                            <tr class="bt-none">
+                                <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                                <th class="bt-none">:</th>
+                                <th class='text-right'>{{$categoryWiseIncome[$category->expense_category]}}</th>
+                                <th class="text-right">Expense : {{$category->bill_amount}}</th>
+                                <th class="text-right">Total : {{$categoryWiseIncome[$category->expense_category] - $category->bill_amount}}</th>
+                            </tr>
+                            @php
+                                $total_category_amount += $categoryWiseIncome[$category->expense_category];
+                                $total_category_expense += $category->bill_amount;
+                            @endphp
+                        @empty
+                            <td colspan="8" class="text-center">No records available</td>
+                        @endforelse
+                        <tr class="bt-none">
+                            <th class="bt-none">Net Amount</th>
+                            <th class="bt-none">:</th>
+                            <th class="text-right net-amount upper-border">{{$total_category_amount}}</th>
+                            <th class="text-right upper-border">Expense : <span class="net-expense-category-wise">{{$total_category_expense}}</span></th>
+                            <th class="text-right top-border-first total-upper-border text-right upper-border">= &nbsp;&nbsp;<span class="net-amount-category-wise">{{$total_category_amount - $total_category_expense}}</span></th>
+                        </tr>
+                    @endif
+                </table>
+            </div>
+        </div>
+        <div class="row d-flex" style="display:flex;margin-top:20px;">
+            @php
+                $ipd_owner = $totalIpd != 0 ? ($totalIpd * 70)/100 : 0;
+                $ipd_man = $totalIpd != 0 ? ($totalIpd * 30)/100 : 0;
+                $opd_owner = (($total_category_amount - $total_category_expense) * 60)/100;
+                $opd_man = (($total_category_amount - $total_category_expense) * 40)/100;
+            @endphp
+                <table class="table m-b-0 table-hover grand-total" style="width:50%">
+                    <tr class="bt-none">
+                        <th class="bt-none">Ped. Owner Income(60%)</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none opd-60">{{$opd_owner}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">Ped. Man. Income(40%)</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none opd-40">{{$opd_man}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">Total</th>
+                        <th class="bt-none">:</th>
+                        <th class="top-border-first total-upper-border text-right total-opd-60-40 upper-border">{{$total_category_amount - $total_category_expense}}</th>
+                    </tr>
+                </table>  
+                <table class="table m-b-0 table-hover grand-total" style="width:50%">
+                    <tr class="bt-none">
+                        <th class="bt-none">IPD Owner Income(70%)</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none ipd-60">{{$ipd_owner}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">IPD Man. Income(30%)</th>
+                        <th class="bt-none">:</th>
+                        <th class="bt-none ipd-40">{{$ipd_man}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">Total</th>
+                        <th class="bt-none">:</th>
+                        <th class="top-border-first total-upper-border text-right upper-border">{{$totalIpd}}</th>
+                    </tr>
+                    <tr class="bt-none">
+                        <th class="bt-none">5% From (Ped. Man. Income + IPD Owner Income)</th>
+                        <th class="bt-none">:</th>
+                        <th class="top-border-first total-upper-border text-right upper-border">{{(5*($opd_man + $ipd_owner))/100 }}</th>
+                    </tr>
+                </table>
+        </div> 
+    @endif
     

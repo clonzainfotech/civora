@@ -272,8 +272,8 @@
         </div>
         <div class="col-md-3 col-sm-3">
             @php
-            $ipd_owner = $totalIpd != 0 ? ($totalIpd * 70)/100 : 0;
-            $ipd_man = $totalIpd != 0 ? ($totalIpd * 30)/100 : 0;
+                $ipd_owner = $totalIpd != 0 ? ($totalIpd * 70)/100 : 0;
+                $ipd_man = $totalIpd != 0 ? ($totalIpd * 30)/100 : 0;
             @endphp
             <table class="table m-b-0 table-hover grand-total" style="width:40%;">
                 <tr class="bt-none">
@@ -292,7 +292,7 @@
                     <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
                 </tr>
                 <tr class="bt-none">
-                    <th class="bt-none">5% income From Owner</th>
+                    <th class="bt-none">5% From Owner</th>
                     <th class="bt-none">:</th>
                     <th class="top-border-first total-upper-border text-right income-from-owner-5"></th>
                 </tr>

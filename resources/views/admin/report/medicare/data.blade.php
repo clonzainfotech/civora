@@ -249,7 +249,7 @@
                 </tr>
             @endif
         </table>
-        <button type="button" class="btn btn-primary expense-bill-apply">Apply</button>
+        <button type="button" class="btn btn-primary expense-bill-apply">Apply *Click on Apply button if you want current changes*</button>
     </div>
     <div class="col-md-3">
         <table class="table m-b-0 table-hover grand-total" style="width:40%;">

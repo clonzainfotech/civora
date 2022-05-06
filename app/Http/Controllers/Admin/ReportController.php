@@ -473,59 +473,63 @@ class ReportController extends AdminController
                 $categoryReport = $refDoctorReport->get();
 
                 $referenceDoctorId = $request->reference_doctor_id;
-
-                if(in_array($referenceDoctorId,['offline','online','lead']))
+                if(!empty($referenceDoctorId))
                 {
-                    $reference_type = 0;
-                    switch($referenceDoctorId){
-                        case 'offline':
-                            $reference_type = '1';
-                            break;
-                        case 'online':
-                            $reference_type = '2';
-                            break;
-                        case 'lead':
-                            $reference_type = '3';
-                            break;
-                    }
-                    $reference_type_ids = $this->ReferenceDoctor->where('reference_type',$reference_type)->pluck('id','id');
-                    if($charge_type == 4) // IPD
+                    if(in_array($referenceDoctorId,['offline','online','lead']))
                     {
-                        $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
-                            $query->whereHas('getPatientsDetails', function($query)  use ($reference_type_ids) {
-                                $query->whereIn('reference_doctor_id', $reference_type_ids);
+                        $reference_type = 0;
+                        switch($referenceDoctorId){
+                            case 'offline':
+                                $reference_type = '1';
+                                break;
+                            case 'online':
+                                $reference_type = '2';
+                                break;
+                            case 'lead':
+                                $reference_type = '3';
+                                break;
+                        }
+                        $reference_type_ids = $this->ReferenceDoctor->where('reference_type',$reference_type)->pluck('id','id');
+                        if($charge_type == 4) // IPD
+                        {
+                            $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                                $query->whereHas('getPatientsDetails', function($query)  use ($reference_type_ids) {
+                                    $query->whereIn('reference_doctor_id', $reference_type_ids);
+                                });
                             });
-                        });
+                        }
+                        else
+                        {
+                            // dd($reference_type_ids);
+                            $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                                $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($reference_type_ids) {
+                                    $query->whereIn('reference_doctor_id', $reference_type_ids);
+                                });
+                            });
+                        }
                     }
                     else
-                    {
-                        $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
-                            $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($reference_type_ids) {
-                                $query->whereIn('reference_doctor_id', $reference_type_ids);
+                    {//opd
+                        
+                        if($charge_type == 4) // IPD
+                        {
+                            $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
+                                $query->whereHas('getPatientsDetails', function($query)  use ($referenceDoctorId) {
+                                    $query->where('reference_doctor_id', $referenceDoctorId);
+                                });
                             });
-                        });
-                    }
+                        }
+                        else
+                        {
+                            $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
+                                $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($referenceDoctorId) {
+                                    $query->where('reference_doctor_id', $referenceDoctorId);
+                                });
+                            });
+                        }
+                    }   
                 }
-                else
-                {//opd
-                    
-                    if($charge_type == 4) // IPD
-                    {
-                        $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
-                            $query->whereHas('getPatientsDetails', function($query)  use ($referenceDoctorId) {
-                                $query->where('reference_doctor_id', $referenceDoctorId);
-                            });
-                        });
-                    }
-                    else
-                    {
-                        $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
-                            $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($referenceDoctorId) {
-                                $query->where('reference_doctor_id', $referenceDoctorId);
-                            });
-                        });
-                    }
-                }
+                
                 if($charge_type == 4) // IPD
                 {
                     $refDoctorReport = collect($refDoctorReport->get())

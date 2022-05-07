@@ -1911,7 +1911,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 </div>
                 <div class="display">
                     {{-- $pt_view is set bcz don't want to display in patients application --}}
-                    @if($planManagement && (!isset($pt_view) || $pt_view != 1) && (isset($planManagement->plan_of_management_data) || (isset($planManagement->plan) && !empty($planManagement->plan))))
+                    @if($planManagement && (isset($planManagement->is_print) && !empty($planManagement->is_print)) && (isset($planManagement->plan_of_management_data) || (isset($planManagement->plan) && !empty($planManagement->plan))))
                         <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
@@ -1920,14 +1920,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     </td>
                                 </tr>
                                 @if (isset($planManagement->plan_of_management_data))
-                                    @if (in_array('ivf', $planManagement->plan_of_management_data))
+                                    {{-- @if (in_array('ivf', $planManagement->plan_of_management_data))
                                         <tr>
                                             <th>
                                                 <span class="ivf-label"> IVF</span>
                                                 {{!empty($planManagement->ivf_details) && !empty($planManagement->is_print) ? $planManagement->ivf_details : '-' }}
                                             </td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
                                     {{-- for converting IVF to IUI --}}
                                     @if (in_array('counceling', $planManagement->plan_of_management_data))
                                         <tr>

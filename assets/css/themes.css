@@ -2963,3 +2963,15 @@ a.ui-state-default:hover, a.ui-datepicker-prev.ui-corner-all:hover ,a.ui-datepic
 svg {
     width: 100%;
 }
+@media(max-width: 1440px){
+    .ped-vaccine {
+         max-width: 100%;
+         flex: 0 0 100%;
+         margin-bottom: 20px;
+    }
+    .own-income, .ipd-owner {
+         max-width: 50%;    
+         flex: 0 0 50%;
+    }
+}
+

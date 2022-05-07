@@ -193,107 +193,109 @@
 </table>
 @if($is_display_bill_expense == 1)
     {{Form::open(['class'=>'form month-bill-expense d-flex','method'=>'POST','id'=>'ivf-form'])}}
-    <div class="col-md-6">
-        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
-            @php
-                $total_category_amount = 0;
-            @endphp
-            @if(count($month_billing)  == 0)
-                @forelse($categoryWiseIncome as $category => $amount)
+    <div class="row">
+        <div class="col-md-6 ped-vaccine">
+            <table class="table m-b-0 table-hover grand-total">
+                @php
+                    $total_category_amount = 0;
+                @endphp
+                @if(count($month_billing)  == 0)
+                    @forelse($categoryWiseIncome as $category => $amount)
+                        <tr class="bt-none">
+                            {{Form::hidden('income_category[]',$category,['class'=>'input-income_category'])}}
+                            {{Form::hidden('category_wise_expense['.$category.']',0,['class'=>'category-wise-expense'.$category])}}
+                            <th class="bt-none">{{ isset($incomeCategoryName[$category]) ? $incomeCategoryName[$category] : ''}}</th>
+                            <th class="bt-none">:</th>
+                            <th class="{{'text-right '.'th-income-'.$amount}}">{{$amount}}</th>
+                            <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category}}" data-type="{{'income-'.$amount}}" value="0"></th>
+                            <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$amount}}">{{$amount}}</span></th>
+                        </tr>
+                        @php
+                            $total_category_amount += $amount;
+                        @endphp
+                    @empty
+                        <td colspan="8" class="text-center">No records available</td>
+                    @endforelse
                     <tr class="bt-none">
-                        {{Form::hidden('income_category[]',$category,['class'=>'input-income_category'])}}
-                        {{Form::hidden('category_wise_expense['.$category.']',0,['class'=>'category-wise-expense'.$category])}}
-                        <th class="bt-none">{{ isset($incomeCategoryName[$category]) ? $incomeCategoryName[$category] : ''}}</th>
+                        <th class="bt-none">Net Amount</th>
                         <th class="bt-none">:</th>
-                        <th class="{{'text-right '.'th-income-'.$amount}}">{{$amount}}</th>
-                        <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category}}" data-type="{{'income-'.$amount}}" value="0"></th>
-                        <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$amount}}">{{$amount}}</span></th>
+                        <th class="text-right net-amount"></th>
+                        <th class="text-right net-expense-category-wise"></th>
+                        <th class="text-right  top-border-first total-upper-border text-right">=&nbsp;&nbsp;<span class="net-amount-category-wise"></span></th>
                     </tr>
-                    @php
-                        $total_category_amount += $amount;
-                    @endphp
-                @empty
-                    <td colspan="8" class="text-center">No records available</td>
-                @endforelse
-                <tr class="bt-none">
-                    <th class="bt-none">Net Amount</th>
-                    <th class="bt-none">:</th>
-                    <th class="text-right net-amount"></th>
-                    <th class="text-right net-expense-category-wise"></th>
-                    <th class="text-right  top-border-first total-upper-border text-right">=&nbsp;&nbsp;<span class="net-amount-category-wise"></span></th>
-                </tr>
-            @endif
-            @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0)
-                @forelse($month_billing as $category)
+                @endif
+                @if(isset($month_billing) && count($month_billing)  > 0 && count($categoryWiseIncome) > 0)
+                    @forelse($month_billing as $category)
+                        <tr class="bt-none">
+                            {{Form::hidden('income_category[]',$category->expense_category,['class'=>'input-income_category'])}}
+                            {{Form::hidden('category_wise_expense['.$category->expense_category.']',$category->bill_amount,['class'=>'category-wise-expense'.$category->expense_category])}}
+                            <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                            <th class="bt-none">:</th>
+                            <th class="{{'text-right '.'th-income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</th>
+                            <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category->expense_category}}" data-type="{{'income-'.$categoryWiseIncome[$category->expense_category]}}" value="{{$category->bill_amount}}"></th>
+                            <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</span></th>
+                        </tr>
+                        @php
+                            $total_category_amount += $categoryWiseIncome[$category->expense_category];
+                        @endphp
+                    @empty
+                        <td colspan="8" class="text-center">No records available</td>
+                    @endforelse
                     <tr class="bt-none">
-                        {{Form::hidden('income_category[]',$category->expense_category,['class'=>'input-income_category'])}}
-                        {{Form::hidden('category_wise_expense['.$category->expense_category.']',$category->bill_amount,['class'=>'category-wise-expense'.$category->expense_category])}}
-                        <th class="bt-none">{{ isset($incomeCategoryName[$category->expense_category]) ? $incomeCategoryName[$category->expense_category] : ''}}</th>
+                        <th class="bt-none">Net Amount</th>
                         <th class="bt-none">:</th>
-                        <th class="{{'text-right '.'th-income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</th>
-                        <th class="text-right">Expense : <input type="number" class="category-wise-expense" data-id="{{$category->expense_category}}" data-type="{{'income-'.$categoryWiseIncome[$category->expense_category]}}" value="{{$category->bill_amount}}"></th>
-                        <th class="text-right ">Total : <span class="{{'category-income-with-expense '.'income-'.$categoryWiseIncome[$category->expense_category]}}">{{$categoryWiseIncome[$category->expense_category]}}</span></th>
+                        <th class="text-right net-amount"></th>
+                        <th class="text-right">Expense : <span class="net-expense-category-wise"></span></th>
+                        <th class="text-right top-border-first total-upper-border text-right">= &nbsp;&nbsp;<span class="net-amount-category-wise"></span></th>
                     </tr>
-                    @php
-                        $total_category_amount += $categoryWiseIncome[$category->expense_category];
-                    @endphp
-                @empty
-                    <td colspan="8" class="text-center">No records available</td>
-                @endforelse
+                @endif
+            </table>
+            <button type="button" class="btn btn-primary expense-bill-apply">Apply</button><span class="text-danger"> *Click on Apply button if you want current changes*</span>
+        </div>
+        <div class="col-md-3 own-income">
+            <table class="table m-b-0 table-hover grand-total border-right">
                 <tr class="bt-none">
-                    <th class="bt-none">Net Amount</th>
+                    <th class="bt-none">Medi. Owner Income(60%)</th>
                     <th class="bt-none">:</th>
-                    <th class="text-right net-amount"></th>
-                    <th class="text-right">Expense : <span class="net-expense-category-wise"></span></th>
-                    <th class="text-right top-border-first total-upper-border text-right">= &nbsp;&nbsp;<span class="net-amount-category-wise"></span></th>
+                    <th class="bt-none opd-60"></th>
                 </tr>
-            @endif
-        </table>
-        <button type="button" class="btn btn-primary expense-bill-apply">Apply</button><span class="text-danger"> *Click on Apply button if you want current changes*</span>
+                <tr class="bt-none">
+                    <th class="bt-none">Medi. Owner Income(40%)</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none opd-40"></th>
+                </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">Total</th>
+                    <th class="bt-none">:</th>
+                    <th class="top-border-first total-upper-border text-right total-opd-60-40"></th>
+                </tr>
+            </table>  
+        </div>
+        <div class="col-md-3 ipd-owner">
+            <table class="table m-b-0 table-hover grand-total">
+                <tr class="bt-none">
+                    <th class="bt-none">IPD Owner Income(70%)</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none ipd-60 owner-ipd-income">{{$totalIpd != 0 ? ($totalIpd * 70)/100 : ''}}</th>
+                </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">IPD Owner Income(30%)</th>
+                    <th class="bt-none">:</th>
+                    <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 30)/100 : ''}}</th>
+                </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">Total</th>
+                    <th class="bt-none">:</th>
+                    <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
+                </tr>
+                <tr class="bt-none">
+                    <th class="bt-none">5% From(Medi. Man. Income + IPD Owner Income)</th>
+                    <th class="bt-none">:</th>
+                    <th class="top-border-first total-upper-border text-right income-from-owner-5"></th>
+                </tr>
+            </table>
+        </div>  
     </div>
-    <div class="col-md-2">
-        <table class="table m-b-0 table-hover grand-total border-right" style="width:40%;">
-            <tr class="bt-none">
-                <th class="bt-none">Medi. Owner Income(60%)</th>
-                <th class="bt-none">:</th>
-                <th class="bt-none opd-60"></th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">Medi. Owner Income(40%)</th>
-                <th class="bt-none">:</th>
-                <th class="bt-none opd-40"></th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">Total</th>
-                <th class="bt-none">:</th>
-                <th class="top-border-first total-upper-border text-right total-opd-60-40"></th>
-            </tr>
-        </table>  
-    </div>
-    <div class="col-md-4">
-        <table class="table m-b-0 table-hover grand-total" style="width:40%;">
-            <tr class="bt-none">
-                <th class="bt-none">IPD Owner Income(70%)</th>
-                <th class="bt-none">:</th>
-                <th class="bt-none ipd-60 owner-ipd-income">{{$totalIpd != 0 ? ($totalIpd * 70)/100 : ''}}</th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">IPD Owner Income(30%)</th>
-                <th class="bt-none">:</th>
-                <th class="bt-none ipd-40">{{$totalIpd != 0 ? ($totalIpd * 30)/100 : ''}}</th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">Total</th>
-                <th class="bt-none">:</th>
-                <th class="top-border-first total-upper-border text-right">{{$totalIpd}}</th>
-            </tr>
-            <tr class="bt-none">
-                <th class="bt-none">5% From(Medi. Man. Income + IPD Owner Income)</th>
-                <th class="bt-none">:</th>
-                <th class="top-border-first total-upper-border text-right income-from-owner-5"></th>
-            </tr>
-        </table>
-    </div>  
     {{Form::close()}}
 @endif
 <script>

@@ -397,34 +397,7 @@ class ReportController extends AdminController
                     })
                         ->orderBy('id', 'DESC');
                 }
-                if($charge_type == 7)//Summary Data
-                {
-                    $reference_wise_patients = $this->OpdPatients->select('*',DB::raw('count(id) as totla_patients'))->where('reference_doctor_id','!=',null)->get();
-                    // $reference_wise_patients = collect($reference_wise_patients->get())
-                    // ->map(function ($query) {
-                    //     $query->reference_doctor_name = $query->getReferenceDoctor['name'];
-                    //     return $query;
-                    // });
-                    $analysis['lead'] = [];
-                    $analysis['online']= [];
-                    $analysis['offline']= [];
-                    $lead_ref = $this->ReferenceDoctor->where('is_lead',1)->pluck('id','id');
-                    $offline_ref = $this->ReferenceDoctor->where('reference_type',1)->where('is_lead',0)->pluck('id','id');
-                    $online_ref = $this->ReferenceDoctor->where('reference_type',2)->where('is_lead',0)->pluck('id','id');
-                    
-                    $ref_lead_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$lead_ref)->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
-                    $ref_offline_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$offline_ref)->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
-                    $ref_online_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$online_ref)->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
-                    $ref_pt_to_pt_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->where('reference_pt_name','!=','')->groupBy('reference_pt_name')->get();
-
-                    $total_lead = $ref_lead_patients->sum('total_patients');
-                    $total_offline = $ref_offline_patients->sum('total_patients');
-                    $total_online = $ref_online_patients->sum('total_patients');
-                    $total_pt_to_pt = $ref_pt_to_pt_patients->sum('total_patients');
-                    $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.refdoctor.data',compact('total_pt_to_pt','total_lead','total_offline','total_online','ref_lead_patients','ref_offline_patients','ref_online_patients','ref_pt_to_pt_patients','charge_type'))->render();
-                    return $data;
-                }
+                
                 //INDOOR
                 if(!empty($charge_type) && $charge_type == 4)
                 {
@@ -443,13 +416,47 @@ class ReportController extends AdminController
                 }
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
+                if($charge_type == 7)//Summary Data
+                {
+                    $reference_wise_patients = $this->OpdPatients->select('*',DB::raw('count(id) as totla_patients'))->where('reference_doctor_id','!=',null)->get();
+                    
+                    $analysis['lead'] = [];
+                    $analysis['online']= [];
+                    $analysis['offline']= [];
+                    $lead_ref = $this->ReferenceDoctor->where('is_lead',1)->pluck('id','id');
+                    $offline_ref = $this->ReferenceDoctor->where('reference_type',1)->where('is_lead',0)->pluck('id','id');
+                    $online_ref = $this->ReferenceDoctor->where('reference_type',2)->where('is_lead',0)->pluck('id','id');
+                    
+                    $ref_lead_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$lead_ref);
+                    $ref_offline_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$offline_ref);
+                    $ref_online_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$online_ref);
+                    $ref_pt_to_pt_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->where('reference_pt_name','!=','');
+                    if($fromdate || $todate){
+                        $ref_lead_patients = $ref_lead_patients->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                        $ref_offline_patients = $ref_offline_patients->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                        $ref_online_patients = $ref_online_patients->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                        $ref_pt_to_pt_patients = $ref_pt_to_pt_patients->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                    }
+                    $ref_lead_patients = $ref_lead_patients->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
+                    $ref_offline_patients = $ref_offline_patients->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
+                    $ref_online_patients = $ref_online_patients->groupBy('reference_doctor_id')->orderBy('total_patients','desc')->get();
+                    $ref_pt_to_pt_patients = $ref_pt_to_pt_patients->groupBy('reference_pt_name')->get();
+
+                    $total_lead = $ref_lead_patients->sum('total_patients');
+                    $total_offline = $ref_offline_patients->sum('total_patients');
+                    $total_online = $ref_online_patients->sum('total_patients');
+                    $total_pt_to_pt = $ref_pt_to_pt_patients->sum('total_patients');
+                    $data['status'] = 1;
+                    $data['report_data'] = View::make('admin.report.refdoctor.data',compact('total_pt_to_pt','total_lead','total_offline','total_online','ref_lead_patients','ref_offline_patients','ref_online_patients','ref_pt_to_pt_patients','charge_type'))->render();
+                    return $data;
+                }
                 if($fromdate || $todate){
                     $fromdate = $fromdate;
                     $todate = $todate;
                     $refDoctorReport = $refDoctorReport->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                     // $iuiReport = $iuiReport->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
                 }
-
+                
                 $categoryId = !empty($request->categoryId) ? [$request->categoryId] : [];
                 if(!empty($charge_type) && $charge_type == 5)//new category patient
                 {

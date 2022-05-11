@@ -66,8 +66,10 @@ class NotificationController extends ApiController
         if($token){
             $procedureslist = collect($this->ProcedureList->select('patients_id','procedure','date','description','remark')->where('date',$date)->paginate($per_page, $page)->all())->map(function($q){
                 $q->name = $q->getPatientsDetails['name'];
-                $q->detail = $q->getPatientsDetails['description'];
-                $q->remark = $q->getPatientsDetails['remark'];
+                $q->mobile_number = $q->getPatientsDetails['mobile_number'];
+                $q->other_mobile_number = $q->getPatientsDetails['other_mobile_number'];
+                // $q->detail = $q->getPatientsDetails['description'];
+                // $q->remark = $q->getPatientsDetails['remark'];
                  unset($q->getPatientsDetails);
                 return $q;
             });

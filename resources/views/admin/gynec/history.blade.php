@@ -247,6 +247,14 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
         $('.surgically-date-error').text('');
         $('.surgically-time-error').text('');
         $('.surgically-type-error').text('');
+        $('.weight').text('');
+        $('.p-info').removeClass('show');
+        var weight=$('#weight').val();
+        if(weight == ''){
+            $('.weight').text('The weight is required');
+            $('.p-info').addClass('show');
+            return false;
+        }
         if($('select.seen-by').val() == ''){
             $('.seen-by-error').text('Please select doctor');
             $('html, body').animate({

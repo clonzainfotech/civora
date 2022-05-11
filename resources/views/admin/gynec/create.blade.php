@@ -117,7 +117,6 @@
                                                         {{Form::number("p_info[weight]",'',['class'=>'form-control weight','id'=>'weight'])}}
                                                     </div>
                                                     <span class="form-error-msg weight">
-                                                        {{$errors->first('weight')}}
                                                     </span>
                                                 </div>
                                             </div>
@@ -3234,6 +3233,13 @@
             // if (isError == false) {
             //     return false;
             // }
+            $('.p-info').removeClass('show');
+            var weight=$('#weight').val();
+            if(weight == ''){
+                $('.weight').text('The weight is required');
+                $('.p-info').addClass('show');
+                return false;
+            }
             if($('select.seen-by').val() == ''){
                 $('.seen-by-error').text('Please select doctor');
                 $('html, body').animate({

@@ -68,8 +68,6 @@ class NotificationController extends ApiController
                 $q->name = $q->getPatientsDetails['name'];
                 $q->mobile_number = $q->getPatientsDetails['mobile_number'];
                 $q->other_mobile_number = $q->getPatientsDetails['other_mobile_number'];
-                // $q->detail = $q->getPatientsDetails['description'];
-                // $q->remark = $q->getPatientsDetails['remark'];
                  unset($q->getPatientsDetails);
                 return $q;
             });

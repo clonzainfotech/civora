@@ -183,7 +183,15 @@
         </div>
     </div>
 </div>
-
+{{-- <td class="refdocdata-loader" colspan="9"> --}}
+    <div class="row refdocdata-loader">
+        <div class="page-loader-wrapper medicine-loader">
+            <div class="loader">
+                <div class="m-t-30"><img src="{{url(config('app.loader'))}}" width="48" height="48" alt="Oreo"></div>
+            </div>
+        </div>
+    </div>
+{{-- </td> --}}
         <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
             @foreach($ref_offline_patients as $refDr)
                 @php
@@ -277,6 +285,12 @@
                             <div class="row">
                                 <table class="table m-b-0 table-hover">
                                     <tbody>
+                                        {{-- @php
+                                        $filtered_events = array_filter($refDr->getPatientToPatientRef(), function($var) use ($rangeStart, $rangeEnd) {  
+                                            $evtime = strtotime($var['created_at']);  
+                                            return $evtime <= $rangeEnd && $evtime >= $rangeStart;  
+                                        });
+                                        @endphp --}}
                                         @foreach($refDr->getPatientToPatientRef() as $patient)
                                         <tr>
                                             <td>{{ucwords(strtolower($patient->name))}}</td>

@@ -379,29 +379,24 @@ class ReportController extends AdminController
                     $query = ucwords(strtolower($query));
                     return $query;
                 })->toArray();
-            $doctor = array_merge(['offline' => 'Offline','online'=>'Online','lead'=>'Lead'],$doctor);
+            $doctor = ['offline' => 'Offline','online'=>'Online','lead'=>'Lead'] + $doctor;
             $reportDatails = [];
             $reportDatails['doctor'] = '';
             $category = $this->Category->pluck('name','id');
             $charge_type = !empty($request->type) ? $request->type : null;
             if($request->ajax()){
+                $app = $this->Appointment->orderBy('created_at','desc')->get();
                 //OPD
                 //charge type 5 and 6 is for  new patients category and old patients category
-                if(empty($charge_type) || $charge_type == 1 || $charge_type == 5 || $charge_type == 6)
-                {
-
-                    $refDoctorReport = $this->AppointmentCharges->where(function($query) {
-                        $query->whereHas('getAppointment.getPatientsDetails', function($query) {
-                            $query->whereNotIn('reference_doctor_id', [1,12,32]);
-                        });
-                    })
-                        ->orderBy('id', 'DESC');
-                }
+                $OPDrefDoctorReport = $this->AppointmentCharges->where(function($query) {
+                    $query->whereHas('getAppointment.getPatientsDetails', function($query) {
+                        $query->whereNotIn('reference_doctor_id', [1,12,32]);
+                    });
+                })
+                    ->orderBy('id', 'DESC');
                 
                 //INDOOR
-                if(!empty($charge_type) && $charge_type == 4)
-                {
-                    $refDoctorReport = $this->IndoorBook
+                $IPDrefDoctorReport = $this->IndoorBook
                     ->whereIsFinalInvoice(1)
                     ->whereNotNull('final_invoice_date')
                     ->with([
@@ -413,7 +408,7 @@ class ReportController extends AdminController
                         });
                     })
                     ->orderBy('id', 'DESC');
-                }
+                
                 $fromdate = $request->fromdate;
                 $todate = $request->todate;
                 if($charge_type == 7)//Summary Data
@@ -453,14 +448,13 @@ class ReportController extends AdminController
                 if($fromdate || $todate){
                     $fromdate = $fromdate;
                     $todate = $todate;
-                    $refDoctorReport = $refDoctorReport->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
-                    // $iuiReport = $iuiReport->whereBetween('created_at', [$fromdate . ' 00:00:00', $todate. ' 23:59:59']);
+                        $IPDrefDoctorReport = $IPDrefDoctorReport->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
+                        $OPDrefDoctorReport = $OPDrefDoctorReport->whereBetween(\DB::raw('DATE(created_at)'), [$fromdate, $todate]);
                 }
                 
                 $categoryId = !empty($request->categoryId) ? [$request->categoryId] : [];
                 if(!empty($charge_type) && $charge_type == 5)//new category patient
                 {
-
                     $categoryId = [1,3,5,8,10];
                 }
                 if(!empty($charge_type) && $charge_type == 6)//oldcategory patient
@@ -471,12 +465,10 @@ class ReportController extends AdminController
 
                 if(count($categoryId) > 0){
                     $reportDatails['category'] = $this->Category->where('id',$categoryId)->value('name');
-                    $refDoctorReport =$refDoctorReport->WhereHas('getAppointment', function ($query) use ($categoryId) {
+                    $OPDrefDoctorReport =$OPDrefDoctorReport->WhereHas('getAppointment', function ($query) use ($categoryId) {
                         $query->whereIn('category_id', $categoryId);
                     });
                 }
-                $categoryReport = $refDoctorReport->get();
-
                 $referenceDoctorId = $request->reference_doctor_id;
                 if(!empty($referenceDoctorId))
                 {
@@ -495,68 +487,63 @@ class ReportController extends AdminController
                                 break;
                         }
                         $reference_type_ids = $reference_type == 3 ? $this->ReferenceDoctor->where('is_lead',1)->pluck('id','id') : $this->ReferenceDoctor->where('reference_type',$reference_type)->pluck('id','id');
-                        if($charge_type == 4) // IPD
-                        {
-                            $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                        
+                            $IPDrefDoctorReport = $IPDrefDoctorReport->where(function($query) use ($reference_type_ids) {
                                 $query->whereHas('getPatientsDetails', function($query)  use ($reference_type_ids) {
                                     $query->whereIn('reference_doctor_id', $reference_type_ids);
                                 });
                             });
-                        }
-                        else
-                        {
-                            // dd($reference_type_ids);
-                            $refDoctorReport = $refDoctorReport->where(function($query) use ($reference_type_ids) {
+                        
+                            $OPDrefDoctorReport = $OPDrefDoctorReport->where(function($query) use ($reference_type_ids) {
                                 $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($reference_type_ids) {
                                     $query->whereIn('reference_doctor_id', $reference_type_ids);
                                 });
                             });
-                        }
                     }
                     else
-                    {//opd
-                        
-                        if($charge_type == 4) // IPD
-                        {
-                            $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
+                    {
+                        //opd
+                            $IPDrefDoctorReport = $IPDrefDoctorReport->where(function($query) use ($referenceDoctorId) {
                                 $query->whereHas('getPatientsDetails', function($query)  use ($referenceDoctorId) {
                                     $query->where('reference_doctor_id', $referenceDoctorId);
                                 });
                             });
-                        }
-                        else
-                        {
-                            $refDoctorReport = $refDoctorReport->where(function($query) use ($referenceDoctorId) {
+                            $OPDrefDoctorReport = $OPDrefDoctorReport->where(function($query) use ($referenceDoctorId) {
                                 $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($referenceDoctorId) {
+                                    
                                     $query->where('reference_doctor_id', $referenceDoctorId);
                                 });
                             });
-                        }
                     }   
                 }
-                
-                if($charge_type == 4) // IPD
-                {
-                    $refDoctorReport = collect($refDoctorReport->get())
+                $IPDrefDoctorReport = collect($IPDrefDoctorReport->get())
                     ->map(function ($query) {
-                        $query->reference_doctor_id = $query->getPatientsDetails['reference_doctor_id'];
-                        $query->reference_doctor_name = $query->getPatientsDetails->getReferenceDoctor['name'];
-                        $procedureName = implode(', ', $this->IndoorProcedure
-                            ->whereIn('id', explode(',', $query->procedure_id))
-                            ->pluck('name')
-                            ->toArray());
-                        $query->procedure_name = $procedureName;
-                        return $query;
-                    });
-                }
-                else//opd
-                {
-                    $refDoctorReport = collect($refDoctorReport->get())
+                    $query->reference_doctor_id = $query->getPatientsDetails['reference_doctor_id'];
+                    $query->reference_doctor_name = $query->getPatientsDetails->getReferenceDoctor['name'];
+                    $procedureName = implode(', ', $this->IndoorProcedure
+                        ->whereIn('id', explode(',', $query->procedure_id))
+                        ->pluck('name')
+                        ->toArray());
+                    $query->procedure_name = $procedureName;
+                    return $query;
+                });
+                $OPDrefDoctorReport = collect($OPDrefDoctorReport->get())
                     ->map(function ($query) {
                         $query->reference_doctor_id = $query->getAppointment->getPatientsDetails['reference_doctor_id'];
                         $query->reference_doctor_name = $query->getAppointment->getPatientsDetails->getReferenceDoctor['name'];
                         return $query;
                     });
+                if($charge_type == 4) // IPD
+                {
+                   $refDoctorReport = $IPDrefDoctorReport;
+                }
+                if($charge_type == 1 || $charge_type == 5 || $charge_type == 6)//opd
+                {
+                    $refDoctorReport = $OPDrefDoctorReport;
+                }
+                if(empty($charge_type))
+                {
+                    $refDoctorReport = $OPDrefDoctorReport->merge($IPDrefDoctorReport);
                 }
                 $refDoctorReport = $refDoctorReport->groupBy('reference_doctor_name');
                 if($request->isprint==1){
@@ -566,7 +553,7 @@ class ReportController extends AdminController
                 }
 
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.refdoctor.data',compact('refDoctorReport','reportDatails','categoryReport','charge_type'))->render();
+                $data['report_data'] = View::make('admin.report.refdoctor.data',compact('refDoctorReport','reportDatails','charge_type'))->render();
                 return $data;
 
             }

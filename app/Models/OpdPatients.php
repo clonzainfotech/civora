@@ -110,5 +110,12 @@ class OpdPatients extends BaseModel
                             ->first();
         return !empty($ivfHistory)  ? json_decode($ivfHistory->description,true) : null;                  
     }
+    public function getPatientToPatientRef()
+    {
+        $patients = OpdPatients::where('reference_doctor_id',1)
+                            ->where('reference_pt_name',$this->reference_pt_name)
+                            ->get();
+        return $patients;
+    }
 
 }

@@ -133,7 +133,7 @@
 @if($charge_type == 7)
 <div class="row m-0 clearfix dashboard">
     <div class="col-sm-2">
-        <div class="card ref-box" data-key="table-offline">
+        <div class="card ref-box box-border" data-key="table-offline">
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -157,7 +157,7 @@
         </div>
     </div>
     <div class="col-sm-2">
-        <div class="card ref-box box-border" data-key="table-lead">
+        <div class="card ref-box" data-key="table-lead">
             <div class="body">
                 <div class="row">
                     <div class="col-12">
@@ -183,70 +183,112 @@
         </div>
     </div>
 </div>
-    <table class="table m-b-0 table-hover table-lead table-ref">
-        <thead>
-            <tr>
-                <th>Reference</th>
-                <th>Total Patients</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($ref_lead_patients as $refDr)
-            <tr>
-                <td>{{$refDr->getReferenceDoctor['name']}}</td>
-                <td>{{$refDr->total_patients}}</td>
-            </tr>
-            @endforeach
-        </tbody>    
-    </table>
-    
-    <table class="table m-b-0 table-hover table-online d-none table-ref">
-        <thead>
-            <tr>
-                <th>Reference</th>
-                <th>Total Patients</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($ref_online_patients as $refDr)
-            <tr>
-                <td>{{$refDr->getReferenceDoctor['name']}}</td>
-                <td>{{$refDr->total_patients}}</td>
-            </tr>   
-            @endforeach
-        </tbody>
-    </table>
-    
-    <table class="table m-b-0 table-hover table-offline d-none table-ref">
-        <thead>
-            <tr>
-                <th>Reference</th>
-                <th>Total Patients</th>
-            </tr>
-        </thead>
-        <tbody>
+
+        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
             @foreach($ref_offline_patients as $refDr)
-            <tr>
-                <td>{{$refDr->getReferenceDoctor['name']}}</td>
-                <td>{{$refDr->total_patients}}</td>
-            </tr>
+                @php
+                $tabName  =  substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),1,5);
+                @endphp
+                <div class="{{'panel panel-primary table-offline table-ref'}}">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="{{'#'.$tabName}}" aria-expanded="true"
+                                aria-controls="{{$tabName}}">{{ucwords($refDr->getReferenceDoctor['name']).' - '.$refDr->total_patients}}</a> </h4>
+                    </div>
+                    <div id="{{$tabName}}" class="panel-collapse collapse p-info" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <table class="table m-b-0 table-hover"> 
+                                    <tbody>
+                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
+                                        <tr>
+                                            <td>{{ucwords(strtolower($patient->name))}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endforeach
-        </tbody>
-    </table>
-    <table class="table m-b-0 table-hover table-pt d-none table-ref">
-        <thead>
-            <tr>
-                <th>Reference</th>
-                <th>Total Patients</th>
-            </tr>
-        </thead>
-        <tbody>
+            @foreach($ref_online_patients as $refDr)
+                @php
+                    $tabName  =  substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),1,5);
+                @endphp
+                <div class="{{'panel panel-primary table-online d-none table-ref'}}">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="{{'#'.$tabName}}" aria-expanded="true"
+                                aria-controls="{{$tabName}}">{{ucwords($refDr->getReferenceDoctor['name']).' - '.$refDr->total_patients}}</a> </h4>
+                    </div>
+                    <div id="{{$tabName}}" class="panel-collapse collapse p-info" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <table class="table m-b-0 table-hover">
+                                    <tbody>
+                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
+                                        <tr>
+                                            <td>{{ucwords(strtolower($patient->name))}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            @endforeach
+            @foreach($ref_lead_patients as $refDr)
+                @php
+                $tabName  =  substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),1,5);
+                @endphp
+                <div class="{{'panel panel-primary d-none table-lead table-ref'}}">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="{{'#'.$tabName}}" aria-expanded="true"
+                                aria-controls="{{$tabName}}">{{ucwords($refDr->getReferenceDoctor['name']).' - '.$refDr->total_patients}}</a> </h4>
+                    </div>
+                    <div id="{{$tabName}}" class="panel-collapse collapse p-info" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <table class="table m-b-0 table-hover">
+                                    <tbody>
+                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $key => $patient)
+                                        <tr>
+                                            <td>{{ucwords(strtolower($patient->name))}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
             @foreach($ref_pt_to_pt_patients as $refDr)
-            <tr>
-                <td>{{$refDr->reference_pt_name}}</td>
-                <td>{{$refDr->total_patients}}</td>
-            </tr>
+                @php
+                    $tabName  =  substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),1,5);
+                @endphp
+                <div class="{{'panel panel-primary table-pt d-none table-ref'}}">
+                    <div class="panel-heading" role="tab" id="headingThree_1">
+                        <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="{{'#'.$tabName}}" aria-expanded="true"
+                                aria-controls="{{$tabName}}">{{ucwords($refDr->reference_pt_name).' - '.$refDr->total_patients}}</a> </h4>
+                    </div>
+                    <div id="{{$tabName}}" class="panel-collapse collapse p-info" role="tabpanel" aria-labelledby="headingThree_1">
+                        <div class="panel-body">
+                            <div class="row">
+                                <table class="table m-b-0 table-hover">
+                                    <tbody>
+                                        @foreach($refDr->getPatientToPatientRef() as $patient)
+                                        <tr>
+                                            <td>{{ucwords(strtolower($patient->name))}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             @endforeach
-        </tbody>
-    </table>
+        </div>
 @endif

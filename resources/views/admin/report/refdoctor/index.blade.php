@@ -3,12 +3,12 @@
 @section('title', 'Reference Doctor Report')
 @section('page-style')
     <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
-    <style>
+<style>
     .box-border
     {
         border: 2px solid #1e5f63 !important;
     }
-    </style>
+</style>
 
 @stop
 @section('content')
@@ -161,10 +161,10 @@
         });
         $(document).on('click','.ref-box',function (){
             var class_name = $(this).data('key'); 
-            $('table.table-ref').addClass('d-none');
+            $('.table-ref').addClass('d-none');
             $('.ref-box').removeClass('box-border');
             $(this).addClass('box-border');
-            $('table.'+class_name).removeClass('d-none');
+            $('.'+class_name).removeClass('d-none');
         })
         // get all reference doctor wise report data
         function getRefDoctorReportData(qstring) {

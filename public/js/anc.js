@@ -1112,6 +1112,7 @@ function hoType(value){
 
 function addOrRemoveClass(value,dId,key=null){
     var oenum = $('select.oe-no').val();
+    console.log(value);
     for (var i = 1; i <= oenum; i++) {
         if(i == 1){
             $('.is-gynec').val(0);
@@ -1138,9 +1139,11 @@ function addOrRemoveClass(value,dId,key=null){
 
         if(value >=3 || key == 22 || key == 9){
             $('.crl-data-value-'+i).removeClass('d-none');
-
         }
-       
+        if(value == 12)
+        {
+            $('.liquor-data-'+i).removeClass('d-none');
+        }
         if(value >= 18 || key == 22 || value >= 6 || key == 9){
             if(i == 1){
                 var fcpValue = $('.fcp-type-1:checked').val();

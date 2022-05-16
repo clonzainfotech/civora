@@ -1430,18 +1430,6 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">Induction With :- </span> 
                             <span class="visit-lable-value">{{!empty($iuiSecondVisitData->plan->agenet) ? $iuiSecondVisitData->plan->agenet[0] : ''}}</span>
                         </div>
-                        @if(!empty($husbandFactor) && isset($husbandFactor->sperm_count) && isset($husbandFactor->motility))
-                            <div class="mb-3">
-                                <span class="visit-lable">Male Age :- </span> 
-                                <span class="visit-lable-value">{{!empty($husbandFactor) && isset($husbandFactor->age) ? $husbandFactor->age : ''}}</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="visit-lable">Male Factor Remark :- </span> 
-                                <span class="visit-lable-value">{{!empty($husbandFactor) && isset($husbandFactor->remark) ? $husbandFactor->remark : ''}}</span>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="col-md-6 follicular_div_2">
                         <div class="mb-3">
                             <span class="visit-lable">UTERUS :- </span> 
                             <span class="visit-lable-value">{{!empty($iuiSecondVisitData->oe->ut->ut_type) && $iuiSecondVisitData->oe->ut->ut_type == 1 ? 'Normal' : 'Abnormal'}}</span>
@@ -1450,6 +1438,9 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">TUBES :- </span> 
                             <span class="visit-lable-value"></span>
                         </div>
+                    </div>
+                    <div class="col-md-6 follicular_div_2">
+                        
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-md-2 visit-lable">
@@ -1471,6 +1462,16 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                             <span class="visit-lable">CYCLE NO :- </span> 
                             <span class="visit-lable-value">{{$cycleNo}}</span>
                         </div>
+                        @if(!empty($husbandFactor) && isset($husbandFactor->sperm_count) && isset($husbandFactor->motility))
+                            <div class="mb-3">
+                                <span class="visit-lable">Male Age :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) && isset($husbandFactor->age) ? $husbandFactor->age : ''}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="visit-lable">Male Factor Remark :- </span> 
+                                <span class="visit-lable-value">{{!empty($husbandFactor) && isset($husbandFactor->remark) ? $husbandFactor->remark : ''}}</span>
+                            </div>
+                        @endif
                         @if(!empty($husbandFactor) && isset($husbandFactor->sperm_count) && isset($husbandFactor->motility))
                             <div class="mb-3">
                                 <span class="visit-lable">Sperm Count :- </span> 

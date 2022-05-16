@@ -1594,6 +1594,31 @@
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
+                                                            Adnexa :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="radio is-conceived">
+                                                            {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_yes">
+                                                                Yes
+                                                            </label>
+        
+                                                            {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_no">
+                                                                No
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 adnexa-details d-none">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-1 pr-0">
+                                                        <label class="vertical-form-label pr-0">
                                                             L/E :
                                                         </label>
                                                     </div>
@@ -1852,6 +1877,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="row unmarried-data">
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
@@ -1874,6 +1900,31 @@
                                                     <div class="col-md-5 gynec-ps-details d-none">
                                                         <div class="form-group">
                                                             {{Form::text("oe[gynec_p_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-1 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Adnexa :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="radio is-conceived">
+                                                            {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_yes">
+                                                                Yes
+                                                            </label>
+        
+                                                            {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_no">
+                                                                No
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 adnexa-details d-none">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -974,7 +974,7 @@
                         </tbody>
                     </table>
             @endif
-            @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || (isset($oe->l_s) && $oe->l_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse) || (isset($oe->breast) && $oe->breast->type == 'yes')))
+            @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || (isset($oe->l_s) && $oe->l_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse) || (isset($oe->breast) && $oe->breast->type == 'yes') || (isset($oe->adnexa) && $oe->adnexa->type == 'yes')))
                 
                 <table cellspacing="0" cellpadding="0" class="table m-b-0 table-hover module-report-table">
                     <tbody>
@@ -1036,6 +1036,14 @@
                                     @if ($oe->l_s->type == 'yes')
                                         {{!empty($oe->l_s->details) ? '| '.$oe->l_s->details : '-' }}
                                     @endif
+                                </th>
+                            </tr>
+                        @endif
+                        @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                            <tr>
+                                <th colspan="2">
+                                    <span class="iui-label">Adnexa: </span>
+                                        {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
                                 </th>
                             </tr>
                         @endif

@@ -207,10 +207,24 @@
                             <div class="row">
                                 <table class="table m-b-0 table-hover"> 
                                     <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
                                         @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
-                                        <tr>
-                                            <td>{{ucwords(strtolower($patient->name))}}</td>
-                                        </tr>
+                                            @if(!empty($fromdate) && !empty($todate))
+                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
+                                                    <tr>
+                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                    </tr>
+                                                @endif
+                                            @else
+                                                <tr>
+                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                </tr>
+                                            @endif
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -233,11 +247,25 @@
                             <div class="row">
                                 <table class="table m-b-0 table-hover">
                                     <tbody>
-                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
-                                        <tr>
-                                            <td>{{ucwords(strtolower($patient->name))}}</td>
-                                        </tr>
-                                        @endforeach
+                                        @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
+                                        @if(!empty($fromdate) && !empty($todate))
+                                            @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
+                                                <tr>
+                                                    <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                            </tr>
+                                        @endif
+                                        @php
+                                            $no++;
+                                        @endphp
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -259,10 +287,24 @@
                             <div class="row">
                                 <table class="table m-b-0 table-hover">
                                     <tbody>
-                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $key => $patient)
-                                        <tr>
-                                            <td>{{ucwords(strtolower($patient->name))}}</td>
-                                        </tr>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
+                                            @if(!empty($fromdate) && !empty($todate))
+                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
+                                                    <tr>
+                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                    </tr>
+                                                @endif
+                                            @else
+                                                <tr>
+                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                </tr>
+                                            @endif
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -285,16 +327,24 @@
                             <div class="row">
                                 <table class="table m-b-0 table-hover">
                                     <tbody>
-                                        {{-- @php
-                                        $filtered_events = array_filter($refDr->getPatientToPatientRef(), function($var) use ($rangeStart, $rangeEnd) {  
-                                            $evtime = strtotime($var['created_at']);  
-                                            return $evtime <= $rangeEnd && $evtime >= $rangeStart;  
-                                        });
-                                        @endphp --}}
+                                        @php
+                                            $no = 1;
+                                        @endphp
                                         @foreach($refDr->getPatientToPatientRef() as $patient)
-                                        <tr>
-                                            <td>{{ucwords(strtolower($patient->name))}}</td>
-                                        </tr>
+                                            @if(!empty($fromdate) && !empty($todate))
+                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
+                                                    <tr>
+                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                    </tr>
+                                                @endif
+                                            @else
+                                                <tr>
+                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                </tr>
+                                            @endif
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>

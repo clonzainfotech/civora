@@ -442,7 +442,7 @@ class ReportController extends AdminController
                     $total_online = $ref_online_patients->sum('total_patients');
                     $total_pt_to_pt = $ref_pt_to_pt_patients->sum('total_patients');
                     $data['status'] = 1;
-                    $data['report_data'] = View::make('admin.report.refdoctor.data',compact('total_pt_to_pt','total_lead','total_offline','total_online','ref_lead_patients','ref_offline_patients','ref_online_patients','ref_pt_to_pt_patients','charge_type'))->render();
+                    $data['report_data'] = View::make('admin.report.refdoctor.data',compact('fromdate','todate','total_pt_to_pt','total_lead','total_offline','total_online','ref_lead_patients','ref_offline_patients','ref_online_patients','ref_pt_to_pt_patients','charge_type'))->render();
                     return $data;
                 }
                 if($fromdate || $todate){
@@ -487,13 +487,11 @@ class ReportController extends AdminController
                                 break;
                         }
                         $reference_type_ids = $reference_type == 3 ? $this->ReferenceDoctor->where('is_lead',1)->pluck('id','id') : $this->ReferenceDoctor->where('reference_type',$reference_type)->pluck('id','id');
-                        
                             $IPDrefDoctorReport = $IPDrefDoctorReport->where(function($query) use ($reference_type_ids) {
                                 $query->whereHas('getPatientsDetails', function($query)  use ($reference_type_ids) {
                                     $query->whereIn('reference_doctor_id', $reference_type_ids);
                                 });
                             });
-                        
                             $OPDrefDoctorReport = $OPDrefDoctorReport->where(function($query) use ($reference_type_ids) {
                                 $query->whereHas('getAppointment.getPatientsDetails', function($query)  use ($reference_type_ids) {
                                     $query->whereIn('reference_doctor_id', $reference_type_ids);
@@ -548,12 +546,12 @@ class ReportController extends AdminController
                 $refDoctorReport = $refDoctorReport->groupBy('reference_doctor_name');
                 if($request->isprint==1){
                     return response()->json([
-                        View::make('admin.report.refdoctor.preview', compact('refDoctorReport','reportDatails'))->render()
+                        View::make('admin.report.refdoctor.preview', compact('refDoctorReport','reportDatails','charge_type'))->render()
                     ]);
                 }
 
                 $data['status'] = 1;
-                $data['report_data'] = View::make('admin.report.refdoctor.data',compact('refDoctorReport','reportDatails','charge_type'))->render();
+                $data['report_data'] = View::make('admin.report.refdoctor.data',compact('refDoctorReport','reportDatails','charge_type','fromdate','todate'))->render();
                 return $data;
 
             }

@@ -1341,13 +1341,14 @@ class IndoorController extends AdminController
             if ($patientId > 0) {
                 $procedure = $this->IndoorBook->whereId($bookingId)->orderBy('id')->value('procedure_id');
                 $indoorBook = $this->IndoorBook->whereId($bookingId)->first();
-                $deposite = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($patientId, 4)->whereBetween(\DB::raw('DATE(created_at)'),[$indoorBook->doa_date,$indoorBook->dod_date])->orderBy('id','DESC')->first();
                 // $deposite = $this->IndoorDeposit->with('getPatients')->wherePatientIdAndChargeType($patientId, 4)->latest()->first();
                 $depositData = $this->IndoorDeposit->wherePatientIdAndChargeType($patientId, 4)->whereDate(\DB::raw('DATE(created_at)'),'>=',$indoorBook->doa_date)->get();
                 if(!empty($indoorBook->final_invoice_date))
                 {
                     $depositData = $this->IndoorDeposit->wherePatientIdAndChargeType($patientId, 4)->whereBetween(\DB::raw('DATE(created_at)'),[$indoorBook->doa_date,$indoorBook->final_invoice_date])->get();
                 }
+                $deposite = $depositData->last();
+
                 $patientname = ucwords(strtolower($this->OpdPatients->where('id',$patientId)->value('name')));
                 if (!empty($deposite) || !empty($patientname)) {
                     return [

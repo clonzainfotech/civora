@@ -950,6 +950,12 @@ class IVFController extends AdminController
                     $ivfHistory->created_by = Auth::user()->id;
                     // dd($ivfHistory);
                     $ivfHistory->save();
+                    if(isset($request->data['weight']))
+                    {
+                        $patients = $this->OpdPatients->find($patientsId);
+                        $patients->weight = $request->data['weight'];
+                        $patients->save();
+                    }
                     $ivf = $ivfHistory;
                     $ivfId = $ivfHistory->id;
                     // ivf repoet save

@@ -3329,6 +3329,34 @@
                                         <div class="{{$otherTab.' row'}}">
                                             <div class="col-md-1 pr-0">
                                                 <label class="vertical-form-label pr-0">
+                                                    Adnexa :
+                                                </label>
+                                            </div>
+                                            @php
+                                                $adnexaType = !empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' ? '' : 'd-none';
+                                            @endphp
+                                            <div class="col-sm-2">
+                                                <div class="radio is-conceived">
+                                                    {{Form::radio("oe[adnexa][type]",'yes',!empty($adnexaType) ? false : true,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                    <label for="adnexa_type_yes">
+                                                        Yes
+                                                    </label>
+
+                                                    {{Form::radio("oe[adnexa][type]",'no',!empty($adnexaType) ? true : false,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                    <label for="adnexa_type_no">
+                                                        No
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="{{'col-md-5 adnexa-details '.$adnexaType}}">
+                                                <div class="form-group">
+                                                    {{Form::text("oe[adnexa][details]",!empty($oe->adnexa->details) ? $oe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="{{$otherTab.' row'}}">
+                                            <div class="col-md-1 pr-0">
+                                                <label class="vertical-form-label pr-0">
                                                     Cervix :
                                                 </label>
                                             </div>

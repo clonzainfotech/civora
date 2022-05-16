@@ -3295,6 +3295,31 @@
                                     </div>
                                     <span class="col-md-1 p-2 vitals_status_data d-none">/ Min</span>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-1 pr-0">
+                                        <label class="vertical-form-label pr-0">
+                                            Adnexa :
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="radio is-conceived">
+                                            {{Form::radio("data[oe][adnexa][type]",'yes',false,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                            <label for="adnexa_type_yes">
+                                                Yes
+                                            </label>
+                
+                                            {{Form::radio("data[oe][adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                            <label for="adnexa_type_no">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="{{'col-md-5 adnexa-details d-none'}}">
+                                        <div class="form-group">
+                                            {{Form::text("data[oe][adnexa][details]",null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                        </div>
+                                    </div>
+                                </div>
                                 {{-- @if($pStatus == 1) --}}
                                     <div class="row">
                                         <div class="col-md-1">

@@ -1506,7 +1506,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                 </div>
                 
                 <div class="display">
-                    @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+                    @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse) || (isset($oe->adnexa) && $oe->adnexa->type == 'yes')))
                         <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                             <tbody>
                                 <tr>
@@ -1544,6 +1544,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             @if ($oe->p_s->type == 'yes')
                                                 {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
                                             @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                                    <tr>
+                                        <th colspan="2">
+                                            <span class="ivf-label">Adnexa: </span>
+                                                {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
                                         </th>
                                     </tr>
                                 @endif
@@ -2381,6 +2389,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             </th>
                                         @endif
                                     </tr>
+                                    @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                                        <tr>
+                                            <th colspan="2">
+                                                <span class="ivf-label">Adnexa: </span>
+                                                    {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
+                                            </th>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         @if (isset($oe->ut->ut_type) && !empty($oe->ut->ut_type))
                                             <th>
@@ -4309,7 +4325,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                     @endif
                 </tbody>
             </table>
-            @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse)))
+            @if($oe  && ($oe->tvs->type == 'yes' || $oe->p_s->type == 'yes' || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse) || (isset($oe->adnexa) && $oe->adnexa->type == 'yes')))
               
                 <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                     <tbody>
@@ -4349,6 +4365,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @if ($oe->p_s->type == 'yes')
                                         {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
                                     @endif
+                                </th>
+                            </tr>
+                        @endif
+                        @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                            <tr>
+                                <th colspan="2">
+                                    <span class="ivf-label">Adnexa: </span>
+                                        {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
                                 </th>
                             </tr>
                         @endif

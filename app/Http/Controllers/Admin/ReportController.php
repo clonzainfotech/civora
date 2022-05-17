@@ -965,7 +965,7 @@ class ReportController extends AdminController
         try{
             $patients = $this->getPatients();
             if($request->ajax()){
-                $ivfPayment = $this->IvfPayment->whereNotNull('package')->orderBy('id','DESC');
+                $ivfPayment = $this->IvfPayment->where('package','!=','')->orderBy('id','DESC');
                 $patients = $this->getPatients();
                 if($request->date){
                     $date = explode("-",$request->date);

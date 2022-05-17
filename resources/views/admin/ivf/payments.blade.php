@@ -1623,6 +1623,7 @@
         $(document).ready(function(){            
             $(document).on('click','.ivf-payment-submit',function(e){
                 e.preventDefault();
+                $('.ivf-payment-submit').prop('disabled', true);
                 var paymentData = new FormData($("#ivf-payment-form")[0]);
                 if('#Multiple:checked')
                 {
@@ -1695,13 +1696,16 @@
                     setTimeout(function() {
                         w.window.print();
                     }, 800);
+                    var patientId = '{{encrypt($patients->id)}}';
+                    window.location.href = "{{ URL::to('ivf/payments') }}"+'/'+patientId;
                         // $('#ivf_history_id').val(data.id);
                 }else if(data.status == 'true'){
                     $('.ivf-payment-msg').removeClass('d-none');
                     // $('#ivf-payment').modal('hide');
                     $('#ivf-payment-form').trigger('reset');
                 }else{
-                    location.reload();
+                    var patientId = '{{encrypt($patients->id)}}';
+                    window.location.href = "{{ URL::to('ivf/payments') }}"+'/'+patientId;
                 }
             }).fail(function() {
 

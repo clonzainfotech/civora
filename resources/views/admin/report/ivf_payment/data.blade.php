@@ -27,6 +27,7 @@
         @php
             $i = 1;
             $paymentTypeData = ['1'=>'Swipe','2'=>'Cash','3'=>'Cheque','4'=>'UPI','5'=>'NEFT'];
+            $totalDueAmount = 0;
         @endphp
         @forelse($ivfPayment as $row)
             <tr class="ivfpayment">
@@ -50,12 +51,23 @@
                     <a href="javascript:void(0)" class="{{'btn btn-primary btn-sm change-payment ivf-payment-font change-ivfpayment-'.$row->id}}" data-id="{{$row->id}}" data-paymentid="{{encrypt($row->id)}}">Change</a>
                 </td>
             </tr>
+            @php
+                $totalDueAmount += ($row->package - $row->getTotalAmount() - $row->getTotalDiscount()) >= 0 ? $row->package - $row->getTotalAmount() - $row->getTotalDiscount() : 0;
+            @endphp
         @empty
             <td colspan='11' class="text-center ivfpayment">No records available</td>
             <script type="text/javascript">
                 $('.ivf-payment-table').css('display','table');
             </script>
         @endforelse
+        <tr>
+            <td colspan=""></td>
+            <td colspan=""></td>
+            <td colspan=""></td>
+            <td class="font-bold">Total LeftAmount : </td>
+            <td class="font-bold">{{$totalDueAmount}}</td>
+            <td colspan="6"></td>
+        </tr>
     </tbody>
 </table>
 {{$ivfPayment->links()}}

@@ -1140,10 +1140,6 @@ function addOrRemoveClass(value,dId,key=null){
         if(value >=3 || key == 22 || key == 9){
             $('.crl-data-value-'+i).removeClass('d-none');
         }
-        if(value == 12)
-        {
-            $('.liquor-data-'+i).removeClass('d-none');
-        }
         if(value >= 18 || key == 22 || value >= 6 || key == 9){
             if(i == 1){
                 var fcpValue = $('.fcp-type-1:checked').val();
@@ -1193,7 +1189,7 @@ function addOrRemoveClass(value,dId,key=null){
         }else{
             $('.expected-data-'+i).addClass('d-none');
         }
-        if(value>=16 || value == 'Full Term') {
+        if(value>=12 || value == 'Full Term') {
             $('.liquor-data-'+i).removeClass('d-none');
         }
         if(value<14) {

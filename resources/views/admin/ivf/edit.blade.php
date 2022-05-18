@@ -3194,6 +3194,66 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        FSH : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[fsh]",isset($husbandFactor->fsh) ? $husbandFactor->fsh : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        LH : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[lh]",isset($husbandFactor->lh) ? $husbandFactor->lh : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        Testosterone : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[testosterone]",isset($husbandFactor->testosterone) ? $husbandFactor->testosterone : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        RBS : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[rbs]",isset($husbandFactor->rbs) ? $husbandFactor->rbs : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        TSH : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[tsh]",isset($husbandFactor->tsh) ? $husbandFactor->tsh : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        HIV : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[hiv]",isset($husbandFactor->hiv) ? $husbandFactor->hiv : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        HbsAg : &nbsp;
+                                                    </span>
+                                                    {{Form::text("h_factor[hbsag]",isset($husbandFactor->hbsag) ? $husbandFactor->hbsag : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                        </div>
                                         @php
                                                 $hsaReportClass = !empty($investigation->hsa_report) && !empty($investigation->hsa_report->type) && $investigation->hsa_report->type == 'yes' ? true : false;
                                                 $hsaReportClassName = $hsaReportClass ? '' : 'd-none';

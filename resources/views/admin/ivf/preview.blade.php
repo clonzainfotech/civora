@@ -259,18 +259,24 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                 {{$oh->first_marriage_life}}
                                             </th>
                                         @endif
+                                    </tr>
+                                    <tr>
                                         @if(!empty($oh->active_marriage_life))
                                             <th>
                                                 <span class="ivf-label">Active Marriage Life :</span>
                                                 {{$oh->active_marriage_life}}
                                             </th>
                                         @endif
+                                    </tr>
+                                    <tr>
                                         @if(!empty($oh->upt_type))
                                             <th>
                                                 <span class="ivf-label">UTP :</span>
                                                 {{$oh->upt_type  == 'positive' ? 'Positive' : 'Negative'}}
                                             </th>
                                         @endif
+                                    </tr>
+                                    <tr>
                                         @if(!empty($oh->type_of_infertility))
                                             <th>
                                                 <span class="ivf-label">Type Of Infertility :</span>
@@ -988,7 +994,54 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         </tr>
                                     @endif
                                 </tbody>
-                            </table>
+                            {{-- </table>
+                            <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table"> --}}
+                                @if((isset($husbandFactor->fsh) && !empty($husbandFactor->fsh)) || (isset($husbandFactor->lh) && !empty($husbandFactor->lh)) || (isset($husbandFactor->testosterone) && !empty($husbandFactor->testosterone)) || (isset($husbandFactor->rbs) && !empty($husbandFactor->rbs)))
+                                    <tr>
+                                        <th>
+                                            @if(isset($husbandFactor->fsh) && !empty($husbandFactor->fsh))
+                                                <span class="ivf-label">FSH:  </span>
+                                                {{ !empty($husbandFactor->fsh) ? $husbandFactor->fsh : '-' }}
+                                                <br>
+                                            @endif
+                                            @if(isset($husbandFactor->lh) && !empty($husbandFactor->lh))
+                                                <span class="ivf-label">LH:  </span>
+                                                {{ !empty($husbandFactor->lh) ? $husbandFactor->lh : '-' }}
+                                            @endif
+                                            <br>
+                                            @if(isset($husbandFactor->testosterone) && !empty($husbandFactor->testosterone))
+                                                <span class="ivf-label">Testosterone:  </span>
+                                                {{ !empty($husbandFactor->testosterone) ? $husbandFactor->testosterone : '-' }}
+                                            @endif
+                                            <br>
+                                            @if(isset($husbandFactor->rbs) && !empty($husbandFactor->rbs))
+                                                <span class="ivf-label">RBS:  </span>
+                                                {{ !empty($husbandFactor->rbs) ? $husbandFactor->rbs : '-' }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if((isset($husbandFactor->tsh) && !empty($husbandFactor->tsh)) || (isset($husbandFactor->hiv) && !empty($husbandFactor->hiv)) || (isset($husbandFactor->hbsag) && !empty($husbandFactor->hbsag)))
+                                    <tr>
+                                        <th>
+                                            @if(isset($husbandFactor->tsh) && !empty($husbandFactor->tsh))
+                                                <span class="ivf-label">TSH:  </span>
+                                                {{ !empty($husbandFactor->tsh) ? $husbandFactor->tsh : '-' }}
+                                                <br>
+                                            @endif
+                                            @if(isset($husbandFactor->hiv) && !empty($husbandFactor->hiv))
+                                                <span class="ivf-label">HIV:  </span>
+                                                {{ !empty($husbandFactor->hiv) ? $husbandFactor->hiv : '-' }}
+                                            @endif
+                                            <br>
+                                            @if(isset($husbandFactor->hbsag) && !empty($husbandFactor->hbsag))
+                                                <span class="ivf-label">HBsAg:  </span>
+                                                {{ !empty($husbandFactor->hbsag) ? $husbandFactor->hbsag : '-' }}
+                                            @endif
+                                        </th>
+                                    </tr>
+                                @endif    
+                            {{-- </table> --}}
                         @endif
                         @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
                         <table cellspacing="0" cellpadding="0" class="{{'table m-b-0  module-report-table'}}">
@@ -2394,6 +2447,20 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             <th colspan="2">
                                                 <span class="ivf-label">Adnexa: </span>
                                                     {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(isset($oe->right_tube) && !empty($oe->right_tube))
+                                        <tr>
+                                            <th>
+                                                <span class="ivf-label">Right Tube: </span>{{$oe->right_tube}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(isset($oe->left_tube) && !empty($oe->left_tube))
+                                        <tr>
+                                            <th>
+                                                <span class="ivf-label">Left Tube:</span> {{$oe->left_tube}}
                                             </th>
                                         </tr>
                                     @endif

@@ -430,6 +430,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-2 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            Right Tube :
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{Form::text("data[oe][right_tube]",isset($ivfData->oe->right_tube) ? $ivfData->oe->right_tube : null,['class'=>'form-control','placeholder'=>'Right Tube Details'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-2 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            Left Tube :
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{Form::text("data[oe][left_tube]",isset($ivfData->oe->left_tube) ? $ivfData->oe->left_tube : null,['class'=>'form-control','placeholder'=>'Left Tube Details'])}}
+                        </div>
+                    </div>
+                   
+                </div>
             @endif
         {{-- @endif --}}
         {{-- ivf comman form --}}

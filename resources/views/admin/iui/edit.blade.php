@@ -1459,7 +1459,7 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                         </div>
                         <div class="mb-1 d-flex">
                             <div class="visit-lable">
-                            Tube : 
+                            Tubes : 
                             </div>
                             <div class="">
                                 @if(isset($iuiSecondVisitData->oe->right_tube) && !empty($iuiSecondVisitData->oe->right_tube))
@@ -1470,17 +1470,6 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                 @endif
                             </div>
                         </div>
-                        {{-- <div class="mb-1">
-                            <span class="visit-lable">TUBES : </span> 
-                            <div class="col-md-10 pl-15">
-                                @if(isset($iuiSecondVisitData->oe->right_tube) && !empty($iuiSecondVisitData->oe->right_tube))
-                                    <span class="visit-lable-value">Right Tube : {{$iuiSecondVisitData->oe->right_tube}}</span>
-                                @endif
-                                @if(isset($iuiSecondVisitData->oe->left_tube) && !empty($iuiSecondVisitData->oe->left_tube))    
-                                    <span class="visit-lable-value">Left Tube : {{$iuiSecondVisitData->oe->left_tube}}</span>
-                                @endif
-                            </div>
-                        </div> --}}
                     </div>
                     <div class="col-md-6 follicular_div_2">
                         

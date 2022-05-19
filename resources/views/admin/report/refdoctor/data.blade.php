@@ -209,19 +209,25 @@
                                     <tbody>
                                         @php
                                             $no = 1;
+                                            $patientList = $refDr->getReferenceDoctor->getReferencePatients;
+                                            $data = [];
+                                            foreach($patientList as $key => $object)
+                                            {
+                                                $object->totalIncome = $object->getTotalIncome();
+                                                $data[] = (object)$object;
+                                            }
+                                            if(!empty($fromdate) && !empty($todate))
+                                            {
+                                                $data = array_filter($data, function($patient) use($todate,$fromdate){ 
+                                                    return date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate ;
+                                                } );
+                                            }
                                         @endphp
-                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
-                                            @if(!empty($fromdate) && !empty($todate))
-                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
-                                                    <tr>
-                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                    </tr>
-                                                @endif
-                                            @else
+                                        @foreach($data as $key => $patient)
                                                 <tr>
-                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                    <td>{{ $no.'. '.ucwords(strtolower($patient['name']))}}</td>
+                                                    <td>{{ $patient['totalIncome']}}</td>
                                                 </tr>
-                                            @endif
                                             @php
                                                 $no++;
                                             @endphp

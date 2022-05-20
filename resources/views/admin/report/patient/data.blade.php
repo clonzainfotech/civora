@@ -31,7 +31,7 @@
         @forelse($patientReportOpd as $rowList => $data)
             @if (count($patientReportOpd) > 0)
                 <tr>
-                    <td colspan="7" class="sub-headline">{{ $rowList }}</td>
+                    <td colspan="7" class="sub-headline">{{ ucwords(strtolower($rowList)) }}</td>
                 </tr>
             @endif
 

@@ -2557,6 +2557,8 @@ $wnlArray = ['1'=>"WNL",'2'=>"Abnormal"];
                             @endphp
                             {{Form::text("mh[last_menstrual_date]",$lmddate,['class'=>'form-control lmd-date','required'])}}
                         </div>
+                        <span class="text-danger approx-week-from-lmp">
+                        </span>
                         <span class="form-error-msg">
                             {{$errors->first('last_mentsrual_date')}}
                         </span>

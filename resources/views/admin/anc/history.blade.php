@@ -751,7 +751,16 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
 
     var medicinesValue = @json($medicines);
     var weekData = @json($weekData);
-
+    
+    $(document).on('change','.lmd-date',function(){
+        $('.approx-week-from-lmp').text('');
+        var lmdDateValue = $('.lmd-date').val();
+        var dt1 = moment(new Date(lmdDateValue)).format('dddd DD MMMM YYYY')
+        var dt2 =  moment(new Date()).format('dddd DD MMMM YYYY');
+        var week = moment(dt2).diff(moment(dt1), 'weeks');
+        var days = moment(dt2).diff(moment(dt1),'days')%7;
+        $('.approx-week-from-lmp').text(week+' Week ' + (days > 0 ? +' '+days+ ' Day' : ''));
+    });
 </script>
 <script src="{{URL::to('public/js/image-uploader.js')}}"></script>
 @stop

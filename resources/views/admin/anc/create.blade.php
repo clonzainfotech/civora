@@ -1375,9 +1375,12 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
                                                     <span class="input-group-addon">Last Menstrual Date : &nbsp;</span>
                                                     {{Form::text("mh[last_menstrual_date]",$lastVisitLmpDate,['class'=>'form-control lmd-date','required'])}}
                                                 </div>
+                                                <span class="text-danger approx-week-from-lmp">
+                                                    
+                                                </span>
                                                 <span class="form-error-msg">
                                                         {{$errors->first('last_mentsrual_date')}}
-                                                    </span>
+                                                </span>
                                             </div>
 
                                             <div class="col-md-4">
@@ -4000,6 +4003,16 @@ $wnlArray = ['1'=>"Normal",'2'=>"Abnormal"];
         }
         var medicinesValue = @json($medicines);
         var weekData = @json($weekData);
+    $(document).on('change','.lmd-date',function(){
+        $('.approx-week-from-lmp').text('');
+        var lmdDateValue = $('.lmd-date').val();
+        var dt1 = moment(new Date(lmdDateValue)).format('dddd DD MMMM YYYY')
+        var dt2 =  moment(new Date()).format('dddd DD MMMM YYYY');
+        var week = moment(dt2).diff(moment(dt1), 'weeks');
+        var days = moment(dt2).diff(moment(dt1),'days')%7;
+        $('.approx-week-from-lmp').text(week+' Week ' + (days > 0 ? +' '+days+ ' Day' : ''));
+    });
+        
     </script>
     <script src="{{url('public/js/anc.js')}}"></script>
 @stop

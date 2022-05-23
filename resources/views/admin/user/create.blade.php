@@ -31,12 +31,12 @@
                         'onsubmit'=>'return createvalidation();',
                         'autocomplete' => 'new-form'
                     ])}}
-                    {{Form::hidden('hidden','',[
+                    {{-- {{Form::hidden('hidden','',[
                         'class'=>'form-control',
                         'placeholder'=>'Name',
                         'id'=>'name',
                         'autocomplete' => 'new-hidden',
-                    ])}}
+                    ])}} --}}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">

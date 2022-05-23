@@ -15,6 +15,6 @@ class ReferenceDoctor extends BaseModel
 
     public function getReferencePatients()
     {
-        return $this->hasMany('App\Models\OpdPatients','reference_doctor_id');
+        return $this->hasMany('App\Models\OpdPatients','reference_doctor_id')->whereNull('reference_pt_name');
     }
 }

@@ -33,7 +33,7 @@ class ReportController extends AdminController
                                     WHEN payment_mode = "1" THEN "Swipe"
                                     WHEN payment_mode = "2" THEN "Cash"
                                     WHEN payment_mode = "3" THEN "Cheque"
-                                    WHEN payment_mode = "4" THEN "UPI"
+                                    WHEN payment_mode = "4" THEN "UPI" 
                                     WHEN payment_mode = "5" THEN "NEFT"
                                     END) AS payment_mode'))->orderBy('id', 'desc');
                 $search = $request->report_days;
@@ -423,7 +423,7 @@ class ReportController extends AdminController
                     $online_ref = $this->ReferenceDoctor->where('reference_type',2)->where('is_lead',0)->pluck('id','id');
                     
                     $ref_lead_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$lead_ref);
-                    $ref_offline_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$offline_ref);
+                    $ref_offline_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereNull('reference_pt_name')->whereIn('reference_doctor_id',$offline_ref);
                     $ref_online_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->whereIn('reference_doctor_id',$online_ref);
                     $ref_pt_to_pt_patients = $this->OpdPatients->select('*',DB::raw('count(id) as total_patients'))->where('reference_pt_name','!=','');
                     if($fromdate || $todate){

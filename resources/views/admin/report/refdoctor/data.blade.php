@@ -224,8 +224,10 @@
                                         @endphp
                                         @foreach($data as $key => $patient)
                                                 <tr>
-                                                    <td>{{ $no.'. '.ucwords(strtolower($patient['name']))}}</td>
-                                                    {{-- <td>{{ getPatientsTotalIncome($patient['id'])}}</td> --}}
+                                                    <td>{{ $no.'. '}}</td>
+                                                    <td>{{ ucwords(strtolower($patient->name))}}</td>
+                                                    <td>{{ $patient->code}}</td>
+                                                    <td>{{ $patient->mobile_number.' '.(!empty($patient->other_mobile_number) ? .' ,'.$patient->other_mobile_number : '')}}</td>
                                                 </tr>
                                             @php
                                                 $no++;
@@ -254,19 +256,26 @@
                                     <tbody>
                                         @php
                                         $no = 1;
+                                        $patientList = $refDr->getReferenceDoctor->getReferencePatients;
+                                            $data = [];
+                                            foreach($patientList as $key => $object)
+                                            {
+                                                $data[] = (object)$object;
+                                            }
+                                            if(!empty($fromdate) && !empty($todate))
+                                            {
+                                                $data = array_filter($data, function($patient) use($todate,$fromdate){ 
+                                                    return date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate ;
+                                                } );
+                                            }
                                     @endphp
-                                    @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
-                                        @if(!empty($fromdate) && !empty($todate))
-                                            @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
-                                                <tr>
-                                                    <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                </tr>
-                                            @endif
-                                        @else
+                                    @foreach($data as $patient)
                                             <tr>
-                                                <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
+                                                <td>{{ $no.'. '}}</td>
+                                                <td>{{ ucwords(strtolower($patient->name))}}</td>
+                                                <td>{{ $patient->code}}</td>
+                                                <td>{{ $patient->mobile_number.' '.(!empty($patient->other_mobile_number) ? .' ,'.$patient->other_mobile_number : '')}}</td>
                                             </tr>
-                                        @endif
                                         @php
                                             $no++;
                                         @endphp
@@ -294,19 +303,26 @@
                                     <tbody>
                                         @php
                                             $no = 1;
+                                            $patientList = $refDr->getReferenceDoctor->getReferencePatients;
+                                            $data = [];
+                                            foreach($patientList as $key => $object)
+                                            {
+                                                $data[] = (object)$object;
+                                            }
+                                            if(!empty($fromdate) && !empty($todate))
+                                            {
+                                                $data = array_filter($data, function($patient) use($todate,$fromdate){ 
+                                                    return date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate ;
+                                                } );
+                                            }
                                         @endphp
-                                        @foreach($refDr->getReferenceDoctor->getReferencePatients as $patient)
-                                            @if(!empty($fromdate) && !empty($todate))
-                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
-                                                    <tr>
-                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                    </tr>
-                                                @endif
-                                            @else
-                                                <tr>
-                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                </tr>
-                                            @endif
+                                        @foreach($data as $patient)
+                                            <tr>
+                                                <td>{{ $no.'. '}}</td>
+                                                <td>{{ ucwords(strtolower($patient->name))}}</td>
+                                                <td>{{ $patient->code}}</td>
+                                                <td>{{ $patient->mobile_number.' '.(!empty($patient->other_mobile_number) ? .' ,'.$patient->other_mobile_number : '')}}</td>
+                                            </tr>
                                             @php
                                                 $no++;
                                             @endphp
@@ -334,19 +350,26 @@
                                     <tbody>
                                         @php
                                             $no = 1;
+                                            $patientList = $refDr->getPatientToPatientRef();
+                                            $data = [];
+                                            foreach($patientList as $key => $object)
+                                            {
+                                                $data[] = (object)$object;
+                                            }
+                                            if(!empty($fromdate) && !empty($todate))
+                                            {
+                                                $data = array_filter($data, function($patient) use($todate,$fromdate){ 
+                                                    return date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate ;
+                                                });
+                                            }
                                         @endphp
-                                        @foreach($refDr->getPatientToPatientRef() as $patient)
-                                            @if(!empty($fromdate) && !empty($todate))
-                                                @if(date('Y-m-d',strtotime($patient->created_at)) <= $todate && date('Y-m-d',strtotime($patient->created_at)) >= $fromdate)
-                                                    <tr>
-                                                        <td>{{$no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                    </tr>
-                                                @endif
-                                            @else
-                                                <tr>
-                                                    <td>{{ $no.'. '.ucwords(strtolower($patient->name))}}</td>
-                                                </tr>
-                                            @endif
+                                        @foreach($data as $patient)
+                                            <tr>
+                                                <td>{{ $no.'. '}}</td>
+                                                <td>{{ ucwords(strtolower($patient->name))}}</td>
+                                                <td>{{ $patient->code}}</td>
+                                                <td>{{ $patient->mobile_number.' '.(!empty($patient->other_mobile_number) ? .' ,'.$patient->other_mobile_number : '')}}</td>
+                                            </tr>
                                             @php
                                                 $no++;
                                             @endphp
@@ -357,7 +380,6 @@
                         </div>
                     </div>
                 </div>
-
             @endforeach
         </div>
 @endif

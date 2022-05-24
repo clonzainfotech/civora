@@ -2526,6 +2526,10 @@ $(document).ready(function(){
         $('.unmarried-data').addClass('d-none');
         if(type == 'married'){
             $('.married-data').removeClass('d-none');
+            $('.unmarried-data').addClass('d-none');
+        }
+        if(type == 'unmarried'){
+            $('.married-data').addClass('d-none');
             $('.unmarried-data').removeClass('d-none');
         }
     }

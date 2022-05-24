@@ -266,7 +266,7 @@
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
                                                         C/O :
-                                                    </label>
+                                                    </label>                                                
                                                 </div>
                                                 <div class="col-md-8 complain-multi">
                                                     {{Form::select('co[co_type][]',$complaints,'',['class'=>'form-control co-value co_value_data complaint-data','placeholder'=>'Enter complain','multiple'=>true,'data-type'=>'0','data-medicine'=>1])}}
@@ -331,6 +331,14 @@
                                                                 {{$errors->first('marriage_life')}}
                                                             </span>
                                                         </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">PLED : &nbsp;</span>
+                                                                {{Form::text("oh[pled]",'',['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col-md-1">
                                                             <label class="vertical-form-label pr-0">
                                                                 UPT :
@@ -728,6 +736,12 @@
                                                                 <label for="other_contraception">
                                                                     Other
                                                                 </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 contraception-data d-none">
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                                {{Form::text("oh[contraception][detail]",'',['class'=>'form-control'])}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1177,6 +1191,12 @@
                                                                 </label>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-3 second-contraception-data d-none">
+                                                            <div class='input-group'>
+                                                                <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                                {{Form::text("oh[second_marriage][contraception][detail]",'',['class'=>'form-control'])}}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     {{-- end contraception second marriage --}}
                                                     {{-- ectopic data --}}
@@ -1277,12 +1297,12 @@
                                         <div id="personal-history" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                             <div class="panel-body">
 
-                                                <div class="row">
-                                                    <div class="col-md-6">
+                                                <div class="row unmarried-data">
+                                                    {{-- <div class="col-md-6">
                                                         <div class="form-group">
                                                             {{Form::select("mh[type_and_year_of_infertility]",['primary'=>'Primary','secondary'=>'Secondary'],'',['class'=>'form-control select-padding-0','placeholder'=>'Type And Year Of Infertility'])}}
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             {{Form::select("mh[age_of_menarchy]",[11=>11,12=>12,13=>13,14=>14,15=>15],'',['class'=>'form-control select-padding-0','placeholder'=>'Age Of Menarchy'])}}
@@ -1294,20 +1314,21 @@
                                                             {{Form::text("mh[since_year]",'',['class'=>'form-control'])}}
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">Manopause Since Year : &nbsp;</span>
+                                                            {{Form::text("mh[manopause_since_year]",'',['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-5">
+                                                    {{-- <div class="col-sm-5">
                                                         <div class="form-group">
                                                             {{Form::text("mh[age_of_manopause]",'',['class'=>'form-control','placeholder'=>'Age Of Manopause'])}}
                                                         </div>
                                                         
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">Since Year : &nbsp;</span>
-                                                            {{Form::text("mh[manopause_since_year]",'',['class'=>'form-control'])}}
-                                                        </div>
-                                                    </div>
+                                                    </div> --}}
+                                                    
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-2">
@@ -1541,6 +1562,9 @@
                                                     <div class="col-md-4 complain-multi ho-past-personal-data">
                                                         {{Form::select('p_detailes[past_history_type][]',$pastData,'',['class'=>'form-control co-value co_value_data mb-3','placeholder'=>'Select Past History','multiple'=>true])}}
                                                     </div>
+                                                    <div class="col-md-4 ho-past-personal-data">
+                                                        {{Form::text('p_detailes[past_history_detail]',null,['class'=>'form-control ','placeholder'=>'Past History Detail'])}}
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -1580,42 +1604,9 @@
                                                             {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'UT Details'])}}
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-1 pr-0">
-                                                        <label class="vertical-form-label pr-0">
-                                                            Cervix :
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            {{Form::text("oe[cervix][details]",'',['class'=>'form-control','placeholder'=>'Cervix Details'])}}
-                                                        </div>
-                                                    </div>
+                                                    
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-1 pr-0">
-                                                        <label class="vertical-form-label pr-0">
-                                                            Adnexa :
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <div class="radio is-conceived">
-                                                            {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                            <label for="adnexa_type_yes">
-                                                                Yes
-                                                            </label>
-        
-                                                            {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                            <label for="adnexa_type_no">
-                                                                No
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-5 adnexa-details d-none">
-                                                        <div class="form-group">
-                                                            {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
@@ -1665,9 +1656,42 @@
                                                             {{Form::text("oe[p_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-1 pr-0 ps-details">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Cervix :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-4 ps-details">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[cervix][details]",'',['class'=>'form-control','placeholder'=>'Cervix Details'])}}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Right Tube :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[right_tube]",null,['class'=>'form-control','placeholder'=>'Right Tube Details'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Left Tube :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[left_tube]",null,['class'=>'form-control','placeholder'=>'Left Tube Details'])}}
+                                                        </div>
+                                                    </div>
+                                                   
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">
@@ -1749,6 +1773,32 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             {{Form::text("oe[endometrial_thickness]",'',['class'=>'form-control','placeholder'=>'Endometrial Thickness Details'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row tvs-details d-none">
+                                                    <div class="col-md-1"></div>
+                                                    <div class="col-md-1 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Adnexa :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="radio is-conceived">
+                                                            {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_yes">
+                                                                Yes
+                                                            </label>
+        
+                                                            {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'gynec-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                            <label for="adnexa_type_no">
+                                                                No
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 adnexa-details d-none">
+                                                        <div class="form-group">
+                                                            {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -3225,12 +3275,12 @@
         $('.co_value_data').selectize({
             delimiter: ',',
             persist: false,
-            // create: function(input) {
-            //     return {
-            //         value: input,
-            //         text: input
-            //     }
-            // }
+            create: function(input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
         });
         $('.report-images').imageUploader({
             imagesInputName: 'investigation[report][images]',

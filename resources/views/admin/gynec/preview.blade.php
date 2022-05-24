@@ -72,12 +72,18 @@
     .white-font {
         color: #ffffff;
     }
-    .header-print-title{
-        font-size: 20px;
-        background-color: #f5f5f5;
-        color: #55555a;
+    
+    .header-print-title
+    {
+        font-size: 18px;
+        background-color: #e2e2e2;
+        color: #212122;
         width: 100%;
-        font-weight: bold;
+        padding: 2px;
+        border: 1px solid;
+        text-indent: 5px;
+        -webkit-print-color-adjust: exact;
+        display: inherit;
     }
     .main-print-anc-div{
         margin: 0 auto;
@@ -158,6 +164,9 @@
         padding: 2px 15px;
         text-transform: capitalize;
     }
+    tr th, tr td{
+        border: none !important;
+    }
     /* @media all {
         .page-break { display: none; }
     }
@@ -203,11 +212,11 @@
                 <tbody>
                     <tr>
                         <th>
-                            <span class="pb-1 font-bold ivf-label">Name : {{ ucwords(strtolower($gynec->getGynecPatients['name'])) . ' / ' . $gynec->getGynecPatients['age']. ' years' }}</span>
-                            <br><span class="pb-1 font-bold ivf-label">Seen By : {{ ucwords(strtolower(isset($gynec->getSeenBy->name) ? $gynec->getSeenBy->name : '')) }}</span>
+                            <span class="pb-1 font-bold anc-label">Name : {{ ucwords(strtolower($gynec->getGynecPatients['name'])) . ' / ' . $gynec->getGynecPatients['age']. ' years' }}</span>
+                            <br><span class="pb-1 font-bold anc-label">Seen By : {{ ucwords(strtolower(isset($gynec->getSeenBy->name) ? $gynec->getSeenBy->name : '')) }}</span>
                         </th>
                         <th>
-                        <th class="pb-1 float-right font-bold ivf-label">Visit Date:  {{Carbon\Carbon::parse($gynec->created_at)->format('d/m/Y')}}
+                        <th class="pb-1 float-right font-bold anc-label">Visit Date:  {{Carbon\Carbon::parse($gynec->created_at)->format('d/m/Y')}}
                             @if($gynec->getGynecPatients['weight'])
                                 <br>Weight: {{$gynec->getGynecPatients['weight'].' kg'}}
                             @endif
@@ -219,11 +228,11 @@
             @if($ho && !empty($ho->ho_details))
                 <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
                     <tbody>
-                        <tr>
+                        {{-- <tr>
                             <td colspan="6">
                                 <div class="panel-title header-print-title"> H/O</div>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <th class="w-250 seperator">
                             <span class="anc-label ">H/O : </span>
                             @if($isGynec == 1)
@@ -240,27 +249,23 @@
             {{-- @if(!empty($co) && !empty($co->co_type) || !empty($co->since)) --}}
                 <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 table-hover module-report-table'}}">
                     <tbody>
-                        <tr>
+                        {{-- <tr>
                             <td colspan="6">
                                 <div class="panel-title header-print-title"> C/O</div>
                             </td>
-                        </tr>
-                        {{-- @if(!empty($co->co_type) || !empty($co->since)) --}}
+                        </tr> --}}
                             <tr>
                                 {{-- @if(isset($co->co_type) && is_array($co->co_type)) --}}
                                     <th class="seperator w-500">
                                         <span class="anc-label">C/O :</span>
                                         {{ (isset($co->co_type) && is_array($co->co_type)) ? implode(', ', $co->co_type) : 'None' }}
+                                        @if(!empty($co->since))
+                                                <span class="anc-label"> / Since :</span>
+                                                {{ !empty($co->since) ? $co->since : '-' }}
+                                        @endif
                                     </th>
                                 {{-- @endif --}}
-                                @if(!empty($co->since))
-                                    <th class="seperator">
-                                        <span class="anc-label">Since :</span>
-                                        {{ !empty($co->since) ? $co->since : '-' }}
-                                    </th>
-                                @endif
                             </tr>
-                        {{-- @endif --}}
                     </tbody>
                 </table>
             {{-- @endif --}}
@@ -333,6 +338,14 @@
                                     <div class="panel-title header-print-title">Obstetric History</div>
                                 </td>
                             </tr>
+                            <tr>
+                                @if(isset($oh->pled) && !empty($oh->pled))
+                                    <th>
+                                        <span class="anc-label">PLED status :</span>
+                                        {{$oh->pled}}
+                                    </th>
+                                @endif
+                            </tr>
                             @php
                                 $hoType = [2,3,4];
                             @endphp
@@ -340,25 +353,25 @@
                                 <tr>
                                     @if(!empty($oh->marriage_life))
                                         <th>
-                                            <span class="iui-label">Marriage Life :</span>
+                                            <span class="anc-label">Marriage Life :</span>
                                             {{$oh->marriage_life}}
                                         </th>
                                     @endif
                                     @if(!empty($oh->active_marriage_life))
                                         <th>
-                                            <span class="iui-label">Active Marriage Life :</span>
+                                            <span class="anc-label">Active Marriage Life :</span>
                                             {{$oh->active_marriage_life}}
                                         </th>
                                     @endif
                                     @if(!empty($oh->upt_type))
                                         <th>
-                                            <span class="iui-label">UTP :</span>
+                                            <span class="anc-label">UTP :</span>
                                             {{$oh->upt_type  == 'positive' ? 'Positive' : 'Negative'}}
                                         </th>
                                     @endif
                                     @if(!empty($oh->type_of_infertility))
                                         <th>
-                                            <span class="iui-label">Type Of Infertility :</span>
+                                            <span class="anc-label">Type Of Infertility :</span>
                                             @if(!empty($oh->type_of_infertility))
                                                 @switch($oh->type_of_infertility)
                                                     @case(1)
@@ -379,9 +392,8 @@
                                 @foreach($oh->child->child_data as $key=>$row)
                                     <tr>
                                         <th>
-                                            <span class="iui-label ">H/O :</span>
                                             @php
-                                                $hoValue = null;
+                                                $hoValue = addOrdinalNumberSuffix($key).' ';
                                                 $ho_term_details = '';
                                                 if(!empty($row->ho_term)){
                                                     $hoValue.= $row->ho_term  == 'full' ? 'FTND' : 'PT';
@@ -446,7 +458,8 @@
 
                                                 }
                                             @endphp
-                                            {{$hoValue.$ho_term_details}}
+                                            
+                                            <span class="anc-label"> {{$hoValue.$ho_term_details}}</span>
                                         </th>
                                     </tr>
                                 @endforeach
@@ -533,7 +546,7 @@
                                     @endphp
                                     <tr>
                                         {{-- <th>
-                                            <span class="iui-label ">Spontancous Abortion :</span> --}}
+                                            <span class="anc-label ">Spontancous Abortion :</span> --}}
                                             @php
                                                 $isBracket = 0;
                                                 if(!empty($value->spontancous_abortion_status) && $value->spontancous_abortion_status == 'yes') {
@@ -639,9 +652,16 @@
                             @if(isset($oh) && !empty($oh->contraception) && !empty($oh->contraception->contraception_status) && $oh->contraception->contraception_status == 'yes' &&  !empty($oh->contraception->contraception_data))
                                 <tr>
                                     <th>
-                                        <span class="iui-label">Contraception Method :</span> {{$contraceptionData[$oh->contraception->contraception_data]}}
+                                        <span class="anc-label">Contraception Method :</span> {{$contraceptionData[$oh->contraception->contraception_data]}}
                                     </th>
                                 </tr>
+                                @if(isset($oh->contraception->detail) && !empty($oh->contraception->detail))
+                                    <tr>
+                                        <th>
+                                            <span class="anc-label">Contraception Detail :</span> {{$oh->contraception->detail}}
+                                        </th>
+                                    </tr>
+                                @endif
                             @else
                                 @php
                                     $noValueData[] = ' Contraception';
@@ -650,7 +670,7 @@
                             @if (isset($oh->second_marriage_life) && !empty($oh->second_marriage_life) && $oh->second_marriage_life == 'yes')
                                 <tr>
                                     <th class=" w-300">
-                                        <span class="iui-label">Second Merriage Life :</span>
+                                        <span class="anc-label">Second Merriage Life :</span>
                                         @if (isset($oh->second_marriage_life) && !empty($oh->second_marriage_life))
                                             {{ $oh->second_marriage_life == 'yes' ? 'Yes' : 'No' }}
                                         @else
@@ -659,7 +679,7 @@
                                     </th>
                                     @if (isset($oh->second_marriage_life) && !empty($oh->second_marriage_life) && $oh->second_marriage_life == 'yes' && !empty($oh->second_marriage_details))
                                         <th>
-                                            <span class="iui-label ">Second Merriage Details :</span>
+                                            <span class="anc-label ">Second Merriage Details :</span>
                                             {{$oh->second_marriage_details}}
                                         </th>
                                     @endif
@@ -669,7 +689,7 @@
                                 <tr>
                                     @if(!empty($oh->second_marriage->child_no) )
                                         <th>
-                                            <span class="iui-label ">Child No : </span>
+                                            <span class="anc-label ">Child No : </span>
                                             {{$oh->second_marriage->child_no}}
                                         </th>
                                     @endif
@@ -679,9 +699,9 @@
                                 @foreach($oh->second_marriage->child->child_data as $key=>$row)
                                     <tr>
                                         <th>
-                                            <span class="iui-label ">H/O :</span>
+                                            {{-- <span class="anc-label ">H/O :</span> --}}
                                             @php
-                                                $secondHoValue = null;
+                                                $secondHoValue = addOrdinalNumberSuffix($key).' ';
                                                 $second_ho_term_details = '';
                                                 if(!empty($row->ho_term)){
                                                     $secondHoValue.= $row->ho_term  == 'full' ? 'FT' : 'PT';
@@ -745,7 +765,7 @@
                                                 $second_ho_term_details = isset($row->ho_term_details) && !empty($row->ho_term_details) ? ' - '.$row->ho_term_details : '';
                                                 }
                                             @endphp
-                                            {{$secondHoValue.$second_ho_term_details}}
+                                            <span class="anc-label ">{{$secondHoValue.$second_ho_term_details}}</span>
                                         </th>
                                     </tr>
                                 @endforeach
@@ -758,7 +778,7 @@
                                 <tr>
                                     @if(!empty($oh->second_marriage->mtp_no))
                                         <th>
-                                            <span class="iui-label ">MTP : </span>{{$oh->second_marriage->mtp_no}}
+                                            <span class="anc-label ">MTP : </span>{{$oh->second_marriage->mtp_no}}
                                         </th>
                                     @endif
                                 </tr>
@@ -818,7 +838,7 @@
                             @if(isset($oh->second_marriage_life) && !empty($oh->second_marriage_life) && $oh->second_marriage_life == 'yes' && !empty($oh) && !empty($oh->second_marriage->abortion_no))
                                 <tr>
                                     <th>
-                                        <span class="iui-label ">Abortion :</span>
+                                        <span class="anc-label ">Abortion :</span>
                                         {{-- {{!empty($oh->second_marriage->abortion_no) ? $oh->second_marriage->abortion_no : 0}} --}}
                                     </th>
                                     @php
@@ -948,9 +968,16 @@
                             @if(isset($oh->second_marriage_life) && !empty($oh->second_marriage_life) && $oh->second_marriage_life == 'yes' && !empty($oh) && !empty($oh->second_marriage->contraception) && !empty($oh->second_marriage->contraception->contraception_status) && $oh->second_marriage->contraception->contraception_status == 'yes' && !empty($oh->second_marriage->contraception->contraception_data))
                                 <tr>
                                     <th>
-                                        <span class="iui-label">Contraception Method : </span> {{$contraceptionData[$oh->second_marriage->contraception->contraception_data]}}
+                                        <span class="anc-label">Contraception Method : </span> {{$contraceptionData[$oh->second_marriage->contraception->contraception_data]}}
                                     </th>
                                 </tr>
+                                @if(isset($oh->second_marriage->contraception->detail) && !empty($oh->second_marriage->contraception->detail))
+                                    <tr>
+                                        <th>
+                                            <span class="anc-label">Contraception Detail :</span> {{$oh->second_marriage->contraception->detail}}
+                                        </th>
+                                    </tr>
+                                @endif
                             @else
                                 @php
                                     $secondNoValueData[] = ' Contraception';
@@ -966,13 +993,132 @@
                             @if(!empty($oh->remark))
                                 <tr>
                                     <th>
-                                        <span class="iui-label">Remark :</span>
+                                        <span class="anc-label">Remark :</span>
                                         {{$oh->remark}}
                                     </th>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
+            @endif
+            @if($mh)
+                <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
+
+                    <tbody>
+                        <tr>
+                            <td colspan="9">
+                                <div class="panel-title header-print-title">Menstrual History</div>
+                            </td>
+                        </tr>
+                        @if (!empty($mh->age_of_menarchy) || !empty($mh->since_year))
+                            <tr>
+                                @if (!empty($mh->age_of_menarchy))
+                                    <th>
+                                        <span class="anc-label">Age Of Menarchy : </span>
+                                        {{ $mh->age_of_menarchy }}
+                                    </th>
+                                @endif
+
+                                @if (!empty($mh->since_year))
+                                    <th>
+                                        <span class="anc-label">Since Year :</span>
+                                        {{ $mh->since_year }}
+                                    </th>
+                                @endif
+                            </tr>
+                        @endif
+                        @if (!empty($mh->manopause_since_year))
+                            <tr>
+                                {{-- @if (!empty($mh->age_of_manopause))
+                                    <th>
+                                        <span class="anc-label">Age Of Manopause : </span>
+                                        {{ $mh->age_of_manopause }}
+                                    </th>
+                                @endif --}}
+
+                                @if (!empty($mh->manopause_since_year))
+                                    <th>
+                                        <span class="anc-label">Duration Of Menstruation : </span><span>Since Year of Manopause {{$mh->manopause_since_year}}</span>
+                                        {{-- {{ $mh->manopause_since_year }} --}}
+                                    </th>
+                                @endif
+                            </tr>
+                        @endif
+                        @if(empty($mh->manopause_since_year))
+                            <tr>
+                                <th>
+                                    @if(!empty($mh->same_past) && $mh->same_past == 'same')
+                                        <span class="anc-label">Present / Past M/H :</span>
+                                    @endif
+                                    @if ($mh->past_mh_2 == 'regular') | Regular @elseif($mh->present_mh_2 == 'irregular') IR Regular @endif
+                                        @if (!empty($mh->past_interval_of_day) || $mh->past_mh_2 == 'regular')
+                                    | Duration Of Menstruation: {{$mh->past_mh_2 == 'regular' ? '3 - 4 day' : $mh->past_interval_of_day}}
+                                    @endif
+                                    @if ((!empty($mh->past_duration_of_day) && !empty($mh->past_mh_2) )|| $mh->past_mh_2 == 'regular')
+                                            at Interval Of : {{$mh->past_mh_2 == 'regular' ? '28 - 30 day' : $mh->past_duration_of_day}}
+                                    @endif
+                                    @if(!empty($mh->past_mh_2) && $mh->past_mh_2 != 'regular')
+                                    | {{ !empty($mh->past_month) ? ucwords($mh->past_month) : ''}}
+                                    @else
+                                            Regular, Moderate, Painless
+                                    @endif
+                                    @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
+                                        | Withdrawal by Medicine 
+                                    @endif
+                                </th>
+                            </tr>
+                            @if(!empty($mh->same_past) && $mh->same_past == 'exit')
+                                <tr>
+                                    <th>
+                                        <span class="anc-label">Present M/H : </span>
+                                        {{ ucwords($mh->present_mh_1) }}
+                                        | @if ($mh->present_mh_2 == 'regular')Regular @elseif($mh->present_mh_2 == 'irregular') IR Regular @endif
+                                        @if (!empty($mh->present_duration_of_day) || $mh->present_mh_2 == 'regular')
+                                        | Duration Of Menstruation : {{$mh->present_mh_2 == 'regular' ? '28 - 30 day' : $mh->present_duration_of_day}}
+                                        @endif
+                                        @if (!empty($mh->present_interval_of_day) || $mh->present_mh_2 == 'regular')
+                                        at Interval Of : {{$mh->present_mh_2 == 'regular' ? '3 - 4 day' : $mh->present_interval_of_day}}
+                                        @endif
+                                        @if($mh->present_mh_2 != 'regular')
+                                            | {{ !empty($mh->present_month) ? ucwords($mh->present_month) : ''}}
+                                        @else
+                                            Regular, Moderate, Painless
+                                        @endif
+                                        @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
+                                            | Withdrawal by Medicine 
+                                        @endif
+                                    </th>
+                                </tr>
+                            @endif
+                        @endif
+                        <tr>
+                            @if(!empty($mh->last_menstrual_date))
+                                <th>
+                                    <span class="anc-label">Last Menstrual Date :</span>
+                                    {{!empty($mh->last_menstrual_date) ?  \Carbon\Carbon::parse($mh->last_menstrual_date)->format('d/m/Y') : '-' }}
+                                    <br>
+                                    @if (isset($mh->lmd_date_diff) && !empty($mh->lmd_date_diff))
+                                    <span class="anc-label">Day of mense :</span>
+                                    {{ $mh->lmd_date_diff}}
+                                    @endif
+                                </th>
+                            @endif
+                            @if(!empty($mh->since_cycle))
+                                <th>
+                                    <span class="anc-label">Since Month :</span>
+                                    {{!empty($mh->since_month) ?  $mh->since_month : '-' }}
+                                </th>
+                            @endif
+                            @if(!empty($mh->since_cycle))
+                                <th>
+                                    <span class="anc-label">Since Cycle :</span>
+                                    {{!empty($mh->since_cycle) ?  $mh->since_cycle : '-' }}
+                                </th>
+                            @endif
+                        </tr>
+
+                    </tbody>
+                </table>
             @endif
             @if($oe  && ((isset($oe->tvs) && $oe->tvs->type == 'yes') || (isset($oe->p_s) && $oe->p_s->type == 'yes') || (isset($oe->l_s) && $oe->l_s->type == 'yes') || !empty($oe->cervix->details) || !empty($oe->le->bp) || !empty($oe->le->temp) || !empty($oe->le->pulse) || (isset($oe->breast) && $oe->breast->type == 'yes') || (isset($oe->adnexa) && $oe->adnexa->type == 'yes')))
                 
@@ -990,17 +1136,17 @@
                                     Vitals
                                     @if(!empty($oe->le->temp))
                                         <br>
-                                        <span class="iui-label">Temp : </span>
+                                        <span class="anc-label">Temp : </span>
                                         {{$oe->le->temp}}
                                     @endif
                                     @if(!empty($oe->le->pulse))
                                         <br>
-                                        <span class="iui-label">Pulse : </span>
+                                        <span class="anc-label">Pulse : </span>
                                         {{$oe->le->pulse ? $oe->le->pulse : '80'}} / Min
                                     @endif
                                     @if(!empty($oe->le->bp))
                                         <br>
-                                        <span class="iui-label">B.P :</span>
+                                        <span class="anc-label">B.P :</span>
                                         {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
                                     @endif
                                 </th>
@@ -1009,7 +1155,7 @@
                         @if($oe->p_a->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">P/A:</span>
+                                    <span class="anc-label">P/A:</span>
                                     {{ !empty($oe->p_a->type == 'yes') ? 'Yes' : 'No' }}
                                     @if ($oe->p_a->type == 'yes')
                                         {{!empty($oe->p_a->details) ? '| '.$oe->p_a->details : '-' }}
@@ -1020,7 +1166,7 @@
                         @if($oe->p_s->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">P/S:</span>
+                                    <span class="anc-label">P/S:</span>
                                     {{ !empty($oe->p_s->type == 'yes') ? 'Yes' : 'No' }}
                                     @if ($oe->p_s->type == 'yes')
                                         {{!empty($oe->p_s->details) ? '| '.$oe->p_s->details : '-' }}
@@ -1031,7 +1177,7 @@
                         @if($oe->l_s->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">L/E:</span>
+                                    <span class="anc-label">L/E:</span>
                                     {{ !empty($oe->l_s->type == 'yes') ? 'Yes' : 'No' }}
                                     @if ($oe->l_s->type == 'yes')
                                         {{!empty($oe->l_s->details) ? '| '.$oe->l_s->details : '-' }}
@@ -1039,10 +1185,24 @@
                                 </th>
                             </tr>
                         @endif
+                        @if(isset($oe->right_tube) && !empty($oe->right_tube))
+                            <tr>
+                                <th>
+                                    <span class="anc-label">Right Tube: </span>{{$oe->right_tube}}
+                                </th>
+                            </tr>
+                        @endif
+                        @if(isset($oe->left_tube) && !empty($oe->left_tube))
+                            <tr>
+                                <th>
+                                    <span class="anc-label">Left Tube:</span> {{$oe->left_tube}}
+                                </th>
+                            </tr>
+                        @endif
                         @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
                             <tr>
                                 <th colspan="2">
-                                    <span class="iui-label">Adnexa: </span>
+                                    <span class="anc-label">Adnexa: </span>
                                         {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
                                 </th>
                             </tr>
@@ -1050,7 +1210,7 @@
                         @if(!empty($oe->cervix->details))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Cervix:  </span>
+                                    <span class="anc-label">Cervix:  </span>
                                     {{ !empty($oe->cervix->details) ? $oe->cervix->details : '-' }}
                                 </th>
                             </tr>
@@ -1058,19 +1218,19 @@
                         @if($oe->tvs->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">Transvaginal Ultrasonography:</span>
+                                    <span class="anc-label">Transvaginal Ultrasonography:</span>
                                 </th>
                             </tr>
                         @endif
                         @if ($oe->tvs->type == 'yes')
                             <tr>
                                 <th>
-                                    <span class="iui-label">Uterus:  </span>
+                                    <span class="anc-label">Uterus:  </span>
                                     {{ !empty($oe->uterus->type == '2') ? 'Abnormal' : 'Normal' }}
                                 </th>
                                 {{-- @if ($oe->uterus->type == '2') --}}
                                     <th>
-                                        <span class="iui-label">Uterus Details:  </span>
+                                        <span class="anc-label">Uterus Details:  </span>
                                         {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
                                     </th>
                                 {{-- @endif --}}
@@ -1079,7 +1239,7 @@
                         @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Endometrial Thickness:  </span>
+                                    <span class="anc-label">Endometrial Thickness:  </span>
                                     {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
                                 </th>
                             </tr>
@@ -1088,7 +1248,7 @@
                         <tr>
                             <th>
                                 @if (!empty($oe->ovary->right->updated_details))
-                                <span class="iui-label">Right Ovary : </span>
+                                <span class="anc-label">Right Ovary : </span>
                                     @foreach ($oe->ovary->right->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
@@ -1096,7 +1256,7 @@
                                     @endforeach
                                 @endif
                                 @if(!empty($oe->ovary->right->afcs))
-                                    <span class="iui-label">Follicle numbers per ovary : </span>
+                                    <span class="anc-label">Follicle numbers per ovary : </span>
                                     {{$oe->ovary->right->afcs}}
                                 @endif
                             </th>
@@ -1106,7 +1266,7 @@
                         <tr>
                             <th>
                                 @if(!empty($oe->ovary->left->updated_details))
-                                <span class="iui-label">Left Ovary : </span>
+                                <span class="anc-label">Left Ovary : </span>
                                     @foreach($oe->ovary->left->updated_details as $key => $value)
                                         @php
                                             echo !empty($value) ? $value .  '<br />' : '- <br />';
@@ -1114,7 +1274,7 @@
                                     @endforeach
                                 @endif
                                 @if(!empty($oe->ovary->left->afcs))
-                                    <span class="iui-label">Follicle numbers per ovary : </span>
+                                    <span class="anc-label">Follicle numbers per ovary : </span>
                                     {{$oe->ovary->left->afcs}}
                                 @endif
                             </th>
@@ -1128,11 +1288,11 @@
                         <tr>   
                             <th> 
                                 @if(!empty($oe->breast->right))
-                                <span class="iui-label">Right : </span>{{$oe->breast->right}}
+                                <span class="anc-label">Right : </span>{{$oe->breast->right}}
                                 @endif
                                 @if(!empty($oe->breast->left))
                                 <br>
-                                <span class="iui-label">Left : </span>{{$oe->breast->left}}
+                                <span class="anc-label">Left : </span>{{$oe->breast->left}}
                                 @endif
                                 
                             </th>
@@ -1142,166 +1302,50 @@
                     </tbody>
                 </table>
             @endif
-            @if($mh)
-                <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
-
-                    <tbody>
-                        <tr>
-                            <td colspan="9">
-                                <div class="panel-title header-print-title">Menstrual History</div>
-                            </td>
-                        </tr>
-                        @if (!empty($mh->age_of_menarchy) || !empty($mh->since_year))
-                            <tr>
-                                @if (!empty($mh->age_of_menarchy))
-                                    <th>
-                                        <span class="iui-label">Age Of Menarchy : </span>
-                                        {{ $mh->age_of_menarchy }}
-                                    </th>
-                                @endif
-
-                                @if (!empty($mh->since_year))
-                                    <th>
-                                        <span class="iui-label">Since Year :</span>
-                                        {{ $mh->since_year }}
-                                    </th>
-                                @endif
-                            </tr>
-                        @endif
-                        @if (!empty($mh->age_of_manopause) || !empty($mh->manopause_since_year))
-                            <tr>
-                                @if (!empty($mh->age_of_manopause))
-                                    <th>
-                                        <span class="ivf-label">Age Of Manopause : </span>
-                                        {{ $mh->age_of_manopause }}
-                                    </th>
-                                @endif
-
-                                @if (!empty($mh->manopause_since_year))
-                                    <th>
-                                        <span class="ivf-label">Since Year :</span>
-                                        {{ $mh->manopause_since_year }}
-                                    </th>
-                                @endif
-                            </tr>
-                        @endif
-                        <tr>
-                            <th>
-                                @if(!empty($mh->same_past) && $mh->same_past == 'same')
-                                    <span class="iui-label">Present / Past M/H :</span>
-                                @endif
-                                @if ($mh->past_mh_2 != 'regular') | IR Regular @endif
-                                    @if (!empty($mh->past_interval_of_day) || $mh->past_mh_2 == 'regular')
-                                | Duration Of Menstruation: {{$mh->past_mh_2 == 'regular' ? '3 - 4 day' : $mh->past_interval_of_day}}
-                                @endif
-                                @if (!empty($mh->past_duration_of_day) || $mh->past_mh_2 == 'regular')
-                                        at Interval Of : {{$mh->past_mh_2 == 'regular' ? '28 - 30 day' : $mh->past_duration_of_day}}
-                                @endif
-                                @if($mh->past_mh_2 != 'regular')
-                                | {{ !empty($mh->past_month) ? ucwords($mh->past_month) : ''}}
-                                @else
-                                        Regular, Moderate, Painless
-                                @endif
-                                @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
-                                    | Withdrawal by Medicine 
-                                @endif
-                            </th>
-                        </tr>
-                        @if(!empty($mh->same_past) && $mh->same_past == 'exit')
-                            <tr>
-                                <th>
-                                    <span class="iui-label">Present M/H : </span>
-                                    {{ ucwords($mh->present_mh_1) }}
-                                    | @if ($mh->present_mh_2 == 'regular')Regular @else IR Regular @endif
-                                    @if (!empty($mh->present_duration_of_day) || $mh->present_mh_2 == 'regular')
-                                    | Duration Of Menstruation : {{$mh->present_mh_2 == 'regular' ? '28 - 30 day' : $mh->present_duration_of_day}}
-                                    @endif
-                                    @if (!empty($mh->present_interval_of_day) || $mh->present_mh_2 == 'regular')
-                                    at Interval Of : {{$mh->present_mh_2 == 'regular' ? '3 - 4 day' : $mh->present_interval_of_day}}
-                                    @endif
-                                    @if($mh->present_mh_2 != 'regular')
-                                        | {{ !empty($mh->present_month) ? ucwords($mh->present_month) : ''}}
-                                    @else
-                                        Regular, Moderate, Painless
-                                    @endif
-                                    @if(!empty($mh->present_withdrawal_medicine) && $mh->present_withdrawal_medicine == 'yes')
-                                        | Withdrawal by Medicine 
-                                    @endif
-                                </th>
-                            </tr>
-                        @endif
-                        <tr>
-                            @if(!empty($mh->last_menstrual_date))
-                                <th>
-                                    <span class="iui-label">Last Menstrual Date :</span>
-                                    {{!empty($mh->last_menstrual_date) ?  \Carbon\Carbon::parse($mh->last_menstrual_date)->format('d/m/Y') : '-' }}
-                                    <br>
-                                    @if (isset($mh->lmd_date_diff) && !empty($mh->lmd_date_diff))
-                                    <span class="iui-label">Day of mense :</span>
-                                    {{ $mh->lmd_date_diff}}
-                                    @endif
-                                </th>
-                            @endif
-                            @if(!empty($mh->since_cycle))
-                                <th>
-                                    <span class="iui-label">Since Month :</span>
-                                    {{!empty($mh->since_month) ?  $mh->since_month : '-' }}
-                                </th>
-                            @endif
-                            @if(!empty($mh->since_cycle))
-                                <th>
-                                    <span class="iui-label">Since Cycle :</span>
-                                    {{!empty($mh->since_cycle) ?  $mh->since_cycle : '-' }}
-                                </th>
-                            @endif
-                        </tr>
-
-                    </tbody>
-                </table>
-            @endif
+            
             @if($patientDetailedHO && (!empty($patientDetailedHO->personal_history_history_type) || !empty($patientDetailedHO->personal_history_date) || !empty($patientDetailedHO->family_history) || !empty($patientDetailedHO->past_history_type)))
                 <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
                     <tbody>
                         @php
                             // $personal_history_type = ['1'=>'NAD','2'=>"Diabetes Mellitus",'3'=>"Thyroid",'4'=>"Heart Disease",'5'=>"Hypertension"];
                         @endphp
-                        @if(!empty($patientDetailedHO->personal_history_history_type) && count((array)$patientDetailedHO->personal_history_history_type) > 1)
+                        @if(!empty($patientDetailedHO->personal_history_history_type))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Personal History :</span>
-                                    {{implode(',',$patientDetailedHO->personal_history_history_type)}}
+                                    <span class="anc-label">Personal History :</span>
+                                    {{implode(',',(array)$patientDetailedHO->personal_history_history_type)}}
                                 </th>
                             </tr>
                         @endif
-                        @if(!empty($patientDetailedHO->personal_history_date))
+                        {{-- @if(!empty($patientDetailedHO->personal_history_date))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Date :</span>
+                                    <span class="anc-label">Date :</span>
                                     {{\Carbon\Carbon::parse($patientDetailedHO->personal_history_date)->format('D d M Y')}}
                                 </th>
                             </tr>
-                        @endif
+                        @endif --}}
                         @if(isset($patientDetailedHO->personal_history_detail) && !empty($patientDetailedHO->personal_history_detail))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Personal History Detail:</span>
+                                    <span class="anc-label">Personal History Detail:</span>
                                     {{$patientDetailedHO->personal_history_detail}}
                                 </th>
                             </tr>
                         @endif
-                        @if(!empty($patientDetailedHO->family_history) && count((array)$patientDetailedHO->family_history) > 1)
+                        @if(!empty($patientDetailedHO->family_history) && count((array)$patientDetailedHO->family_history) > 0)
                             <tr>
                                 <th>
-                                    <span class="iui-label">Family History :</span>
-                                    {{implode(',',$patientDetailedHO->family_history)}}
+                                    <span class="anc-label">Family History :</span>
+                                    {{implode(',',(array)$patientDetailedHO->family_history)}}
                                 </th>
                             </tr>
                         @endif
                         @if(isset($patientDetailedHO->family_history_detail) && !empty($patientDetailedHO->family_history_detail))
                             <tr>
                                 <th>
-                                    <span class="iui-label">Family History Detail:</span>
-                                    {{$patientDetailedHO->personal_history_detail}}
+                                    <span class="anc-label">Family History Detail:</span>
+                                    {{$patientDetailedHO->family_history_detail}}
                                 </th>
                             </tr>
                         @endif   
@@ -1309,14 +1353,22 @@
                             // $personal_past_history_type = ['nad'=>'NAD','tuberculosis_bacillus'=>"Tuberculosis Bacillus",'hypertension'=>"Hypertension",'thyroid'=>"Thyroid",'dm'=>"DM",'appendectomy'=>'Appendectomy','laparoscopy'=>'Laparoscopy'];
                         @endphp
 
-                        @if(!empty($patientDetailedHO->past_history_type) && count((array)$patientDetailedHO->past_history_type) > 1)
+                        @if(!empty($patientDetailedHO->past_history_type) && count((array)$patientDetailedHO->past_history_type) > 0)
                             <tr>
                                 <th>
-                                    <span class="iui-label">Past History :</span>
-                                    {{implode(',',$patientDetailedHO->past_history_type)}}
+                                    <span class="anc-label">Past History :</span>
+                                    {{implode(',',(array)$patientDetailedHO->past_history_type)}}
                                 </th>
                             </tr>
                         @endif
+                        @if(isset($patientDetailedHO->past_history_detail) && !empty($patientDetailedHO->past_history_detail))
+                            <tr>
+                                <th>
+                                    <span class="anc-label">Past History Detail:</span>
+                                    {{$patientDetailedHO->past_history_detail}}
+                                </th>
+                            </tr>
+                        @endif  
                     </tbody>
                 </table>
             @endif
@@ -1368,17 +1420,17 @@
                                     @if(!empty($investigation->hystroscopy->type) && $investigation->hystroscopy->type == 'yes')
                                         <tr>
                                             <th>
-                                                <span class="iui-label">Hystroscopy: </span>
+                                                <span class="anc-label">Hystroscopy: </span>
                                                 {{($investigation->hystroscopy->type == 'yes') ? 'Yes' : 'No' }}
                                             </th>
                                             @if(isset($investigation->hystroscopy->type) && ($investigation->hystroscopy->type == 'yes'))
                                                 <th>
-                                                    <span class="iui-label">Finding Type: </span>
+                                                    <span class="anc-label">Finding Type: </span>
                                                     {{ ($investigation->hystroscopy->finding_type == 1) ? 'Normal' : 'Abnormal' }}
                                                 </th>
                                                 @if ($investigation->hystroscopy->finding_type == 2)
                                                     <th>
-                                                        <span class="iui-label">Abnormal Details: </span>
+                                                        <span class="anc-label">Abnormal Details: </span>
                                                         {{!empty($investigation->hystroscopy->abnormal_details) ? $investigation->hystroscopy->abnormal_details : '-' }}
                                                     </th>
                                                 @endif
@@ -1389,13 +1441,13 @@
                                         <tr>
                                             @if($investigation->hystroscopy->finding_date)
                                                 <th>
-                                                    <span class="iui-label">Finding Date:</span>
+                                                    <span class="anc-label">Finding Date:</span>
                                                     {{$investigation->hystroscopy->finding_date}}
                                                 </th>
                                             @endif
                                             @if($investigation->hystroscopy->finding_details)
                                                 <th>
-                                                    <span class="iui-label">Details: </span>
+                                                    <span class="anc-label">Details: </span>
                                                     {{$investigation->hystroscopy->finding_details}}
                                                 </th>
                                             @endif
@@ -1404,7 +1456,7 @@
                                     @if(isset($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes')
                                         <tr>
                                             <th  colspan="9">
-                                                <span class="iui-label">Laproscopy:  </span>
+                                                <span class="anc-label">Laproscopy:  </span>
                                                 @if (!empty($investigation->laproscopy->type))
                                                     {{$investigation->laproscopy->type == 'yes' ? 'Yes' : 'No' }}
                                                 @endif
@@ -1415,7 +1467,7 @@
                                         <tr>
                                             @if(!empty($investigation->laproscopy->finding_date))
                                                 <th>
-                                                    <span class="iui-label">Date: </span>
+                                                    <span class="anc-label">Date: </span>
                                                     {{$investigation->laproscopy->finding_date}}
                                                 </th>
                                             @endif
@@ -1430,7 +1482,7 @@
                                     @if (isset($investigation->laproscopy->laproscopy_type) && $investigation->laproscopy->laproscopy_type == 2)
                                         <tr>
                                             <th>
-                                                <span class="iui-label">RT Tube: </span>
+                                                <span class="anc-label">RT Tube: </span>
                                                 {{($investigation->laproscopy->rt_tube_type == 2) ? 'Abnormal' : 'Normal'}}
                                             </th>
                                             @if ($investigation->laproscopy->rt_tube_type == 2)
@@ -1441,7 +1493,7 @@
                                         </tr>
                                         <tr>
                                             <th>
-                                                <span class="iui-label"> Uterus: </span>
+                                                <span class="anc-label"> Uterus: </span>
                                                 {{ ($investigation->laproscopy->uterus_type == 2) ? 'Abnormal' : 'Normal' }}
                                             </th>
                                             @if ($investigation->laproscopy->uterus_type == 2)
@@ -1452,7 +1504,7 @@
                                         </tr>
                                         <tr>
                                             <th>
-                                                <span class="iui-label">LT Tube:  </span>
+                                                <span class="anc-label">LT Tube:  </span>
                                                 {{ ($investigation->laproscopy->lt_tube_type == 2) ? 'Abnormal' : 'Normal' }}
                                             </th>
                                             @if ($investigation->laproscopy->lt_tube_type == 2)
@@ -1471,7 +1523,7 @@
                                     @if (isset($investigation->laproscopy->laproscopy_type) && $investigation->laproscopy->laproscopy_type == 2 && !empty($investigation->laproscopy->other))
                                         <tr>
                                             <th>
-                                                <span class="iui-label"> Other:  </span>
+                                                <span class="anc-label"> Other:  </span>
                                                 {{$investigation->laproscopy->other}}
                                             </th>
                                         </tr>
@@ -1481,19 +1533,19 @@
                                         <tr>
                                             @if(!empty($investigation->fsh))
                                                 <th>
-                                                    <span class="iui-label">  FSH:  </span>
+                                                    <span class="anc-label">  FSH:  </span>
                                                     {{ !empty($investigation->fsh) ? $investigation->fsh : '-' }}
                                                 </th>
                                             @endif
                                             @if(!empty($investigation->prolectin))
                                                 <th>
-                                                    <span class="iui-label"> Prolectin: </span>
+                                                    <span class="anc-label"> Prolectin: </span>
                                                     {{ !empty($investigation->prolectin) ? $investigation->prolectin : '-' }}
                                                 </th>
                                             @endif
                                             @if(!empty($investigation->lh))
                                                 <th>
-                                                    <span class="iui-label">  LH: </span>
+                                                    <span class="anc-label">  LH: </span>
                                                     {{ !empty($investigation->lh) ? $investigation->lh : '-' }}
                                                 </th>
                                             @endif
@@ -1503,25 +1555,25 @@
                                         <tr>
                                             @if(!empty($investigation->amh))
                                                 <th>
-                                                    <span class="iui-label"> AMH:  </span>
+                                                    <span class="anc-label"> AMH:  </span>
                                                     {{ !empty($investigation->amh) ? $investigation->amh : '-' }}
                                                 </th>
                                             @endif
                                             @if(!empty($investigation->e2))
                                                 <th>
-                                                    <span class="iui-label"> E2:  </span>
+                                                    <span class="anc-label"> E2:  </span>
                                                     {{ !empty($investigation->e2) ? $investigation->e2 : '-' }}
                                                 </th>
                                             @endif
                                             @if(!empty($investigation->p2))
                                                 <th>
-                                                    <span class="iui-label">  P2:  </span>
+                                                    <span class="anc-label">  P2:  </span>
                                                     {{ !empty($investigation->p2) ? $investigation->p2 : '-' }}
                                                 </th>
                                             @endif
                                             @if(!empty($investigation->date_2))
                                                 <th>
-                                                    <span class="iui-label">  Date 2:  </span>
+                                                    <span class="anc-label">  Date 2:  </span>
                                                     {{ !empty($investigation->date_2) ? $investigation->date_2 : '-' }}
                                                 </th>
                                             @endif
@@ -1546,16 +1598,16 @@
                                                     }
                                                 @endphp
                                                 @if(count($investigationData)>0)
-                                                    <span class="iui-label">Investigation Advise : {{implode(',',$investigationData)}}</span>
+                                                    <span class="anc-label">Investigation Advise : {{implode(',',$investigationData)}}</span>
                                                 @endif
                                             </th>
                                         </tr>
                                         @if(!empty($investigationValueDetails))
                                             <tr>
                                                 <th>
-                                                    <span class="iui-label">Investigation Done :</span>
+                                                    <span class="anc-label">Investigation Done :</span>
                                                     @foreach($investigationValueDetails as $key => $value)
-                                                        {!! '<span class="iui-label">'.$key.'</span> :' .  $value !!}
+                                                        {!! '<span class="anc-label">'.$key.'</span> :' .  $value !!}
                                                     @endforeach
                                                 </th>
                                             </tr>
@@ -1564,7 +1616,7 @@
                                     @if(isset($investigation->investigation_extra) && !empty($investigation->investigation_extra))
                                         <tr >
                                             <th>
-                                                <span class="iui-label">Other Report :</span>
+                                                <span class="anc-label">Other Report :</span>
                                                 {{$investigation->investigation_extra}}
                                             </th>
                                         </tr>

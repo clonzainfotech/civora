@@ -359,13 +359,13 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
 
                 $('.co_value_data').selectize({
                     delimiter: ',',
-                    persist: false
-                    // create: function(input) {
-                    //     return {
-                    //         value: input,
-                    //         text: input
-                    //     }
-                    // }
+                    persist: false,
+                    create: function(input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
+                    }
                 });
                 if(typeof data.reportImagesData != 'undefined'){
                     $('.report-images').imageUploader({

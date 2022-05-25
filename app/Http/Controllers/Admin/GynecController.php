@@ -165,11 +165,13 @@ class GynecController extends AdminController
             $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',Carbon::parse($gynec->created_at)->format('Y-m-d'))->update(['is_medicine_given'=>$is_medicine_given_from_opd]);
             
             $appointmentFlag = $this->Appointment->wherePatientsId($pId)->where('date',$now)->update(['is_done'=>1,'seen_by'=>$request->seen_by,'in_consulting_room'=>0]);
-
+            $appointment_remark = null;
             Session::flash('msg','Record has been successfully added.');
-            if(isset($request->plan_of_management['plan_of_management_data']) && in_array('surgically', $request->plan_of_management['plan_of_management_data'])){
+            // if(isset($request->plan_of_management['plan_of_management_data']) && in_array('surgically', $request->plan_of_management['plan_of_management_data'])){
+            if(!empty($request->plan_of_management['termination_type']) && !empty($request->plan_of_management['surgically_date'])){
 
                 $isProcudure = 1;
+                $appointment_remark = $request->plan_of_management['termination_type'];
                 $procedureList = $this->ProcedureList->where('patients_id',$pId)->first();
                     if(empty($procedureList))
                     {
@@ -177,8 +179,8 @@ class GynecController extends AdminController
                     }
                     $procedureList->patients_id = $pId;
                     $procedureList->date = Carbon::parse($request->plan_of_management['surgically_date'])->format('Y-m-d');
-                    $procedureList->procedure = 'Coming for '.(!empty(implode(', ',$request->plan_of_management['surgically_details'])) ? implode(', ',$request->plan_of_management['surgically_details']) : 'surgical');
-                    $procedureList->description = 'Time : '.Carbon::parse($request->plan_of_management['surgically_time'])->format('h:i');
+                    $procedureList->procedure = 'Coming for '.(!empty($request->plan_of_management['termination_type']) ? $request->plan_of_management['termination_type'] : 'surgical');
+                    $procedureList->description = 'Time : '.(!empty(Carbon::parse($request->plan_of_management['surgically_time'])->format('h:i')) ? : '-');
                     $procedureList->save();
             }
             if(!empty($request->ho['follow_up'])){

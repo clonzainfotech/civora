@@ -2562,6 +2562,14 @@ $(document).ready(function(){
             $('.admission-print').removeClass('d-none');
         }
     })
+    $(document).on('change','.pa-type',function(){
+        var married_status = $('.married-type:checked').val();
+        $('.unmarried-data').removeClass('d-none')
+        if(married_status == 'married')
+        {
+            $('.unmarried-data').addClass('d-none');
+        }
+    })
     // function terminationTypeTerm(value)
     // {
     //     $('.admission-print').addClass('d-none');

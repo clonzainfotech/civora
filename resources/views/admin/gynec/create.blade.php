@@ -1345,7 +1345,7 @@
 
                                                     <div class="col-sm-2">
                                                         <div class="form-group">
-                                                            {{Form::select("mh[past_mh_2]",['regular'=>'Regular','irregular'=>'IR Regular'],'',['class'=>'form-control select-padding-0 past-mh-2 regular-type','data-id'=>'past-ir-regular-data'])}}
+                                                            {{Form::select("mh[past_mh_2]",[''=>'Select Past MH','regular'=>'Regular','irregular'=>'IR Regular'],'',['class'=>'form-control select-padding-0 past-mh-2 regular-type','data-id'=>'past-ir-regular-data'])}}
                                                         </div>
                                                         <span class="form-error-msg">
                                                             {{$errors->first('past_mh_2')}}
@@ -1409,7 +1409,7 @@
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <div class="form-group">
-                                                            {{Form::select("mh[present_mh_2]",['regular'=>'Regular','irregular'=>'IR Regular'],'',['class'=>'form-control select-padding-0 present-mh-2 regular-type','data-id'=>'present-ir-regular-data'])}}
+                                                            {{Form::select("mh[present_mh_2]",[''=>'Select Present MH','regular'=>'Regular','irregular'=>'IR Regular'],'',['class'=>'form-control select-padding-0 present-mh-2 regular-type','data-id'=>'present-ir-regular-data'])}}
                                                         </div>
                                                         <span class="form-error-msg">
                                                             {{$errors->first('present_mh_2')}}
@@ -1482,7 +1482,7 @@
                                                         </span>
                                                     </div> --}}
 
-                                                    <div class="col-md-3">
+                                                    {{-- <div class="col-md-3">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">Since Month : &nbsp;</span>
                                                             {{Form::text("mh[since_month]",'',['class'=>'form-control'])}}
@@ -1500,7 +1500,7 @@
                                                         <span class="form-error-msg">
                                                             {{$errors->first('since_cycle')}}
                                                         </span>
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
 
@@ -1588,12 +1588,12 @@
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <div class="radio is-conceived">
-                                                            {{Form::radio("oe[p_a][type]",'yes','',['id'=>'pa_type_yes','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
+                                                            {{Form::radio("oe[p_a][type]",'yes','',['id'=>'pa_type_yes','class'=>'pa-type gynec-yes-no-status','data-type'=>'pa-details'])}}
                                                             <label for="pa_type_yes">
                                                                 Yes
                                                             </label>
 
-                                                            {{Form::radio("oe[p_a][type]",'no',true,['id'=>'pa_type_no','class'=>'gynec-yes-no-status','data-type'=>'pa-details'])}}
+                                                            {{Form::radio("oe[p_a][type]",'no',true,['id'=>'pa_type_no','class'=>'pa-type gynec-yes-no-status','data-type'=>'pa-details'])}}
                                                             <label for="pa_type_no">
                                                                 No
                                                             </label>
@@ -1605,6 +1605,76 @@
                                                         </div>
                                                     </div>
                                                     
+                                                </div>
+                                                <div class="row pa-details unmarried-data d-none">
+                                                    <div class="col-md-1"></div>
+                                                    <div class="col-md-1 pr-0 tvs-details d-none">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Ovary :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[ovary][type][]','right','',['id'=>'right','class'=>'plan-management'])}}
+                                                            <label for="right">
+                                                                Right
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 right-details">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],'',['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-right-abnormal-type'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 right-details">
+                                                        <div class="row">
+                                                            <div class="col-md-5 complain-multi ovary-right-abnormal-type d-none mt-1">
+                                                                {{Form::select("oe[ovary][right][details][]",$rightOvaryData,'',[
+                                                                    'class'=>'form-control co-value co_value_data oe_ovary_right_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_ovary_right_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="col-md-6 complain-multi ovary-right-abnormal-type d-none">
+                                                                <div class="row edit_oe_ovary_right_details">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row pa-details unmarried-data d-none">
+                                                    <div class="col-md-2"></div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[ovary][type][]','left','',['id'=>'left','class'=>'plan-management'])}}
+                                                            <label for="left">
+                                                                Left
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 left-details">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],'',['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-left-abnormal-type'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 left-details">
+                                                        <div class="row">
+                                                            <div class="col-md-5 complain-multi ovary-left-abnormal-type d-none">
+                                                                {{Form::select("oe[ovary][left][details][]",$leftOvaryData,'',[
+                                                                    'class'=>'form-control co-value co_value_data oe_ovary_left_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_ovary_left_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="col-md-6 complain-multi ovary-left-abnormal-type d-none">
+                                                                <div class="row edit_oe_ovary_left_details">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 
                                                 <div class="row">
@@ -1693,7 +1763,7 @@
                                                     </div>
                                                    
                                                 </div>
-                                                <div class="row">
+                                                <div class="row married-data">
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
                                                             TVS :
@@ -1739,7 +1809,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row tvs-details d-none">
+                                                <div class="row tvs-details married-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
@@ -1763,7 +1833,7 @@
                                                     </div>
                                                     {{-- <span class="col-md-1 p-2 uterus-abnormal-type d-none">LG</span> --}}
                                                 </div>
-                                                <div class="row tvs-details d-none">
+                                                <div class="row tvs-details married-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-2 pr-0">
                                                         <label class="vertical-form-label pr-0">
@@ -1776,7 +1846,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row tvs-details d-none">
+                                                <div class="row tvs-details married-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-1 pr-0">
                                                         <label class="vertical-form-label pr-0">
@@ -1802,7 +1872,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row tvs-details d-none">
+                                                <div class="row tvs-details married-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-1 pr-0 tvs-details d-none">
                                                         <label class="vertical-form-label pr-0">
@@ -1840,7 +1910,7 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <div class="row tvs-details d-none">
+                                                <div class="row tvs-details married-data d-none">
                                                     <div class="col-md-2"></div>
                                                     <div class="col-md-1">
                                                         <div class="checkbox">
@@ -3179,6 +3249,37 @@
                                     </div>
                                     <div id="treatment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                         <div class="panel-body" id="parent">
+                                            <div class="row">
+                                                <div class="col-md-2 ipd-detail">
+                                                    <label for="termination">
+                                                        Admission for
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                            
+                                                        {{Form::select("plan_of_management[termination_type]",[''=>'Select Reason','Obseravation'=>"Obseravation",'Surgery'=>"Surgery"],null,['class'=>'form-control termination_type'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            Admission Date : &nbsp;
+                                                        </span>
+                                                        {{Form::text("plan_of_management[surgically_date]",null,['class'=>'form-control datetimepicker surgically_date'])}}
+                                                    </div>
+                                                    <span class="surgically-date-error form-error-msg"></span>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            Admission Time : &nbsp;
+                                                        </span>
+                                                        {{Form::text("plan_of_management[surgically_time]",null,['class'=>'form-control timepicker surgically_time'])}}
+                                                    </div>
+                                                    <span class="surgically-time-error form-error-msg"></span>
+                                                </div>
+                                            </div>
                                             <div class="row treatment-data" id="t_data_1">
                                                     <div class="col-md-2 pr-0">
                                                             <label class="vertical-form-label pr-0">

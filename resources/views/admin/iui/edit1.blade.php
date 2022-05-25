@@ -789,6 +789,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         </label>
                                     </div>
                                 </div>
+                                <div class="{{'col-sm-3 contraception-data ' . $contraceptionStatusClass}}">
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                        {{Form::text("oh[contraception][detail]",!empty($oh->contraception) && isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control'])}}
+                                    </div>
+                                </div>
                             </div>
                             {{-- end contraception marriage --}}
 
@@ -1350,6 +1356,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         <label for="second_other_contraception">
                                             Other
                                         </label>
+                                    </div>
+                                </div>
+                                <div class="{{'col-sm-3 second-contraception-data ' . $secondContraceptionStatusClass}}">
+                                    <div class='input-group'>
+                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                        {{Form::text("oh[second_marriage][contraception][detail]",!empty($oh->second_marriage->contraception) && isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control'])}}
                                     </div>
                                 </div>
                             </div>

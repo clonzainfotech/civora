@@ -1065,6 +1065,12 @@
                                                         </label>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3 contraception-data d-none">
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                        {{Form::text("oh[contraception][detail]",'',['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
                                             </div>
                                             {{-- end contraception --}}
 
@@ -1447,6 +1453,12 @@
                                                         <label for="second_other_contraception">
                                                             Other
                                                         </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 second-contraception-data d-none">
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",'',['class'=>'form-control'])}}
                                                     </div>
                                                 </div>
                                             </div>

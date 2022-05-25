@@ -656,6 +656,13 @@
                                                 <span class="iui-label">Contraception Method :</span> {{$contraceptionData[$oh->contraception->contraception_data]}}
                                             </th>
                                         </tr>
+                                        @if(isset($oh->contraception->detail) && !empty($oh->contraception->detail))
+                                            <tr>
+                                                <th>
+                                                    <span class="anc-label">Contraception Detail :</span> {{$oh->contraception->detail}}
+                                                </th>
+                                            </tr>
+                                        @endif
                                     @else
                                         @php
                                             $noValueData[] = ' Contraception';
@@ -1022,6 +1029,13 @@
                                                 <span class="iui-label">Contraception Method : </span> {{$contraceptionData[$oh->second_marriage->contraception->contraception_data]}}
                                             </th>
                                         </tr>
+                                        @if(isset($oh->second_marriage->contraception->detail) && !empty($oh->second_marriage->contraception->detail))
+                                            <tr>
+                                                <th>
+                                                    <span class="anc-label">Contraception Detail :</span> {{$oh->second_marriage->contraception->detail}}
+                                                </th>
+                                            </tr>
+                                        @endif
                                     @else
                                         @php
                                             $secondNoValueData[] = ' Contraception';

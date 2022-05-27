@@ -534,6 +534,7 @@ class ReportController extends AdminController
                     ->map(function ($query) {
                     $query->reference_doctor_id = $query->getPatientsDetails['reference_doctor_id'];
                     $query->reference_doctor_name = $query->getPatientsDetails->getReferenceDoctor['name'];
+                    $query->patientDetail = $query->getPatientsDetails;
                     $procedureName = implode(', ', $this->IndoorProcedure
                         ->whereIn('id', explode(',', $query->procedure_id))
                         ->pluck('name')
@@ -545,12 +546,14 @@ class ReportController extends AdminController
                     ->map(function ($query) {
                         $query->reference_doctor_id = $query->getAppointment->getPatientsDetails['reference_doctor_id'];
                         $query->reference_doctor_name = $query->getAppointment->getPatientsDetails->getReferenceDoctor['name'];
+                        $query->patientDetail = $query->getAppointment->getPatientsDetails;
                         return $query;
                     });
                 $iuiHormonReport = collect($iuiHormonReport->get())
                     ->map(function ($query) {
                         $query->reference_doctor_id = $query->getPatientsDetails['reference_doctor_id'];
                         $query->reference_doctor_name = $query->getPatientsDetails->getReferenceDoctor['name'];
+                        $query->patientDetail = $query->getPatientsDetails;
                         return $query;
                     });
                 if($charge_type == 4) // IPD

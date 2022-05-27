@@ -37,18 +37,18 @@
                 @php $totalNetAmount = 0; @endphp
                 @foreach ($rowList as $row)
                     @php
-                        $totalNetAmount += ($row->injection) ? $row->amount : (($row->is_final_invoice == 1) ? $row->getInvoice['grand_total_amt'] : $row->netamount);
-                        $iuiHormonIvf = ['1'=>'Hormon', '2'=>'IVF', '3'=>'IUI'];
-                        // $totalNetAmount += ($row->injection == 3) ? $row->amount : $row->netamount;
+                        $totalNetAmount += isset($row->case_type) ? $row->amount : (($row->is_final_invoice == 1) ? $row->getInvoice['grand_total_amt'] : $row->netamount);
+                        $iuiHormonIvf = ['1'=>'Hormon', '2'=>'IVF', '3'=>'IUI','4'=>'Indoor Deposit'];
+                        // $totalNetAmount += ($row->case_type == 3) ? $row->amount : $row->netamount;
                     @endphp
                     <tr class="refdocdata">
                         <td>{{ ($i++) . '.' }}</td>
                         <td>{{ ($row->final_invoice_date) ? \Carbon\Carbon::parse($row->final_invoice_date)->format('d-m-Y') : \Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
-                        <td>{{ ($row->injection) ? strtoupper(@$row->getPatients['name']) : (($row->is_final_invoice == 1) ? strtoupper($row->getPatientsDetails['name']) : strtoupper($row->getAppointment->getPatientsDetails['name'])) }}</td>
-                        <td>{{ ($row->injection) ? strtoupper(@$row->getPatients['mobile_number']) : (($row->is_final_invoice == 1) ? strtoupper($row->getPatientsDetails['mobile_number']) : strtoupper($row->getAppointment->getPatientsDetails['mobile_number']))}}</td>
+                        <td>{{ isset($row->case_type) ? strtoupper(@$row->getPatients['name']) : (($row->is_final_invoice == 1) ? strtoupper($row->getPatientsDetails['name']) : strtoupper($row->patientDetail['name'])) }}</td>
+                        <td>{{ isset($row->case_type) ? strtoupper(@$row->getPatients['mobile_number']) : (($row->is_final_invoice == 1) ? strtoupper($row->getPatientsDetails['mobile_number']) : strtoupper($row->patientDetail['mobile_number']))}}</td>
                         <td>{{ucfirst(@$row->getAppointment->categoryDetails['name'])}}</td>
                         <td class="procedure-font">
-                            @if ($row->injection)
+                            @if(isset($row->case_type))
                                 {{isset($iuiHormonIvf[$row->charge_type]) ? $iuiHormonIvf[$row->charge_type] : ''}}
                             @elseif($row->procedure_id)
                                     {{isset($row->procedure_name) ? $row->procedure_name : ''}}
@@ -87,7 +87,7 @@
                                         echo ucfirst($extraField2[0]) . ': <span class="procedure-value">' .  $extraField2[1] . '</span>';
                                     }
                                 @endphp
-                                @if ($row->injections)
+                                @if ($row->case_type)
                                     -
                                 @endif
                             @endif
@@ -95,7 +95,7 @@
                         </td>
                         <td>
                             <div class="amount">
-                                @if ($row->injection)
+                                @if (isset($row->case_type))
                                     {{$row->amount}}
                                 @elseif($row->is_final_invoice == 1)
                                     {{$row->getInvoice['grand_total_amt']}}

@@ -1716,10 +1716,11 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
         </div>
         <div id="oe_tab" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
             <div class="panel-body" id="parent">
+                {{Form::hidden("married_type",!empty($oh->married_type) ? $oh->married_type : null,['class'=>'form-control input-married-type','placeholder'=>'UT Details'])}}
                 <div class="row">
                 @php
                     $paType = !empty($oe->p_a->type) && $oe->p_a->type == 'yes' ? '' : 'd-none';
-                    $utersDetail = !empty($oh->married_type) && $oh->married_type == 'married' &&  $oe->p_a->type == 'no' ? 'd-none' : '';
+                    $utersDetail = (!empty($oh->married_type) && $oh->married_type == 'married') ||  $oe->p_a->type == 'no' ? 'd-none' : '';
                 @endphp
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -1728,12 +1729,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-sm-2">
                         <div class="radio is-conceived">
-                            {{Form::radio("oe[p_a][type]",'yes',!empty($paType) ? false : true,['id'=>'pa_type_yes','class'=>'pa-type gynec-yes-no-status','data-type'=>'pa-details'])}}
+                            {{Form::radio("oe[p_a][type]",'yes',!empty($paType) ? false : true,['id'=>'pa_type_yes','class'=>'pa-type','data-type'=>'pa-details'])}}
                             <label for="pa_type_yes">
                                 Yes
                             </label>
 
-                            {{Form::radio("oe[p_a][type]",'no',!empty($paType) ? true : false,['id'=>'pa_type_no','class'=>'pa-type gynec-yes-no-status','data-type'=>'pa-details'])}}
+                            {{Form::radio("oe[p_a][type]",'no',!empty($paType) ? true : false,['id'=>'pa_type_no','class'=>'pa-type','data-type'=>'pa-details'])}}
                             <label for="pa_type_no">
                                 No
                             </label>

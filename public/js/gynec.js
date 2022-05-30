@@ -678,7 +678,7 @@ $(document).ready(function(){
     });
 
     // new
-    $(document).on('click', '.gynec-yes-no-status', function () {
+    $(document).on('change', '.gynec-yes-no-status', function () {
         gynecYesNoStatus($(this).val(), $(this).data('type'));
     });
 
@@ -2564,8 +2564,16 @@ $(document).ready(function(){
     })
     $(document).on('change','.pa-type',function(){
         var married_status = $('.married-type:checked').val();
+        var input_married_type = $('.input-married-type').val();
+        var value = $(this).val();
+        var type = $(this).data('type');
+        $('.'+type).addClass('d-none');
+        if(value == 'yes')
+        {
+            $('.'+type).removeClass('d-none');
+        }
         $('.unmarried-data').removeClass('d-none')
-        if(married_status == 'married')
+        if(married_status == 'married' || input_married_type == 'married')
         {
             $('.unmarried-data').addClass('d-none');
         }

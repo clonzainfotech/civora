@@ -1976,7 +1976,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-sm-3 breast-details d-none">
                         <div class="form-group">
-                            {{Form::text("oe[breast][left]",&& isset($oe->breast->left) ? $oe->breast->left:null,['class'=>'form-control','placeholder'=>'Left'])}}
+                            {{Form::text("oe[breast][left]",isset($oe->breast->left) ? $oe->breast->left:null,['class'=>'form-control','placeholder'=>'Left'])}}
                         </div>
                     </div>
                 </div>

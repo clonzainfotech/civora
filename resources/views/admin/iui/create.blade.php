@@ -784,26 +784,35 @@
                                                 </div>
                                                 <div class="col-sm-5 contraception-data d-none">
                                                     <div class="radio is-conceived">
-                                                        {{Form::radio("oh[contraception][contraception_data]",'barrier_method','',['class'=>'mr-2','id'=>'barrier_method'])}}
+                                                        {{Form::radio("oh[contraception][contraception_data]",'barrier_method','',['class'=>'mr-2 contraception-data-radio','id'=>'barrier_method'])}}
                                                         <label for="barrier_method">
                                                             Barrier Method
                                                         </label>
-                                                        {{Form::radio("oh[contraception][contraception_data]",'cu_t','',['class'=>'mr-2','id'=>'cu_t'])}}
+                                                    </div>
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                        {{Form::text("oh[contraception][detail]",'',['class'=>'form-control'])}}
+                                                    </div>
+                                                        {{-- <div class='input-group'> 
+                                                            <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                            {{Form::text("oh[contraception][detail]",'',['class'=>'form-control'])}}
+                                                        </div>
+                                                        {{Form::radio("oh[contraception][contraception_data]",'cu_t','',['class'=>'mr-2 contraception-data-radio','id'=>'cu_t'])}}
                                                         <label for="cu_t">
                                                             Cu - T
                                                         </label>
-                                                        {{Form::radio("oh[contraception][contraception_data]",'tl_done','',['class'=>'mr-2','id'=>'tl_done'])}}
+                                                        {{Form::radio("oh[contraception][contraception_data]",'tl_done','',['class'=>'mr-2 contraception-data-radio','id'=>'tl_done'])}}
                                                         <label for="tl_done">
                                                            TL Done
                                                         </label>
-                                                        {{Form::radio("oh[contraception][contraception_data]",'occipill','',['class'=>'mr-2','id'=>'occipill'])}}
+                                                        {{Form::radio("oh[contraception][contraception_data]",'occipill','',['class'=>'mr-2 contraception-data-radio','id'=>'occipill'])}}
                                                         <label for="occipill">
                                                             Occipill
                                                         </label>
-                                                        {{Form::radio("oh[contraception][contraception_data]",'other_contraception','',['class'=>'mr-2','id'=>'other_contraception'])}}
+                                                        {{Form::radio("oh[contraception][contraception_data]",'other_contraception','',['class'=>'mr-2 contraception-data-radio','id'=>'other_contraception'])}}
                                                         <label for="other_contraception">
                                                             Other
-                                                        </label>
+                                                        </label> --}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 contraception-data d-none">

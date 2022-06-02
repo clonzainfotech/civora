@@ -394,6 +394,7 @@ $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';</script>
                 $('#treatment-medicine').select2();
                 $('.duration-value .selectized').addClass('d-none');
                 $('#personal-history .selectized').addClass('d-none');
+                
             });
 
             $('.select-padding-0').selectpicker('refresh');

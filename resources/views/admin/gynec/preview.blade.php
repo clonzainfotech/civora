@@ -1222,7 +1222,7 @@
                                 </th>
                             </tr>
                         @endif
-                        @if ($oe->tvs->type == 'yes')
+                        @if (isset($oe->tvs->type) && $oe->tvs->type == 'yes')
                             <tr>
                                 <th>
                                     <span class="anc-label">Uterus:  </span>
@@ -1236,7 +1236,7 @@
                                 {{-- @endif --}}
                             </tr>
                         @endif
-                        @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                        @if (isset($oe->tvs->type) && $oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
                             <tr>
                                 <th>
                                     <span class="anc-label">Endometrial Thickness:  </span>

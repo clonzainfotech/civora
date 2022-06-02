@@ -1693,7 +1693,7 @@
                                                 @endif
                                                 @if(!empty($oe->le->bp))
                                                     <br>
-                                                    <span class="iui-label">&nbsp; B.P :</span>
+                                                    <span class="iui-label">&nbsp;B.P :</span>
                                                     {{$oe->le->bp}} MMHG
                                                 @endif
                                             </th>
@@ -1710,14 +1710,7 @@
                                             </th>
                                         </tr>
                                     @endif
-                                    @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
-                                        <tr>
-                                            <th colspan="2">
-                                                <span class="iui-label">Adnexa: </span>
-                                                    {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
-                                            </th>
-                                        </tr>
-                                    @endif
+                                    
                                     @if(!empty($oe->cervix->details))
                                         <tr>
                                             <th>
@@ -1747,6 +1740,14 @@
                                             @endif
                                         </tr>
                                     @endif
+                                    @if (isset($oe->uterus_3d->type) && $oe->uterus_3d->type == 'yes')
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">3D Uterus:  </span>
+                                                {{ !empty($oe->uterus_3d->details) ? $oe->uterus_3d->details : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
                                     @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
                                         <tr>
                                             <th>
@@ -1757,8 +1758,8 @@
                                     @endif
                                     <tr>
                                         <th>
-                                            <span class="iui-label">Right Ovary</span>
                                             @if (!empty($oe->ovary->right->updated_details))
+                                                <span class="iui-label">Right Ovary</span>
                                                 <br>
                                                 @foreach ($oe->ovary->right->updated_details as $key => $value)
                                                     @php
@@ -1774,8 +1775,9 @@
                                     </tr>
                                     <tr>
                                         <th>
-                                            <span class="iui-label">Left Ovary</span>
+                                            
                                             @if (!empty($oe->ovary->left->updated_details))
+                                                <span class="iui-label">Left Ovary</span>
                                                 <br>
                                                 @foreach ($oe->ovary->left->updated_details as $key => $value)
                                                     @php
@@ -1789,6 +1791,14 @@
                                             @endif
                                         </th>
                                     </tr>
+                                    @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                                        <tr>
+                                            <th colspan="2">
+                                                <span class="iui-label">Adnexa: </span>
+                                                    {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
+                                            </th>
+                                        </tr>
+                                    @endif
                                     {{-- @endif --}}
                                     
                                 </tbody>
@@ -4078,6 +4088,14 @@
                                     {{ !empty($oe->uterus->details) ? $oe->uterus->details : '-' }}
                                 </th>
                             @endif
+                        </tr>
+                    @endif
+                    @if (isset($oe->uterus_3d->type) && $oe->uterus_3d->type == 'yes')
+                        <tr>
+                            <th>
+                                <span class="iui-label">3D Uterus:  </span>
+                                {{ !empty($oe->uterus_3d->details) ? $oe->uterus_3d->details : '-' }}
+                            </th>
                         </tr>
                     @endif
                     @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))

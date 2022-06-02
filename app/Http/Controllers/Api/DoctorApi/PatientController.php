@@ -117,7 +117,7 @@ class PatientController extends ApiController
     public function patientDetails(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'patients_id' => 'required',
+            'patient_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -125,7 +125,7 @@ class PatientController extends ApiController
         }
         $token = $request->header('Authorization');
         $UserData = $this->UserToken->where('token', $token)->first();
-        $patientId = isset($request->patients_id) ? $request->patients_id : '';        
+        $patientId = isset($request->patient_id) ? $request->patient_id : '';        
         
         $appointmentData = $this->Appointment::select('id','date','time','created_by','is_done','category_id','appontment_request_id','arrival_time','is_procedure',DB::raw("DATE_FORMAT(date,'%Y') as yearKey"))
                                         ->where('patients_id', $patientId)
@@ -600,7 +600,7 @@ class PatientController extends ApiController
     public function appointmentpatientDetails(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'patients_id' => 'required',
+            'patient_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -608,7 +608,7 @@ class PatientController extends ApiController
         }
         $token = $request->header('Authorization');
         $UserData = $this->UserToken->where('token', $token)->first();
-        $patients_id = isset($request->patients_id) ? $request->patients_id : '';
+        $patients_id = isset($request->patient_id) ? $request->patient_id : '';
 
         if($token && $UserData) {
             $appointment = $this->Appointment->select('id','patients_id','category_id','date','time','remark')->where('patients_id',$patients_id)->latest()->take(1)->first();

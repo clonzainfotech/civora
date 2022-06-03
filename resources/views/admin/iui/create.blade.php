@@ -1628,7 +1628,8 @@
                                                         <span class="input-group-addon">
                                                             How Much : &nbsp;
                                                         </span>
-                                                        {{Form::number("ho_rx[taken][how_much_no]",'',['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                                        {{Form::number("ho_rx[taken][how_much_no]",'1',['class'=>'form-control','data-id'=>'','readonly'])}}
+                                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",'',['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -2994,12 +2995,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 ps-details d-none">
-                                                    <div class="form-group">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Details : &nbsp;</span>
                                                         {{Form::text("oe[p_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 ps-details d-none">
-                                                    <div class="form-group">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Cervix : &nbsp;</span>
                                                         {{Form::text("oe[cervix][details]",'',['class'=>'form-control','placeholder'=>'Cervix Details'])}}
                                                     </div>
                                                 </div>
@@ -3093,6 +3096,27 @@
                                                         {{Form::text("oe[endometrial_thickness]",'',['class'=>'form-control','placeholder'=>'Endometrial Thickness Details'])}}
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row tvs-details d-none">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-2 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Endometrial Cavity :
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Detail : &nbsp;</span>
+                                                        {{Form::text("oe[endometrial_cavity][cavity]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Size : &nbsp;</span>
+                                                        {{Form::text("oe[endometrial_cavity][size]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
+                                                    </div>
+                                                </div>
+                                                <span class="col-md-1 p-2">M</span>
                                             </div>
 
                                             <div class="row tvs-details d-none">

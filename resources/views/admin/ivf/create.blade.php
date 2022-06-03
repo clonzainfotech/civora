@@ -1859,11 +1859,31 @@
                                                         <span class="input-group-addon">
                                                             How Much : &nbsp;
                                                         </span>
-                                                        {{Form::number("ho_rx[taken][how_much_no]",'',['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                                        {{Form::number("ho_rx[taken][how_much_no]",'1',['class'=>'form-control','data-id'=>'','onwheel'=>'this.blur()','readonly'])}}
+                                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",'',['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row taken-data"></div>
+                                            <div class="row taken-data ho-taken-type d-none">
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::text('ho_rx[taken][how_much][1]',null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>
+                                                            When/Where : &nbsp;
+                                                        </span>
+                                                        {{Form::text('ho_rx[taken][when_where][1]',null,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::select('ho_rx[taken][type][1][]',["1"=>"CC","2"=>"Letroz","3"=>"Both"],null,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
@@ -3058,6 +3078,36 @@
                                     <div id="o_e" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                         <div class="panel-body" id="parent">
                                             <div class="{{$donar.' row'}}">
+                                                <div class="col-md-1"> 
+                                                    <div class="checkbox">
+                                                        {{Form::checkbox('oe[le][vitals_status]','yes','',['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
+                                                        <label for="oe_vitals_status">
+                                                            Vitals
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 oe_vitals_status_data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">B.P : &nbsp;</span>
+                                                        {{Form::text("oe[le][bp]",'',['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <span class="col-md-1 p-2 oe_vitals_status_data d-none">MMHG</span>
+                                                <div class="col-md-2 oe_vitals_status_data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Temp : &nbsp;</span>
+                                                        {{Form::text("oe[le][temp]",'',['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 oe_vitals_status_data d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Pulse : &nbsp;</span>
+                                                        {{Form::text("oe[le][pulse]",'',['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <span class="col-md-1 p-2 oe_vitals_status_data d-none">/ Min</span>
+                                            </div>
+                                            <div class="{{$donar.' row'}}">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
                                                         P/S :
@@ -3076,49 +3126,28 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-5 ps-details d-none">
-                                                    <div class="form-group">
+                                                <div class="col-md-4 ps-details d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Details : &nbsp;</span>
                                                         {{Form::text("oe[p_s][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-1 pr-0">
-                                                    <label class="vertical-form-label pr-0">
-                                                        Adnexa :
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="radio is-conceived">
-                                                        {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                        <label for="adnexa_type_yes">
-                                                            Yes
-                                                        </label>
-    
-                                                        {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                        <label for="adnexa_type_no">
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5 adnexa-details d-none">
-                                                    <div class="form-group">
-                                                        {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
+                                                <div class="col-md-4 ps-details d-none">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Cervix : &nbsp;</span>
+                                                        {{Form::text("oe[cervix][details]",'',['class'=>'form-control','placeholder'=>'Cervix Details'])}}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="{{$donar.' row'}}">
+                                            
+                                            {{-- <div class="{{$donar.' row'}}">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
                                                         Cervix :
                                                     </label>
                                                 </div>
-                                                <div class="col-md-7">
-                                                    <div class="form-group">
-                                                        {{Form::text("oe[cervix][details]",'',['class'=>'form-control','placeholder'=>'Cervix Details'])}}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                
+                                            </div> --}}
                                             <div class="row">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
@@ -3159,6 +3188,32 @@
                                             </div>
                                             <div class="row tvs-details d-none">
                                                 <div class="col-md-1"></div>
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        3D uterus :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("oe[uterus_3d][type]",'yes',false,['id'=>'uterus_3d_type_yes','class'=>'iui-yes-no-status','data-type'=>'uterus-3d-details'])}}
+                                                        <label for="uterus_3d_type_yes">
+                                                            Yes
+                                                        </label>
+                            
+                                                        {{Form::radio("oe[uterus_3d][type]",'no',true,['id'=>'uterus_3d_type_no','class'=>'iui-yes-no-status','data-type'=>'uterus-3d-details'])}}
+                                                        <label for="uterus_3d_type_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="{{'col-md-5 uterus-3d-details d-none'}}">
+                                                    <div class="form-group">
+                                                        {{Form::text("oe[uterus_3d][details]",null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row tvs-details d-none">
+                                                <div class="col-md-1"></div>
                                                 <div class="col-md-2 pr-0">
                                                     <label class="vertical-form-label pr-0">
                                                         Endometrial Thickness :
@@ -3169,6 +3224,27 @@
                                                         {{Form::text("oe[endometrial_thickness]",'',['class'=>'form-control','placeholder'=>'Endometrial Thickness Details'])}}
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row tvs-details d-none">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-2 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Endometrial Cavity :
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Detail : &nbsp;</span>
+                                                        {{Form::text("oe[endometrial_cavity][cavity]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Size : &nbsp;</span>
+                                                        {{Form::text("oe[endometrial_cavity][size]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
+                                                    </div>
+                                                </div>
+                                                <span class="col-md-1 p-2">M</span>
                                             </div>
                                             <div class="row tvs-details d-none">
                                                 <div class="col-md-1"></div>
@@ -3268,36 +3344,34 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="{{$donar.' row'}}">
-                                                <div class="col-md-1"> 
-                                                    <div class="checkbox">
-                                                        {{Form::checkbox('oe[le][vitals_status]','yes','',['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
-                                                        <label for="oe_vitals_status">
-                                                            Vitals
+                                            <br>
+                                            <div class="row tvs-details d-none">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-1 pr-0">
+                                                    <label class="vertical-form-label pr-0">
+                                                        Adnexa :
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="radio is-conceived">
+                                                        {{Form::radio("oe[adnexa][type]",'yes','',['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                        <label for="adnexa_type_yes">
+                                                            Yes
+                                                        </label>
+    
+                                                        {{Form::radio("oe[adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                        <label for="adnexa_type_no">
+                                                            No
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 oe_vitals_status_data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">B.P : &nbsp;</span>
-                                                        {{Form::text("oe[le][bp]",'',['class'=>'form-control'])}}
+                                                <div class="col-md-5 adnexa-details d-none">
+                                                    <div class="form-group">
+                                                        {{Form::text("oe[adnexa][details]",'',['class'=>'form-control','placeholder'=>'Details'])}}
                                                     </div>
                                                 </div>
-                                                <span class="col-md-1 p-2 oe_vitals_status_data d-none">MMHG</span>
-                                                <div class="col-md-2 oe_vitals_status_data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Temp : &nbsp;</span>
-                                                        {{Form::text("oe[le][temp]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 oe_vitals_status_data d-none">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Pulse : &nbsp;</span>
-                                                        {{Form::text("oe[le][pulse]",'',['class'=>'form-control'])}}
-                                                    </div>
-                                                </div>
-                                                <span class="col-md-1 p-2 oe_vitals_status_data d-none">/ Min</span>
                                             </div>
+                                            
                                             <div class="row">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">

@@ -1597,13 +1597,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             @endif
                                             @if(!empty($oe->le->bp))
                                                 <br>
-                                                <span class="ivf-label">B.P :</span>
+                                                <span class="ivf-label">&nbsp;B.P :</span>
                                                 {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
                                             @endif
                                         </th>
                                     @endif
                                 </tr>
                                 @if($oe->p_s->type == 'yes')
+                                <br>
                                     <tr>
                                         <th>
                                             <span class="ivf-label">P / S:</span>
@@ -1614,14 +1615,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         </th>
                                     </tr>
                                 @endif
-                                @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
-                                    <tr>
-                                        <th colspan="2">
-                                            <span class="ivf-label">Adnexa: </span>
-                                                {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
-                                        </th>
-                                    </tr>
-                                @endif
+                                
                                 @if(!empty($oe->cervix->details))
                                     <tr>
                                         <th>
@@ -1651,6 +1645,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         @endif
                                     </tr>
                                 @endif
+                                @if (isset($oe->uterus_3d->type) && $oe->uterus_3d->type == 'yes') 
+                                        <tr>
+                                            <th>
+                                                <span class="iui-label">3D Uterus:  </span>
+                                                {{ !empty($oe->uterus_3d->details) ? $oe->uterus_3d->details : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
                                 @if ($oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
                                     <tr>
                                         <th>
@@ -1659,7 +1661,26 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         </th>
                                     </tr>
                                 @endif
+                                @if(isset($oe->endometrial_cavity) && (!empty($oe->endometrial_cavity->cavity) || !empty($oe->endometrial_cavity->size)))
+                                    <tr>
+                                        <th>
+                                            {{-- <span class="iui-label"> Endometrial Cavity :</span> --}}
+                                            @if((isset($oe->endometrial_cavity) && !empty($oe->endometrial_cavity->cavity)))
+                                                <br>
+                                                    <span class="ivf-label">Endometrial Cavity :</span>
+                                                    {{$oe->endometrial_cavity->cavity}}
+                                            @endif
+                                            @if((isset($oe->endometrial_cavity) && !empty($oe->endometrial_cavity->size)))
+                                            <br>
+                                                    <span class="ivf-label">Endometrial Size: </span>
+                                                    {{$oe->endometrial_cavity->size}}
+                                            @endif
+                                            
+                                        </th>
+                                    </tr>
+                                @endif
                                 @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
+                                <br>
                                 <tr>
                                     <th>
                                         @if (!empty($oe->ovary->right->updated_details))
@@ -1696,6 +1717,14 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     </th>
                                 </tr>
                                 @endif
+                                @if(!empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' && !empty($oe->adnexa->details))
+                                    <tr>
+                                        <th colspan="2">
+                                            <span class="ivf-label">Adnexa: </span>
+                                                {{!empty($oe->adnexa->details) ? $oe->adnexa->details : ''}}
+                                        </th>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     @endif
@@ -1710,9 +1739,9 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                 @if(isset($hoRx->taken->status) && $hoRx->taken->status == 'yes')
                                     <tr>
                                         @if(isset($hoRx->taken->status) && ($hoRx->taken->status == 'yes') && isset($hoRx->taken->how_much_no) && $hoRx->taken->how_much_no > 0)
-                                            <tr>
+                                            {{-- <tr> --}}
                                                 {{-- <td> --}}
-                                                    <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
+                                                    {{-- <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table">
                                                         @if(isset($hoRx->taken->how_much))
                                                             @foreach($hoRx->taken->how_much as $key => $value)
                                                                 @if(!empty($value))
@@ -1724,10 +1753,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                                 @endif
                                                             @endforeach
                                                         @endif
-                                                    </table>
-                                                    @if (isset($hoRx->taken->type))
+                                                    </table> --}}
+                                                    {{-- @if (isset($hoRx->taken->type)) --}}
                                                     {{-- <table cellspacing="0" cellpadding="0" class="table m-b-0  module-report-table"> --}}
-                                                        @if (isset($hoRx->taken->type))
+                                                        {{-- @if (isset($hoRx->taken->type))
                                                             @foreach($hoRx->taken->type as $key => $value)
                                                                 @if(!empty(array_filter($value)))
                                                                     <tr>
@@ -1743,11 +1772,55 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                                                     </tr>
                                                                 @endif
                                                             @endforeach
-                                                        @endif
+                                                        @endif --}}
                                                     {{-- </table> --}}
-                                                    @endif
+                                                    {{-- @endif --}}
                                                 {{-- </td> --}}
-                                            </tr>
+                                            {{-- </tr> --}}
+                                            @php
+                                                $taken_how_much = [];
+                                                $taken_when_where = [];
+                                                $taken_type = [];
+                                            @endphp
+                                            @if(isset($hoRx->taken->how_much_no) && ($hoRx->taken->how_much_no > 0))
+                                                @if (isset($hoRx->taken->how_much))
+                                                    @foreach($hoRx->taken->how_much as $key => $value)
+                                                        @php
+                                                            $taken_how_much[] = $value;
+                                                        @endphp
+                                                    @endforeach
+                                                @endif
+                                                @if (isset($hoRx->taken->when_where))
+                                                    @foreach($hoRx->taken->when_where as $key => $value)
+                                                        @php
+                                                            $taken_when_where[] = $value;
+                                                        @endphp
+                                                    @endforeach
+                                                @endif
+                                                @if (isset($hoRx->taken->type))
+                                                    @foreach($hoRx->taken->type as $key => $value)
+                                                        @php
+                                                            if ($value[0] == 1)
+                                                            {
+                                                                $taken_type[] = 'Ovulation induction done with Clomiphene';
+                                                            }
+                                                            elseif ($value[0] == 2)
+                                                            {
+                                                                $taken_type[] ='Ovulation induction done with Letroz';
+                                                            }
+                                                            elseif ($value[0] == 3)
+                                                            {
+                                                                $taken_type[] = 'Ovulation induction done with both Clomiphene and letroze';
+                                                            }
+                                                        @endphp
+                                                    @endforeach
+                                                @endif
+                                                @foreach($taken_how_much as $key => $value)
+                                                    <tr>
+                                                        <td>{{ 'H/O Taken - '.$value.' - '.(isset($taken_when_where[$key]) ? $taken_when_where[$key] : '').' - '.(isset($taken_type[$key]) ? $taken_type[$key] : '')}}</td>
+                                                    </tr>
+                                                @endforeach 
+                                            @endif   
                                         @endif
                                     </tr>
                                 @endif
@@ -4432,7 +4505,7 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                     @endif
                                     @if(!empty($oe->le->bp))
                                         <br>
-                                        <span class="ivf-label">B.P :</span>
+                                        <span class="ivf-label">B.P : </span>
                                         {{$oe->le->bp ? $oe->le->bp : '110/70'}} MMHG
                                     @endif
                                 </th>

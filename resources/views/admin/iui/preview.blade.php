@@ -1740,7 +1740,7 @@
                                             @endif
                                         </tr>
                                     @endif
-                                    @if (isset($oe->uterus_3d->type) && $oe->uterus_3d->type == 'yes')
+                                    @if (isset($oe->uterus_3d->type) && $oe->uterus_3d->type == 'yes') 
                                         <tr>
                                             <th>
                                                 <span class="iui-label">3D Uterus:  </span>
@@ -1753,6 +1753,24 @@
                                             <th>
                                                 <span class="iui-label">Endometrial Thickness:  </span>
                                                 {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    @if(isset($oe->endometrial_cavity) && (!empty($oe->endometrial_cavity->cavity) || !empty($oe->endometrial_cavity->size)))
+                                        <tr>
+                                            <th>
+                                                    <span class="iui-label"> Endometrial Cavity :</span>
+                                                    @if((isset($oe->endometrial_cavity) && !empty($oe->endometrial_cavity->cavity)))
+                                                        <br>
+                                                            <span class="iui-label"> Cavity :</span>
+                                                            {{$oe->endometrial_cavity->cavity}}
+                                                    @endif
+                                                    @if((isset($oe->endometrial_cavity) && !empty($oe->endometrial_cavity->size)))
+                                                    <br>
+                                                            <span class="iui-label"> Size: </span>
+                                                            {{$oe->endometrial_cavity->size}}
+                                                    @endif
+                                                
                                             </th>
                                         </tr>
                                     @endif
@@ -1813,7 +1831,7 @@
                                         </td>
                                     </tr>
                                     @if(isset($hoRx->taken->status) && ($hoRx->taken->status == 'yes') && isset($hoRx->taken->how_much_no) && $hoRx->taken->how_much_no > 0)
-                                        <tr>
+                                        {{-- <tr>
                                             @if(isset($hoRx->taken->how_much))
                                                 <td style="width: 10%">
                                                     <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
@@ -1852,7 +1870,51 @@
                                                     </table>
                                                 </td>
                                             @endif
-                                        </tr>
+                                        </tr> --}}
+                                        @php
+                                            $taken_how_much = [];
+                                            $taken_when_where = [];
+                                            $taken_type = [];
+                                        @endphp
+                                        @if(isset($hoRx->taken->how_much_no) && ($hoRx->taken->how_much_no > 0))
+                                            @if (isset($hoRx->taken->how_much))
+                                                @foreach($hoRx->taken->how_much as $key => $value)
+                                                    @php
+                                                        $taken_how_much[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->taken->when_where))
+                                                @foreach($hoRx->taken->when_where as $key => $value)
+                                                    @php
+                                                        $taken_when_where[] = $value;
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @if (isset($hoRx->taken->type))
+                                                @foreach($hoRx->taken->type as $key => $value)
+                                                    @php
+                                                        if ($value[0] == 1)
+                                                        {
+                                                            $taken_type[] = 'Ovulation induction done with Clomiphene';
+                                                        }
+                                                        elseif ($value[0] == 2)
+                                                        {
+                                                            $taken_type[] ='Ovulation induction done with Letroz';
+                                                        }
+                                                        elseif ($value[0] == 3)
+                                                        {
+                                                            $taken_type[] = 'Ovulation induction done with both Clomiphene and letroze';
+                                                        }
+                                                    @endphp
+                                                @endforeach
+                                            @endif
+                                            @foreach($taken_how_much as $key => $value)
+                                                <tr>
+                                                    <td>{{ 'H/O Taken - '.$value.' - '.(isset($taken_when_where[$key]) ? $taken_when_where[$key] : '').' - '.(isset($taken_type[$key]) ? $taken_type[$key] : '')}}</td>
+                                                </tr>
+                                            @endforeach 
+                                        @endif   
                                     @endif
                                     @if(isset($hoRx->iui->status) && $hoRx->iui->status == 'yes')
                                         @if(!empty($hoRx->iui->details))

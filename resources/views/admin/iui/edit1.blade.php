@@ -1846,7 +1846,8 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         <span class="input-group-addon">
                                             How Much : &nbsp;
                                         </span>
-                                        {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                        {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control','data-id'=>'taken','readonly'])}}
+                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
                                     </div>
                                 </div>
                             </div>
@@ -3322,7 +3323,26 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="{{'row tvs-details '.$tvsType}}">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2 pr-0">
+                                    <label class="vertical-form-label pr-0">
+                                        Endometrial Cavity :
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{Form::text("oe[endometrial_cavity][cavity]",isset($oe->endometrial_cavity->cavity)  ? $oe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Size : &nbsp;</span>
+                                        {{Form::text("oe[endometrial_cavity][size]",isset($oe->endometrial_cavity->size)  ? $oe->endometrial_cavity->size : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
+                                    </div>
+                                </div>
+                                <span class="col-md-1 p-2">M</span>
+                            </div>
                             @php
                                 $left = in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
                                 $right = in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
@@ -4034,31 +4054,32 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 </div>
                                 <span class="{{'col-md-1 p-2 vitals_status_data '.$vitlasClass}}">/ Min</span>
                             </div>
+                            @php
+                                $pStatus = !empty($historyOe->p_s->type) && $historyOe->p_s->type == 'yes' ? '' : 'd-none';
+                            @endphp
                             <div class="row">
                                 <div class="col-md-1 pr-0">
-                                    <label class="vertical-form-label pr-0">
-                                        Adnexa :
-                                    </label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="radio is-conceived">
-                                        {{Form::radio("data[oe][adnexa][type]",'yes',!empty($adnexaStaus) ? false : true,['id'=>'adnexa_type_yes','class'=>'anc-status','data-type'=>'adnexa-details'])}}
-                                        <label for="adnexa_type_yes">
-                                            Yes
-                                        </label>
-            
-                                        {{Form::radio("data[oe][adnexa][type]",'no',!empty($adnexaStaus) ? true : false,['id'=>'adnexa_type_no','class'=>'anc-status','data-type'=>'adnexa-details'])}}
-                                        <label for="adnexa_type_no">
-                                            No
+                                    <div class="checkbox">
+                                        {{Form::checkbox('data[oe][p_s][type]','yes',!empty($pStatus) ? false : true,['id'=>'ps_status','class'=>'ps-status','data-type'=>'ps-details'])}}
+                                        <label for="ps_status">
+                                            P/S :
                                         </label>
                                     </div>
                                 </div>
-                                <div class="{{'col-md-5 adnexa-details '.$adnexaStaus}}">
-                                    <div class="form-group">
-                                        {{Form::text("data[oe][adnexa][details]",!empty($historyOe->adnexa->details) ? $historyOe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                <div class="{{'col-md-4 ps-details '.$pStatus}}">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Detail : &nbsp;</span>
+                                        {{Form::text("data[oe][p_s][details]",!empty($historyOe->p_s->details) ? $historyOe->p_s->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                    </div>
+                                </div>
+                                <div class="{{'col-md-4 ps-details '.$pStatus}}">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Cervix : &nbsp;</span>
+                                        {{Form::text("data[oe][cervix][details]",!empty($historyOe->cervix->details) ? $historyOe->cervix->details : null,['class'=>'form-control','placeholder'=>'Cervix'])}}
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="vertical-form-label pr-0">
@@ -4106,6 +4127,26 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         {{Form::text("data[oe][ut][details]",!empty($historyOe->ut->details) ? $historyOe->ut->details : null,['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 pr-0">
+                                    <label class="vertical-form-label pr-0">
+                                        Endometrial Cavity :
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Detail : &nbsp;</span>
+                                        {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Size : &nbsp;</span>
+                                        {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
+                                    </div>
+                                </div>
+                                <span class="col-md-1 p-2">M</span>
                             </div>
                             @php
                                 $leftData = in_array('left',$ovaryType) ? null : 'd-none';
@@ -4242,25 +4283,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             <br>
 
                             <br>
-                            <div class="row">
-                                <div class="col-md-2 pr-0">
-                                    <label class="vertical-form-label pr-0">
-                                        Endometrial Cavity :
-                                    </label>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Size : &nbsp;</span>
-                                        {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
-                                    </div>
-                                </div>
-                                <span class="col-md-1 p-2">M</span>
-                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-2 pr-0">
                                     <label class="vertical-form-label pr-0">
@@ -4282,26 +4305,33 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         {{Form::text("data[oe][left_tube]",isset($historyOe->left_tube) ? $historyOe->left_tube : null,['class'=>'form-control','placeholder'=>'Left Tube Details'])}}
                                     </div>
                                 </div>
-                               
                             </div>
-                            @php
-                                $pStatus = !empty($historyOe->p_s->type) && $historyOe->p_s->type == 'yes' ? '' : 'd-none';
-                            @endphp
                             <div class="row">
                                 <div class="col-md-1 pr-0">
-                                    <div class="checkbox">
-                                        {{Form::checkbox('data[oe][p_s][type]','yes',!empty($pStatus) ? false : true,['id'=>'ps_status','class'=>'ps-status','data-type'=>'ps-details'])}}
-                                        <label for="ps_status">
-                                            P/S :
+                                    <label class="vertical-form-label pr-0">
+                                        Adnexa :
+                                    </label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="radio is-conceived">
+                                        {{Form::radio("data[oe][adnexa][type]",'yes',!empty($adnexaStaus) ? false : true,['id'=>'adnexa_type_yes','class'=>'anc-status','data-type'=>'adnexa-details'])}}
+                                        <label for="adnexa_type_yes">
+                                            Yes
+                                        </label>
+            
+                                        {{Form::radio("data[oe][adnexa][type]",'no',!empty($adnexaStaus) ? true : false,['id'=>'adnexa_type_no','class'=>'anc-status','data-type'=>'adnexa-details'])}}
+                                        <label for="adnexa_type_no">
+                                            No
                                         </label>
                                     </div>
                                 </div>
-                                <div class="{{'col-md-4 ps-details '.$pStatus}}">
+                                <div class="{{'col-md-5 adnexa-details '.$adnexaStaus}}">
                                     <div class="form-group">
-                                        {{Form::text("data[oe][p_s][details]",!empty($historyOe->p_s->details) ? $historyOe->p_s->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                        {{Form::text("data[oe][adnexa][details]",!empty($historyOe->adnexa->details) ? $historyOe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

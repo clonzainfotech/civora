@@ -554,10 +554,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             </th>
                                         </tr>
                                     @endif
-                                @else
+                                {{-- @else
                                     @php
                                         $noValueData[] = ' Contraception';
-                                    @endphp
+                                    @endphp --}}
                                 @endif
                                 @if(!empty($noValueData))
                                 <tr>
@@ -882,10 +882,10 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                             </th>
                                         </tr>
                                     @endif
-                                @else
+                                {{-- @else
                                     @php
                                         $secondNoValueData[] = ' Contraception';
-                                    @endphp
+                                    @endphp --}}
                                 @endif
                             
                                 <br>

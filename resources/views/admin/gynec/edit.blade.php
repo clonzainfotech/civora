@@ -2389,8 +2389,10 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                 @php
                     $medicalData = !empty($planOfManagement->plan_of_management_data) ? $planOfManagement->plan_of_management_data : [];
                     $surgicallyDataStatus = in_array('surgically',$medicalData) ? '' : 'd-none';
+                    $medicallyDataStatus = in_array('medically',$medicalData) ? '' : 'd-none';
+                    $counsellingDataStatus = in_array('counselling',$medicalData) ? '' : 'd-none';
                 @endphp
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-2">
                         <div class="checkbox">
                             {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically',isset($gynecId) ? in_array('medically',$medicalData) : false,['id'=>'medically','class'=>'plan-management','data-id'=>'medically'])}}
@@ -2399,6 +2401,44 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             </label>
                         </div>
                     </div>
+                </div> --}}
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','counselling',isset($gynecId) ? in_array('counselling',$medicalData) : false,['id'=>'counselling','class'=>'plan-management','data-id'=>'counselling-details'])}}
+                            <label for="counselling">
+                                Counselling
+                            </label>
+                        </div>
+                    </div>
+                    <div class="{{'col-md-6 counselling-details '.$counsellingDataStatus}}">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Details : &nbsp;
+                            </span>
+                            {{Form::text("plan_of_management[counselling_details]",isset($gynecId) && isset($planOfManagement->counselling_details) ? $planOfManagement->counselling_details : null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically',isset($gynecId) ? in_array('medically',$medicalData) : false,['id'=>'medically','class'=>'plan-management','data-id'=>'medical-details'])}}
+                            <label for="medically">
+                                Medically
+                            </label>
+                        </div>
+                    </div>
+                    <div class="{{'col-md-6 medical-details '.$medicallyDataStatus}}">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Details : &nbsp;
+                            </span>
+                            {{Form::text("plan_of_management[medically_details]",isset($gynecId) && isset($planOfManagement->medically_details) ? $planOfManagement->medically_details : null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-2">
                         <div class="checkbox">
                             {{Form::checkbox('plan_of_management[plan_of_management_data][]','surgically',isset($gynecId) ? in_array('surgically',$medicalData) : false,['id'=>'surgically-type','class'=>'plan-management','data-id'=>'surgically-type'])}}

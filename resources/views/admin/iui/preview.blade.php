@@ -663,10 +663,10 @@
                                                 </th>
                                             </tr>
                                         @endif
-                                    @else
+                                    {{-- @else
                                         @php
                                             $noValueData[] = ' Contraception';
-                                        @endphp
+                                        @endphp --}}
                                     @endif
                                     @if (isset($oh->second_marriage_life) && !empty($oh->second_marriage_life) && $oh->second_marriage_life == 'yes')
                                         <tr>
@@ -1036,10 +1036,10 @@
                                                 </th>
                                             </tr>
                                         @endif
-                                    @else
+                                    {{-- @else
                                         @php
                                             $secondNoValueData[] = ' Contraception';
-                                        @endphp
+                                        @endphp --}}
                                     @endif
                                     @if(!empty($noValueData))
                                         <tr>
@@ -2618,6 +2618,7 @@
                     @endif
 
                     @if($oe)
+                    <br>
                         <table cellspacing="0" cellpadding="0" class="table m-b-0 module-report-table">
                             <tbody>
                                 <tr>
@@ -2635,13 +2636,12 @@
                                                 {
                                                     echo "Transabdominal sonography";
                                                 }
-                                                
                                             }
                                             ?>
                                         @endif
                                         @if(isset($oe->ut) && !empty($oe->ut))
                                             @if (isset($oe->ut) && !empty($oe->ut))
-                                                <br>
+                                                <br><br>
                                                 <span class="iui-label"> Uterus:</span>
                                                 {{ ($oe->ut->ut_type == 1) ? 'Normal' : 'Abnormal' }}
                                             @endif
@@ -2774,6 +2774,7 @@
                                         <th>
                                             <br>
                                             @php
+                                                
                                             if(isset($inducing) && !empty($inducing))
                                             {
                                                 $dateAndInjectionData = [];
@@ -2787,18 +2788,18 @@
                                                         $injection_name = explode('+',$value)[1];
                                                         $spilt_from = (strpos($injection_name,'on') !== false) ? 'on' : '-';
                                                         $inj_name = explode($spilt_from,$injection_name)[0];
-                                                        if(strpos($value,'3/5/7') !== false)
-                                                        {
-                                                            $menses_Day = ['0'=>'3','1'=>'5','2'=>'7'];
-                                                        }
-                                                        if(strpos($value,'2 ') !== false)
-                                                        {
-                                                            $menses_Day = ['0'=>'2'];
-                                                        }
-                                                        if(strpos($value,'6 ') !== false)
-                                                        {
-                                                            $menses_Day = ['0'=>'6'];
-                                                        }
+                                                        // if(strpos($value,'3/5/7') !== false)
+                                                        // {
+                                                        //     $menses_Day = ['0'=>'3','1'=>'5','2'=>'7'];
+                                                        // }
+                                                        // if(strpos($value,'2 ') !== false)
+                                                        // {
+                                                        //     $menses_Day = ['0'=>'2'];
+                                                        // }
+                                                        // if(strpos($value,'6 ') !== false)
+                                                        // {
+                                                        //     $menses_Day = ['0'=>'6'];
+                                                        // }
                                                     }
                                                     else {
                                                         $is_inj = 0;
@@ -2812,12 +2813,14 @@
                                                 }
                                                 foreach(array_flatten($dateAndInjectionData) as $keyValue=>$valueData)
                                                 {
+                                                    // print_r()
+                                                    // if(isset($menses_Day[$keyValue]))
+                                                    // {
 
-                                                    if(isset($menses_Day[$keyValue]))
-                                                    {
-
-                                                        $inducingDisplayDate = \Carbon\Carbon::parse($lmp->date)->addDays(($menses_Day[$keyValue] - 1))->format('d/m/Y');
-                                                        if(!empty($value) && $is_inj == 1 && (\Carbon\Carbon::parse($valueData->date)->format('d/m/Y') == $inducingDisplayDate))
+                                                        // $inducingDisplayDate = \Carbon\Carbon::parse($lmp->date)->addDays(($menses_Day[$keyValue] - 1))->format('d/m/Y');
+                                                        $days = \Carbon\Carbon::parse($lmp->date)->diffInDays($valueData->date);
+                                                        // if(!empty($value) && $is_inj == 1 && (\Carbon\Carbon::parse($valueData->date)->format('d/m/Y') == $inducingDisplayDate))
+                                                        if(!empty($value) && $is_inj == 1)
                                                         {
                                                             $replacement = '('.' '.')';
                                                             $start = preg_quote('(','/');
@@ -2825,9 +2828,9 @@
                                                             $regex = "/({$start})(.*?)({$end})/";
                                                             $inj_name = preg_replace($regex,$replacement,$inj_name);
 
-                                                            echo '<span class="iui-label"> INJ '.str_replace('( )','',$inj_name).' - '.date('d/m/Y - l',strtotime($valueData->date)).' - '.$menses_Day[$keyValue].'rd day' . '</span><br />';
+                                                            echo '<span class="iui-label"> INJ '.str_replace('( )','',$inj_name).' - '.date('d/m/Y - l',strtotime($valueData->date)).' - '.addOrdinalNumberSuffix($days).' day' . '</span><br />';
                                                         }
-                                                    }
+                                                    // }
                                                     
                                                 }
                                             }

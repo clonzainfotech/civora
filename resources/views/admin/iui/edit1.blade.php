@@ -4129,9 +4129,11 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2 pr-0">
                                     <label class="vertical-form-label pr-0">
                                         Endometrial Cavity :
+
                                     </label>
                                 </div>
                                 <div class="col-md-3">
@@ -4147,6 +4149,19 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                     </div>
                                 </div>
                                 <span class="col-md-1 p-2">M</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2 pr-0">
+                                    <label class="vertical-form-label pr-0">
+                                        Endometrial Thickness :
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{Form::text("oe[endometrial_thickness]",!empty($historyOe->endometrial_thickness) ? $historyOe->endometrial_thickness : null,['class'=>'form-control','placeholder'=>'Endometrial Thickness Details'])}}
+                                    </div>
+                                </div>
                             </div>
                             @php
                                 $leftData = in_array('left',$ovaryType) ? null : 'd-none';

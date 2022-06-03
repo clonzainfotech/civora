@@ -1388,6 +1388,22 @@
                                         {{implode(',',$planManagement->plan_of_management_data)}}
                                     </th>
                                 </tr>
+                                @if(isset($planManagement->counselling_details) && !empty($planManagement->counselling_details))
+                                    <tr>
+                                        <th class="seperator w-500">
+                                            <span class="anc-label">Plan Of Management Counselling:</span>
+                                            {{$planManagement->counselling_details}}
+                                        </th>
+                                    </tr>
+                                @endif
+                                @if(isset($planManagement->medically_details) && !empty($planManagement->medically_details))
+                                    <tr>
+                                        <th class="seperator w-500">
+                                            <span class="anc-label">Plan Of Management Medically:</span>
+                                            {{$planManagement->medically_details}}
+                                        </th>
+                                    </tr>
+                                @endif
                                 @if(!empty($planManagement->surgically_details) && in_array('surgically',$planManagement->plan_of_management_data))
                                     @php
                                         $sData = [];
@@ -1397,7 +1413,7 @@
                                     @endphp
                                     <tr>
                                         <th class="seperator w-500">
-                                            <span class="anc-label">Plan Of Management Type :</span>
+                                            <span class="anc-label">Plan Of Management Surgicully :</span>
                                             {{implode(',',$sData)}}
                                         </th>
                                     </tr>

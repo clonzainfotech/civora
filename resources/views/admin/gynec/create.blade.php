@@ -2098,12 +2098,58 @@
                                                 <div class="row">
                                                     <div class="col-md-2">
                                                         <div class="checkbox">
-                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically','',['id'=>'medically','class'=>'plan-management','data-id'=>'medically'])}}
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','counselling',false,['id'=>'counselling','class'=>'plan-management','data-id'=>'counselling-details'])}}
+                                                            <label for="counselling">
+                                                                Counselling
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 counselling-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[counselling_details]", null,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically',false,['id'=>'medically','class'=>'plan-management','data-id'=>'medical-details'])}}
                                                             <label for="medically">
                                                                 Medically
                                                             </label>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6 medical-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[medically_details]",null,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically','',['id'=>'medically','class'=>'plan-management','data-id'=>'medically','data-type'=>'medical-details'])}}
+                                                            <label for="medically">
+                                                                Medically
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 medical-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[medically_details]",'',['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
+                                                <div class="row">
                                                     <div class="col-md-2">
                                                         <div class="checkbox">
                                                             {{Form::checkbox('plan_of_management[plan_of_management_data][]','surgically','',['id'=>'surgically-type','class'=>'plan-management','data-id'=>'surgically-type'])}}

@@ -3366,13 +3366,13 @@
                                                 {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        {{-- <div class="col-md-3">
                                             <div class="input-group">
                                                 <span class="input-group-addon">Size : &nbsp;</span>
                                                 {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
                                             </div>
-                                        </div>
-                                        <span class="col-md-1 p-2">MM</span>
+                                        </div> --}}
+                                        {{-- <span class="col-md-1 p-2">MM</span> --}}
                                     </div>
                                     @if(!empty($cycleNumber) && $visit == 2)
                                         <div class="row">

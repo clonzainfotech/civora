@@ -239,10 +239,9 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     @endphp
                     <div class="col-sm-3">
                         <div class="radio is-conceived">
-                            {{Form::radio("oh[married_type]",'married',!empty($marriedType) ? false : true,[
+                            {{Form::radio("oh[married_type]",'married',empty($marriedType) ? true : false,[
                                 'id'=>'married',
-                                'class'=>'married-type',
-                                isset($gynecId) ? 'disabled' : ''
+                                'class'=>'married-type'
                             ])}}
                             <label for="married">
                                 Married
@@ -250,8 +249,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
 
                             {{Form::radio("oh[married_type]",'unmarried',!empty($marriedType) ? true : false,[
                                 'id'=>'unmarried',
-                                'class'=>'married-type',
-                                isset($gynecId) ? 'disabled' : ''
+                                'class'=>'married-type'
                             ])}}
                             <label for="unmarried">
                                 Unmarried
@@ -1814,12 +1812,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     
                 </div>
                 @php
-                    $left = isset($gynecId) && in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
-                    $right = isset($gynecId) && in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
-                    $ovaryLeftType = isset($gynecId) && !empty($oe->ovary->left->type) && $oe->ovary->left->type == '2' ? '' : 'd-none';
-                    $ovaryRightType = isset($gynecId) && !empty($oe->ovary->right->type) && $oe->ovary->right->type == '2' ? '' : 'd-none';
+                    $left =  in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
+                    $right = in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
+                    $ovaryLeftType =  !empty($oe->ovary->left->type) && $oe->ovary->left->type == '2' ? '' : 'd-none';
+                    $ovaryRightType = !empty($oe->ovary->right->type) && $oe->ovary->right->type == '2' ? '' : 'd-none';
                 @endphp
-                <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
+                {{-- <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
                     <div class="col-md-1"></div>
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -1828,15 +1826,15 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="col-md-1">
                         <div class="checkbox">
-                            {{Form::checkbox('oe[ovary][type][]','right',in_array('right',isset($gynecId) && !empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'right','class'=>'plan-management'])}}
-                            <label for="right">
+                            {{Form::checkbox('oe[ovary][type][]','right',in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'oe-right','class'=>'plan-management'])}}
+                            <label for="oe-right">
                                 Right
                             </label>
                         </div>
                     </div>
                     <div class="{{'col-md-3 right-details'}}">
                         <div class="form-group">
-                            {{Form::select("oe[ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],isset($gynecId) && !empty($oe->ovary->right->type) ? $oe->ovary->right->type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-right-abnormal-type'])}}
+                            {{Form::select("oe[ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->ovary->right->type) ? $oe->ovary->right->type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-right-abnormal-type'])}}
                         </div>
                     </div>
                     <div class="{{'col-md-6 right-details'}}">
@@ -1853,7 +1851,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 <div class="row edit_oe_ovary_right_details">
                                     @if (isset($oe->ovary->right->updated_details))
                                         @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                        @if(isset($oe->ovary->right->details[$key]))
+                                            @if(isset($oe->ovary->right->details[$key]))
                                             <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->right->details[$key]) . '_right' }}">
                                                 {{Form::text('oe[ovary][right][updated_details][]', !empty($value) ? $value : null, [
                                                     'class' => 'form-control edited_oe_ovary_right_details',
@@ -1869,18 +1867,18 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                 </div>
                 <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
-                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-1">
                         <div class="checkbox">
-                            {{Form::checkbox('oe[ovary][type][]','left',in_array('left',isset($gynecId) &&!empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'left','class'=>'plan-management'])}}
-                            <label for="left">
+                            {{Form::checkbox('oe[ovary][type][]','left',in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'oe-left','class'=>'plan-management'])}}
+                            <label for="oe-left">
                                 Left
                             </label>
                         </div>
                     </div>
                     <div class="{{'col-md-3 left-details'}}">
                         <div class="form-group">
-                            {{Form::select("oe[ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],isset($gynecId) && !empty($oe->ovary->left->type) ? $oe->ovary->left->type : null,[
+                            {{Form::select("oe[ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->ovary->left->type) ? $oe->ovary->left->type : null,[
                                 'class'=>'form-control select-padding-0 abnormal',
                                 'data-type'=>'ovary-left-abnormal-type'
                             ])}}
@@ -1914,7 +1912,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 @php
                     $leType = !empty($oe->l_s->type) && $oe->l_s->type == 'yes' ? '' : 'd-none';
                 @endphp

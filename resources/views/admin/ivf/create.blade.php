@@ -3238,13 +3238,13 @@
                                                         {{Form::text("oe[endometrial_cavity][cavity]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">Size : &nbsp;</span>
                                                         {{Form::text("oe[endometrial_cavity][size]",null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
                                                     </div>
-                                                </div>
-                                                <span class="col-md-1 p-2">M</span>
+                                                </div> --}}
+                                                {{-- <span class="col-md-1 p-2">M</span> --}}
                                             </div>
                                             <div class="row tvs-details d-none">
                                                 <div class="col-md-1"></div>

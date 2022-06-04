@@ -1614,7 +1614,7 @@
                                                     </div>
                                                     
                                                 </div>
-                                                <div class="row pa-details unmarried-data d-none">
+                                                {{-- <div class="row pa-details unmarried-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-1 pr-0 tvs-details d-none">
                                                         <label class="vertical-form-label pr-0">
@@ -1683,7 +1683,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">

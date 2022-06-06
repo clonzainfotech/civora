@@ -4336,7 +4336,7 @@
         @if(isset($oe->investigation_extra) && !empty($oe->investigation_extra))
             <span class="font-bold">Other Reports : </span>{{$oe->investigation_extra}}
         @endif
-        @if(!isset($printPreview) || $printPreview == 0)
+        @if(!isset($patient_view) || $patient_view == 0)
             @if(isset($oe->remark) && !empty($oe->remark))
                 <br><span class="font-bold">Dr Remark : {{$oe->remark}}</span>
             @endif

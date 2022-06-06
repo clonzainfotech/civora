@@ -2507,10 +2507,21 @@
                         </table>
                     @endif
 
-                    
-                    @if(isset($oe->follow_up) && !empty($oe->follow_up))
-                    <h4 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>
+                    @if(isset($oe->pt_remark) && !empty($oe->pt_remark)) 
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="iui-label">Remark : </span> <span class="font-bold">{{$oe->pt_remark}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     @endif
+                    @if(isset($oe->follow_up) && !empty($oe->follow_up))
+                        <h4 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>
+                    @endif
+
                     
                 @endif
                 @if(isset($visit) && $visit != null)
@@ -3293,6 +3304,7 @@
                 @endif
                 
             </div>
+            
 
         @else
             <style>
@@ -4332,7 +4344,10 @@
         @if(isset($patients_remark) && !empty($patients_remark))
             <br><span class="font-bold">Remark : {{$patients_remark}}</span>
         @endif
-            
+        {{-- for first visit --}}
+        @if(isset($oe->pt_remark) && !empty($oe->pt_remark)) 
+            <br><span class="font-bold">Remark : {{$oe->pt_remark}}</span>
+        @endif
         @if(isset($oe->follow_up) && !empty($oe->follow_up))
         <br>
                     <h4 class="text-center">{{"ફરીવાર ".\Carbon\Carbon::parse($oe->follow_up)->format('d-m-Y')." તારીખે બતાવવા આવવું."}}</h4>

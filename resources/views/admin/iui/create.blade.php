@@ -1628,12 +1628,32 @@
                                                         <span class="input-group-addon">
                                                             How Much : &nbsp;
                                                         </span>
-                                                        {{Form::number("ho_rx[taken][how_much_no]",'1',['class'=>'form-control','data-id'=>'','readonly'])}}
+                                                        {{Form::number("ho_rx[taken][how_much_no]",'1',['class'=>'form-control','data-id'=>'','onwheel'=>'this.blur()','readonly'])}}
+                                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",'1',['class'=>'form-control','data-id'=>'','readonly'])}} --}}
                                                         {{-- {{Form::number("ho_rx[taken][how_much_no]",'',['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row taken-data"></div>
+                                            <div class="row taken-data ho-taken-type d-none">
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::text('ho_rx[taken][how_much][1]',null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>
+                                                            When/Where : &nbsp;
+                                                        </span>
+                                                        {{Form::text('ho_rx[taken][when_where][1]',null,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::select('ho_rx[taken][type][1][]',["1"=>"CC","2"=>"Letroz","3"=>"Both"],null,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-1 pr-0">
                                                     <label class="vertical-form-label pr-0">
@@ -3603,23 +3623,29 @@
                                 {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                                 {{Form::hidden('next_time','',['class'=>'next-time-value'])}}
                                 <div class="row">
-                                                
-                                                <div class="col-md-6 col-sm-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Follow Up : &nbsp;</span>
-                                                        {{Form::text("oe[follow_up]",'',['class'=>'form-control datetimepicker follow-up-date next-date '])}}
-                                                    </div>
-                                                    <span class="follow-date-msg form-error-msg"></span>
-                                                </div>
-                                                <div class="col-md-3 col-sm-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">Day : &nbsp;</span>
-                                                        {{Form::text("oe[follow_up_date_diff]",'',['class'=>'form-control next-day','maxlength'=>3,'placeholder'=>'Date Diff'])}}
-                                                    </div>
-                                                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{Form::textarea('oe[pt_remark]', null, ['class'=>'form-control no-resize pt_remark','placeholder'=>'Patient Remark','rows'=>'2'])}}
+                                        </div>
+                                    </div>
+                                </div>                                                                          
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Follow Up : &nbsp;</span>
+                                            {{Form::text("oe[follow_up]",'',['class'=>'form-control datetimepicker follow-up-date next-date '])}}
+                                        </div>
+                                        <span class="follow-date-msg form-error-msg"></span>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Day : &nbsp;</span>
+                                            {{Form::text("oe[follow_up_date_diff]",'',['class'=>'form-control next-day','maxlength'=>3,'placeholder'=>'Date Diff'])}}
+                                        </div>
+                                    </div>
 
-                                                <span class="col-md-1 p-3 history-lmp-date">Day</span>
-                                            </div>
+                                    <span class="col-md-1 p-3 history-lmp-date">Day</span>
+                                </div>
                                 <div class="col-sm-12">
                                     {{Form::submit('submit',['class'=>'btn btn-primary submit'])}}
                                     <button type="submit" class="btn btn-primary submit" value="1">Save & Preivew</button>

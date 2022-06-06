@@ -2418,7 +2418,17 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                         </tbody>
                     </table>
                 @endif
-                
+                @if(isset($oe->pt_remark) && !empty($oe->pt_remark)) 
+                    <table cellspacing="0" cellpadding="0" class="{{'table m-b-0 module-report-table'}}">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <span class="ivf-label">Remark : </span>{{$oe->pt_remark}}
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                @endif
                 {{-- investigation --}}
                 
             </div>

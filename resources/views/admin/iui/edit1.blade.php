@@ -3510,6 +3510,13 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                 </div>
                                 
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        {{Form::textarea('oe[remark]', isset($oe->remark) ? $oe->remark : '', ['class'=>'form-control no-resize remark','placeholder'=>'Remark','rows'=>'2'])}}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3906,6 +3913,13 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{Form::textarea('oe[pt_remark]', isset($oe->pt_remark) ? $oe->pt_remark : null, ['class'=>'form-control no-resize pt_remark','placeholder'=>'Patient Remark','rows'=>'2'])}}
+                        </div>
+                    </div>
+                </div>  
                 {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                 {{Form::hidden('next_time','',['class'=>'next-time-value'])}}
             @endif

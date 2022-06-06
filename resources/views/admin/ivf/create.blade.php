@@ -3735,7 +3735,13 @@
                                     </div>
                                 </div>
                                 {{Form::hidden('old_medicine_data','',['class'=>'old-medicine-data'])}}
-                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{Form::textarea('oe[pt_remark]', null, ['class'=>'form-control no-resize pt_remark','placeholder'=>'Patient Remark','rows'=>'2'])}}
+                                        </div>
+                                    </div>
+                                </div>    
                                 
                                 {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                                 {{Form::hidden('next_time','',['class'=>'next-time-value'])}}

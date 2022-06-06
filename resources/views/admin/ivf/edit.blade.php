@@ -2073,12 +2073,12 @@
                                                     <span class="input-group-addon">
                                                         How Much : &nbsp;
                                                     </span>
-                                                    {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
-                                                    {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control ','data-id'=>'','readonly'])}}
+                                                    {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                                    {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control ','data-id'=>'','readonly'])}} --}}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row taken-data">
+                                        <div class="{{ 'row taken-data ho-taken-type ' . $takenClass }}">
                                             @if(!empty($hoRx->taken->how_much_no))
                                                 @for($i=1; $i<=$hoRx->taken->how_much_no; $i++)
                                                     <div class='col-md-4'>

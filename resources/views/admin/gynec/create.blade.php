@@ -1609,10 +1609,83 @@
                                                     </div>
                                                     <div class="col-md-3 pa-details d-none">
                                                         <div class="form-group">
-                                                            {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'UT Details'])}}
+                                                            {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'PA Details'])}}
                                                         </div>
                                                     </div>
                                                     
+                                                </div>
+                                                <div class="{{'row pa-details unmarried-data d-none'}}">
+                                                    <div class="col-md-1"></div>
+                                                    <div class="col-md-1 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Ovary :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[p_a][ovary][type][]','right','',['id'=>'oe-right','class'=>'plan-management'])}}
+                                                            <label for="oe-right">
+                                                                Right
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-3 right-details'}}">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[p_a][ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],'',['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-pa-right-abnormal-type'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-6 right-details'}}">
+                                                        <div class="row">
+                                                            <div class="{{'col-md-5 complain-multi ovary-pa-right-abnormal-type mt-1 d-none'}}">
+                                                                {{Form::select("oe[p_a][ovary][right][details][]",$rightOvaryData,null,[
+                                                                    'class'=>'form-control co-value co_value_data oe_pa_ovary_right_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_pa_ovary_right_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="{{'col-md-6 complain-multi ovary-pa-right-abnormal-type d-none'}}">
+                                                                <div class="row edit_pa_oe_ovary_right_details">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="{{'row pa-details unmarried-data d-none'}}">
+                                                    <div class="col-md-2"></div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[p_a][ovary][type][]','left',null,['id'=>'oe-left','class'=>'plan-management'])}}
+                                                            <label for="oe-left">
+                                                                Left
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-3 left-details'}}">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[p_a][ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],null,[
+                                                                'class'=>'form-control select-padding-0 abnormal',
+                                                                'data-type'=>'ovary-pa-left-abnormal-type'
+                                                            ])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-6 left-details'}}">
+                                                        <div class="row">
+                                                            <div class="{{'col-md-5 complain-multi ovary-pa-left-abnormal-type d-none'}} ">
+                                                                {{Form::select("oe[p_a][ovary][left][details][]",$leftOvaryData,null,[
+                                                                    'class'=>'form-control co-value co_value_data oe_pa_ovary_left_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_pa_ovary_left_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="{{'col-md-6 complain-multi ovary-pa-oe-left-abnormal-type d-none'}}">
+                                                                <div class="row edit_pa_oe_ovary_left_details">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 {{-- <div class="row pa-details unmarried-data d-none">
                                                     <div class="col-md-1"></div>

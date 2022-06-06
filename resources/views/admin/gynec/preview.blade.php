@@ -1162,6 +1162,42 @@
                                     @endif
                                 </th>
                             </tr>
+                            @if (!empty($oe->p_a->ovary->right->updated_details) || !empty($oe->p_a->ovary->right->afcs))
+                            <tr>
+                                <th>
+                                    @if (!empty($oe->p_a->ovary->right->updated_details))
+                                    <span class="anc-label">Right Ovary : </span>
+                                        @foreach ($oe->p_a->ovary->right->updated_details as $key => $value)
+                                            @php
+                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                            @endphp
+                                        @endforeach
+                                    @endif
+                                    @if(!empty($oe->p_a->ovary->right->afcs))
+                                        <span class="anc-label">Follicle numbers per ovary : </span>
+                                        {{$oe->p_a->ovary->right->afcs}}
+                                    @endif
+                                </th>
+                            </tr>
+                            @endif
+                            @if(!empty($oe->p_a->ovary->left->updated_details) || !empty($oe->p_a->ovary->left->afcs))
+                            <tr>
+                                <th>
+                                    @if(!empty($oe->p_a->ovary->left->updated_details))
+                                    <span class="anc-label">Left Ovary : </span>
+                                        @foreach($oe->p_a->ovary->left->updated_details as $key => $value)
+                                            @php
+                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                            @endphp
+                                        @endforeach
+                                    @endif
+                                    @if(!empty($oe->p_a->ovary->left->afcs))
+                                        <span class="anc-label">Follicle numbers per ovary : </span>
+                                        {{$oe->p_a->ovary->left->afcs}}
+                                    @endif
+                                </th>
+                            </tr>
+                            @endif
                         @endif
                         @if($oe->p_s->type == 'yes')
                             <tr>
@@ -1235,51 +1271,52 @@
                                     </th>
                                 {{-- @endif --}}
                             </tr>
-                        @endif
-                        @if (isset($oe->tvs->type) && $oe->tvs->type == 'yes' && !empty($oe->endometrial_thickness))
+                            @if (!empty($oe->endometrial_thickness))
                             <tr>
                                 <th>
                                     <span class="anc-label">Endometrial Thickness:  </span>
                                     {{ !empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : '-' }}
                                 </th>
                             </tr>
+                            @endif
+                            @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
+                            <tr>
+                                <th>
+                                    @if (!empty($oe->ovary->right->updated_details))
+                                    <span class="anc-label">Right Ovary : </span>
+                                        @foreach ($oe->ovary->right->updated_details as $key => $value)
+                                            @php
+                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                            @endphp
+                                        @endforeach
+                                    @endif
+                                    @if(!empty($oe->ovary->right->afcs))
+                                        <span class="anc-label">Follicle numbers per ovary : </span>
+                                        {{$oe->ovary->right->afcs}}
+                                    @endif
+                                </th>
+                            </tr>
+                            @endif
+                            @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
+                            <tr>
+                                <th>
+                                    @if(!empty($oe->ovary->left->updated_details))
+                                    <span class="anc-label">Left Ovary : </span>
+                                        @foreach($oe->ovary->left->updated_details as $key => $value)
+                                            @php
+                                                echo !empty($value) ? $value .  '<br />' : '- <br />';
+                                            @endphp
+                                        @endforeach
+                                    @endif
+                                    @if(!empty($oe->ovary->left->afcs))
+                                        <span class="anc-label">Follicle numbers per ovary : </span>
+                                        {{$oe->ovary->left->afcs}}
+                                    @endif
+                                </th>
+                            </tr>
+                            @endif
                         @endif
-                        @if (!empty($oe->ovary->right->updated_details) || !empty($oe->ovary->right->afcs))
-                        <tr>
-                            <th>
-                                @if (!empty($oe->ovary->right->updated_details))
-                                <span class="anc-label">Right Ovary : </span>
-                                    @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                        @php
-                                            echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                        @endphp
-                                    @endforeach
-                                @endif
-                                @if(!empty($oe->ovary->right->afcs))
-                                    <span class="anc-label">Follicle numbers per ovary : </span>
-                                    {{$oe->ovary->right->afcs}}
-                                @endif
-                            </th>
-                        </tr>
-                        @endif
-                        @if(!empty($oe->ovary->left->updated_details) || !empty($oe->ovary->left->afcs))
-                        <tr>
-                            <th>
-                                @if(!empty($oe->ovary->left->updated_details))
-                                <span class="anc-label">Left Ovary : </span>
-                                    @foreach($oe->ovary->left->updated_details as $key => $value)
-                                        @php
-                                            echo !empty($value) ? $value .  '<br />' : '- <br />';
-                                        @endphp
-                                    @endforeach
-                                @endif
-                                @if(!empty($oe->ovary->left->afcs))
-                                    <span class="anc-label">Follicle numbers per ovary : </span>
-                                    {{$oe->ovary->left->afcs}}
-                                @endif
-                            </th>
-                        </tr>
-                        @endif
+                        
                         @if (isset($oe->breast) && $oe->breast->type == 'yes')
                         
                         <tr>

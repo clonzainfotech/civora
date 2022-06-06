@@ -1784,7 +1784,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                 <div class="row">
                 @php
                     $paType = isset($gynecId) &&  !empty($oe->p_a->type) && $oe->p_a->type == 'yes' ? '' : 'd-none';
-                    $utersDetail = isset($gynecId) && ((!empty($oh->married_type) && $oh->married_type == 'unmarried') ||  $oe->p_a->type == 'yes') ? '' : 'd-none';
+                    $utersDetail = isset($gynecId) && ((!empty($oh->married_type) && $oh->married_type == 'unmarried') &&  $oe->p_a->type == 'yes') ? '' : 'd-none';
                 @endphp
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -1806,113 +1806,115 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                     <div class="{{'col-md-3 pa-details '.$paType}}">
                         <div class="form-group">
-                            {{Form::text("oe[p_a][details]",isset($gynecId) && !empty($oe->p_a->details) ? $oe->p_a->details : null,['class'=>'form-control','placeholder'=>'UT Details'])}}
+                            {{Form::text("oe[p_a][details]",isset($gynecId) && !empty($oe->p_a->details) ? $oe->p_a->details : null,['class'=>'form-control','placeholder'=>'PA Details'])}}
                         </div>
                     </div>
                     
                 </div>
-                @php
-                    $left =  in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
-                    $right = in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
-                    $ovaryLeftType =  !empty($oe->ovary->left->type) && $oe->ovary->left->type == '2' ? '' : 'd-none';
-                    $ovaryRightType = !empty($oe->ovary->right->type) && $oe->ovary->right->type == '2' ? '' : 'd-none';
-                @endphp
-                {{-- <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-1 pr-0">
-                        <label class="vertical-form-label pr-0">
-                            Ovary :
-                        </label>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="checkbox">
-                            {{Form::checkbox('oe[ovary][type][]','right',in_array('right',!empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'oe-right','class'=>'plan-management'])}}
-                            <label for="oe-right">
-                                Right
+                {{-- @if(isset($gynecId) && !empty($oh->married_type) && $oh->married_type == 'unmarried') --}}
+                    @php
+                        $left =  in_array('left',!empty($oe->p_a->ovary->type) ? $oe->p_a->ovary->type : []) ? '' : 'd-none';
+                        $right = in_array('right',!empty($oe->p_a->ovary->type) ? $oe->p_a->ovary->type : []) ? '' : 'd-none';
+                        $ovaryLeftType =  !empty($oe->p_a->ovary->left->type) && $oe->p_a->ovary->left->type == '2' ? '' : 'd-none';
+                        $ovaryRightType = !empty($oe->p_a->ovary->right->type) && $oe->p_a->ovary->right->type == '2' ? '' : 'd-none';
+                    @endphp
+                    <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1 pr-0">
+                            <label class="vertical-form-label pr-0">
+                                Ovary :
                             </label>
                         </div>
-                    </div>
-                    <div class="{{'col-md-3 right-details'}}">
-                        <div class="form-group">
-                            {{Form::select("oe[ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->ovary->right->type) ? $oe->ovary->right->type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-right-abnormal-type'])}}
-                        </div>
-                    </div>
-                    <div class="{{'col-md-6 right-details'}}">
-                        <div class="row">
-                            <div class="{{'col-md-5 complain-multi ovary-right-abnormal-type mt-1 '.$ovaryRightType}}">
-                                {{Form::select("oe[ovary][right][details][]",$rightOvaryData,isset($gynecId) && !empty($oe->ovary->right->details) ? $oe->ovary->right->details : null,[
-                                    'class'=>'form-control co-value co_value_data oe_ovary_right_details',
-                                    'placeholder'=>'Abnormal Details',
-                                    'id' => 'oe_ovary_right_details',
-                                    'multiple'=>true
-                                ])}}
+                        <div class="col-md-1">
+                            <div class="checkbox">
+                                {{Form::checkbox('oe[p_a][ovary][type][]','right',in_array('right',!empty($oe->p_a->ovary->type) ? $oe->p_a->ovary->type : []),['id'=>'oe-right','class'=>'plan-management'])}}
+                                <label for="oe-right">
+                                    Right
+                                </label>
                             </div>
-                            <div class="{{'col-md-6 complain-multi ovary-right-abnormal-type '.$ovaryRightType}}">
-                                <div class="row edit_oe_ovary_right_details">
-                                    @if (isset($oe->ovary->right->updated_details))
-                                        @foreach ($oe->ovary->right->updated_details as $key => $value)
-                                            @if(isset($oe->ovary->right->details[$key]))
-                                            <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->right->details[$key]) . '_right' }}">
-                                                {{Form::text('oe[ovary][right][updated_details][]', !empty($value) ? $value : null, [
-                                                    'class' => 'form-control edited_oe_ovary_right_details',
-                                                    'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->right->details[$key])
-                                                ])}}
-                                            </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                        </div>
+                        <div class="{{'col-md-3 right-details'}}">
+                            <div class="form-group">
+                                {{Form::select("oe[p_a][ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->p_a->ovary->right->type) ? $oe->p_a->ovary->right->type : null,['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-pa-right-abnormal-type'])}}
+                            </div>
+                        </div>
+                        <div class="{{'col-md-6 right-details'}}">
+                            <div class="row">
+                                <div class="{{'col-md-5 complain-multi ovary-pa-right-abnormal-type mt-1 '.$ovaryRightType}}">
+                                    {{Form::select("oe[p_a][ovary][right][details][]",$rightOvaryData,!empty($oe->p_a->ovary->right->details) ? $oe->p_a->ovary->right->details : null,[
+                                        'class'=>'form-control co-value co_value_data oe_pa_ovary_right_details',
+                                        'placeholder'=>'Abnormal Details',
+                                        'id' => 'oe_pa_ovary_right_details',
+                                        'multiple'=>true
+                                    ])}}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-1">
-                        <div class="checkbox">
-                            {{Form::checkbox('oe[ovary][type][]','left',in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []),['id'=>'oe-left','class'=>'plan-management'])}}
-                            <label for="oe-left">
-                                Left
-                            </label>
-                        </div>
-                    </div>
-                    <div class="{{'col-md-3 left-details'}}">
-                        <div class="form-group">
-                            {{Form::select("oe[ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->ovary->left->type) ? $oe->ovary->left->type : null,[
-                                'class'=>'form-control select-padding-0 abnormal',
-                                'data-type'=>'ovary-left-abnormal-type'
-                            ])}}
-                        </div>
-                    </div>
-                    <div class="{{'col-md-6 left-details'}}">
-                        <div class="row">
-                            <div class="{{'col-md-5 complain-multi ovary-left-abnormal-type '.$ovaryLeftType}} ">
-                                {{Form::select("oe[ovary][left][details][]",$leftOvaryData,!empty($oe->ovary->left->details) ? $oe->ovary->left->details : null,[
-                                    'class'=>'form-control co-value co_value_data oe_ovary_left_details',
-                                    'placeholder'=>'Abnormal Details',
-                                    'id' => 'oe_ovary_left_details',
-                                    'multiple'=>true
-                                ])}}
-                            </div>
-                            <div class="{{'col-md-6 complain-multi ovary-left-abnormal-type '.$ovaryLeftType}}">
-                                <div class="row edit_oe_ovary_left_details">
-                                    @if (isset($oe->ovary->left->updated_details))
-                                        @foreach ($oe->ovary->left->updated_details as $key => $value)
-                                            @if(isset($oe->ovary->left->details[$key]))
-                                                <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key]) . '_left' }}">
-                                                    {{Form::text('oe[ovary][left][updated_details][]', !empty($value) ? $value : null, [
-                                                        'class' => 'form-control edited_oe_ovary_left_details',
-                                                        'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->ovary->left->details[$key])
+                                <div class="{{'col-md-6 complain-multi ovary-pa-right-abnormal-type '.$ovaryRightType}}">
+                                    <div class="row edit_pa_oe_ovary_right_details">
+                                        @if (isset($oe->p_a->ovary->right->updated_details))
+                                            @foreach ($oe->p_a->ovary->right->updated_details as $key => $value)
+                                                @if(isset($oe->p_a->ovary->right->details[$key]))
+                                                <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->p_a->ovary->right->details[$key]) . '_right_pa' }}">
+                                                    {{Form::text('oe[p_a][ovary][right][updated_details][]', !empty($value) ? $value : null, [
+                                                        'class' => 'form-control edited_pa_oe_ovary_right_details',
+                                                        'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->p_a->ovary->right->details[$key])
                                                     ])}}
                                                 </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                    <div class="{{'row pa-details unmarried-data '.$utersDetail}}">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-1">
+                            <div class="checkbox">
+                                {{Form::checkbox('oe[p_a][ovary][type][]','left',in_array('left',!empty($oe->p_a->ovary->type) ? $oe->p_a->ovary->type : []),['id'=>'oe-left','class'=>'plan-management'])}}
+                                <label for="oe-left">
+                                    Left
+                                </label>
+                            </div>
+                        </div>
+                        <div class="{{'col-md-3 left-details'}}">
+                            <div class="form-group">
+                                {{Form::select("oe[p_a][ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],!empty($oe->p_a->ovary->left->type) ? $oe->p_a->ovary->left->type : null,[
+                                    'class'=>'form-control select-padding-0 abnormal',
+                                    'data-type'=>'ovary-pa-left-abnormal-type'
+                                ])}}
+                            </div>
+                        </div>
+                        <div class="{{'col-md-6 left-details'}}">
+                            <div class="row">
+                                <div class="{{'col-md-5 complain-multi ovary-pa-left-abnormal-type '.$ovaryLeftType}} ">
+                                    {{Form::select("oe[p_a][ovary][left][details][]",$leftOvaryData,!empty($oe->p_a->ovary->left->details) ? $oe->p_a->ovary->left->details : null,[
+                                        'class'=>'form-control co-value co_value_data oe_pa_ovary_left_details',
+                                        'placeholder'=>'Abnormal Details',
+                                        'id' => 'oe_pa_ovary_left_details',
+                                        'multiple'=>true
+                                    ])}}
+                                </div>
+                                <div class="{{'col-md-6 complain-multi ovary-pa-left-abnormal-type '.$ovaryLeftType}}">
+                                    <div class="row edit_pa_oe_ovary_left_details">
+                                        @if (isset($oe->p_a->ovary->left->updated_details))
+                                            @foreach ($oe->p_a->ovary->left->updated_details as $key => $value)
+                                                @if(isset($oe->p_a->ovary->left->details[$key]))
+                                                    <div class="form-group col-md-12" id="{{ preg_replace('/[^a-zA-Z0-9]/','_',$oe->p_a->ovary->left->details[$key]) . '_left_pa' }}">
+                                                        {{Form::text('oe[p_a][ovary][left][updated_details][]', !empty($value) ? $value : null, [
+                                                            'class' => 'form-control edited_pa_oe_ovary_left_details',
+                                                            'id' => preg_replace('/[^a-zA-Z0-9]/','_',$oe->p_a->ovary->left->details[$key])
+                                                        ])}}
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{-- @endif --}}
                 @php
                     $leType = !empty($oe->l_s->type) && $oe->l_s->type == 'yes' ? '' : 'd-none';
                 @endphp
@@ -2006,9 +2008,10 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                    
                 </div>
                 @php
-                    $tvsType = !empty($oe->tvs->type) && $oe->tvs->type == 'yes' ? '' : 'd-none';
+                    $tvsType = isset($oh->married_type) && $oh->married_type == 'married' && !empty($oe->tvs->type) && $oe->tvs->type == 'yes' ? '' : 'd-none';
                     $breastType = !empty($oe->breast->type) && $oe->breast->type == 'yes' ? '' : 'd-none';
-                    $tvsDisplay = isset($oh->married_type) && $oh->married_type == 'married' ? '' : 'd-none';
+                    $tvsDisplay = isset($oh->married_type) && $oh->married_type == 'married' && $oe->tvs->type == 'yes' ? '' : 'd-none';
+                    // print_r($oh);
                 @endphp
                 <div class="row">
                     <div class="col-md-1 pr-0">
@@ -2039,7 +2042,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                         </div>
                     </div>
                 </div>
-
+                {{-- @if(!$isFirstVisit && !empty($oh->married_type) && $oh->married_type == 'married') --}}
                 <div class="{{'row married-data '.$tvsDisplay}}">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -2060,7 +2063,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                     </div>
                 </div>
                     
-                @if(isset($oh->married_type) && $oh->married_type == 'married')
+                {{-- @if(isset($oh->married_type) && $oh->married_type == 'married') --}}
                     <div class="{{'row tvs-details married-data '.$tvsType}}">
                         <div class="col-md-1"></div>
                         <div class="col-md-1 pr-0">
@@ -2233,7 +2236,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                             </div>
                         </div>
                     </div>
-                @endif
+                {{-- @endif --}}
 
             </div>
         </div>

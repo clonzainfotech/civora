@@ -3695,7 +3695,7 @@
                                         @if($row->visit == 3)
                                         @php
                                         $InjectionData = '';
-                                        if(!empty($agentData))
+                                        if(!empty($agentData) && in_array($createdAt,$inducingDateArray))
                                         {
                                             foreach($agentData as $agentData)
                                             {

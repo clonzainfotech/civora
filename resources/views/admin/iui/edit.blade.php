@@ -1776,16 +1776,16 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                                     {{-- {{!empty($inducingAgentDataValue) ? implode(',',$inducingAgentDataValue) : ''}} --}}
                                                 @endif
                                                 @if($row->visit == 3)
-                                                @php
-                                                $InjectionData = '';
-                                                if(!empty($agentData))
-                                                {
-                                                    foreach($agentData as $agentData)
-                                                    {
-                                                        $InjectionData = !empty($InjectionData) ? $InjectionData.','.$inducingInjectionData[$agentData] : $inducingInjectionData[$agentData];
+                                                    @php
+                                                    $InjectionData = '';
+                                                    if(!empty($agentData) && in_array($createdAt,$inducingDateArray))
+                                                    { 
+                                                        foreach($agentData as $agentData)
+                                                        {
+                                                            $InjectionData = !empty($InjectionData) ? $InjectionData.','.$inducingInjectionData[$agentData] : $inducingInjectionData[$agentData];
+                                                        }
                                                     }
-                                                }
-                                                @endphp
+                                                    @endphp
                                                 {{$InjectionData}}
                                                 @endif
                                             </td>

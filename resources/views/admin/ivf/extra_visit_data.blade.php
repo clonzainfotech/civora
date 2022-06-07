@@ -131,6 +131,36 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
             <div id="oe" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                 <div class="panel-body" id="parent">
                     <div class="row">
+                        <div class="col-md-1">
+                            <div class="checkbox">
+                                {{Form::checkbox('oe[le][vitals_status]','yes',!empty($leVitalsStatus) ? false : true,['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
+                                <label for="oe_vitals_status">
+                                    Vitals
+                                </label>
+                            </div>
+                        </div>
+                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
+                            <div class="input-group">
+                                <span class="input-group-addon">B.P : &nbsp;</span>
+                                {{Form::text("oe[le][bp]",!empty($oe->le->bp) ? $oe->le->bp : null,['class'=>'form-control'])}}
+                            </div>
+                        </div>
+                        <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$leVitalsStatus}}">MMHG</span>
+                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
+                            <div class="input-group">
+                                <span class="input-group-addon">Temp : &nbsp;</span>
+                                {{Form::text("oe[le][temp]",!empty($oe->le->temp) ? $oe->le->temp : null,['class'=>'form-control'])}}
+                            </div>
+                        </div>
+                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
+                            <div class="input-group">
+                                <span class="input-group-addon">Pulse : &nbsp;</span>
+                                {{Form::text("oe[le][pulse]",!empty($oe->le->pulse) ? $oe->le->pulse : null,['class'=>'form-control'])}}
+                            </div>
+                        </div>
+                        <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$leVitalsStatus}}">/ Min</span>
+                    </div>
+                    <div class="row">
                         <div class="col-md-1 pr-0">
                             <label class="vertical-form-label pr-0">
                                 P/S :
@@ -330,36 +360,7 @@ $dose = ["1"=>"Daily","2"=>"Once a week","3"=>"Twice a week","4"=>"Stat","5"=>"S
                         </div>
                     </div>
                     <br>
-                    <div class="row">
-                        <div class="col-md-1">
-                            <div class="checkbox">
-                                {{Form::checkbox('oe[le][vitals_status]','yes',!empty($leVitalsStatus) ? false : true,['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
-                                <label for="oe_vitals_status">
-                                    Vitals
-                                </label>
-                            </div>
-                        </div>
-                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
-                            <div class="input-group">
-                                <span class="input-group-addon">B.P : &nbsp;</span>
-                                {{Form::text("oe[le][bp]",!empty($oe->le->bp) ? $oe->le->bp : null,['class'=>'form-control'])}}
-                            </div>
-                        </div>
-                        <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$leVitalsStatus}}">MMHG</span>
-                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
-                            <div class="input-group">
-                                <span class="input-group-addon">Temp : &nbsp;</span>
-                                {{Form::text("oe[le][temp]",!empty($oe->le->temp) ? $oe->le->temp : null,['class'=>'form-control'])}}
-                            </div>
-                        </div>
-                        <div class="{{'col-md-2 oe_vitals_status_data '.$leVitalsStatus}}">
-                            <div class="input-group">
-                                <span class="input-group-addon">Pulse : &nbsp;</span>
-                                {{Form::text("oe[le][pulse]",!empty($oe->le->pulse) ? $oe->le->pulse : null,['class'=>'form-control'])}}
-                            </div>
-                        </div>
-                        <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$leVitalsStatus}}">/ Min</span>
-                    </div>
+                    
                 </div>
             </div>
         </div>

@@ -3335,13 +3335,13 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         {{Form::text("oe[endometrial_cavity][cavity]",isset($oe->endometrial_cavity->cavity)  ? $oe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="input-group">
                                         <span class="input-group-addon">Size : &nbsp;</span>
                                         {{Form::text("oe[endometrial_cavity][size]",isset($oe->endometrial_cavity->size)  ? $oe->endometrial_cavity->size : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
                                     </div>
                                 </div>
-                                <span class="col-md-1 p-2">M</span>
+                                <span class="col-md-1 p-2">M</span> --}}
                             </div>
                             @php
                                 $left = in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';

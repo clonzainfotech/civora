@@ -190,13 +190,37 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-2 pr-0">
+                    <label class="vertical-form-label pr-0">
+                        Endometrial Cavity :
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($ivfData->oe->endometrial_cavity->cavity) ? $ivfData->oe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Size : &nbsp;</span>
+                        {{Form::text("data[oe][endometrial_cavity][size]",!empty($ivfData->oe->endometrial_cavity->size) ? $ivfData->oe->endometrial_cavity->size : null,['class'=>'form-control'])}}
+                    </div>
+                </div>
+                <span class="col-md-1 p-2">MM</span>
+            </div>
             @if($ivf->visit == 2)
                 @php
                     $leftDataStatus = in_array('left',$ovaryType) ? '' : 'd-none';
                     $rightDataStatus = in_array('right',$ovaryType) ? '' : 'd-none';
                 @endphp
                 <div class="row">
-                    <div class="col-md-1"></div>
+                    {{-- <div class="col-md-1"></div> --}}
+                    <div class="col-md-1">
+                        <label class="vertical-form-label pr-0">
+                            Ovary:
+                        </label>
+                    </div>
                     <div class="col-md-1">
                         <div class="checkbox">
                             {{Form::checkbox('data[oe][ovary][ovary_type][]','right',in_array('right',$ovaryType),['id'=>'oe_right','class'=>'plan-management','data-id'=>'oe-right-details'])}}
@@ -253,11 +277,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-1">
-                        <label class="vertical-form-label pr-0">
-                            Ovary:
-                        </label>
-                    </div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-1">
                         <div class="checkbox">
                             {{Form::checkbox('data[oe][ovary][ovary_type][]','left',in_array('left',$ovaryType),['id'=>'oe_left','class'=>'plan-management','data-id'=>'oe-left-details'])}}
@@ -363,25 +383,7 @@
                 <br/>
             @endif
 
-            <div class="row">
-                <div class="col-md-2 pr-0">
-                    <label class="vertical-form-label pr-0">
-                        Endometrial Cavity :
-                    </label>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($ivfData->oe->endometrial_cavity->cavity) ? $ivfData->oe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <span class="input-group-addon">Size : &nbsp;</span>
-                        {{Form::text("data[oe][endometrial_cavity][size]",!empty($ivfData->oe->endometrial_cavity->size) ? $ivfData->oe->endometrial_cavity->size : null,['class'=>'form-control'])}}
-                    </div>
-                </div>
-                <span class="col-md-1 p-2">MM</span>
-            </div>
+            
             <br>
             @if($ivf->visit == 2)
                 @php
@@ -402,6 +404,29 @@
                         </div>
                     </div>
                 </div> --}}
+                
+                <div class="row">
+                    <div class="col-md-2 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            Right Tube :
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{Form::text("data[oe][right_tube]",isset($ivfData->oe->right_tube) ? $ivfData->oe->right_tube : null,['class'=>'form-control','placeholder'=>'Right Tube Details'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-2 pr-0">
+                        <label class="vertical-form-label pr-0">
+                            Left Tube :
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{Form::text("data[oe][left_tube]",isset($ivfData->oe->left_tube) ? $ivfData->oe->left_tube : null,['class'=>'form-control','placeholder'=>'Left Tube Details'])}}
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-1 pr-0">
                         <label class="vertical-form-label pr-0">
@@ -429,29 +454,6 @@
                             {{Form::text("data[oe][adnexa][details]",!empty($ivfData->oe->adnexa->details) ? $ivfData->oe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 pr-0">
-                        <label class="vertical-form-label pr-0">
-                            Right Tube :
-                        </label>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            {{Form::text("data[oe][right_tube]",isset($ivfData->oe->right_tube) ? $ivfData->oe->right_tube : null,['class'=>'form-control','placeholder'=>'Right Tube Details'])}}
-                        </div>
-                    </div>
-                    <div class="col-md-2 pr-0">
-                        <label class="vertical-form-label pr-0">
-                            Left Tube :
-                        </label>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            {{Form::text("data[oe][left_tube]",isset($ivfData->oe->left_tube) ? $ivfData->oe->left_tube : null,['class'=>'form-control','placeholder'=>'Left Tube Details'])}}
-                        </div>
-                    </div>
-                   
                 </div>
             @endif
         {{-- @endif --}}

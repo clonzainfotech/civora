@@ -1031,36 +1031,55 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="{{'col-sm-5 contraception-data ' . $contraceptionStatusClass}}">
-                                                <div class="radio is-conceived">
-                                                    {{Form::radio("oh[contraception][contraception_data]",'barrier_method',$contraceptionValue == 'barrier_method' ? true : false,['class'=>'mr-2','id'=>'barrier_method'])}}
-                                                    <label for="barrier_method">
+                                            <div class="{{'col-sm-8 contraception-data ' . $contraceptionStatusClass}}">
+                                                <div class="radio is-conceived d-flex">
+                                                    {{Form::radio("oh[contraception][contraception_data]",'barrier_method',$contraceptionValue == 'barrier_method' ? true : false,['class'=>'mr-2 contraception_radio','data-type'=>'barrier-method-detail','id'=>'barrier_method'])}}
+                                                    <label for="barrier_method" class="barrier_method">
                                                         Barrier Method
                                                     </label>
-                                                    {{Form::radio("oh[contraception][contraception_data]",'cu_t',$contraceptionValue == 'cu_t' ? true : false,['class'=>'mr-2','id'=>'cu_t'])}}
-                                                    <label for="cu_t">
+                                                    @if($contraceptionValue == 'barrier_method')
+                                                        {{Form::text("oh[contraception][detail]",isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control col-md-3 contraception-radio-radio barrier-method-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[contraception][contraception_data]",'cu_t',$contraceptionValue == 'cu_t' ? true : false,['class'=>'mr-2 contraception_radio','id'=>'cu_t','data-type'=>'cu-t-detail'])}}
+                                                    <label for="cu_t" class="cu_t">
                                                         Cu - T
                                                     </label>
-                                                    {{Form::radio("oh[contraception][contraception_data]",'tl_done',$contraceptionValue == 'tl_done' ? true : false,['class'=>'mr-2','id'=>'tl_done'])}}
-                                                    <label for="tl_done">
+                                                    @if($contraceptionValue == 'cu_t')
+                                                        {{Form::text("oh[contraception][detail]",isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control col-md-3 contraception-radio-radio cu-t-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[contraception][contraception_data]",'tl_done',$contraceptionValue == 'tl_done' ? true : false,['class'=>'mr-2 contraception_radio','id'=>'tl_done','data-type'=>'tl-done-detail'])}}
+                                                    <label for="tl_done" class="tl_done">
                                                     TL Done
                                                     </label>
-                                                    {{Form::radio("oh[contraception][contraception_data]",'occipill',$contraceptionValue == 'occipill' ? true : false,['class'=>'mr-2','id'=>'occipill'])}}
-                                                    <label for="occipill">
+                                                    @if($contraceptionValue == 'tl_done')
+                                                        {{Form::text("oh[contraception][detail]",isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control col-md-3 contraception-radio-radio tl-done-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[contraception][contraception_data]",'occipill',$contraceptionValue == 'occipill' ? true : false,['class'=>'mr-2 contraception_radio','id'=>'occipill','data-type'=>'occipill-detail'])}}
+                                                    <label for="occipill" class="occipill">
                                                         Occipill
                                                     </label>
-                                                    {{Form::radio("oh[contraception][contraception_data]",'other_contraception',$contraceptionValue == 'other_contraception' ? true : false,['class'=>'mr-2','id'=>'other_contraception'])}}
-                                                    <label for="other_contraception">
+                                                    @if($contraceptionValue == 'occipill')
+                                                        {{Form::text("oh[contraception][detail]",isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control col-md-3 contraception-radio-radio occipill-detail '])}}
+                                                    @endif 
+
+                                                    {{Form::radio("oh[contraception][contraception_data]",'other_contraception',$contraceptionValue == 'other_contraception' ? true : false,['class'=>'mr-2 contraception_radio','id'=>'other_contraception','data-type'=>'other-detail'])}}
+                                                    <label for="other_contraception" class="other_contraception">
                                                         Other
-                                                    </label>
+                                                    </label> 
+                                                    @if($contraceptionValue == 'other_contraception')
+                                                        {{Form::text("oh[contraception][detail]",isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control col-md-3 contraception-radio-radio other-detail '])}}
+                                                    @endif
                                                 </div>
                                             </div>
-                                            <div class="{{'col-sm-3 contraception-data ' . $contraceptionStatusClass}}">
+                                            {{-- <div class="{{'col-sm-3 contraception-data ' . $contraceptionStatusClass}}">
                                                 <div class='input-group'>
                                                     <span class='input-group-addon'>Detail : &nbsp;</span>
                                                     {{Form::text("oh[contraception][detail]",!empty($oh->contraception) && isset($oh->contraception->detail) ? $oh->contraception->detail : '',['class'=>'form-control'])}}
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         {{-- end contraception marriage --}}
                                         <!-- for ectopic -->
@@ -1605,11 +1624,15 @@
                                                 </div>
                                             </div>
                                             <div class="{{'col-sm-5 second-contraception-data ' . $secondContraceptionStatusClass}}">
-                                                <div class="radio is-conceived">
-                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'barrier_method',$secondContraceptionValue == 'barrier_method' ? true : false,['class'=>'mr-2','id'=>'second_barrier_method'])}}
+                                                <div class="radio is-conceived d-flex">
+                                                    {{-- {{Form::radio("oh[second_marriage][contraception][contraception_data]",'barrier_method',$secondContraceptionValue == 'barrier_method' ? true : false,['class'=>'mr-2','id'=>'second_barrier_method'])}}
                                                     <label for="second_barrier_method">
-                                                        Barrier Method
+                                                        Barrier Methoddfd
                                                     </label>
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>Detail : &nbsp;</span>
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",'',['class'=>'form-control'])}}
+                                                    </div>
                                                     {{Form::radio("oh[second_marriage][contraception][contraception_data]",'cu_t',$secondContraceptionValue == 'cu_t' ? true : false,['class'=>'mr-2','id'=>'second_cu_t'])}}
                                                     <label for="second_cu_t">
                                                         Cu - T
@@ -1625,15 +1648,57 @@
                                                     {{Form::radio("oh[second_marriage][contraception][contraception_data]",'other_contraception',$secondContraceptionValue == 'other_contraception' ? true : false,['class'=>'mr-2','id'=>'second_other_contraception'])}}
                                                     <label for="second_other_contraception">
                                                         Other
+                                                    </label> --}}
+
+
+                                                    
+                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'barrier_method',$secondContraceptionValue == 'barrier_method' ? true : false,['class'=>'mr-2 second_contraception_radio','data-type'=>'second-barrier-method-detail','id'=>'second_barrier_method'])}}
+                                                    <label for="second_barrier_method" class="second_barrier_method">
+                                                        Barrier Method
                                                     </label>
+                                                    @if($secondContraceptionValue == 'barrier_method')
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control col-md-3 second-contraception-radio-radio second-barrier-method-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'cu_t',$secondContraceptionValue == 'cu_t' ? true : false,['class'=>'mr-2 second_contraception_radio','id'=>'second_cu_t','data-type'=>'second-cu-t-detail'])}}
+                                                    <label for="second_cu_t" class="second_cu_t">
+                                                        Cu - T
+                                                    </label>
+                                                    @if($secondContraceptionValue == 'cu_t')
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control col-md-3 second-contraception-radio-radio second-cu-t-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'tl_done',$secondContraceptionValue == 'tl_done' ? true : false,['class'=>'mr-2 second_contraception_radio','id'=>'second_tl_done','data-type'=>'second-tl-done-detail'])}}
+                                                    <label for="second_tl_done" class="second_tl_done">
+                                                    TL Done
+                                                    </label>
+                                                    @if($secondContraceptionValue == 'tl_done')
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control col-md-3 second-contraception-radio-radio second-tl-done-detail '])}}
+                                                    @endif
+
+                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'occipill',$secondContraceptionValue == 'occipill' ? true : false,['class'=>'mr-2 second_contraception_radio','id'=>'second_occipill','data-type'=>'second-occipill-detail'])}}
+                                                    <label for="second_occipill" class="second_occipill">
+                                                        Occipill
+                                                    </label>
+                                                    @if($secondContraceptionValue == 'occipill')
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control col-md-3 second-contraception-radio-radio second-occipill-detail '])}}
+                                                    @endif 
+
+                                                    {{Form::radio("oh[second_marriage][contraception][contraception_data]",'other_contraception',$secondContraceptionValue == 'other_contraception' ? true : false,['class'=>'mr-2 second_contraception_radio','id'=>'second_other_contraception','data-type'=>'second-other-detail'])}}
+                                                    <label for="second_other_contraception" class="second_other_contraception">
+                                                        Other
+                                                    </label> 
+                                                    @if($secondContraceptionValue == 'other_contraception')
+                                                        {{Form::text("oh[second_marriage][contraception][detail]",isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control col-md-3 second-contraception-radio-radio second-other-detail '])}}
+                                                    @endif
                                                 </div>
                                             </div>
-                                            <div class="{{'col-sm-3 second-contraception-data ' . $secondContraceptionStatusClass}}">
+                                            {{-- <div class="{{'col-sm-3 second-contraception-data ' . $secondContraceptionStatusClass}}">
                                                 <div class='input-group'>
                                                     <span class='input-group-addon'>Detail : &nbsp;</span>
                                                     {{Form::text("oh[second_marriage][contraception][detail]",!empty($oh->second_marriage->contraception) && isset($oh->second_marriage->contraception->detail) ? $oh->second_marriage->contraception->detail : '',['class'=>'form-control'])}}
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         {{-- end contraception second marriage --}}
 
@@ -2009,10 +2074,11 @@
                                                         How Much : &nbsp;
                                                     </span>
                                                     {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                                    {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control ','data-id'=>'','readonly'])}} --}}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row taken-data">
+                                        <div class="{{ 'row taken-data ho-taken-type ' . $takenClass }}">
                                             @if(!empty($hoRx->taken->how_much_no))
                                                 @for($i=1; $i<=$hoRx->taken->how_much_no; $i++)
                                                     <div class='col-md-4'>
@@ -3371,6 +3437,39 @@
                                 </div>
                                 <div id="o_e" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1">
                                     <div class="panel-body" id="parent">
+                                        @php
+                                            $vitlasClass = !empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' ? '' : 'd-none';
+                                        @endphp
+                                        <div class="{{$otherTab.' row'}}">
+                                            <div class="col-md-1">
+                                                <div class="checkbox">
+                                                    {{Form::checkbox('oe[le][vitals_status]','yes',!empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' ? true : false,['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
+                                                    <label for="oe_vitals_status">
+                                                        Vitals
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">B.P : &nbsp;</span>
+                                                    {{Form::text("oe[le][bp]",!empty($oe->le->bp) ? $oe->le->bp : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$vitlasClass}}">MMHG</span>
+                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Temp : &nbsp;</span>
+                                                    {{Form::text("oe[le][temp]",!empty($oe->le->temp) ? $oe->le->temp : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Pulse : &nbsp;</span>
+                                                    {{Form::text("oe[le][pulse]",!empty($oe->le->pulse) ? $oe->le->pulse : null,['class'=>'form-control'])}}
+                                                </div>
+                                            </div>
+                                            <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$vitlasClass}}">/ Min</span>
+                                        </div>
                                         <div class="{{$otherTab.' row'}}">
                                             <div class="col-md-1 pr-0">
                                                 <label class="vertical-form-label pr-0">
@@ -3393,52 +3492,28 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="{{'col-md-5 ps-details '.$psType}}">
-                                                <div class="form-group">
+                                            <div class="{{'col-md-4 ps-details '.$psType}}">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Details : &nbsp;</span>
                                                     {{Form::text("oe[p_s][details]",!empty($oe->p_s->details) ? $oe->p_s->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="{{$otherTab.' row'}}">
-                                            <div class="col-md-1 pr-0">
-                                                <label class="vertical-form-label pr-0">
-                                                    Adnexa :
-                                                </label>
-                                            </div>
-                                            @php
-                                                $adnexaType = !empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' ? '' : 'd-none';
-                                            @endphp
-                                            <div class="col-sm-2">
-                                                <div class="radio is-conceived">
-                                                    {{Form::radio("oe[adnexa][type]",'yes',!empty($adnexaType) ? false : true,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                    <label for="adnexa_type_yes">
-                                                        Yes
-                                                    </label>
-
-                                                    {{Form::radio("oe[adnexa][type]",'no',!empty($adnexaType) ? true : false,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                                    <label for="adnexa_type_no">
-                                                        No
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="{{'col-md-5 adnexa-details '.$adnexaType}}">
-                                                <div class="form-group">
-                                                    {{Form::text("oe[adnexa][details]",!empty($oe->adnexa->details) ? $oe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                            <div class="{{'col-md-4 ps-details '.$psType}}">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Cervix : &nbsp;</span>
+                                                    {{Form::text("oe[cervix][details]",!empty($oe->cervix->details) ? $oe->cervix->details : null,['class'=>'form-control','placeholder'=>'Cervix Details'])}}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="{{$otherTab.' row'}}">
+                                        
+                                        {{-- <div class="{{$otherTab.' row'}}">
                                             <div class="col-md-1 pr-0">
                                                 <label class="vertical-form-label pr-0">
                                                     Cervix :
                                                 </label>
                                             </div>
-                                            <div class="col-md-7">
-                                                <div class="form-group">
-                                                    {{Form::text("oe[cervix][details]",!empty($oe->cervix->details) ? $oe->cervix->details : null,['class'=>'form-control','placeholder'=>'Cervix Details'])}}
-                                                </div>
-                                            </div>
-                                        </div>
+                                            
+                                        </div> --}}
                                         @php
                                             $tvsType = !empty($oe->tvs->type) && $oe->tvs->type == 'yes' ? '' : 'd-none';
                                         @endphp
@@ -3495,6 +3570,26 @@
                                                     {{Form::text("oe[endometrial_thickness]",!empty($oe->endometrial_thickness) ? $oe->endometrial_thickness : null,['class'=>'form-control','placeholder'=>'Endometrial Thickness Details'])}}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="{{'row tvs-details '.$tvsType}}">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-2 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    Endometrial Cavity :
+                                                </label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{Form::text("oe[endometrial_cavity][cavity]",isset($oe->endometrial_cavity->cavity)  ? $oe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Size : &nbsp;</span>
+                                                    {{Form::text("oe[endometrial_cavity][size]",isset($oe->endometrial_cavity->size)  ? $oe->endometrial_cavity->size : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity size'])}}
+                                                </div>
+                                            </div>
+                                            <span class="col-md-1 p-2">M</span> --}}
                                         </div>
                                         @php
                                             $left = in_array('left',!empty($oe->ovary->type) ? $oe->ovary->type : []) ? '' : 'd-none';
@@ -3624,40 +3719,35 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        @php
-                                            $vitlasClass = !empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' ? '' : 'd-none';
-                                        @endphp
                                         <div class="{{$otherTab.' row'}}">
-                                            <div class="col-md-1">
-                                                <div class="checkbox">
-                                                    {{Form::checkbox('oe[le][vitals_status]','yes',!empty($oe->le->vitals_status) && $oe->le->vitals_status == 'yes' ? true : false,['class'=>'vitals_status','id'=>'oe_vitals_status','data-id'=>'oe_vitals_status_data'])}}
-                                                    <label for="oe_vitals_status">
-                                                        Vitals
+                                            <div class="col-md-1 pr-0">
+                                                <label class="vertical-form-label pr-0">
+                                                    Adnexa :
+                                                </label>
+                                            </div>
+                                            @php
+                                                $adnexaType = !empty($oe->adnexa->type) && $oe->adnexa->type == 'yes' ? '' : 'd-none';
+                                            @endphp
+                                            <div class="col-sm-2">
+                                                <div class="radio is-conceived">
+                                                    {{Form::radio("oe[adnexa][type]",'yes',!empty($adnexaType) ? false : true,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                    <label for="adnexa_type_yes">
+                                                        Yes
+                                                    </label>
+
+                                                    {{Form::radio("oe[adnexa][type]",'no',!empty($adnexaType) ? true : false,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                    <label for="adnexa_type_no">
+                                                        No
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">B.P : &nbsp;</span>
-                                                    {{Form::text("oe[le][bp]",!empty($oe->le->bp) ? $oe->le->bp : null,['class'=>'form-control'])}}
+                                            <div class="{{'col-md-5 adnexa-details '.$adnexaType}}">
+                                                <div class="form-group">
+                                                    {{Form::text("oe[adnexa][details]",!empty($oe->adnexa->details) ? $oe->adnexa->details : null,['class'=>'form-control','placeholder'=>'Details'])}}
                                                 </div>
                                             </div>
-                                            <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$vitlasClass}}">MMHG</span>
-                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">Temp : &nbsp;</span>
-                                                    {{Form::text("oe[le][temp]",!empty($oe->le->temp) ? $oe->le->temp : null,['class'=>'form-control'])}}
-                                                </div>
-                                            </div>
-                                            <div class="{{'col-md-2 oe_vitals_status_data '.$vitlasClass}}">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">Pulse : &nbsp;</span>
-                                                    {{Form::text("oe[le][pulse]",!empty($oe->le->pulse) ? $oe->le->pulse : null,['class'=>'form-control'])}}
-                                                </div>
-                                            </div>
-                                            <span class="{{'col-md-1 p-2 oe_vitals_status_data '.$vitlasClass}}">/ Min</span>
                                         </div>
+                                        
                                         <div class="row">
                                             <div class="col-md-1 pr-0">
                                                 <label class="vertical-form-label pr-0">
@@ -3921,6 +4011,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{Form::textarea('oe[pt_remark]', isset($oe->pt_remark) ? $oe->pt_remark : '', ['class'=>'form-control no-resize pt_remark','placeholder'=>'Patient Remark','rows'=>'2'])}}
+                                    </div>
+                                </div>
+                            </div>  
                             {{Form::hidden('next_date','',['class'=>'next-date-value'])}}
                             {{Form::hidden('next_time','',['class'=>'next-time-value'])}}
 

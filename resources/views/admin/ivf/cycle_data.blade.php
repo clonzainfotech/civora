@@ -3276,6 +3276,7 @@
                                         <span class="weight-by-error text-danger mb-2"></span>
                                     </div>
                                 </div>
+                                <br>
                                 <div class="row">
                                     <div class="col-md-1">
                                         <div class="checkbox">
@@ -3306,31 +3307,7 @@
                                     </div>
                                     <span class="col-md-1 p-2 vitals_status_data d-none">/ Min</span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-1 pr-0">
-                                        <label class="vertical-form-label pr-0">
-                                            Adnexa :
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="radio is-conceived">
-                                            {{Form::radio("data[oe][adnexa][type]",'yes',false,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                            <label for="adnexa_type_yes">
-                                                Yes
-                                            </label>
-                
-                                            {{Form::radio("data[oe][adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
-                                            <label for="adnexa_type_no">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="{{'col-md-5 adnexa-details d-none'}}">
-                                        <div class="form-group">
-                                            {{Form::text("data[oe][adnexa][details]",null,['class'=>'form-control','placeholder'=>'Details'])}}
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 {{-- @if($pStatus == 1) --}}
                                     <div class="row">
                                         <div class="col-md-1">
@@ -3377,6 +3354,25 @@
                                                 {{Form::text("data[oe][ut][details]",!empty($historyOe->ut->details) ? $historyOe->ut->details : ($utValues ? $utValues : null),['class'=>'form-control','placeholder'=>'Abnormal Details'])}}
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2 pr-0">
+                                            <label class="vertical-form-label pr-0">
+                                                Endometrial Cavity :
+                                            </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
+                                            </div>
+                                        </div>
+                                        {{-- <div class="col-md-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Size : &nbsp;</span>
+                                                {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
+                                            </div>
+                                        </div> --}}
+                                        {{-- <span class="col-md-1 p-2">MM</span> --}}
                                     </div>
                                     @if(!empty($cycleNumber) && $visit == 2)
                                         <div class="row">
@@ -3538,25 +3534,7 @@
                                         <br/>
                                     @endif
 
-                                    <div class="row">
-                                        <div class="col-md-2 pr-0">
-                                            <label class="vertical-form-label pr-0">
-                                                Endometrial Cavity :
-                                            </label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="input-group">
-                                                <span class="input-group-addon">Size : &nbsp;</span>
-                                                {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
-                                            </div>
-                                        </div>
-                                        <span class="col-md-1 p-2">MM</span>
-                                    </div>
+                                    
                                     <div class="row">
                                         <div class="col-md-2 pr-0">
                                             <label class="vertical-form-label pr-0">
@@ -3579,6 +3557,31 @@
                                             </div>
                                         </div>
                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1 pr-0">
+                                            <label class="vertical-form-label pr-0">
+                                                Adnexa :
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="radio is-conceived">
+                                                {{Form::radio("data[oe][adnexa][type]",'yes',false,['id'=>'adnexa_type_yes','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                <label for="adnexa_type_yes">
+                                                    Yes
+                                                </label>
+                    
+                                                {{Form::radio("data[oe][adnexa][type]",'no',true,['id'=>'adnexa_type_no','class'=>'iui-yes-no-status','data-type'=>'adnexa-details'])}}
+                                                <label for="adnexa_type_no">
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="{{'col-md-5 adnexa-details d-none'}}">
+                                            <div class="form-group">
+                                                {{Form::text("data[oe][adnexa][details]",null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                            </div>
+                                        </div>
                                     </div>
                                     <br>
                                 {{-- @endif --}}

@@ -715,35 +715,39 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-5 contraception-data d-none">
-                                                            <div class="radio is-conceived">
-                                                                {{Form::radio("oh[contraception][contraception_data]",'barrier_method','',['class'=>'mr-2','id'=>'barrier_method'])}}
-                                                                <label for="barrier_method">
+                                                            <div class="radio is-conceived d-flex">
+                                                                {{Form::radio("oh[contraception][contraception_data]",'barrier_method',false,['class'=>'mr-2 contraception_radio','data-type'=>'barrier-method-detail','id'=>'barrier_method'])}}
+                                                                <label for="barrier_method" class="barrier_method">
                                                                     Barrier Method
                                                                 </label>
-                                                                {{Form::radio("oh[contraception][contraception_data]",'cu_t','',['class'=>'mr-2','id'=>'cu_t'])}}
-                                                                <label for="cu_t">
+
+                                                                {{Form::radio("oh[contraception][contraception_data]",'cu_t',false,['class'=>'mr-2 contraception_radio','id'=>'cu_t','data-type'=>'cu-t-detail'])}}
+                                                                <label for="cu_t" class="cu_t">
                                                                     Cu - T
                                                                 </label>
-                                                                {{Form::radio("oh[contraception][contraception_data]",'tl_done','',['class'=>'mr-2','id'=>'tl_done'])}}
-                                                                <label for="tl_done">
+
+                                                                {{Form::radio("oh[contraception][contraception_data]",'tl_done',false,['class'=>'mr-2 contraception_radio','id'=>'tl_done','data-type'=>'tl-done-detail'])}}
+                                                                <label for="tl_done" class="tl_done">
                                                                 TL Done
                                                                 </label>
-                                                                {{Form::radio("oh[contraception][contraception_data]",'occipill','',['class'=>'mr-2','id'=>'occipill'])}}
-                                                                <label for="occipill">
+
+                                                                {{Form::radio("oh[contraception][contraception_data]",'occipill',false,['class'=>'mr-2 contraception_radio','id'=>'occipill','data-type'=>'occipill-detail'])}}
+                                                                <label for="occipill" class="occipill">
                                                                     Occipill
                                                                 </label>
-                                                                {{Form::radio("oh[contraception][contraception_data]",'other_contraception','',['class'=>'mr-2','id'=>'other_contraception'])}}
-                                                                <label for="other_contraception">
+
+                                                                {{Form::radio("oh[contraception][contraception_data]",'other_contraception',false,['class'=>'mr-2 contraception_radio','id'=>'other_contraception','data-type'=>'other-detail'])}}
+                                                                <label for="other_contraception" class="other_contraception">
                                                                     Other
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3 contraception-data d-none">
+                                                        {{-- <div class="col-md-3 contraception-data d-none">
                                                             <div class='input-group'>
                                                                 <span class='input-group-addon'>Detail : &nbsp;</span>
                                                                 {{Form::text("oh[contraception][detail]",'',['class'=>'form-control'])}}
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                     {{-- end contraception --}}
                                                     {{-- ectopic data --}}
@@ -1168,35 +1172,39 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-5 second-contraception-data d-none">
-                                                            <div class="radio is-conceived">
-                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'barrier_method','',['class'=>'mr-2','id'=>'second_barrier_method'])}}
-                                                                <label for="second_barrier_method">
+                                                            <div class="radio is-conceived d-flex">
+                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'barrier_method',false,['class'=>'mr-2 second_contraception_radio','data-type'=>'second-barrier-method-detail','id'=>'second_barrier_method'])}}
+                                                                <label for="second_barrier_method" class="second_barrier_method">
                                                                     Barrier Method
                                                                 </label>
-                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'cu_t','',['class'=>'mr-2','id'=>'second_cu_t'])}}
-                                                                <label for="second_cu_t">
+
+                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'cu_t',false,['class'=>'mr-2 second_contraception_radio','id'=>'second_cu_t','data-type'=>'second-cu-t-detail'])}}
+                                                                <label for="second_cu_t" class="second_cu_t">
                                                                     Cu - T
                                                                 </label>
-                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'tl_done','',['class'=>'mr-2','id'=>'second_tl_done'])}}
-                                                                <label for="second_tl_done">
+
+                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'tl_done',false,['class'=>'mr-2 second_contraception_radio','id'=>'second_tl_done','data-type'=>'second-tl-done-detail'])}}
+                                                                <label for="second_tl_done" class="second_tl_done">
                                                                 TL Done
                                                                 </label>
-                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'occipill','',['class'=>'mr-2','id'=>'second_occipill'])}}
-                                                                <label for="second_occipill">
+
+                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'occipill',false,['class'=>'mr-2 second_contraception_radio','id'=>'second_occipill','data-type'=>'second-occipill-detail'])}}
+                                                                <label for="second_occipill" class="second_occipill">
                                                                     Occipill
                                                                 </label>
-                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'other_contraception','',['class'=>'mr-2','id'=>'second_other_contraception'])}}
-                                                                <label for="second_other_contraception">
+
+                                                                {{Form::radio("oh[second_marriage][contraception][contraception_data]",'other_contraception',false,['class'=>'mr-2 second_contraception_radio','id'=>'second_other_contraception','data-type'=>'second-other-detail'])}}
+                                                                <label for="second_other_contraception" class="second_other_contraception">
                                                                     Other
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3 second-contraception-data d-none">
+                                                        {{-- <div class="col-md-3 second-contraception-data d-none">
                                                             <div class='input-group'>
                                                                 <span class='input-group-addon'>Detail : &nbsp;</span>
                                                                 {{Form::text("oh[second_marriage][contraception][detail]",'',['class'=>'form-control'])}}
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                     {{-- end contraception second marriage --}}
                                                     {{-- ectopic data --}}
@@ -1601,12 +1609,85 @@
                                                     </div>
                                                     <div class="col-md-3 pa-details d-none">
                                                         <div class="form-group">
-                                                            {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'UT Details'])}}
+                                                            {{Form::text("oe[p_a][details]",'',['class'=>'form-control','placeholder'=>'PA Details'])}}
                                                         </div>
                                                     </div>
                                                     
                                                 </div>
-                                                <div class="row pa-details unmarried-data d-none">
+                                                <div class="{{'row pa-details unmarried-data d-none'}}">
+                                                    <div class="col-md-1"></div>
+                                                    <div class="col-md-1 pr-0">
+                                                        <label class="vertical-form-label pr-0">
+                                                            Ovary :
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[p_a][ovary][type][]','right','',['id'=>'oe-right','class'=>'plan-management'])}}
+                                                            <label for="oe-right">
+                                                                Right
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-3 right-details'}}">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[p_a][ovary][right][type]",['1'=>'Normal','2'=>"Abnormal"],'',['class'=>'form-control select-padding-0 abnormal','data-type'=>'ovary-pa-right-abnormal-type'])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-6 right-details'}}">
+                                                        <div class="row">
+                                                            <div class="{{'col-md-5 complain-multi ovary-pa-right-abnormal-type mt-1 d-none'}}">
+                                                                {{Form::select("oe[p_a][ovary][right][details][]",$rightOvaryData,null,[
+                                                                    'class'=>'form-control co-value co_value_data oe_pa_ovary_right_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_pa_ovary_right_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="{{'col-md-6 complain-multi ovary-pa-right-abnormal-type d-none'}}">
+                                                                <div class="row edit_pa_oe_ovary_right_details">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="{{'row pa-details unmarried-data d-none'}}">
+                                                    <div class="col-md-2"></div>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('oe[p_a][ovary][type][]','left',null,['id'=>'oe-left','class'=>'plan-management'])}}
+                                                            <label for="oe-left">
+                                                                Left
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-3 left-details'}}">
+                                                        <div class="form-group">
+                                                            {{Form::select("oe[p_a][ovary][left][type]",['1'=>'Normal','2'=>"Abnormal"],null,[
+                                                                'class'=>'form-control select-padding-0 abnormal',
+                                                                'data-type'=>'ovary-pa-left-abnormal-type'
+                                                            ])}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{'col-md-6 left-details'}}">
+                                                        <div class="row">
+                                                            <div class="{{'col-md-5 complain-multi ovary-pa-left-abnormal-type d-none'}} ">
+                                                                {{Form::select("oe[p_a][ovary][left][details][]",$leftOvaryData,null,[
+                                                                    'class'=>'form-control co-value co_value_data oe_pa_ovary_left_details',
+                                                                    'placeholder'=>'Abnormal Details',
+                                                                    'id' => 'oe_pa_ovary_left_details',
+                                                                    'multiple'=>true
+                                                                ])}}
+                                                            </div>
+                                                            <div class="{{'col-md-6 complain-multi ovary-pa-oe-left-abnormal-type d-none'}}">
+                                                                <div class="row edit_pa_oe_ovary_left_details">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="row pa-details unmarried-data d-none">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-1 pr-0 tvs-details d-none">
                                                         <label class="vertical-form-label pr-0">
@@ -1675,7 +1756,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 
                                                 <div class="row">
                                                     <div class="col-md-1 pr-0">
@@ -2090,12 +2171,58 @@
                                                 <div class="row">
                                                     <div class="col-md-2">
                                                         <div class="checkbox">
-                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically','',['id'=>'medically','class'=>'plan-management','data-id'=>'medically'])}}
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','counselling',false,['id'=>'counselling','class'=>'plan-management','data-id'=>'counselling-details'])}}
+                                                            <label for="counselling">
+                                                                Counselling
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 counselling-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[counselling_details]", null,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically',false,['id'=>'medically','class'=>'plan-management','data-id'=>'medical-details'])}}
                                                             <label for="medically">
                                                                 Medically
                                                             </label>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6 medical-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[medically_details]",null,['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox">
+                                                            {{Form::checkbox('plan_of_management[plan_of_management_data][]','medically','',['id'=>'medically','class'=>'plan-management','data-id'=>'medically','data-type'=>'medical-details'])}}
+                                                            <label for="medically">
+                                                                Medically
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 medical-details d-none">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                Details : &nbsp;
+                                                            </span>
+                                                            {{Form::text("plan_of_management[medically_details]",'',['class'=>'form-control'])}}
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
+                                                <div class="row">
                                                     <div class="col-md-2">
                                                         <div class="checkbox">
                                                             {{Form::checkbox('plan_of_management[plan_of_management_data][]','surgically','',['id'=>'surgically-type','class'=>'plan-management','data-id'=>'surgically-type'])}}

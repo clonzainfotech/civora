@@ -3530,10 +3530,11 @@ class IVFController extends AdminController
             $isExtraVisit = 1;
             if($request->isprint == 1)
             {
+                $pt_view = 1;
                 return [
                     'status'=>2,
                     'id'=>$ivfExtraVisit->id,
-                'preview' => View::make('admin.ivf.preview',compact('ivfExtraVisit','ivfPatients','isExtraVisit'))->render()
+                'preview' => View::make('admin.ivf.preview',compact('ivfExtraVisit','ivfPatients','isExtraVisit','pt_view'))->render() 
                 ];
 
             }

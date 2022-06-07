@@ -101,6 +101,98 @@ $(document).ready(function(){
             $('#' + remove + '_right').remove();
         }
     });
+
+    //p_a ovary for unmarried
+    $(document).on('change', 'select.oe_pa_ovary_left_details', function (e) {
+        var textboxName = 'oe[p_a][ovary][left][updated_details][]';
+        // if (typeof ($(this).data('id')) !== 'undefined') {
+        //     var textboxName = 'data[oe][ovary][left][updated_details][]';
+        // }
+        var selectedValues = $('#oe_pa_ovary_left_details').val();
+        var updatedDetails = $('.edited_pa_oe_ovary_left_details').map(function () {
+            return this.id;
+        }).get();
+
+        var difference = [];
+        var elementDifference = [];
+
+        jQuery.grep(selectedValues, function (element) {
+            if (jQuery.inArray(element.replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_'), updatedDetails) == -1) {
+                elementDifference.push(element);
+                difference.push(element.replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_'));
+            }
+        });
+
+        for (var i = 0; i < selectedValues.length; i++) {
+            selectedValues[i] = selectedValues[i].replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_');
+        }
+
+        var remove = [];
+        jQuery.grep(updatedDetails, function (el) {
+            if (jQuery.inArray(el, selectedValues) == -1) {
+                remove.push(el);
+            }
+        });
+
+        if (selectedValues.length > updatedDetails.length) {
+            for (var i = 0; i < difference.length; i++) {
+                $('.edit_pa_oe_ovary_left_details').append(
+                    '<div class="form-group col-md-12" id="' + difference[i] + '_left_pa">' +
+                    '<input class="form-control edited_pa_oe_ovary_left_details" name="' + textboxName + '" type="text" value="' + elementDifference[i] + '" id="' + difference[i] + '" maxlength="250" required>' +
+                    '</div>'
+                );
+            }
+
+        }
+
+        if (updatedDetails.length > $('#oe_pa_ovary_left_details').val().length) {
+            $('#' + remove + '_left_pa').remove();
+        }
+    });
+    $(document).on('change', 'select.oe_pa_ovary_right_details', function (e) {
+
+        var textboxName = 'oe[p_a][ovary][right][updated_details][]';
+        // if (typeof ($(this).data('id')) !== 'undefined') {
+        //     var textboxName = 'data[oe][ovary][right][updated_details][]';
+        // }
+        var selectedValues = $('#oe_pa_ovary_right_details').val();
+        var updatedDetails = $('.edited_pa_oe_ovary_right_details').map(function () {
+            return this.id;
+        }).get();
+
+        var difference = [];
+        var elementDifference = [];
+
+        jQuery.grep(selectedValues, function (element) {
+            if (jQuery.inArray(element.replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_'), updatedDetails) == -1) {
+                elementDifference.push(element);
+                difference.push(element.replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_'));
+            }
+        });
+
+        for (var i = 0; i < selectedValues.length; i++) {
+            selectedValues[i] = selectedValues[i].replace(/[!@#$&()\\`.+,/\"%\-*{}[|:;'<>~?^_=\] ]/g, '_');
+        }
+        var remove = [];
+
+        jQuery.grep(updatedDetails, function (el) {
+            if (jQuery.inArray(el, selectedValues) == -1) remove.push(el);
+        });
+
+        if (selectedValues.length > updatedDetails.length) {
+            for (var i = 0; i < difference.length; i++) {
+                $('.edit_pa_oe_ovary_right_details').append(
+                    '<div class="form-group col-md-12" id="' + difference[i] + '_right_pa">' +
+                    '<input class="form-control edited_pa_oe_ovary_right_details" name="' + textboxName + '" type="text" value="' + elementDifference[i] + '" id="' + difference[i] + '" maxlength="250" required>' +
+                    '</div>'
+                );
+            }
+        }
+
+        if (updatedDetails.length > $('#oe_pa_ovary_right_details').val().length) {
+            $('#' + remove + '_right_pa').remove();
+        }
+    });
     $(document).on('change', ".plan-management", function () {
         var ischecked = $(this).is(':checked');
         var dId = $(this).data('id');
@@ -2587,6 +2679,24 @@ $(document).ready(function(){
         {
             $('.unmarried-data').addClass('d-none');
         }
+    })
+    $(document).on('change','.contraception_radio',function(){
+        var type = $(this).data('type');
+        $('.contraception-radio-radio').addClass('d-none');
+        // console.log(type);
+        var contraception_id = $(this).attr('id');
+        console.log(contraception_id);
+        $('<input class="form-control col-md-3 contraception-radio-radio" name="oh[contraception][detail]" type="text" value="">').insertAfter('label.'+contraception_id);
+        // $('.'+type).removeClass('d-none');
+    })
+    $(document).on('change','.second_contraception_radio',function(){
+        var type = $(this).data('type');
+        $('.second-contraception-radio-radio').addClass('d-none');
+        console.log(type);
+        var contraception_id = $(this).attr('id');
+        // console,log(contraception_id);
+        $('<input class="form-control col-md-3 second-contraception-radio-radio" name="oh[second_marriage][contraception][detail]" type="text" value="">').insertAfter('label.'+contraception_id);
+        // $('.'+type).removeClass('d-none');
     })
     // function terminationTypeTerm(value)
     // {

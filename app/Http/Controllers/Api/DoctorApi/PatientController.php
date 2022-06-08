@@ -24,9 +24,12 @@ class PatientController extends ApiController
         $UserData = $this->UserToken->where('token', $token)->first();
         $per_page = isset($request->per_page) ? $request->per_page : '';
         $page = isset($request->page) ? $request->page : '';
+        $search_text = isset($request->search_text) ? $request->search_text : '';
 
         if ($token && $UserData) {
-            $patientList = collect($this->OpdPatients->select('id', 'code', 'name', 'dob', 'mobile_number', 'profile_picture', 'reference_doctor_id')->where('hospital_doctor_id', $UserData->user_id)->paginate($per_page, $page)->all())->map(function ($q) {
+            $patientList = collect($this->OpdPatients->select('id', 'code', 'name', 'dob', 'mobile_number', 'profile_picture', 'reference_doctor_id')->where('hospital_doctor_id', $UserData->user_id)->where(function($q) use($search_text){
+                $q->where('name', 'LIKE', '%'.$search_text.'%');
+            })->paginate($per_page, $page)->all())->map(function ($q) {
                 $q->reference_doctor = $q->getReferenceDoctor['name'];
                 $q->category = isset($q->lastDoneAppointmentData->categoryDetails['name']) ? $q->lastDoneAppointmentData->categoryDetails['name'] : '';
                 unset($q->getReferenceDoctor, $q->lastDoneAppointmentData);

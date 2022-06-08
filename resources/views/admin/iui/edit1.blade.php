@@ -1846,12 +1846,12 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         <span class="input-group-addon">
                                             How Much : &nbsp;
                                         </span>
-                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control','data-id'=>'taken','readonly'])}} --}}
-                                        {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
+                                        {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : 1,['class'=>'form-control','data-id'=>'taken','readonly'])}}
+                                        {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
                                     </div>
                                 </div>
                             </div>
-                            <div class="{{ 'row taken-data ho-taken-type ' . $takenClass }}">
+                            <div class="{{ 'row  ho-taken-type ' . $takenClass }}">
                                 @if(!empty($hoRx->taken->how_much_no))
                                     @for($i=1; $i<=$hoRx->taken->how_much_no; $i++)
                                         <div class='col-md-4'>
@@ -1873,6 +1873,25 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                             </div>
                                         </div>
                                     @endfor
+                                @else
+                                    <div class='col-md-4'>
+                                        <div class='form-group'>
+                                            {{Form::text('ho_rx[taken][how_much][1]',null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                        </div>
+                                    </div>
+                                    <div class='col-md-4'>
+                                        <div class='input-group'>
+                                            <span class='input-group-addon'>
+                                                When/Where : &nbsp;
+                                            </span>
+                                            {{Form::text('ho_rx[taken][when_where][1]',null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    <div class='col-md-4'>
+                                        <div class='form-group'>
+                                            {{Form::select('ho_rx[taken][type][1][]',["1"=>"CC","2"=>"Letroz","3"=>"Both"],null,['class'=>'form-control select-padding-0'])}}
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                             <div class="row">
@@ -4156,13 +4175,13 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                                         {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="input-group">
                                         <span class="input-group-addon">Size : &nbsp;</span>
                                         {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
-                                <span class="col-md-1 p-2">M</span>
+                                <span class="col-md-1 p-2">M</span> --}}
                             </div>
                             <div class="row">
                                 <div class="col-md-1"></div>

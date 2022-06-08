@@ -2073,8 +2073,8 @@
                                                     <span class="input-group-addon">
                                                         How Much : &nbsp;
                                                     </span>
-                                                    {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}}
-                                                    {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control ','data-id'=>'','readonly'])}} --}}
+                                                    {{-- {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : null,['class'=>'form-control how-much-taken','data-id'=>'taken','onwheel'=>'this.blur()'])}} --}}
+                                                    {{Form::number("ho_rx[taken][how_much_no]",!empty($hoRx->taken->how_much_no) ? $hoRx->taken->how_much_no : 1,['class'=>'form-control ','data-id'=>'','readonly'])}}
                                                 </div>
                                             </div>
                                         </div>
@@ -2100,6 +2100,25 @@
                                                         </div>
                                                     </div>
                                                 @endfor
+                                            @else
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::text('ho_rx[taken][how_much][1]',null,['class'=>'form-control','placeholder'=>'Details'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='input-group'>
+                                                        <span class='input-group-addon'>
+                                                            When/Where : &nbsp;
+                                                        </span>
+                                                        {{Form::text('ho_rx[taken][when_where][1]',null,['class'=>'form-control'])}}
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-4'>
+                                                    <div class='form-group'>
+                                                        {{Form::select('ho_rx[taken][type][1][]',["1"=>"CC","2"=>"Letroz","3"=>"Both"],null,['class'=>'form-control select-padding-0'])}}
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
                                         <div class="row">

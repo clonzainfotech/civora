@@ -31,7 +31,7 @@
             $totalCutAmount = 0;
         @endphp
         <tr class="cutdata">
-            <td colspan="7" class="sub-headline">{{ 'Dr. ' . $doctorName }}</td>
+            <td colspan="7" class="sub-headline">{{ $doctorName }}</td>
         </tr>
         
         @foreach ($rowList as $row)

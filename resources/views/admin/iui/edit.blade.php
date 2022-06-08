@@ -414,13 +414,13 @@ $medqty = ['0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5'];
                                         {{Form::text("data[oe][endometrial_cavity][cavity]",!empty($historyOe->endometrial_cavity->cavity) ? $historyOe->endometrial_cavity->cavity : null,['class'=>'form-control','placeholder'=>'Endometrial Cavity Details'])}}
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="input-group">
                                         <span class="input-group-addon">Size : &nbsp;</span>
                                         {{Form::text("data[oe][endometrial_cavity][size]",!empty($historyOe->endometrial_cavity->size) ? $historyOe->endometrial_cavity->size : null,['class'=>'form-control'])}}
                                     </div>
                                 </div>
-                                <span class="col-md-1 p-2">M</span>
+                                <span class="col-md-1 p-2">M</span> --}}
                             </div>
                             <div class="{{'row tvs-details d-none'}}">
                                 <div class="col-md-1"></div>

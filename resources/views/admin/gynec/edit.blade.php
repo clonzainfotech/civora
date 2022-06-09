@@ -2010,7 +2010,7 @@ $dose =  ['' => 'Select Dose','1'=>'Daily','2'=>"Once a week",'3'=>"Twice a week
                 @php
                     $tvsType = isset($oh->married_type) && $oh->married_type == 'married' && !empty($oe->tvs->type) && $oe->tvs->type == 'yes' ? '' : 'd-none';
                     $breastType = !empty($oe->breast->type) && $oe->breast->type == 'yes' ? '' : 'd-none';
-                    $tvsDisplay = isset($oh->married_type) && $oh->married_type == 'married' && $oe->tvs->type == 'yes' ? '' : 'd-none';
+                    $tvsDisplay = isset($oh->married_type) && $oh->married_type == 'married' ? '' : 'd-none';
                     // print_r($oh);
                 @endphp
                 <div class="row">

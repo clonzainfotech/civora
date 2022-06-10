@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Base\BaseModel;
+use App\User;
 use Carbon\Carbon;
 use Log;
 
@@ -195,7 +196,7 @@ class SmsManager extends BaseModel
         }
     }
 
-    public static function sendOtpToPatients($userId,$mobile_no) {
+    public static function sendOtpToPatients($userId,$mobile_no,$type=null) {
         $module = __FUNCTION__;
         $smsData = [];
         $smsData['module'] = $module;
@@ -205,18 +206,28 @@ class SmsManager extends BaseModel
         $smsData['templateid'] = 0;
         $smsData['message'] = config('app.'.$smsData['module']);
 
-        $patients = OpdPatients::whereMobileNumber($mobile_no)->first();
-        //for app register patients
-        if(!$patients)
+        if($type == 'user')
         {
-            $patients = PatientSignup::whereMobileNumber($mobile_no)->first();
+            $user = User::whereMobileNumber($mobile_no)->first();
+            $getotp = $user->verification_code;
+            $mobile_no = $user->mobile_number;
         }
+        else
+        {
+            $patients = OpdPatients::whereMobileNumber($mobile_no)->first();
+            //for app register patients
+            if(!$patients)
+            {
+                $patients = PatientSignup::whereMobileNumber($mobile_no)->first();
+            }
 
-        $getotp = $patients->otp;
-
+            $getotp = $patients->otp;
+            $mobile_no = $patients->mobile_number;
+        }
+        
         $smsData['message'] = self::replaceMessage('{{otp}}', $getotp,$smsData['message']);
         $smsData['message'] = self::replaceMessage('{{app_name}}',config('app.name'),$smsData['message']);
-        $smsData['mobile'] = $patients->mobile_number;
+        $smsData['mobile'] = $mobile_no;
 
         self::startToSendSms($smsData);
         return true;

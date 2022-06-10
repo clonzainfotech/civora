@@ -48,11 +48,16 @@ Route::group(['middleware'=>'checkDB'],function(){
     Route::get('get-anc-report','Admin\ANCController@getAncDetails');
     Route::get('get-gynec-details','Admin\GynecController@getGynecDetails');
     Route::post('login','Admin\UserController@login')->name('login');
+    Route::get('mobile-verification','Admin\UserController@mobileVerification')->name('mobile-verify');
+    Route::post('admin-otp-verify','Admin\UserController@getOtpVerify')->name('admin-otp-verify');
+    Route::get('resend-otp','Admin\UserController@resendOtp');
+
     Route::post('register','Admin\UserController@register')->name('register');
     Route::get('update-lmp/{type}','Base\Admin\AdminController@updateLmp');
     Route::get('/anc/get-existed-medicine-data','Base\Admin\AdminController@getExistedMedicineData')->middleware('login');
     Route::get('get-complaint-wise-medicine','Base\Admin\AdminController@getComplaintWiseMedicine')->middleware('login');
     Route::get('appointment-important-note','Base\Admin\AdminController@getAjaxImportantNote');
+    Route::get('mobile-verificatiob','Admin\AdminController@getAjaxImportantNote');
 
     //patient notification
     Route::get('patient_notification','Base\Admin\AdminController@patient_notification');
@@ -65,6 +70,7 @@ Route::group(['middleware'=>'checkDB'],function(){
 
     Route::get('ancdata/{patientsId}','Admin\GetANCDataController@getANCData');
     Route::get('anchistorydata/{patientsId}/{anccreatedate}','Admin\GetANCDataController@getANCHistoryData');
+
     Route::group(['namespace'=>'Admin','middleware'=>'login'],function(){
         Route::post('saverec','HomeController@saverec')->name('saverec');
         // dashboard
@@ -353,7 +359,7 @@ Route::group(['middleware'=>'checkDB'],function(){
         Route::get('get-medicine/{patientsId}','MedicalController@getMedicines');
         Route::get('medical-given-status','MedicalController@medicineStatus');
 
-    // send sms
+        // send sms
 
         Route::post('/send-custom-sms', 'SendMessageController@sendCustomSms');
         //route for sms templete

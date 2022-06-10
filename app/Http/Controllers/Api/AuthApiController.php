@@ -76,7 +76,7 @@ class AuthApiController extends ApiController
                 'is_new' => $is_new
             ];
            
-           $data = $this->SmsManager::sendOtpToPatients($userId,$user_data->mobile_number);
+           $data = $this->SmsManager::sendOtpToPatients($userId,$user_data->mobile_number,null);
             // dd('ere');
             return $this->sendResponse('Send otp for verification.',$success);
         }

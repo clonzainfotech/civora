@@ -24,10 +24,10 @@
             <tr>
                 <td>{{ ((($patients->currentPage() - 1 ) * $patients->perPage() ) + $loop->iteration) . '.' }}</td>
                 <td>{{cdate($row['created_at'])->format('d-m-Y')}}</td>
-               <td>{{ ucwords(strtolower($row->getPatientsDetails['name'])) }}</td>
-                <td>{{$row->getPatientsDetails->getReferenceDoctor['name']}}</td>
-                <td>{{$row->getPatientsDetails->getReferenceDoctorPro['name']}}</td>
-                <td>{{ucfirst($row->categoryDetails['name'])}}</td>
+               <td>{{ ucwords(strtolower(optional($row->getPatientsDetails)['name'] ?? '')) }}</td>
+                <td>{{ optional(optional($row->getPatientsDetails)->getReferenceDoctor)['name'] ?? '' }}</td>
+                <td>{{ optional(optional($row->getPatientsDetails)->getReferenceDoctorPro)['name'] ?? '' }}</td>
+                <td>{{ ucfirst(optional($row->categoryDetails)['name'] ?? '') }}</td>
             </tr>
         @empty
             <td colspan='5' class="text-center ancdata">No records available</td>
@@ -63,10 +63,10 @@
             <tr>
                 <td>{{ ((($patients->currentPage() - 1 ) * $patients->perPage() ) + $loop->iteration) . '.' }}</td>
                 <td>{{cdate($row['created_at'])->format('d-m-Y')}}</td>
-               <td>{{ ucwords(strtolower($row->getPatientsDetails['name'])) }}</td>
-                <td>{{$row->getPatientsDetails->getReferenceDoctor['name']}}</td>
-                <td>{{$row->getPatientsDetails->getReferenceDoctorPro['name']}}</td>
-                <td>{{ucfirst($row->categoryDetails['name'])}}</td>
+               <td>{{ ucwords(strtolower(optional($row->getPatientsDetails)['name'] ?? '')) }}</td>
+                <td>{{ optional(optional($row->getPatientsDetails)->getReferenceDoctor)['name'] ?? '' }}</td>
+                <td>{{ optional(optional($row->getPatientsDetails)->getReferenceDoctorPro)['name'] ?? '' }}</td>
+                <td>{{ ucfirst(optional($row->categoryDetails)['name'] ?? '') }}</td>
             </tr>
         @empty
             <td colspan='5' class="text-center ancdata">No records available</td>

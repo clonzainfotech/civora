@@ -1216,13 +1216,13 @@ if(!isset($isExtraVisit) || $isExtraVisit == 0)
                                         @if(isset($investigation->hystroscopy->type) && ($investigation->hystroscopy->type == 'yes'))
                                             <th>
                                                 <span class="ivf-label">Finding Type: </span>
-                                                {{ ($investigation->hystroscopy->finding_type == 1) ? 'Normal' : 'Abnormal' }}
+                                                {{ (!empty($investigation->hystroscopy->finding_type) && $investigation->hystroscopy->finding_type == 1) ? 'Normal' : 'Abnormal' }}
                                             </th>
                                         @endif
                                     </tr>
                                     <tr>
                                         @if(isset($investigation->hystroscopy->type) && ($investigation->hystroscopy->type == 'yes'))
-                                            @if ($investigation->hystroscopy->finding_type == 2)
+                                            @if (!empty($investigation->hystroscopy->finding_type) && $investigation->hystroscopy->finding_type == 2)
                                                 <th>
                                                     <span class="ivf-label">Abnormal Details: </span>
                                                     {{!empty($investigation->hystroscopy->abnormal_details) ? $investigation->hystroscopy->abnormal_details : '-' }}

@@ -257,8 +257,10 @@
         // Explicit, round-trip-validated formats (most specific first).
         foreach (['m/d/Y', 'd/m/Y', 'Y-m-d H:i:s', 'Y-m-d', 'd-m-Y', 'd-M-Y'] as $fmt) {
             $dt = \DateTime::createFromFormat('!' . $fmt, $s);
+            // PHP 8.2+ returns false from getLastErrors() when there are no warnings/errors.
             $e = \DateTime::getLastErrors();
-            if ($dt !== false && !($e['warning_count'] || $e['error_count']) && $dt->format($fmt) === $s) {
+            $clean = $e === false || (empty($e['warning_count']) && empty($e['error_count']));
+            if ($dt !== false && $clean && $dt->format($fmt) === $s) {
                 return \Carbon\Carbon::instance($dt);
             }
         }

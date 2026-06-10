@@ -805,10 +805,10 @@ class PatientsController extends AdminController
                             $investigation = json_decode($anc->investigation);
                             $investigationValueDetails = [];
                             $data = isset($investigation->investigation_data) ? $investigation->investigation_data : [];
-                            $investigationValueData = (array)$investigation->investigation_details;
+                            $investigationValueData = !empty($investigation->investigation_details) ? (array)$investigation->investigation_details : [];
                             foreach($data as $key => $value){
                                 if(empty($investigationValueData[$value])){
-                                    $investigationData[] = $investigationReport[$value];
+                                    $investigationData[] = isset($investigationReport[$value]) ? $investigationReport[$value] : '';
                                 }
                             }
                             $otherReport = isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? $investigation->investigation_extra : null;
@@ -842,12 +842,15 @@ class PatientsController extends AdminController
                                     $hubinvestigationData = [];
                                     $investigationValueDetails['hub'] = [];
                                     $data = !empty($historyHubInvestigation->investigation_data) ? $historyHubInvestigation->investigation_data : [];
-                                    $investigationValueData = (array)$historyHubInvestigation->investigation_details;
+                                    $investigationValueData = !empty($historyHubInvestigation->investigation_details) ? (array)$historyHubInvestigation->investigation_details : [];
                                     foreach($data as $key => $value){
+                                        if(!isset($investigationReport[$value])){
+                                            continue;
+                                        }
                                         if(!empty($investigationValueData[$value])){
                                             $investigationValueDetails['hub'][$investigationReport[$value]] = $investigationValueData[$value];
                                         }else{
-                                            $hubinvestigationData[] = isset($investigationReport[$value]) ? $investigationReport[$value] : '';
+                                            $hubinvestigationData[] = $investigationReport[$value];
                                         }
                                     }
                                     $record->advice_report_male = implode(', ',$hubinvestigationData);
@@ -874,7 +877,7 @@ class PatientsController extends AdminController
                             $investigationValueData = !empty($investigation->investigation_details) ? (array)$investigation->investigation_details : [];
                             foreach($data as $key => $value){
                                 if(empty($investigationValueData[$value])){
-                                    $investigationData[] = $investigationReport[$value];
+                                    $investigationData[] = isset($investigationReport[$value]) ? $investigationReport[$value] : '';
                                 }
                             }
                             $otherReport = isset($investigation->investigation_extra) && !empty($investigation->investigation_extra) ? $investigation->investigation_extra : null;
@@ -882,7 +885,7 @@ class PatientsController extends AdminController
 
                         }
                     }
-                    $record->advice_report = (!empty($investigationData) ? implode(', ',$investigationData) : '').(!empty($otherReport) ? ', '.$otherReport : '');
+                    $record->advice_report =(!empty($investigationData) ? implode(', ',$investigationData) : '').(!empty($otherReport) ? ', '.$otherReport : '');
                 }
                 $data['status'] = 1;
                 $data['adviceReport'] = View::make('admin.report_advice_list.data',compact('appointment'))->render();

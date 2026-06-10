@@ -42,7 +42,7 @@ class AuthApiController extends ApiController
             $login_type => $request->input('login')
         ]);
 
-        $otp=99999999;
+        $otp=123456;
         $user_data = $this->OpdPatients->where('mobile_number', $request->only($login_type))->orwhere('code',$request->only($login_type))->first();
         // $user = $this->OpdPatients;
         // if($user_data){
@@ -57,7 +57,7 @@ class AuthApiController extends ApiController
         //         $user_data = $patient;
         //         // return $this->sendNotApproved('Please contact to Radha Candor IVF Hospital of Approve your Request');
         //     }
-
+ 
         // }
         if($user_data) {
             // $user_new = $user->is_verify = 0;
@@ -69,7 +69,7 @@ class AuthApiController extends ApiController
             if ($user_data->is_verify == 0) {
                 $is_new = 1;
             }
-
+ 
             $success = [
                 'otp' => $otp,
                 'pid' => $userId, 
@@ -92,12 +92,12 @@ class AuthApiController extends ApiController
     * @return \Illuminate\Http\Response
     */
     public function otp_verify(Request $request){
-
+ 
         $rule = [
             'otp' => 'required',
             'pid' => 'required',
         ];
-
+ 
          $pid = $request->pid;
         if($pid>0)
         {
@@ -110,7 +110,7 @@ class AuthApiController extends ApiController
             // {
             //     $patient = $this->PatientSignup->where('id', $pid)->first();
             // }
-            if(($patient && $patient->mobile_number == '9825604838') || $request->otp == '99999999')
+            if(($patient && $patient->mobile_number == '9825604838') || $request->otp == '123456')
             {
                 $user = $this->OpdPatients->where('id', $pid)->first();
             }

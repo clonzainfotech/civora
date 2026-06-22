@@ -44,6 +44,8 @@ class CopySubset extends Command
     private $target;
     /** @var array<string,array<string>> table => [columns] */
     private $cols = [];
+    /** @var array<string,bool> view names (data copy is skipped for these) */
+    private $views = [];
     /** @var array<string,string> table => primary key column */
     private $pk = [];
     /** @var array<int> chosen patient ids */
@@ -114,7 +116,14 @@ class CopySubset extends Command
                 $this->pk[$r->t] = $r->c;
             }
         }
-        $this->line('Discovered ' . count($this->cols) . ' tables.');
+        // Views carry no data of their own — skip them in the data copy.
+        $views = DB::table('information_schema.tables')
+            ->where('TABLE_SCHEMA', $this->source)
+            ->where('TABLE_TYPE', 'VIEW')
+            ->pluck('TABLE_NAME')->all();
+        $this->views = array_fill_keys($views, true);
+
+        $this->line('Discovered ' . count($this->cols) . ' tables (' . count($this->views) . ' are views, skipped for data).');
     }
 
     private function has(string $table, string $col): bool
@@ -319,6 +328,9 @@ class CopySubset extends Command
         $patientKeyed = []; // table => fk column (patients_id|patient_id)
         $undecided = [];
         foreach (array_keys($this->cols) as $table) {
+            if (isset($this->views[$table])) {
+                continue; // a view: definition already cloned, no data to copy
+            }
             if (in_array($table, self::SKIP_DATA, true) || $this->endsWith($table, '_archive')) {
                 continue;
             }
@@ -431,7 +443,7 @@ class CopySubset extends Command
     {
         $base = substr($col, 0, -3); // strip _id
         foreach ([$base, $base . 's', rtrim($base, 's')] as $cand) {
-            if (isset($this->cols[$cand])) return $cand;
+            if (isset($this->cols[$cand]) && ! isset($this->views[$cand])) return $cand;
         }
         return null;
     }

@@ -26,6 +26,7 @@ class CopySubset extends Command
         {--target=candor_sample : Name of the new database to create and fill.}
         {--count=55 : Number of patients to keep (kept within 50-60).}
         {--dry-run : Show the patient selection + coverage matrix; create/copy nothing.}
+        {--no-create : Do not DROP/CREATE the target DB (it must already exist). Use when the DB user lacks CREATE/DROP DATABASE privilege.}
         {--force : Skip the interactive confirmation prompt.}';
 
     protected $description = 'Clone a curated 50-60 patient subset (with all related + reference data) into a fresh database.';
@@ -272,13 +273,22 @@ class CopySubset extends Command
         $env = ['MYSQL_PWD' => (string) $c['password']];
         $base = ['-h' . $c['host'], '-P' . (string) $c['port'], '-u' . $c['username']];
 
-        $this->line('Dropping & recreating target database...');
-        DB::statement("DROP DATABASE IF EXISTS `{$this->target}`");
-        DB::statement("CREATE DATABASE `{$this->target}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+        if ($this->option('no-create')) {
+            $this->line('Skipping DROP/CREATE (--no-create); target DB must already exist.');
+            // Sanity: confirm we can reach the target schema.
+            $exists = DB::table('information_schema.schemata')->where('SCHEMA_NAME', $this->target)->exists();
+            if (! $exists) {
+                throw new \RuntimeException("Target database `{$this->target}` does not exist. Create it first (as a privileged user) or drop --no-create.");
+            }
+        } else {
+            $this->line('Dropping & recreating target database...');
+            DB::statement("DROP DATABASE IF EXISTS `{$this->target}`");
+            DB::statement("CREATE DATABASE `{$this->target}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+        }
 
         $this->line('Cloning schema (structure only) via mysqldump...');
         $dump = new Process(array_merge(
-            ['mysqldump', '--no-data', '--routines', '--events', '--skip-triggers', '--no-tablespaces'],
+            ['mysqldump', '--no-data', '--skip-triggers', '--no-tablespaces', '--skip-lock-tables', '--single-transaction'],
             $base,
             [$this->source]
         ), null, $env);

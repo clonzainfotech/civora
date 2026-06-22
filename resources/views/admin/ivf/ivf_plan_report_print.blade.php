@@ -338,7 +338,7 @@ h4{
 
             </div>
             @foreach($erImageArray as $erImage)
-                @if(getimagesize($baseUrl.'/'.$erImage.'.jpg'))
+                @if(file_exists(public_path('assets/images/'.$erImage.'.jpg')))
                     <div class="col-xl-2 col-xs-2 text-center">
                         {{-- <div class="input-group"> --}}
                             <span class="mt-5 er_image_name"><strong>{{ucwords($erImage)}}</strong></span>

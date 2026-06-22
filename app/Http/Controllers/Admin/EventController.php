@@ -116,7 +116,7 @@ class EventController extends AdminController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,Request $request)
+    public function edit(Request $request, $id)
     {
        if($request->ajax()){
             $eventId = $id;

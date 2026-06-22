@@ -38,7 +38,7 @@ class AppointmentRequestController extends AdminController
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function appointmentApprove($id, Request $request) {
+    public function appointmentApprove(Request $request, $id) {
         try{
             if($request->ajax()) {
                 $apRequestId = decrypt($id);
@@ -85,7 +85,7 @@ class AppointmentRequestController extends AdminController
         }
     }
 
-    public function appointmentReject($id, Request $request) {
+    public function appointmentReject(Request $request, $id) {
         if($request->ajax()) {
             $apRequestId = decrypt($id);
             if($apRequestId) {

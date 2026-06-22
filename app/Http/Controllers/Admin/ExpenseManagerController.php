@@ -147,7 +147,7 @@ class ExpenseManagerController extends AdminController
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function edit($id,Request $request){
+    public function edit(Request $request, $id){
         if($request->ajax()){
             $expenseId = $id;
         }

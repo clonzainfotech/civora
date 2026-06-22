@@ -444,7 +444,7 @@ class AdminController extends BaseController
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function patientReport($type,$patientsId,Request $request){
+    public function patientReport(Request $request, $type, $patientsId){
         try{
             $rType = decrypt($type);
             $pId = decrypt($patientsId);

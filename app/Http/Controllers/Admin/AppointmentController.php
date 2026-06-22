@@ -211,7 +211,7 @@ class AppointmentController extends AdminController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create($id = null,Request $request) {
+    public function create(Request $request, $id = null) {
         try{
             $usgType = 0;
             if($request->usgType){
@@ -638,7 +638,7 @@ class AppointmentController extends AdminController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,Request $request){
+    public function edit(Request $request, $id){
         try{
             $proReferenceDoctor = ['other'=>'Other'] + $this->ReferenceDoctorPro->pluck('name','id')->toArray();
             $appointmentRemark = [];

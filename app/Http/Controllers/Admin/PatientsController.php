@@ -95,7 +95,7 @@ class PatientsController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function edit($id,Request $request) {
+    public function edit(Request $request, $id) {
         try{
             $patientId = decrypt($id);
             $patient = $this->OpdPatients->find($patientId);

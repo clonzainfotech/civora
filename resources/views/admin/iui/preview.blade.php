@@ -3540,7 +3540,7 @@
                                     }
                                     $data = json_decode($row->description);
                                     $agentData = !empty($data->plan->inducing_agent) ? $data->plan->inducing_agent : [];
-                                    $lmpDate = cdate($data->lmp->date)->format('d-m-Y');
+                                    $lmpDate = !empty($data->lmp->date) ? cdate($data->lmp->date)->format('d-m-Y') : null;
                                     $createdAt = cdate($row->created_at)->format('d-m-Y');
                                     $appointmentDate = !empty($data->new_follow_up) ? cdate($data->new_follow_up)->format('d-m-Y') : cdate($row->created_at)->format('d-m-Y');
                                     $diff = cdate($lmpDate)->diffInDays(cdate($createdAt));

@@ -98,11 +98,11 @@
         $abArray = ['1'=>"Normal",'2'=>"Abnormal"];
         $o_h = !empty($ivf->o_h) ? json_decode($ivf->o_h) : null;
         $investigation = json_decode($ivf->investigation);
-        $laproscopy = $investigation->laproscopy->type == 'yes' ? $abArray[$investigation->laproscopy->laproscopy_type] : null;
-        $hcg = $investigation->hcg->type == 'yes' ? $abArray[$investigation->hcg->laproscopy_type] : null;
+        $laproscopy = isset($investigation->laproscopy->type) && $investigation->laproscopy->type == 'yes' && isset($investigation->laproscopy->laproscopy_type) ? $abArray[$investigation->laproscopy->laproscopy_type] : null;
+        $hcg = isset($investigation->hcg->type) && $investigation->hcg->type == 'yes' && isset($investigation->hcg->laproscopy_type) ? $abArray[$investigation->hcg->laproscopy_type] : null;
         $tubalFactor = !empty($laproscopy) && !empty($hcg) ? $laproscopy : (!empty($laproscopy) && empty($hcg) ? $laproscopy : $hcg);
         $o_e = !empty($ivf->o_e) ? json_decode($ivf->o_e) : null;
-        $uterus = $o_e->uterus->type == 2 ? $o_e->uterus->details : 'Normal';
+        $uterus = isset($o_e->uterus->type) && $o_e->uterus->type == 2 && isset($o_e->uterus->details) ? $o_e->uterus->details : 'Normal';
         $ovary = !empty($o_e->ovary) ? $o_e->ovary : null;
         $right_ovary = isset($ovary->right->details) ? implode(', ',$ovary->right->details) : null;
         $left_ovary = isset($ovary->left->details) ? implode(', ',$ovary->left->details) : null;
@@ -112,9 +112,12 @@
         if(!empty($o_h) && ($o_h->abortion_no != null && $o_h->abortion_no != 0 ))
         {
             $total_abortion = $o_h->abortion_no;
-            foreach($o_h->abortion->abortion_data as $key=>$value)
+            if(isset($o_h->abortion->abortion_data))
             {
-                $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+                foreach($o_h->abortion->abortion_data as $key=>$value)
+                {
+                    $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+                }
             }
         }
         if(!empty($o_h) && isset($o_h->second_marriage) && ($o_h->second_marriage->abortion_no != null && $o_h->second_marriage->abortion_no != 0 ))
@@ -123,9 +126,12 @@
             // {
                 $total_abortion = $o_h->second_marriage->abortion_no;
                 $abortion_reason = [];
-                foreach($o_h->second_marriage->abortion->abortion_data as $key=>$value)
+                if(isset($o_h->second_marriage->abortion->abortion_data))
                 {
-                    $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+                    foreach($o_h->second_marriage->abortion->abortion_data as $key=>$value)
+                    {
+                        $abortion_reason[] = isset($value->reason) && !empty($value->reason) ? $value->reason : null;
+                    }
                 }
             // }
         }

@@ -283,7 +283,7 @@ class UserController extends AdminController
         }
     }
 
-    public function edit($id,Request $request){
+    public function edit(Request $request, $id){
         if($request->ajax()){
             $UserId = $id;
         }

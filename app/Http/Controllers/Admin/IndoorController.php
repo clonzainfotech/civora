@@ -211,7 +211,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request
     * @return \Illuminate\Http\Response
     */
-    public function store($id, Request $request) {
+    public function store(Request $request, $id) {
         try{
             $patientsId = $this->OpdPatients->whereCode($request->code)->value('id');
 
@@ -315,7 +315,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function bookingEdit($id, Request $request) {
+    public function bookingEdit(Request $request, $id) {
         try {
             $bookingid = decrypt($id);
         } catch (Exception $exception) {
@@ -389,7 +389,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function edit($id,Request $request){
+    public function edit(Request $request, $id){
         try{
             if($request->ajax()){
                 $patients = $this->OpdPatients
@@ -454,7 +454,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function bookingUpdate($id,Request $request) {
+    public function bookingUpdate(Request $request, $id) {
         try{
             $lastArray = $this->storeprocedure($request->pro);
             $storeNewProcedure = array_values($lastArray);
@@ -565,7 +565,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function dischargeStore($id, Request $request) {
+    public function dischargeStore(Request $request, $id) {
         try {
             $bookingId = decrypt($id);
             // $this->medicineData2($request->treatment);
@@ -708,7 +708,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function dischargeEdit($id, Request $request) {
+    public function dischargeEdit(Request $request, $id) {
         try {
             $bookingid = decrypt($id);
             $dischargedata = $this->IndoorDischargeCard->where('booking_id',$bookingid)->first();
@@ -755,7 +755,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function dischargeUpdate($id,Request $request) {
+    public function dischargeUpdate(Request $request, $id) {
         try {
             // $this->medicineData2($request->treatment);
             $this->giventratment($request->treatments);
@@ -1299,7 +1299,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function directDischarge($id,Request $request) {
+    public function directDischarge(Request $request, $id) {
         try {
             $bookingId = decrypt($id);
             $roomId = $this->IndoorBook->where('id',$bookingId)->pluck('room_id')->first();
@@ -1380,7 +1380,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function depositStore($id,Request $request) {
+    public function depositStore(Request $request, $id) {
         try{
             $validator = \Validator::make($request->all(), [
                 'deposit_amount' => 'required|numeric|digits_between:0,6',
@@ -1538,7 +1538,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function depositPrint($id,Request $request) {
+    public function depositPrint(Request $request, $id) {
 
         $deposit = $this->IndoorDeposit->with('getPatients')->where('id', $id)->first();
         if(!empty($deposit)) {
@@ -1759,7 +1759,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $request,$id
     * @return \Illuminate\Http\Response
     */
-    public function roomedit($id, Request $request){
+    public function roomedit(Request $request, $id){
 
         try {
             $roomTypeId = decrypt($id);
@@ -1864,7 +1864,7 @@ class IndoorController extends AdminController
     * @param  \Illuminate\Http\Request $id,$request
     * @return \Illuminate\Http\Response
     */
-    public function updatestatus($id,Request $request)
+    public function updatestatus(Request $request, $id)
     {
         $id=decrypt($id);
         $this->IndoorType->where('id',$id)->update(['status' => 0]);

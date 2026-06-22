@@ -15,7 +15,7 @@ class IndoorPrintController extends AdminController
     * @param  \Illuminate\Http\Request 
     * @return \Illuminate\Http\Response
     */
-    public function printAdmisionConsent($id,Request $request) {
+    public function printAdmisionConsent(Request $request, $id) {
 
         $patientData = $this->OpdPatients->where('id', $id)->first();
         $room_id = $this->IndoorBook->where('patient_id', $patientData->id)->first();

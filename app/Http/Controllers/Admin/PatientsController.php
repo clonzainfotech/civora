@@ -619,6 +619,31 @@ class PatientsController extends AdminController
         $planData = ['1'=>'Pick Up','2'=>'FET','3'=>'FET-OD','4'=>'FET-ED'];
         $allVisit = array_merge($anc,$ancHistory,$iui,$iuiHistory,$iuiExtraVisit,$iuiReport,$ivf,$ivfHistory,$ivfExtraVisit,$gynec,$stich);
         krsort($allVisit);
+        // Resolve these controllers once instead of re-instantiating them (and their ~30 BaseController models) on every loop iteration.
+        $ivfController = app('App\Http\Controllers\Admin\IVFController');
+        $iuiController = app('App\Http\Controllers\Admin\IUIController');
+        $ancController = app('App\Http\Controllers\Admin\ANCController');
+        $gynecController = app('App\Http\Controllers\Admin\GynecController');
+        $stichController = app('App\Http\Controllers\Admin\StichController');
+        // Pre-fetch each table's records once and key them by created_at (same key format as $allVisit),
+        // so the loop below can look them up in memory instead of re-querying per visit date.
+        // reverse()->keyBy keeps the first row per timestamp, matching the previous ->first() behaviour.
+        $keyByDate = function ($collection) {
+            return $collection->reverse()->keyBy(function ($row) {
+                return (string) $row->created_at;
+            });
+        };
+        $ivfHistoryRecords = $keyByDate($this->IvfHistory->where('patients_id',$pId)->get());
+        $ivfExtraRecords   = $keyByDate($this->IvfExtraVisit->where('patient_id',$pId)->get());
+        $ivfRecords        = $keyByDate($this->IVF->where('patients_id',$pId)->get());
+        $iuiHistoryRecords = $keyByDate($this->IuiHistory->where('patients_id',$pId)->get());
+        $iuiExtraRecords   = $keyByDate($this->IuiExtraVisit->where('patient_id',$pId)->get());
+        $iuiRecords        = $keyByDate($this->IUI->where('patients_id',$pId)->get());
+        $iuiReportRecords  = $keyByDate($this->IUIReport->where('patients_id',$pId)->get());
+        $ancHistoryRecords = $keyByDate($this->AncHistory->where('patients_id',$pId)->get());
+        $ancRecords        = $keyByDate($this->ANC->where('patients_id',$pId)->get());
+        $gynecRecords      = $keyByDate($this->Gynec->where('patients_id',$pId)->get());
+        $stichRecords      = $keyByDate($this->Stich->where('patients_id',$pId)->get());
         // $preview = 0;
         foreach($allVisit as $date => $category_id)
         {
@@ -626,7 +651,7 @@ class PatientsController extends AdminController
             //ivf
             if($category_id == 1 || $category_id == 2)
             {
-                $ivf = $this->IvfHistory->where('patients_id',$pId)->where('created_at',$date)->first();
+                $ivf = $ivfHistoryRecords->get($date);
                 if($ivf)
                 {
                     $historyData = json_decode($ivf->description);
@@ -640,66 +665,66 @@ class PatientsController extends AdminController
                     if (in_array('transfer',$collectionData))
                     {
                         // $preview = 0;
-                        $history[$created_at]['IVF'][$ivf->cycle_no.'/'.$planData[$ivf->plan]] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
+                        $history[$created_at]['IVF'][$ivf->cycle_no.'/'.$planData[$ivf->plan]] = $ivfController->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
                     }
                     else
                     {
-                        $history[$created_at]['IVF'][$ivf->cycle_no.'/'.$planData[$ivf->plan]] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
+                        $history[$created_at]['IVF'][$ivf->cycle_no.'/'.$planData[$ivf->plan]] = $ivfController->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
                     }
                 }
-                $ivfExtra = $this->IvfExtraVisit->where('patient_id',$pId)->where('created_at',$date)->first();
+                $ivfExtra = $ivfExtraRecords->get($date);
                 if($ivfExtra)
                 {
                     $cycle_no = encrypt($ivfExtra->cycle_no);
                     $plan = encrypt($ivfExtra->plan);
                     $preview = 0;
                     $created_at = Carbon::parse($ivfExtra->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['IVF'][$ivfExtra->cycle_no.'/'.(isset($planData[$ivfExtra->plan]) ? $planData[$ivfExtra->plan] : '')] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
+                    $history[$created_at]['IVF'][$ivfExtra->cycle_no.'/'.(isset($planData[$ivfExtra->plan]) ? $planData[$ivfExtra->plan] : '')] = $ivfController->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
                 }
-                $ivf = $this->IVF->where('patients_id',$pId)->where('created_at',$date)->first();
+                $ivf = $ivfRecords->get($date);
                 if($ivf && $category_id == 1)
                 {
                     $preview = 0;
                     $created_at = Carbon::parse($ivf->created_at)->format('Y-m-d H:i');
                     $cycle_no = 0;
                     $plan = 0;
-                    $history[$created_at]['IVF'][''] = app('App\Http\Controllers\Admin\IVFController')->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
+                    $history[$created_at]['IVF'][''] = $ivfController->getIvfAppointmentWiseVisit($date,$patient_id,$cycle_no,$plan,$preview);
                 }
             }
             // //iui
             if($category_id == 3 || $category_id == 4)
             {
-                $iui = $this->IuiHistory->where('patients_id',$pId)->where('created_at',$date)->first();
+                $iui = $iuiHistoryRecords->get($date);
                 if($iui)
                 {
                     $cycle_no = encrypt($iui->cycle_no);
                     $preview = $iui->visit - 1;
                     $created_at = Carbon::parse($iui->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['IUI'][$iui->cycle_no] = app('App\Http\Controllers\Admin\IUIController')->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
+                    $history[$created_at]['IUI'][$iui->cycle_no] = $iuiController->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
                 }
-                $iuiExtra = $this->IuiExtraVisit->where('patient_id',$pId)->where('created_at',$date)->first();
+                $iuiExtra = $iuiExtraRecords->get($date);
                 if($iuiExtra)
                 {
                     $cycle_no = encrypt($iuiExtra->cycle_no);
                     $preview = 0;
                     $created_at = Carbon::parse($iuiExtra->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['IUI'][$iuiExtra->cycle_no] = app('App\Http\Controllers\Admin\IUIController')->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
+                    $history[$created_at]['IUI'][$iuiExtra->cycle_no] = $iuiController->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
                 }
-                $iui = $this->IUI->where('patients_id',$pId)->where('created_at',$date)->first();
+                $iui = $iuiRecords->get($date);
                 if($iui && $category_id == 3)
                 {
                     $cycle_no = encrypt($iui->cycle_no);
                     $preview = 0;
                     $created_at = Carbon::parse($iui->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['IUI'][''] = app('App\Http\Controllers\Admin\IUIController')->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
+                    $history[$created_at]['IUI'][''] = $iuiController->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
                 }
-                $iuiReport = $this->IUIReport->where('patients_id',$pId)->where('created_at',$date)->first();
+                $iuiReport = $iuiReportRecords->get($date);
                 if($iuiReport)
                 {
                     $cycle_no = encrypt($iuiReport->cycle_no);
                     $preview = 0;
                     $created_at = Carbon::parse($iuiReport->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['IUI'][''] = app('App\Http\Controllers\Admin\IUIController')->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
+                    $history[$created_at]['IUI'][''] = $iuiController->getIuiAppointmentWiseVisit($date,$patient_id,$cycle_no,$preview,$category_id);
                 }
 
             }
@@ -707,37 +732,37 @@ class PatientsController extends AdminController
             if($category_id == 5 || $category_id == 6 || $category_id == 10 || $category_id == 13)
             {
                 // $preview = [];
-                $anc = $this->AncHistory->where('patients_id',$pId)->where('created_at',$date)->first();
+                $anc = $ancHistoryRecords->get($date);
                 if($anc)
                 {
                     $created_at = Carbon::parse($anc->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['ANC'][''] = app('App\Http\Controllers\Admin\ANCController')->getAncAppointmentWiseVisit($date,$patient_id,$anc->anc_id);
+                    $history[$created_at]['ANC'][''] = $ancController->getAncAppointmentWiseVisit($date,$patient_id,$anc->anc_id);
                 }
-                $anc = $this->ANC->where('patients_id',$pId)->where('created_at',$date)->first();
+                $anc = $ancRecords->get($date);
                 if($anc && $category_id == 5)
                 {
                     $created_at = Carbon::parse($anc->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['ANC'][''] = app('App\Http\Controllers\Admin\ANCController')->getAncAppointmentWiseVisit($date,$patient_id,$anc->id);
+                    $history[$created_at]['ANC'][''] = $ancController->getAncAppointmentWiseVisit($date,$patient_id,$anc->id);
                 }
             }
             if($category_id == 18)
             {
                 // $preview = [];
-                $gynec = $this->Gynec->where('patients_id',$pId)->where('created_at',$date)->first();
+                $gynec = $gynecRecords->get($date);
                 if($gynec)
                 {
                     $created_at = Carbon::parse($gynec->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['GYNEC'][''] = app('App\Http\Controllers\Admin\GynecController')->getGynecAppointmentWiseVisit($date,$patient_id);
+                    $history[$created_at]['GYNEC'][''] = $gynecController->getGynecAppointmentWiseVisit($date,$patient_id);
                 }
             }
             if($category_id == 22)
             {
                 // $preview = [];
-                $stich = $this->Stich->where('patients_id',$pId)->where('created_at',$date)->first();
+                $stich = $stichRecords->get($date);
                 if($stich)
                 {
                     $created_at = Carbon::parse($stich->created_at)->format('Y-m-d H:i');
-                    $history[$created_at]['STICH'][''] = app('App\Http\Controllers\Admin\StichController')->getStichAppointmentWiseVisit($date,$patient_id);
+                    $history[$created_at]['STICH'][''] = $stichController->getStichAppointmentWiseVisit($date,$patient_id);
                 }
             }
         }

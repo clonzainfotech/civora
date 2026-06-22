@@ -122,7 +122,7 @@
 													<li data-responsive="{{cdnUrl($image, null)}}" data-iframe="true" data-src="{{cdnUrl($image, null)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 														<a href="{{cdnUrl($image, null)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{url('images/default-pdf.png')}}">
+															<img class="img-responsive" loading="lazy" src="{{url('images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -134,7 +134,7 @@
 														<li data-responsive="{{cdnUrl($image, null)}}" data-src="{{cdnUrl($image, null)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{cdnUrl($image, null)}}">
+																<img class="img-responsive" loading="lazy" src="{{cdnUrl($image, null)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -214,7 +214,7 @@
 													<li data-responsive="{{cdnUrl($image, null)}}" data-iframe="true" data-src="{{cdnUrl($image, null)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 														<a href="{{cdnUrl($image, null)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{url('images/default-pdf.png')}}">
+															<img class="img-responsive" loading="lazy" src="{{url('images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -226,7 +226,7 @@
 														<li data-responsive="{{cdnUrl($image, null)}}" data-src="{{cdnUrl($image, null)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{cdnUrl($image, null)}}">
+																<img class="img-responsive" loading="lazy" src="{{cdnUrl($image, null)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -306,7 +306,7 @@
 													<li data-responsive="{{cdnUrl($image, null)}}" data-iframe="true" data-src="{{cdnUrl($image, null)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 														<a href="{{cdnUrl($image, null)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{url('images/default-pdf.png')}}">
+															<img class="img-responsive" loading="lazy" src="{{url('images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -318,7 +318,7 @@
 														<li data-responsive="{{cdnUrl($image, null)}}" data-src="{{cdnUrl($image, null)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{cdnUrl($image, null)}}">
+																<img class="img-responsive" loading="lazy" src="{{cdnUrl($image, null)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -383,7 +383,7 @@
 													<li data-responsive="{{cdnUrl($image, null)}}" data-iframe="true" data-src="{{cdnUrl($image, null)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 														<a href="{{cdnUrl($image, null)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{url('images/default-pdf.png')}}">
+															<img class="img-responsive" loading="lazy" src="{{url('images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -395,7 +395,7 @@
 														<li data-responsive="{{cdnUrl($image, null)}}" data-src="{{cdnUrl($image, null)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{cdnUrl($image, null)}}">
+																<img class="img-responsive" loading="lazy" src="{{cdnUrl($image, null)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>
@@ -455,7 +455,7 @@
 													<li data-responsive="{{cdnUrl($image, null)}}" data-iframe="true" data-src="{{cdnUrl($image, null)}}"
 													data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 														<a href="{{cdnUrl($image, null)}}" class="mb-1" target="_blank">
-															<img class="img-responsive" src="{{url('images/default-pdf.png')}}">
+															<img class="img-responsive" loading="lazy" src="{{url('images/default-pdf.png')}}">
 															<div class="demo-gallery-poster">
 																<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 															</div>
@@ -467,7 +467,7 @@
 														<li data-responsive="{{cdnUrl($image, null)}}" data-src="{{cdnUrl($image, null)}}"
 														data-sub-html="<h4>{{$report_name}}</h4><p>Uploaded On {{$date}}</p>">
 															<a href="" class="mb-1">
-																<img class="img-responsive" src="{{cdnUrl($image, null)}}">
+																<img class="img-responsive" loading="lazy" src="{{cdnUrl($image, null)}}">
 																<div class="demo-gallery-poster">
 																	<img src="https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png">
 																</div>

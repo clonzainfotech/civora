@@ -104,13 +104,13 @@
                 <tr>
                     <td class="data-font seperator">{{($i++).'.'}}</td>
                     <td class="data-font seperator">{{ !empty($row->time) ? cdate($row->date)->format('d-m-Y') . ' ' .  cdate($row->time)->format('h:i') : cdate($row->date)->format('d-m-Y') }}</td>
-                    <td class="data-font seperator">{{$row->getPatientsDetails['code'] }}</td>
-                    <td class="data-font seperator">{{ucwords(strtolower($row->getPatientsDetails['name']))}}</td>
+                    <td class="data-font seperator">{{$row->getPatientsDetails['code'] ?? '' }}</td>
+                    <td class="data-font seperator">{{ucwords(strtolower($row->getPatientsDetails['name'] ?? ''))}}</td>
                     <td class="data-font seperator">{{ date('h:i', strtotime($row->arrival_time)) }}</td>
-                    <td class="data-font seperator">{{ucfirst($row->categoryDetails['name'])}}</td>
-                    <td class="data-font seperator">{{$row->getPatientsDetails->getHospitalDoctor['name']}}</td>
-                    <td class="data-font seperator">{{$row->getPatientsDetails['mobile_number']}}</td>
-                    <td class="data-font seperator">{{$row->getAppointmentCharges['netamount']}}</td>
+                    <td class="data-font seperator">{{ucfirst($row->categoryDetails['name'] ?? '')}}</td>
+                    <td class="data-font seperator">{{$row->getPatientsDetails->getHospitalDoctor['name'] ?? ''}}</td>
+                    <td class="data-font seperator">{{$row->getPatientsDetails['mobile_number'] ?? ''}}</td>
+                    <td class="data-font seperator">{{$row->getAppointmentCharges['netamount'] ?? ''}}</td>
                     <td class="data-font seperator"><div class="remark">{{$row->remark}}</div></td>
                     <td class="data-font seperator">{{$row->nextAppointmentDate()}}</td>
                 </tr>
